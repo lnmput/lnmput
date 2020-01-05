@@ -1,0 +1,695 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Laravel,翻译,translate,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="着意闻时不肯香，香在无心处。  Single responsibility principleA class and a method should have only one responsibility. Bad:12345678public function getFullNameAttribute()&amp;#123;    if (auth()-&amp;gt;user() &amp;amp;&amp;amp; au">
+<meta name="keywords" content="Laravel,翻译,translate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel最佳实践">
+<meta property="og:url" content="https://swoole.app/2018/06/02/laravel最佳实践/index.html">
+<meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:description" content="着意闻时不肯香，香在无心处。  Single responsibility principleA class and a method should have only one responsibility. Bad:12345678public function getFullNameAttribute()&amp;#123;    if (auth()-&amp;gt;user() &amp;amp;&amp;amp; au">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-02T06:57:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="laravel最佳实践">
+<meta name="twitter:description" content="着意闻时不肯香，香在无心处。  Single responsibility principleA class and a method should have only one responsibility. Bad:12345678public function getFullNameAttribute()&amp;#123;    if (auth()-&amp;gt;user() &amp;amp;&amp;amp; au">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> laravel最佳实践 | 杨子鳄鱼 ● 外贸电商从业者 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a target="_blank" href="https://github.com/lnmput"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">杨子鳄鱼 ● 外贸电商从业者</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br>
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-translate">
+          <a href="/tags/translate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br>
+            
+            翻译
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            简历
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-thumbs-up"></i> <br>
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                laravel最佳实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-02T14:42:00+08:00" content="2018-06-02">
+              2018-06-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><br>着意闻时不肯香，香在无心处。<br></blockquote>
+
+<h3 id="Single-responsibility-principle"><a href="#Single-responsibility-principle" class="headerlink" title="Single responsibility principle"></a>Single responsibility principle</h3><p>A class and a method should have only one responsibility.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFullNameAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (auth()-&gt;user() &amp;&amp; auth()-&gt;user()-&gt;hasRole(<span class="string">'client'</span>) &amp;&amp; auth()-&gt;user()-&gt;isVerified()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'Mr. '</span> . <span class="keyword">$this</span>-&gt;first_name . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;middle_name . <span class="string">' '</span> <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;first_name[<span class="number">0</span>] . <span class="string">'. '</span> . <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFullNameAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;isVerifiedClient() ? <span class="keyword">$this</span>-&gt;getFullNameLong() : <span class="keyword">$this</span>-&gt;getFullNameShort();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isVerfiedClient</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> auth()-&gt;user() &amp;&amp; auth()-&gt;user()-&gt;hasRole(<span class="string">'client'</span>) &amp;&amp; auth()-&gt;user()-&gt;isVerified();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFullNameLong</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Mr. '</span> . <span class="keyword">$this</span>-&gt;first_name . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;middle_name . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFullNameShort</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;first_name[<span class="number">0</span>] . <span class="string">'. '</span> . <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Fat-models-skinny-controllers"><a href="#Fat-models-skinny-controllers" class="headerlink" title="Fat models, skinny controllers"></a>Fat models, skinny controllers</h3><p>Put all DB related logic into Eloquent models or into Repository classes if you’re using Query Builder or raw SQL queries.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $clients = Client::verified()</span><br><span class="line">        -&gt;with([<span class="string">'orders'</span> =&gt; <span class="function"><span class="keyword">function</span> <span class="params">($q)</span> </span>&#123;</span><br><span class="line">            $q-&gt;where(<span class="string">'created_at'</span>, <span class="string">'&gt;'</span>, Carbon::today()-&gt;subWeek());</span><br><span class="line">        &#125;])</span><br><span class="line">        -&gt;get();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'index'</span>, [<span class="string">'clients'</span> =&gt; $clients]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'index'</span>, [<span class="string">'clients'</span> =&gt; <span class="keyword">$this</span>-&gt;client-&gt;getWithNewOrders()]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">Class</span> <span class="title">Client</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWithNewOrders</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;verified()</span><br><span class="line">            -&gt;with([<span class="string">'orders'</span> =&gt; <span class="function"><span class="keyword">function</span> <span class="params">($q)</span> </span>&#123;</span><br><span class="line">                $q-&gt;where(<span class="string">'created_at'</span>, <span class="string">'&gt;'</span>, Carbon::today()-&gt;subWeek());</span><br><span class="line">            &#125;])</span><br><span class="line">            -&gt;get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Validation"><a href="#Validation" class="headerlink" title="Validation"></a>Validation</h3><p>Move validation from controllers to Request classes.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $request-&gt;validate([</span><br><span class="line">        <span class="string">'title'</span> =&gt; <span class="string">'required|unique:posts|max:255'</span>,</span><br><span class="line">        <span class="string">'body'</span> =&gt; <span class="string">'required'</span>,</span><br><span class="line">        <span class="string">'publish_at'</span> =&gt; <span class="string">'nullable|date'</span>,</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(PostRequest $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;    </span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostRequest</span> <span class="keyword">extends</span> <span class="title">Request</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rules</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">'title'</span> =&gt; <span class="string">'required|unique:posts|max:255'</span>,</span><br><span class="line">            <span class="string">'body'</span> =&gt; <span class="string">'required'</span>,</span><br><span class="line">            <span class="string">'publish_at'</span> =&gt; <span class="string">'nullable|date'</span>,</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Business-logic-should-be-in-service-class"><a href="#Business-logic-should-be-in-service-class" class="headerlink" title="Business logic should be in service class"></a>Business logic should be in service class</h3><p>A controller must have only one responsibility, so move business logic from controllers to service classes.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($request-&gt;hasFile(<span class="string">'image'</span>)) &#123;</span><br><span class="line">        $request-&gt;file(<span class="string">'image'</span>)-&gt;move(public_path(<span class="string">'images'</span>) . <span class="string">'temp'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;articleService-&gt;handleUploadedImage($request-&gt;file(<span class="string">'image'</span>));</span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleService</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handleUploadedImage</span><span class="params">($image)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!is_null($image)) &#123;</span><br><span class="line">            $image-&gt;move(public_path(<span class="string">'images'</span>) . <span class="string">'temp'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Don’t-repeat-yourself-DRY"><a href="#Don’t-repeat-yourself-DRY" class="headerlink" title="Don’t repeat yourself (DRY)"></a>Don’t repeat yourself (DRY)</h3><p>Reuse code when you can. SRP is helping you to avoid duplication. Also, reuse Blade templates, use Eloquent scopes etc.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getActive</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;where(<span class="string">'verified'</span>, <span class="number">1</span>)-&gt;whereNotNull(<span class="string">'deleted_at'</span>)-&gt;get();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getArticles</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;whereHas(<span class="string">'user'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($q)</span> </span>&#123;</span><br><span class="line">            $q-&gt;where(<span class="string">'verified'</span>, <span class="number">1</span>)-&gt;whereNotNull(<span class="string">'deleted_at'</span>);</span><br><span class="line">        &#125;)-&gt;get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">scopeActive</span><span class="params">($q)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $q-&gt;where(<span class="string">'verified'</span>, <span class="number">1</span>)-&gt;whereNotNull(<span class="string">'deleted_at'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getActive</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;active()-&gt;get();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getArticles</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;whereHas(<span class="string">'user'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($q)</span> </span>&#123;</span><br><span class="line">            $q-&gt;active();</span><br><span class="line">        &#125;)-&gt;get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Prefer-to-use-Eloquent-over-using-Query-Builder-and-raw-SQL-queries-Prefer-collections-over-arrays"><a href="#Prefer-to-use-Eloquent-over-using-Query-Builder-and-raw-SQL-queries-Prefer-collections-over-arrays" class="headerlink" title="Prefer to use Eloquent over using Query Builder and raw SQL queries. Prefer collections over arrays"></a>Prefer to use Eloquent over using Query Builder and raw SQL queries. Prefer collections over arrays</h3><p>Eloquent allows you to write readable and maintainable code. Also, Eloquent has great built-in tools like soft deletes, events, scopes etc.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM `articles`</span><br><span class="line">WHERE EXISTS (SELECT *</span><br><span class="line">              FROM `users`</span><br><span class="line">              WHERE `articles`.`user_id` = `users`.`id`</span><br><span class="line">              <span class="keyword">AND</span> EXISTS (SELECT *</span><br><span class="line">                          FROM `profiles`</span><br><span class="line">                          WHERE `profiles`.`user_id` = `users`.`id`) </span><br><span class="line">              <span class="keyword">AND</span> `users`.`deleted_at` IS <span class="keyword">NULL</span>)</span><br><span class="line"><span class="keyword">AND</span> `verified` = <span class="string">'1'</span></span><br><span class="line"><span class="keyword">AND</span> `active` = <span class="string">'1'</span></span><br><span class="line">ORDER BY `created_at` DESC</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Article::has(<span class="string">'user.profile'</span>)-&gt;verified()-&gt;latest()-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="Mass-assignment"><a href="#Mass-assignment" class="headerlink" title="Mass assignment"></a>Mass assignment</h3><p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$article = <span class="keyword">new</span> Article;</span><br><span class="line">$article-&gt;title = $request-&gt;title;</span><br><span class="line">$article-&gt;content = $request-&gt;content;</span><br><span class="line">$article-&gt;verified = $request-&gt;verified;</span><br><span class="line"><span class="comment">// Add category to article</span></span><br><span class="line">$article-&gt;category_id = $category-&gt;id;</span><br><span class="line">$article-&gt;save();</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$category-&gt;article()-&gt;create($request-&gt;all());</span><br></pre></td></tr></table></figure></p>
+<h3 id="Do-not-execute-queries-in-Blade-templates-and-use-eager-loading-N-1-problem"><a href="#Do-not-execute-queries-in-Blade-templates-and-use-eager-loading-N-1-problem" class="headerlink" title="Do not execute queries in Blade templates and use eager loading (N + 1 problem)"></a>Do not execute queries in Blade templates and use eager loading (N + 1 problem)</h3><p>Bad (for 100 users, 101 DB queries will be executed):<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">foreach</span> (User::all() <span class="keyword">as</span> $user)</span><br><span class="line">    &#123;&#123; $user-&gt;profile-&gt;name &#125;&#125;</span><br><span class="line">@<span class="keyword">endforeach</span></span><br></pre></td></tr></table></figure></p>
+<p>Good (for 100 users, 2 DB queries will be executed):<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$users = User::with(<span class="string">'profile'</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">@<span class="keyword">foreach</span> ($users <span class="keyword">as</span> $user)</span><br><span class="line">    &#123;&#123; $user-&gt;profile-&gt;name &#125;&#125;</span><br><span class="line">@<span class="keyword">endforeach</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Comment-your-code-but-prefer-descriptive-method-and-variable-names-over-comments"><a href="#Comment-your-code-but-prefer-descriptive-method-and-variable-names-over-comments" class="headerlink" title="Comment your code, but prefer descriptive method and variable names over comments"></a>Comment your code, but prefer descriptive method and variable names over comments</h3><p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (count((<span class="keyword">array</span>) $builder-&gt;getQuery()-&gt;joins) &gt; <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Better:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Determine if there are any joins.</span></span><br><span class="line"><span class="keyword">if</span> (count((<span class="keyword">array</span>) $builder-&gt;getQuery()-&gt;joins) &gt; <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;hasJoins())</span><br></pre></td></tr></table></figure></p>
+<h3 id="Do-not-put-JS-and-CSS-in-Blade-templates-and-do-not-put-any-HTML-in-PHP-classes"><a href="#Do-not-put-JS-and-CSS-in-Blade-templates-and-do-not-put-any-HTML-in-PHP-classes" class="headerlink" title="Do not put JS and CSS in Blade templates and do not put any HTML in PHP classes"></a>Do not put JS and CSS in Blade templates and do not put any HTML in PHP classes</h3><p>Bad:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> article = <span class="string">`&#123;&#123; json_encode($article) &#125;&#125;`</span>;</span><br></pre></td></tr></table></figure></p>
+<p>Better:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"article"</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">value</span>=<span class="string">"&#123;&#123; json_encode($article) &#125;&#125;"</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Or<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"js-fav-article"</span> <span class="attr">data-article</span>=<span class="string">"&#123;&#123; json_encode($article) &#125;&#125;"</span>&gt;</span>&#123;&#123; $article-&gt;name &#125;&#125;<span class="tag">&lt;<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>In a Javascript file:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> article = $(<span class="string">'#article'</span>).val();</span><br><span class="line">The best way is to use specialized PHP to JS package to transfer the data.</span><br></pre></td></tr></table></figure></p>
+<h3 id="Use-config-and-language-files-constants-instead-of-text-in-the-code"><a href="#Use-config-and-language-files-constants-instead-of-text-in-the-code" class="headerlink" title="Use config and language files, constants instead of text in the code"></a>Use config and language files, constants instead of text in the code</h3><p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isNormal</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $article-&gt;type === <span class="string">'normal'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> back()-&gt;with(<span class="string">'message'</span>, <span class="string">'Your article has been added!'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isNormal</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $article-&gt;type === Article::TYPE_NORMAL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> back()-&gt;with(<span class="string">'message'</span>, __(<span class="string">'app.article_added'</span>));</span><br></pre></td></tr></table></figure></p>
+<h3 id="Use-shorter-and-more-readable-syntax-where-possible"><a href="#Use-shorter-and-more-readable-syntax-where-possible" class="headerlink" title="Use shorter and more readable syntax where possible"></a>Use shorter and more readable syntax where possible</h3><p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$request-&gt;session()-&gt;get(<span class="string">'cart'</span>);</span><br><span class="line">$request-&gt;input(<span class="string">'name'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">session(<span class="string">'cart'</span>);</span><br><span class="line">$request-&gt;name;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Use-IoC-container-or-facades-instead-of-new-Class"><a href="#Use-IoC-container-or-facades-instead-of-new-Class" class="headerlink" title="Use IoC container or facades instead of new Class"></a>Use IoC container or facades instead of new Class</h3><p>new Class syntax creates tight coupling between classes and complicates testing. Use IoC container or facades instead.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$user = <span class="keyword">new</span> User;</span><br><span class="line">$user-&gt;create($request-&gt;all());</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(User $user)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;user = $user;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">$this</span>-&gt;user-&gt;create($request-&gt;all());</span><br></pre></td></tr></table></figure></p>
+<h3 id="Do-not-get-data-from-the-env-file-directly"><a href="#Do-not-get-data-from-the-env-file-directly" class="headerlink" title="Do not get data from the .env file directly"></a>Do not get data from the .env file directly</h3><p>Pass the data to config files instead and then use the config() helper function to use the data in an application.</p>
+<p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$apiKey = env(<span class="string">'API_KEY'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// config/api.php</span></span><br><span class="line"><span class="string">'key'</span> =&gt; env(<span class="string">'API_KEY'</span>),</span><br><span class="line"></span><br><span class="line"><span class="comment">// Use the data</span></span><br><span class="line">$apiKey = config(<span class="string">'api.key'</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Store-dates-in-the-standard-format-Use-accessors-and-mutators-to-modify-date-format"><a href="#Store-dates-in-the-standard-format-Use-accessors-and-mutators-to-modify-date-format" class="headerlink" title="Store dates in the standard format. Use accessors and mutators to modify date format"></a>Store dates in the standard format. Use accessors and mutators to modify date format</h3><p>Bad:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; Carbon::createFromFormat(<span class="string">'Y-d-m H-i'</span>, $object-&gt;ordered_at)-&gt;toDateString() &#125;&#125;</span><br><span class="line">&#123;&#123; Carbon::createFromFormat(<span class="string">'Y-d-m H-i'</span>, $object-&gt;ordered_at)-&gt;format(<span class="string">'m-d'</span>) &#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Good:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Model</span></span><br><span class="line"><span class="keyword">protected</span> $dates = [<span class="string">'ordered_at'</span>, <span class="string">'created_at'</span>, <span class="string">'updated_at'</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getMonthDayAttribute</span><span class="params">($date)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $date-&gt;format(<span class="string">'m-d'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// View</span></span><br><span class="line">&#123;&#123; $object-&gt;ordered_at-&gt;toDateString() &#125;&#125;</span><br><span class="line">&#123;&#123; $object-&gt;ordered_at-&gt;monthDay &#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Other-good-practices"><a href="#Other-good-practices" class="headerlink" title="Other good practices"></a>Other good practices</h3><p>Never put any logic in routes files.</p>
+<p>Minimize usage of vanilla PHP in Blade templates.</p>
+<blockquote>
+<p><a href="https://github.com/alexeymezenin/laravel-best-practices" target="_blank" rel="noopener">https://github.com/alexeymezenin/laravel-best-practices</a><br><a href="https://laravel-china.org/articles/12762/eighteen-best-practices-of-laravel" target="_blank" rel="noopener">https://laravel-china.org/articles/12762/eighteen-best-practices-of-laravel</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>请我喝一个苹果味的美年达吧，谢谢！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="lnmput@gmail.com WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="lnmput@gmail.com Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/laravel/" rel="tag">#Laravel</a>
+          
+            <a href="/tags/翻译/" rel="tag">#翻译</a>
+          
+            <a href="/tags/translate/" rel="tag">#translate</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/02/laravel中使用多个数据库操作数据/" rel="next" title="Laravel中使用多个数据库操作数据">
+                <i class="fa fa-chevron-left"></i> Laravel中使用多个数据库操作数据
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/04/nginx使用lua-redis限制ip的访问频率/" rel="prev" title="Nginx使用Lua+Redis限制IP的访问频率">
+                Nginx使用Lua+Redis限制IP的访问频率 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
+          <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lnmput" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.laruence.com/" title="风雪之隅" target="_blank">风雪之隅</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tech.youzan.com/" title="有赞技术团队" target="_blank">有赞技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tech.meituan.com/archives" title="美团点评技术团队" target="_blank">美团点评技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="點燈坊" target="_blank">點燈坊</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.turn.tw/" title="轉個彎日誌" target="_blank">轉個彎日誌</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Single-responsibility-principle"><span class="nav-number">1.</span> <span class="nav-text">Single responsibility principle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fat-models-skinny-controllers"><span class="nav-number">2.</span> <span class="nav-text">Fat models, skinny controllers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Validation"><span class="nav-number">3.</span> <span class="nav-text">Validation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Business-logic-should-be-in-service-class"><span class="nav-number">4.</span> <span class="nav-text">Business logic should be in service class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Don’t-repeat-yourself-DRY"><span class="nav-number">5.</span> <span class="nav-text">Don’t repeat yourself (DRY)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prefer-to-use-Eloquent-over-using-Query-Builder-and-raw-SQL-queries-Prefer-collections-over-arrays"><span class="nav-number">6.</span> <span class="nav-text">Prefer to use Eloquent over using Query Builder and raw SQL queries. Prefer collections over arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mass-assignment"><span class="nav-number">7.</span> <span class="nav-text">Mass assignment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Do-not-execute-queries-in-Blade-templates-and-use-eager-loading-N-1-problem"><span class="nav-number">8.</span> <span class="nav-text">Do not execute queries in Blade templates and use eager loading (N + 1 problem)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comment-your-code-but-prefer-descriptive-method-and-variable-names-over-comments"><span class="nav-number">9.</span> <span class="nav-text">Comment your code, but prefer descriptive method and variable names over comments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Do-not-put-JS-and-CSS-in-Blade-templates-and-do-not-put-any-HTML-in-PHP-classes"><span class="nav-number">10.</span> <span class="nav-text">Do not put JS and CSS in Blade templates and do not put any HTML in PHP classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-config-and-language-files-constants-instead-of-text-in-the-code"><span class="nav-number">11.</span> <span class="nav-text">Use config and language files, constants instead of text in the code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-shorter-and-more-readable-syntax-where-possible"><span class="nav-number">12.</span> <span class="nav-text">Use shorter and more readable syntax where possible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-IoC-container-or-facades-instead-of-new-Class"><span class="nav-number">13.</span> <span class="nav-text">Use IoC container or facades instead of new Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Do-not-get-data-from-the-env-file-directly"><span class="nav-number">14.</span> <span class="nav-text">Do not get data from the .env file directly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Store-dates-in-the-standard-format-Use-accessors-and-mutators-to-modify-date-format"><span class="nav-number">15.</span> <span class="nav-text">Store dates in the standard format. Use accessors and mutators to modify date format</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Other-good-practices"><span class="nav-number">16.</span> <span class="nav-text">Other good practices</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lnmput@gmail.com</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

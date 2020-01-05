@@ -1,0 +1,970 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:url" content="https://swoole.app/page/49/index.html">
+<meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:description" content="一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta name="twitter:description" content="一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 杨子鳄鱼 ● 外贸电商从业者 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+    <a target="_blank" href="https://github.com/lnmput"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">杨子鳄鱼 ● 外贸电商从业者</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br>
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-translate">
+          <a href="/tags/translate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br>
+            
+            翻译
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            简历
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-thumbs-up"></i> <br>
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/11/PHP-MySQL持久连接-mysql-pconnect/" itemprop="url">
+                  PHP-MySQL持久连接-mysql_pconnect
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-11T11:12:05+08:00" content="2017-06-11">
+              2017-06-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>别人说你变了，是因为你没有按照他的想法活罢了。。。<br></blockquote><br>先来一段 PHP 连接 MySQL 的经典代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$con = mysql_connect(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Could not connect: "</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// some code</span></span><br><span class="line">mysql_close($con);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="mysql-pconnect"><a href="#mysql-pconnect" class="headerlink" title="mysql_pconnect"></a>mysql_pconnect</h3><p>首先，当连接的时候本函数将先尝试寻找一个在同一个主机上用同样的用户名和密码已经打开的（持久）连接，如果找到，则返回此连接标识而不打开新连接。</p>
+<p>其次，当脚本执行完毕后到 SQL 服务器的连接不会被关闭，此连接将保持打开以备以后使用（mysql_close() 不会关闭由 mysql_pconnect() 建立的连接）。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// pconnect.php</span></span><br><span class="line">$con = mysql_pconnect(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="comment">// connect.php</span></span><br><span class="line"><span class="comment">// $con = mysql_connect("localhost","root","123456");</span></span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">  <span class="keyword">die</span>(<span class="string">'Could not connect: '</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line">sleep(<span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
+<p>注意，此种连接仅能用于模块版本的 PHP。(我用的是 Nginx+PHP-FPM 模式，而非 Apache+php_module 模式。 )</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/11/PHP魔术函数之-sleep和-wakeup/" itemprop="url">
+                  PHP魔术函数之__sleep和__wakeup
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-11T10:25:53+08:00" content="2017-06-11">
+              2017-06-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>最重要的东西,用眼睛是看不见的。<br></blockquote><br>在PHP5中有两个魔术方法<strong>sleep()方法和</strong>wakeup()方法，在对象串行化的时候，会调用一个<strong>sleep()方法来完成一 些睡前的事情；而在重新醒来，即由二进制串重新组成一个对象的时候，则会自动调用PHP的另一个函数</strong>wakeup()，做一些对象醒来就要做的动作。</p>
+<p><strong>sleep()函数不接受任何参数， 但返回一个数组，其中包含需要串行化的属性。末被包含的属性将在串行化时被忽略，如果没有</strong>sleep()方法，PHP将保存所有属性。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">//下面是人的成员属性</span></span><br><span class="line">    <span class="keyword">var</span> $name;  <span class="comment">//人的名子</span></span><br><span class="line">    <span class="keyword">var</span> $sex;   <span class="comment">//人的性别</span></span><br><span class="line">    <span class="keyword">var</span> $age;   <span class="comment">//人的年龄</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义一个构造方法参数为属性姓名$name、性别$sex和年龄$age进行赋值</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name = <span class="string">""</span>, $sex = <span class="string">""</span>, $age = <span class="string">""</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;sex = $sex;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;age = $age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//这个人可以说话的方法, 说出自己的属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">say</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"我的名子叫："</span> . <span class="keyword">$this</span>-&gt;name . <span class="string">" 性别："</span> . <span class="keyword">$this</span>-&gt;sex . <span class="string">" 我的年龄是："</span> . <span class="keyword">$this</span>-&gt;age . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__sleep</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Implement __sleep() method.</span></span><br><span class="line">        $arr = <span class="keyword">array</span>(<span class="string">"name"</span>, <span class="string">"age"</span>); <span class="comment">// 此时，属性$sex将被删除！！！</span></span><br><span class="line">        <span class="keyword">return</span> $arr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Implement __wakeup() method.</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;age = <span class="number">40</span>;  <span class="comment">//重新生成对象时，并重新赋值$age为40</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$p1 = <span class="keyword">new</span> Person(<span class="string">"张三"</span>, <span class="string">"男"</span>, <span class="number">20</span>);</span><br><span class="line">$p1_string = serialize($p1);    <span class="comment">//把一个对象串行化，返一个字符串</span></span><br><span class="line"><span class="keyword">echo</span> $p1_string . <span class="string">"&lt;br&gt;"</span>;     <span class="comment">//串行化的字符串我们通常不去解析</span></span><br><span class="line">$p2 = unserialize($p1_string);  <span class="comment">//把一个串行化的字符串反串行化形成对象$p2</span></span><br><span class="line">$p2-&gt;say();</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/11/php中json-encode和serialize对比/" itemprop="url">
+                  php中json_encode和serialize对比
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-11T09:55:24+08:00" content="2017-06-11">
+              2017-06-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>如果毫不费力，你就是在浪费时间<br></blockquote>
+
+<h3 id="json-encode"><a href="#json-encode" class="headerlink" title="json_encode"></a>json_encode</h3><p>PHP Version &gt;= 5.0.0<br>Nesting Limit of 20.<br>PHP Version &gt;= 5.2.3<br>Nesting Limit of 128.<br>PHP Version &gt;= 5.3.0<br>Nesting Limit of 512.<br>Small footprint vs PHP’s serialize’d string.<br>serialize() &amp; unserialize()</p>
+<h3 id="serialize"><a href="#serialize" class="headerlink" title="serialize"></a>serialize</h3><p>PHP Version &gt;= 4.0.0<br>You’re storing objects that need to be unserialized as the correct class(反序列化的对象依然可以被正常调用)</p>
+<h3 id="Serialization-of-‘Closure’-is-not-allowed"><a href="#Serialization-of-‘Closure’-is-not-allowed" class="headerlink" title="Serialization of ‘Closure’ is not allowed"></a>Serialization of ‘Closure’ is not allowed</h3><p>Apparently anonymous functions cannot be serialized.(匿名函数不能被序列化)</p>
+<p>Example<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$function = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"ABC"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">serialize($function); <span class="comment">// would throw error</span></span><br></pre></td></tr></table></figure></p>
+<p>You can try this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">emailCallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'ZendMail_'</span> . microtime(<span class="keyword">true</span>) . <span class="string">'.tmp'</span>;</span><br><span class="line">&#125;</span><br><span class="line">$callback = <span class="string">"emailCallback"</span> ;</span><br><span class="line"></span><br><span class="line">serialize($callback); <span class="comment">// success</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/08/WebWorker通信/" itemprop="url">
+                  WebWorker通信
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-08T09:37:06+08:00" content="2017-06-08">
+              2017-06-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>生活就是这样，<br>在你最糟的时候，会遇到最好的人。<br></blockquote>
+
+<h3 id="Web-Worker是什么"><a href="#Web-Worker是什么" class="headerlink" title="Web Worker是什么"></a>Web Worker是什么</h3><p>Web Worker 是HTML5标准的一部分，这一规范定义了一套 API，它允许一段JavaScript程序运行在主线程之外的另外一个线程中。Web Worker 规范中定义了两类工作线程，分别是专用线程Dedicated Worker和共享线程 Shared Worker，其中，Dedicated Worker只能为一个页面所使用，而Shared Worker则可以被多个页面所共享，本文示例为专用线程Dedicated Worker。<br>web worker 是运行在后台的 JavaScript，不会影响页面的性能。</p>
+<h3 id="例子一-简单通信"><a href="#例子一-简单通信" class="headerlink" title="例子一: 简单通信"></a>例子一: 简单通信</h3><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/socket.io/1.7.2/socket.io.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">"task.js"</span>);</span></span><br><span class="line">worker.postMessage(</span><br><span class="line">        &#123;</span><br><span class="line">id:1,</span><br><span class="line"><span class="javascript">msg:<span class="string">'Hello World'</span></span></span><br><span class="line">&#125;</span><br><span class="line">    );</span><br><span class="line"><span class="javascript">worker.onmessage=<span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data = message.data;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(data));</span></span><br><span class="line">worker.terminate();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="javascript">worker.onerror=<span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(error.filename,error.lineno,error.message);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>task.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">onmessage= <span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span><br><span class="line"><span class="keyword">var</span> data=message.data;</span><br><span class="line">data.msg = <span class="string">'Hi from task.js'</span>;</span><br><span class="line">postMessage(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="例子二-计数功能"><a href="#例子二-计数功能" class="headerlink" title="例子二: 计数功能"></a>例子二: 计数功能</h3><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">"task.js"</span>);</span></span><br><span class="line"><span class="javascript">worker.onmessage=<span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data = message.data;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(data));</span></span><br><span class="line"><span class="javascript"><span class="comment">//终止woker</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">//worker.terminate();</span></span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="javascript">worker.onerror=<span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(error.filename,error.lineno,error.message);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>task.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedCount</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">i=i+<span class="number">1</span>;</span><br><span class="line">postMessage(i);</span><br><span class="line">setTimeout(<span class="string">"timedCount()"</span>,<span class="number">500</span>);</span><br><span class="line">&#125;</span><br><span class="line">timedCount();</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/31/增广贤文/" itemprop="url">
+                  增广贤文
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-31T14:19:59+08:00" content="2017-05-31">
+              2017-05-31
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>迷茫…<br></blockquote><br>人情似纸张张薄，世事如棋局局新。贫居闹市无人问，富在深山有远亲。不信但看宴中酒，杯杯先敬富贵人。门前拴上高头马，不是亲来也是亲。门前放根讨饭棍，亲戚故友不上门。世人结交需黄金，黄金不多交不深，纵令然诺暂相许，终是悠悠路行心。有钱有酒多兄弟，急难何曾见一人。酒肉朋友朝朝有，无钱无势亲不亲。相逢好比初相识，到老终无怨恨心。胜者为王败者寇，只重衣冠不重人。三贫三富不到老，十年兴败多少人。在官三日人问我，离官三日我问人。古人不见今时月，今月曾经照古人。近水楼台先得月，向阳花木易为春。谁人背后无人说，那个人前不说人。百炼化身成铁汉，三缄其口学金人。十分伶俐使七分，常留三分与儿孙。如若十分都使尽，远在儿孙近在身。长江后浪推前浪，世上新人赶旧人。君子乐得做君子，小人枉自做小人。山中自有千年树，世上难逢百岁人。岂无远道思亲泪，不及高堂念子心。堂上二老是活佛，何用灵山朝世尊。平生不作皱眉事，世上应无切齿人。越奸越狡越贫穷，奸狡原来天不容。富贵若从奸狡起，世间呆汉喝西风。求人须求大丈夫，济人须济急时无。茫茫四海人无数，那个男儿是丈夫。人情似水分高下，世事如云任卷舒。入山不怕伤人虎，只怕人情两面刀。无求到处人情好，不饮随它酒价高。知事少时烦恼少，识人多处是非多。秋至满山皆秀色，春来无处不花香。贫无达士将金赠，病有高人说药方。美人卖笑千金易，壮士穷途一饭难。少时总觉为人易，华年方知立业难。用心计较般般错，退步思量事事难。世上闲愁千万斛，不教一点上眉端。毁身每是作恶日，成名皆在行善时。莫把真心空计较，唯有大德享万年。谗言败坏真君子，美色消磨狂少年。神仙难断阴骘命，皇天不昧苦心人。人恶人怕天不怕，人善人欺天不欺。善恶到头终有报，只争来早与来迟。平生不做亏心事，半夜敲门心不惊。万事劝人休瞒昧，举头三尺有神明。鬼神可敬不可谄，怨家宜解不宜结。人生何处不相逢，莫因小怨动声色。好义固为人所钦，贪利乃为鬼所笑。贤者不炫己之长，君子不夺人所好。善业可为须着力，是非闲杂莫劳心。良田不由心田置，产业变为冤业折。千年田地八百主，田是主人人是客。阴地不如心地好，命运在人不在天。有理问得君王倒，有钱难买子孙贤。不求金玉重重贵，但愿儿孙个个贤。枯木逢春犹再岁，人无两度再少年。水暖水寒鱼自知，花开花谢春不管。蜗牛角上校雌雄，石火光中争长短。留心学到古人难，立脚怕随流欲转。少而寡欲颜常好，老不求官梦也闲。妙药难医冤孽病，横财不富命穷人。多情自古空遗恨，好梦由来最易醒。命中只有八合米，走尽天下难满升。知恩报恩天下少，反面无情世间多。荣宠旁边辱等待，贫贱背后福跟随。各人生死各人了，管人闲事受人磨。易涨易退山溪水，易反易覆小人心。红粉佳人休说老，风流浪子莫叫贫。龙游浅水遭虾戏，虎落平阳被犬欺。得食猫儿强似虎，褪毛鸾凤不如鸡。为人莫作千年计，三十河东四十西。当路莫栽荆棘树，它年免挂子孙衣。天上众星皆拱北，世间无水不朝东。笋因落箨方成竹，鱼为奔波始化龙。屋漏偏遭连夜雨，船慢又遇顶头风。记得少年骑竹马，看看又是白头翁。美人绝色原妖物，乱世多财是祸根。畜牲易度人难度，宁度畜牲不度人。天作棋盘星作子，水有源头木有根。昨日花开今日谢，百年人有万年心。北邙荒冢无贫富，玉垒浮云变古今。世事茫茫难自料，清风明月冷看人。守口不谈新旧事，知心难得两三人。欲知世情须尝胆，会尽人情暗点头。是非只为多开口，烦恼皆因强出头。人生七十古来稀，问君还有几春秋。莺花犹怕春光老，岂可教人枉度春。一年之计在于春，一日之计在于晨。一家之计在于和，一生之计在于勤。一朝天子一朝臣，一辈新鲜一辈陈。一苗露水一苗草，一层山水一层人。闷坐书馆闲操心，看来全是论古今。书中有真就有假，世人认假不认真。假作真时真亦假，真作假时假也真。真真假假难分解，假者自假真自真。回忆世情般般假，借假修真破迷津。由来富贵三更梦，何必楚楚苦用心。识透人情惊破胆，看穿世间心胆寒。白璧易埋千古恨，黄金难买一身闲。人生究竟归何处，看破放下随万缘。佛法浩瀚广无边，度尽人间苦和难。开启自性真智慧，笑游清秀山水间。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/48/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><span class="page-number current">49</span><a class="page-number" href="/page/50/">50</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/50/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
+          <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lnmput" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.laruence.com/" title="风雪之隅" target="_blank">风雪之隅</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tech.youzan.com/" title="有赞技术团队" target="_blank">有赞技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tech.meituan.com/archives" title="美团点评技术团队" target="_blank">美团点评技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="點燈坊" target="_blank">點燈坊</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.turn.tw/" title="轉個彎日誌" target="_blank">轉個彎日誌</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lnmput@gmail.com</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

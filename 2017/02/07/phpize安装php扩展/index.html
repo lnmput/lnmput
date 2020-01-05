@@ -1,0 +1,656 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="PHP,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="这十年来做过的事，能令你无悔骄傲吗？那时候你所相信的事，应该没动摇吧？如果要安装的扩展在php源码ext目录中没有，那么这个扩展需要到http://pecl.php.net 搜索下载 以安装libevent扩展为例（假设系统安装了libevent-dev库） 1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）123456789~# wget http://pecl.php.net">
+<meta name="keywords" content="PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="phpize安装php扩展">
+<meta property="og:url" content="https://swoole.app/2017/02/07/phpize安装php扩展/index.html">
+<meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:description" content="这十年来做过的事，能令你无悔骄傲吗？那时候你所相信的事，应该没动摇吧？如果要安装的扩展在php源码ext目录中没有，那么这个扩展需要到http://pecl.php.net 搜索下载 以安装libevent扩展为例（假设系统安装了libevent-dev库） 1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）123456789~# wget http://pecl.php.net">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T13:28:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="phpize安装php扩展">
+<meta name="twitter:description" content="这十年来做过的事，能令你无悔骄傲吗？那时候你所相信的事，应该没动摇吧？如果要安装的扩展在php源码ext目录中没有，那么这个扩展需要到http://pecl.php.net 搜索下载 以安装libevent扩展为例（假设系统安装了libevent-dev库） 1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）123456789~# wget http://pecl.php.net">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> phpize安装php扩展 | 杨子鳄鱼 ● 外贸电商从业者 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a target="_blank" href="https://github.com/lnmput"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">杨子鳄鱼 ● 外贸电商从业者</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br>
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-translate">
+          <a href="/tags/translate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br>
+            
+            翻译
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            简历
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-thumbs-up"></i> <br>
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                phpize安装php扩展
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-07T14:30:32+08:00" content="2017-02-07">
+              2017-02-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center"><br>这十年来做过的事，能令你无悔骄傲吗？<br>那时候你所相信的事，应该没动摇吧？<br></blockquote><br>如果要安装的扩展在php源码ext目录中没有，那么这个扩展需要到<a href="http://pecl.php.net" target="_blank" rel="noopener">http://pecl.php.net</a> 搜索下载</p>
+<p>以安装libevent扩展为例（假设系统安装了libevent-dev库）</p>
+<h3 id="1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"><a href="#1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）" class="headerlink" title="1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"></a>1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># wget http://pecl.php.net/get/libevent-0.1.0.tgz</span></span><br><span class="line">-<span class="number">-2015</span><span class="number">-05</span><span class="number">-26</span> <span class="number">21</span>:<span class="number">43</span>:<span class="number">40</span>--  http:<span class="comment">//pecl.php.net/get/libevent-0.1.0.tgz</span></span><br><span class="line">Resolving pecl.php.net... <span class="number">104.236</span><span class="number">.228</span><span class="number">.160</span></span><br><span class="line">Connecting to pecl.php.net|<span class="number">104.236</span><span class="number">.228</span><span class="number">.160</span>|:<span class="number">80.</span>.. connected.</span><br><span class="line">HTTP request sent, awaiting response... <span class="number">200</span> OK</span><br><span class="line">Length: <span class="number">9806</span> (<span class="number">9.6</span>K) [application/octet-stream]</span><br><span class="line">Saving to: “libevent<span class="number">-0.1</span><span class="number">.0</span>.tgz”</span><br><span class="line"></span><br><span class="line"><span class="number">100</span>%[=======================================================&gt;] <span class="number">9</span>,<span class="number">806</span>       <span class="number">41.4</span>K/s   in <span class="number">0.2</span>s</span><br></pre></td></tr></table></figure>
+<h3 id="2、解压扩展文件压缩包"><a href="#2、解压扩展文件压缩包" class="headerlink" title="2、解压扩展文件压缩包"></a>2、解压扩展文件压缩包</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># tar -zxvf libevent-0.1.0.tgz</span></span><br><span class="line">package.xml</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/config.m4</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/CREDITS</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/libevent.c</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<h3 id="3、进入到源码目录"><a href="#3、进入到源码目录" class="headerlink" title="3、进入到源码目录"></a>3、进入到源码目录</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># cd libevent-0.1.0/</span></span><br></pre></td></tr></table></figure>
+<h3 id="4、运行phpize命令"><a href="#4、运行phpize命令" class="headerlink" title="4、运行phpize命令"></a>4、运行phpize命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># phpize</span></span><br><span class="line">Configuring <span class="keyword">for</span>:</span><br><span class="line">PHP Api Version:         <span class="number">20090626</span></span><br><span class="line">Zend Module Api No:      <span class="number">20090626</span></span><br><span class="line">Zend Extension Api No:   <span class="number">220090626</span></span><br></pre></td></tr></table></figure>
+<h3 id="5、运行configure命令"><a href="#5、运行configure命令" class="headerlink" title="5、运行configure命令"></a>5、运行configure命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># ./configure</span></span><br><span class="line">checking <span class="keyword">for</span> grep that handles long lines <span class="keyword">and</span> -e... /bin/grep</span><br><span class="line">checking <span class="keyword">for</span> egrep... /bin/grep -E</span><br><span class="line">checking <span class="keyword">for</span> a sed that does not truncate output... /bin/sed</span><br><span class="line">checking <span class="keyword">for</span> cc... cc</span><br><span class="line">checking whether the C compiler works... yes</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="6、运行make命令"><a href="#6、运行make命令" class="headerlink" title="6、运行make命令"></a>6、运行make命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># /bin/bash /data/test/libevent-0.1.0/libtool --mode=compile cc  -I. -I/data/test/libevent-0.1.0 -DPHP_ATOM_INC -I/data/test/libevent-0.1.0/include</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="7、运行make-install命令"><a href="#7、运行make-install命令" class="headerlink" title="7、运行make install命令"></a>7、运行make install命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># make install</span></span><br><span class="line">Installing shared extensions:     /usr/lib/php5/<span class="number">20090626</span>/</span><br></pre></td></tr></table></figure>
+<h3 id="8、配置ini文件"><a href="#8、配置ini文件" class="headerlink" title="8、配置ini文件"></a>8、配置ini文件</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过运行 php --ini查找php.ini文件位置，然后在文件中添加extension=libevent.so</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://doc3.workerman.net/appendices/install-extension.html" target="_blank" rel="noopener">http://doc3.workerman.net/appendices/install-extension.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>请我喝一个苹果味的美年达吧，谢谢！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="lnmput@gmail.com WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="lnmput@gmail.com Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag">#PHP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/07/关于php的PECL和PEAR/" rel="next" title="关于php的PECL和PEAR">
+                <i class="fa fa-chevron-left"></i> 关于php的PECL和PEAR
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/13/python截图/" rel="prev" title="python截图">
+                python截图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
+          <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lnmput" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.laruence.com/" title="风雪之隅" target="_blank">风雪之隅</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tech.youzan.com/" title="有赞技术团队" target="_blank">有赞技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tech.meituan.com/archives" title="美团点评技术团队" target="_blank">美团点评技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="點燈坊" target="_blank">點燈坊</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.turn.tw/" title="轉個彎日誌" target="_blank">轉個彎日誌</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"><span class="nav-number">1.</span> <span class="nav-text">1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、解压扩展文件压缩包"><span class="nav-number">2.</span> <span class="nav-text">2、解压扩展文件压缩包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、进入到源码目录"><span class="nav-number">3.</span> <span class="nav-text">3、进入到源码目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、运行phpize命令"><span class="nav-number">4.</span> <span class="nav-text">4、运行phpize命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、运行configure命令"><span class="nav-number">5.</span> <span class="nav-text">5、运行configure命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、运行make命令"><span class="nav-number">6.</span> <span class="nav-text">6、运行make命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、运行make-install命令"><span class="nav-number">7.</span> <span class="nav-text">7、运行make install命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、配置ini文件"><span class="nav-number">8.</span> <span class="nav-text">8、配置ini文件</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lnmput@gmail.com</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

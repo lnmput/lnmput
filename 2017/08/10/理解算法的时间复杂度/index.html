@@ -1,0 +1,669 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="算法,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="如果不曾遇见过你,我本可以忍受孤独. 关于大O符号我所能想到的大O符号最好的例子就是做算术。拿两个数字（123456和789012）举例。我们在学校里学到的基本算术操作是：加法；减法；乘法；除法。它们中每一个都是一次操作或一个问题。为它们(加法，减法，乘法，除法)求解的方法就被叫做算法（algorithm）。 加法加法是最简单的了。你把加数排成行，按列加上每个数字，把所加得的数的末位数字写到结果里">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解算法的时间复杂度">
+<meta property="og:url" content="https://swoole.app/2017/08/10/理解算法的时间复杂度/index.html">
+<meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:description" content="如果不曾遇见过你,我本可以忍受孤独. 关于大O符号我所能想到的大O符号最好的例子就是做算术。拿两个数字（123456和789012）举例。我们在学校里学到的基本算术操作是：加法；减法；乘法；除法。它们中每一个都是一次操作或一个问题。为它们(加法，减法，乘法，除法)求解的方法就被叫做算法（algorithm）。 加法加法是最简单的了。你把加数排成行，按列加上每个数字，把所加得的数的末位数字写到结果里">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T13:06:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解算法的时间复杂度">
+<meta name="twitter:description" content="如果不曾遇见过你,我本可以忍受孤独. 关于大O符号我所能想到的大O符号最好的例子就是做算术。拿两个数字（123456和789012）举例。我们在学校里学到的基本算术操作是：加法；减法；乘法；除法。它们中每一个都是一次操作或一个问题。为它们(加法，减法，乘法，除法)求解的方法就被叫做算法（algorithm）。 加法加法是最简单的了。你把加数排成行，按列加上每个数字，把所加得的数的末位数字写到结果里">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 理解算法的时间复杂度 | 杨子鳄鱼 ● 外贸电商从业者 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a target="_blank" href="https://github.com/lnmput"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">杨子鳄鱼 ● 外贸电商从业者</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br>
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-translate">
+          <a href="/tags/translate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br>
+            
+            翻译
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            简历
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-thumbs-up"></i> <br>
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                理解算法的时间复杂度
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-10T08:16:21+08:00" content="2017-08-10">
+              2017-08-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center"><br>如果不曾遇见过你,我本可以忍受孤独.<br></blockquote></p>
+<h3 id="关于大O符号"><a href="#关于大O符号" class="headerlink" title="关于大O符号"></a>关于大O符号</h3><p>我所能想到的大O符号最好的例子就是做算术。拿两个数字（123456和789012）举例。我们在学校里学到的基本算术操作是：<br>加法；<br>减法；<br>乘法；<br>除法。<br>它们中每一个都是一次操作或一个问题。为它们(加法，减法，乘法，除法)求解的方法就被叫做算法（algorithm）。</p>
+<h4 id="加法"><a href="#加法" class="headerlink" title="加法"></a>加法</h4><p>加法是最简单的了。你把加数排成行，按列加上每个数字，把所加得的数的末位数字写到结果里。所加得的数的十位及其以上的数字转入下一列的计算中。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   <span class="number">123456</span></span><br><span class="line"> +</span><br><span class="line">   <span class="number">789012</span></span><br><span class="line">------------</span><br><span class="line">   <span class="number">912468</span>   我们一共操作了<span class="number">6</span>次</span><br></pre></td></tr></table></figure></p>
+<p>让我们假设在算法中，加上这些数是计算开销最大的操作。合乎情理的说，为了把这两个数加起来我们必须要加6次数字（并且可能进位到第7次）。如果我们把两个100位数相加，我们必须做100次加法操作。如果我们把两个10,000位数相加，我们必须做10,000次加法操作。<br>6位数相加就必须要加6次数字（并且可能进位到第7次）—最坏的情况<br><code>复杂度</code>（complexity，就是操作的数量），对于加法中较大数的数字个数n，是直接成比例的。我们称这为O(n)或者线性复杂度（linear complexity）。</p>
+<h4 id="乘法"><a href="#乘法" class="headerlink" title="乘法"></a>乘法</h4><p>乘法就不同了。你把乘数排成行，取放在下面的乘数的第1个数字，把它逆序乘以上面乘数的每一个数字。下面乘数的其余数字也这样做。所以为了乘我们的两个6位数乘数，我们必须做36次乘法操作。我们还需要做10或11次列的加法操作来得到最终结果。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="number">23</span></span><br><span class="line">x</span><br><span class="line">  <span class="number">34</span></span><br><span class="line">-------</span><br><span class="line">   <span class="number">2</span></span><br><span class="line">  <span class="number">9</span></span><br><span class="line">  <span class="number">9</span></span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">782</span></span><br><span class="line"><span class="comment">// 4次 乘法操作， 3次加法操作</span></span><br></pre></td></tr></table></figure></p>
+<p>如果我们有两个100位数相乘，我们需要做10,000次乘法操作和200次加法操作。两个100万位数相乘，我们需要做1万亿(1012)次乘法操作和200万次加法操作。<br>作为n平方的算法衡量尺度，这就是O(n2)，即平方复杂度(quadratic complexity)。现在是时候介绍另一个重要概念了：</p>
+<p>我们只关心复杂度最重要的部分。</p>
+<p>敏锐的人可能已意识到，我们可以把操作次数表示为：n2 + 2n。但正如你所看到的，我们的两个100万位数相乘的例子，第二个 2n 无关紧要（在那个阶段，2n只占操作总量的0.0002%）。</p>
+<p>有人注意到我们在这里假设场景为最坏的情况。当我们做6位数乘法时，如果其中一个是4位数另一个是6位数，那么我们只需做24次乘法操作。然而，对于那个’n’，我们仍然计算最坏情况，即乘数都是6位数的情况。因此，大O符号是关于一个算法的最坏情况的。</p>
+<h3 id="电话簿"><a href="#电话簿" class="headerlink" title="电话簿"></a>电话簿</h3><p>我所能想到的下一个最棒的例子就是电话簿，通常叫做白页电话簿或者其它类似名字，因国而异。但我要谈论的是这种电话薄，这种电话薄把人按这样的顺序排列：姓、缩写或名、地址、然后是电话号码。</p>
+<p>现在，如果你要指示计算机在一个包含<code>1,000,000</code>个名字的电话簿中查找”John Smith”的电话号码，你会怎么做？忽略也许你能猜测出S从电话簿哪里开始的事实（假设你不能猜测），你会怎么做？</p>
+<p>一种典型的实现也许是，打开电话簿的正中间，取第500,000条记录，把它和”Smith”进行比较。如果这恰好就是”Smith,John”，那我们真幸运。然而，”John Smith”更有可能在其前面或后面。如果在后面，那么我们把电话簿后面一半从中间划分开，然后重复之前的过程；如果在前面，那么我们把第一半从中间划分开，然后重复之前的过程。以此类推。</p>
+<p>这种算法叫做<code>二分搜索(binary search)</code>。</p>
+<p>因此，如果你想要在包含100万名字的电话簿中查找一个名字，事实上，通过这种算法，最多20次，你能找到任何名字。在比较搜索算法中，我们决定把比较操作作为我们的’n’。</p>
+<p>对于有3个名字的电话簿，最多需2次比较。<br>对于有7个名字的电话簿，最多需3次比较。<br>对于有15个名字的电话簿，最多需4次比较。<br>…<br>对于有1,000,000个名字的电话簿，最多需20次比较。<br>这简直好得难以置信，不是吗？</p>
+<p>用大O术语就是O(log n)，即对数复杂度（logarithmic complexity）。现在问题中的对数可以是ln(底数为e)，log10，log2 或者以其它为底数，这无关紧要，它仍然是O(log n)，正如O(2n2) 和 O(100n2) 都记为 O(n2)。</p>
+<p>现在，值得花时间说明一下，对于算法，大O符号能够被用于决定3种情况：</p>
+<p>最好情况(Best Case)：在电话簿的搜索中，最好情况是我们比较了1次就找到了名字。这就是O(1)，即常数复杂度(constant complexity)；<br>期望情况(Expected Case)：正如上面讨论过的，复杂度是O(log n)；<br>最坏情况(Worst Case)：也是O(log n)。<br>通常我们不关心最好情况。我们对期望和最坏情况感兴趣。有时，期望情况更重要，有时最坏情况更重要。</p>
+<p>回到电话簿的例子上来。</p>
+<p>如果你有一个电话号码，想要查找名字，要怎么做呢？警察有一个相反（按电话号码排列）的电话簿，但是对于一般公众，这样的查询会被拒绝，是吧？技术上，你能在普通电话簿中查找一个号码。要怎么做呢？</p>
+<p>你从第一个名字开始比较号码。如果吻合，很棒，如果不吻合，你移到下一条记录。你必须这样做，因为电话簿是无序(unordered)的(电话号码的排列是无序的)。</p>
+<p>因此，查找一个名字：</p>
+<p>最好情况(Best Case)：O(1);<br>期望情况(Expected Case)：O(n)（对应500,000）;<br>最坏情况(Worst Case)：O(n)（对应1,000,000）。</p>
+<blockquote>
+<p><a href="http://blog.jobbole.com/55184/#article-comment" target="_blank" rel="noopener">http://blog.jobbole.com/55184/#article-comment</a><br><a href="https://stackoverflow.com/questions/487258/what-is-a-plain-english-explanation-of-big-o-notation/487278#487278" target="_blank" rel="noopener">https://stackoverflow.com/questions/487258/what-is-a-plain-english-explanation-of-big-o-notation/487278#487278</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>请我喝一个苹果味的美年达吧，谢谢！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="lnmput@gmail.com WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="lnmput@gmail.com Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/09/php中的时间/" rel="next" title="php中的时间">
+                <i class="fa fa-chevron-left"></i> php中的时间
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/11/转载PHP实现异步调用方法研究/" rel="prev" title="转载PHP实现异步调用方法研究">
+                转载PHP实现异步调用方法研究 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
+          <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lnmput" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.laruence.com/" title="风雪之隅" target="_blank">风雪之隅</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tech.youzan.com/" title="有赞技术团队" target="_blank">有赞技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tech.meituan.com/archives" title="美团点评技术团队" target="_blank">美团点评技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="點燈坊" target="_blank">點燈坊</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.turn.tw/" title="轉個彎日誌" target="_blank">轉個彎日誌</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于大O符号"><span class="nav-number">1.</span> <span class="nav-text">关于大O符号</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#加法"><span class="nav-number">1.1.</span> <span class="nav-text">加法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#乘法"><span class="nav-number">1.2.</span> <span class="nav-text">乘法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电话簿"><span class="nav-number">2.</span> <span class="nav-text">电话簿</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lnmput@gmail.com</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

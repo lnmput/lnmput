@@ -1,0 +1,666 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Select2,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="每个人都是他人生的主角，可是一旦沦为配角，就是他最伤心的时候。select2是一个可以给你定制支持搜索、标签、远程数据集，无限滚动，以及其他常用功能的一个下拉框美化插件。总之，功能很强大。 配置12&amp;lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css&quot; rel=&quot;stylesh">
+<meta name="keywords" content="Select2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强大的下拉框插件Select2">
+<meta property="og:url" content="https://swoole.app/2017/09/28/强大的下拉框插件Select2/index.html">
+<meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:description" content="每个人都是他人生的主角，可是一旦沦为配角，就是他最伤心的时候。select2是一个可以给你定制支持搜索、标签、远程数据集，无限滚动，以及其他常用功能的一个下拉框美化插件。总之，功能很强大。 配置12&amp;lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css&quot; rel=&quot;stylesh">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T13:04:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强大的下拉框插件Select2">
+<meta name="twitter:description" content="每个人都是他人生的主角，可是一旦沦为配角，就是他最伤心的时候。select2是一个可以给你定制支持搜索、标签、远程数据集，无限滚动，以及其他常用功能的一个下拉框美化插件。总之，功能很强大。 配置12&amp;lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css&quot; rel=&quot;stylesh">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 强大的下拉框插件Select2 | 杨子鳄鱼 ● 外贸电商从业者 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <a target="_blank" href="https://github.com/lnmput"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">杨子鳄鱼 ● 外贸电商从业者</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br>
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-translate">
+          <a href="/tags/translate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br>
+            
+            翻译
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            简历
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-thumbs-up"></i> <br>
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                强大的下拉框插件Select2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-28T09:25:20+08:00" content="2017-09-28">
+              2017-09-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center"><br>每个人都是他人生的主角，<br>可是一旦沦为配角，就是他最伤心的时候。<br></blockquote><br>select2是一个可以给你定制支持搜索、标签、远程数据集，无限滚动，以及其他常用功能的一个下拉框美化插件。总之，功能很强大。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">$(<span class="string">'select'</span>).select2();</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="单选框"><a href="#单选框" class="headerlink" title="单选框"></a>单选框</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">$(<span class="string">".js-example-basic-single"</span>).select2();</span><br><span class="line">&#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;select class="js-example-basic-single"&gt;</span></span><br><span class="line"><span class="regexp">&lt;option value="AL"&gt;Alabama&lt;/</span>option&gt;</span><br><span class="line"> ...</span><br><span class="line">&lt;option value=<span class="string">"WY"</span>&gt;Wyoming&lt;<span class="regexp">/option&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>select&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="多选框"><a href="#多选框" class="headerlink" title="多选框"></a>多选框</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">$(<span class="string">".js-example-basic-multiple"</span>).select2();</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;select class="js-example-basic-multiple" multiple="multiple"&gt;</span></span><br><span class="line"><span class="regexp">&lt;option value="AL"&gt;Alabama&lt;/</span>option&gt;</span><br><span class="line">...</span><br><span class="line">&lt;option value=<span class="string">"WY"</span>&gt;Wyoming&lt;<span class="regexp">/option&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>select&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="提示信息"><a href="#提示信息" class="headerlink" title="提示信息"></a>提示信息</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-placeholder-single"</span>).select2(&#123;</span><br><span class="line">placeholder: <span class="string">"Select a state"</span>,</span><br><span class="line">allowClear: <span class="literal">true</span> <span class="comment">//可以删除</span></span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">".js-example-placeholder-multiple"</span>).select2(&#123;</span><br><span class="line">placeholder: <span class="string">"Select a state"</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="加载数组"><a href="#加载数组" class="headerlink" title="加载数组"></a>加载数组</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line"><span class="keyword">var</span> data = [</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">text</span>: <span class="string">'enhancement'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">text</span>: <span class="string">'bug'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">text</span>: <span class="string">'duplicate'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">text</span>: <span class="string">'invalid'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">4</span>, <span class="attr">text</span>: <span class="string">'wontfix'</span> &#125;];</span><br><span class="line">$(<span class="string">".js-example-data-array"</span>).select2(&#123;</span><br><span class="line">data: data</span><br><span class="line">&#125;)</span><br><span class="line">$(<span class="string">".js-example-data-array-selected"</span>).select2(&#123;</span><br><span class="line">data: data</span><br><span class="line">&#125;)</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;select class="js-example-data-array"&gt;&lt;/</span>select&gt;</span><br><span class="line">&lt;select <span class="class"><span class="keyword">class</span></span>=<span class="string">"js-example-data-array-selected"</span>&gt;</span><br><span class="line">&lt;option value=<span class="string">"2"</span> selected=<span class="string">"selected"</span>&gt;duplicate&lt;<span class="regexp">/option&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>select&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="加载远程数据"><a href="#加载远程数据" class="headerlink" title="加载远程数据"></a>加载远程数据</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-data-example-ajax"</span>).select2(&#123;</span><br><span class="line">ajax: &#123;</span><br><span class="line"> url: <span class="string">"https://api.github.com/search/repositories"</span>,</span><br><span class="line"> dataType: <span class="string">'json'</span>,</span><br><span class="line"> delay: <span class="number">250</span>,</span><br><span class="line"> data: <span class="function"><span class="keyword">function</span> (<span class="params">params</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> &#123;</span><br><span class="line"> q: params.term, <span class="comment">// search term</span></span><br><span class="line"> page: params.page</span><br><span class="line"> &#125;;</span><br><span class="line"> &#125;,</span><br><span class="line"> processResults: <span class="function"><span class="keyword">function</span> (<span class="params">data, params</span>) </span>&#123;</span><br><span class="line"> <span class="comment">// parse the results into the format expected by Select2</span></span><br><span class="line"> <span class="comment">// since we are using custom formatting functions we do not need to</span></span><br><span class="line"> <span class="comment">// alter the remote JSON data, except to indicate that infinite</span></span><br><span class="line"> <span class="comment">// scrolling can be used</span></span><br><span class="line"> params.page = params.page || <span class="number">1</span>;</span><br><span class="line"> <span class="keyword">return</span> &#123;</span><br><span class="line"> results: data.items,</span><br><span class="line"> pagination: &#123;</span><br><span class="line"> more: (params.page * <span class="number">30</span>) &lt; data.total_count</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;;</span><br><span class="line"> &#125;,</span><br><span class="line"> cache: <span class="literal">true</span></span><br><span class="line">&#125;,</span><br><span class="line">escapeMarkup: <span class="function"><span class="keyword">function</span> (<span class="params">markup</span>) </span>&#123; <span class="keyword">return</span> markup; &#125;, <span class="comment">// let our custom formatter work</span></span><br><span class="line">minimumInputLength: <span class="number">1</span>,</span><br><span class="line">templateResult: formatRepo, <span class="comment">// omitted for brevity, see the source of this page</span></span><br><span class="line">templateSelection: formatRepoSelection <span class="comment">// omitted for brevity, see the source of this page</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="禁用模式"><a href="#禁用模式" class="headerlink" title="禁用模式"></a>禁用模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-programmatic-enable"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $(<span class="string">".js-example-disabled"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">false</span>);</span><br><span class="line"> $(<span class="string">".js-example-disabled-multi"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">false</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-disable"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $(<span class="string">".js-example-disabled"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">true</span>);</span><br><span class="line"> $(<span class="string">".js-example-disabled-multi"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">true</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="禁用结果"><a href="#禁用结果" class="headerlink" title="禁用结果"></a>禁用结果</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">class</span>=<span class="string">"js-example-disabled-results"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"one"</span>&gt;</span>First<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"two"</span> <span class="attr">disabled</span>=<span class="string">"disabled"</span>&gt;</span>Second (disabled)<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"three"</span>&gt;</span>Third<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="限制个数"><a href="#限制个数" class="headerlink" title="限制个数"></a>限制个数</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-basic-multiple-limit"</span>).select2(&#123;</span><br><span class="line"> maximumSelectionLength: <span class="number">2</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="隐藏搜索框"><a href="#隐藏搜索框" class="headerlink" title="隐藏搜索框"></a>隐藏搜索框</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-basic-hide-search"</span>).select2(&#123;</span><br><span class="line">minimumResultsForSearch: <span class="literal">Infinity</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="DOM事件"><a href="#DOM事件" class="headerlink" title="DOM事件"></a>DOM事件</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">change //选中或删除触发</span><br><span class="line">select2:open //下拉框打开触发</span><br><span class="line">select2:opening //下拉框打开之前</span><br><span class="line">select2:close //下拉框关闭</span><br><span class="line">select2:closing //下拉框关闭之前</span><br><span class="line">select2:select //选中结果触发</span><br><span class="line">select2:selecting //选中之前</span><br><span class="line">select2:unselect //结果未选中</span><br><span class="line">select2:unselecting //结果未选中之前</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $eventLog = $(<span class="string">".js-event-log"</span>);</span><br><span class="line"><span class="keyword">var</span> $eventSelect = $(<span class="string">".js-example-events"</span>);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:open"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:open"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:close"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:close"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:select"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:select"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:unselect"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:unselect"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"change"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"change"</span>); &#125;);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span> (<span class="params">name, evt</span>) </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (!evt) &#123;</span><br><span class="line"> <span class="keyword">var</span> args = <span class="string">"&#123;&#125;"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"> <span class="keyword">var</span> args = <span class="built_in">JSON</span>.stringify(evt.params, <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">if</span> (value &amp;&amp; value.nodeName) <span class="keyword">return</span> <span class="string">"[DOM node]"</span>;</span><br><span class="line"> <span class="keyword">if</span> (value <span class="keyword">instanceof</span> $.Event) <span class="keyword">return</span> <span class="string">"[$.Event]"</span>;</span><br><span class="line"> <span class="keyword">return</span> value;</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> $e = $(<span class="string">"&lt;li&gt;"</span> + name + <span class="string">" -&gt; "</span> + args + <span class="string">"&lt;/li&gt;"</span>);</span><br><span class="line">$eventLog.append($e);</span><br><span class="line">$e.animate(&#123; <span class="attr">opacity</span>: <span class="number">1</span> &#125;, <span class="number">10000</span>, <span class="string">'linear'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $e.animate(&#123; <span class="attr">opacity</span>: <span class="number">0</span> &#125;, <span class="number">2000</span>, <span class="string">'linear'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $e.remove();</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自定义控制"><a href="#自定义控制" class="headerlink" title="自定义控制"></a>自定义控制</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $example = $(<span class="string">".js-example-programmatic"</span>).select2();</span><br><span class="line"><span class="keyword">var</span> $exampleMulti = $(<span class="string">".js-example-programmatic-multi"</span>).select2();</span><br><span class="line">$(<span class="string">".js-programmatic-set-val"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.val(<span class="string">"CA"</span>).trigger(<span class="string">"change"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-open"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(<span class="string">"open"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-close"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(<span class="string">"close"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-init"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-destroy"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(<span class="string">"destroy"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-multi-set-val"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $exampleMulti.val([<span class="string">"CA"</span>, <span class="string">"AL"</span>]).trigger(<span class="string">"change"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-multi-clear"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $exampleMulti.val(<span class="literal">null</span>).trigger(<span class="string">"change"</span>); &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="标签支持"><a href="#标签支持" class="headerlink" title="标签支持"></a>标签支持</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-tags"</span>).select2(&#123;</span><br><span class="line"> tags: <span class="literal">true</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="自动标记"><a href="#自动标记" class="headerlink" title="自动标记"></a>自动标记</h3><p>当我们输入值匹配成功后 键入空格就会自动标签化<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-tokenizer"</span>).select2(&#123;</span><br><span class="line"> tags: <span class="literal">true</span>,</span><br><span class="line"> tokenSeparators: [<span class="string">','</span>, <span class="string">' '</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义查找匹配"><a href="#自定义查找匹配" class="headerlink" title="自定义查找匹配"></a>自定义查找匹配</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">matchStart</span> (<span class="params">term, text</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">if</span> (text.toUpperCase().indexOf(term.toUpperCase()) == <span class="number">0</span>) &#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">$.fn.select2.amd.require([<span class="string">'select2/compat/matcher'</span>],</span><br><span class="line"> <span class="function"><span class="keyword">function</span> (<span class="params">oldMatcher</span>) </span>&#123;</span><br><span class="line"> $(<span class="string">".js-example-matcher-start"</span>).select2(&#123;</span><br><span class="line"> matcher: oldMatcher(matchStart)</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>关于select2的CDN资源整理：<a href="http://www.bootcdn.cn/select2/" target="_blank" rel="noopener">http://www.bootcdn.cn/select2/</a><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://libs.baidu.com/jquery/2.0.0/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://cdn.bootcss.com/select2/4.0.2/js/select2.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"http://cdn.bootcss.com/select2/4.0.2/css/select2.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>示例:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"sel_menu2"</span> <span class="attr">multiple</span>=<span class="string">"multiple"</span> <span class="attr">name</span>=<span class="string">"tags"</span> <span class="attr">class</span>=<span class="string">"form-control"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">optgroup</span> <span class="attr">label</span>=<span class="string">"选择标签"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"1"</span>&gt;</span>用户管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"2"</span>&gt;</span>角色管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"3"</span>&gt;</span>部门管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"4"</span>&gt;</span>菜单管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">optgroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//多选</span></span></span><br><span class="line"><span class="javascript">    $(<span class="string">"#sel_menu2"</span>).select2(&#123;</span></span><br><span class="line"><span class="javascript">        tags: <span class="literal">true</span>,</span></span><br><span class="line"><span class="javascript">        maximumSelectionLength: <span class="number">5</span>  <span class="comment">//最多能够选择的个数</span></span></span><br><span class="line">    &#125;);</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://www.bandari.net/blog/14" target="_blank" rel="noopener">https://www.bandari.net/blog/14</a><br><a href="https://stackoverflow.com/questions/14577014/select2-dropdown-but-allow-new-values-by-user" target="_blank" rel="noopener">https://stackoverflow.com/questions/14577014/select2-dropdown-but-allow-new-values-by-user</a><br><a href="https://my.oschina.net/corwien/blog/672858" target="_blank" rel="noopener">https://my.oschina.net/corwien/blog/672858</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>请我喝一个苹果味的美年达吧，谢谢！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="lnmput@gmail.com WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="lnmput@gmail.com Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/select2/" rel="tag">#Select2</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/25/PHPstudy升级mysql5-7方法/" rel="next" title="PHPstudy升级mysql5.7方法">
+                <i class="fa fa-chevron-left"></i> PHPstudy升级mysql5.7方法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/28/Predis和Phpredis的区别/" rel="prev" title="Predis和Phpredis的区别">
+                Predis和Phpredis的区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
+          <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lnmput" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.laruence.com/" title="风雪之隅" target="_blank">风雪之隅</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tech.youzan.com/" title="有赞技术团队" target="_blank">有赞技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tech.meituan.com/archives" title="美团点评技术团队" target="_blank">美团点评技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="點燈坊" target="_blank">點燈坊</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.turn.tw/" title="轉個彎日誌" target="_blank">轉個彎日誌</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本使用"><span class="nav-number">2.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单选框"><span class="nav-number">3.</span> <span class="nav-text">单选框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多选框"><span class="nav-number">4.</span> <span class="nav-text">多选框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提示信息"><span class="nav-number">5.</span> <span class="nav-text">提示信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载数组"><span class="nav-number">6.</span> <span class="nav-text">加载数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载远程数据"><span class="nav-number">7.</span> <span class="nav-text">加载远程数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用模式"><span class="nav-number">8.</span> <span class="nav-text">禁用模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用结果"><span class="nav-number">9.</span> <span class="nav-text">禁用结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#限制个数"><span class="nav-number">10.</span> <span class="nav-text">限制个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐藏搜索框"><span class="nav-number">11.</span> <span class="nav-text">隐藏搜索框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM事件"><span class="nav-number">12.</span> <span class="nav-text">DOM事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义控制"><span class="nav-number">13.</span> <span class="nav-text">自定义控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标签支持"><span class="nav-number">14.</span> <span class="nav-text">标签支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动标记"><span class="nav-number">15.</span> <span class="nav-text">自动标记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义查找匹配"><span class="nav-number">16.</span> <span class="nav-text">自定义查找匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">17.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lnmput@gmail.com</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

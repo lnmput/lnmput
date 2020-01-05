@@ -1,0 +1,994 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:url" content="https://swoole.app/page/32/index.html">
+<meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta property="og:description" content="一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="杨子鳄鱼 ● 外贸电商从业者">
+<meta name="twitter:description" content="一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 杨子鳄鱼 ● 外贸电商从业者 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+    <a target="_blank" href="https://github.com/lnmput"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">杨子鳄鱼 ● 外贸电商从业者</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br>
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-translate">
+          <a href="/tags/translate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br>
+            
+            翻译
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            简历
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-thumbs-up"></i> <br>
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/08/无法在服务器使用curl命令访问https域名的问题/" itemprop="url">
+                  无法在服务器使用curl命令访问https域名的问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-08T09:06:50+08:00" content="2017-11-08">
+              2017-11-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不要说我们没有警告过你<br></blockquote>
+
+<p>今天有开发同学说无法在服务器使用curl命令访问https域名，提示curl: (35) SSL connect error，原因是nss版本有点旧了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update nss</span><br></pre></td></tr></table></figure></p>
+<p>更新一下，重新curl即可！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/07/使用laravel生成条形码/" itemprop="url">
+                  使用laravel生成条形码
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-07T09:06:07+08:00" content="2017-11-07">
+              2017-11-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我已经和垃圾学校的某些垃圾学生呆够了，再他妈不努力，你这辈子就只能和他们打交道了。<br></blockquote>
+
+<h3 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h3><p>项目地址<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//packagist.org/packages/codeitnowin/barcode</span></span><br></pre></td></tr></table></figure></p>
+<p>使用composer安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> codeitnowin/barcode</span><br></pre></td></tr></table></figure></p>
+<p>无需配置</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="生成二维码"><a href="#生成二维码" class="headerlink" title="生成二维码"></a>生成二维码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">QrCode</span>;</span><br><span class="line"></span><br><span class="line">$qrCode = <span class="keyword">new</span> QrCode();</span><br><span class="line">$qrCode</span><br><span class="line">    -&gt;setText(<span class="string">'QR code by codeitnow.in'</span>)</span><br><span class="line">    -&gt;setSize(<span class="number">300</span>)</span><br><span class="line">    -&gt;setPadding(<span class="number">10</span>)</span><br><span class="line">    -&gt;setErrorCorrection(<span class="string">'high'</span>)</span><br><span class="line">    -&gt;setForegroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">0</span>, <span class="string">'g'</span> =&gt; <span class="number">0</span>, <span class="string">'b'</span> =&gt; <span class="number">0</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setBackgroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">255</span>, <span class="string">'g'</span> =&gt; <span class="number">255</span>, <span class="string">'b'</span> =&gt; <span class="number">255</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setLabel(<span class="string">'Scan Qr Code'</span>)</span><br><span class="line">    -&gt;setLabelFontSize(<span class="number">16</span>)</span><br><span class="line">    -&gt;setImageType(QrCode::IMAGE_TYPE_PNG)</span><br><span class="line">;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:'</span>.$qrCode-&gt;getContentType().<span class="string">';base64,'</span>.$qrCode-&gt;generate().<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="生成条形码"><a href="#生成条形码" class="headerlink" title="生成条形码"></a>生成条形码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">BarcodeGenerator</span>;</span><br><span class="line"></span><br><span class="line">$barcode = <span class="keyword">new</span> BarcodeGenerator();</span><br><span class="line">$barcode-&gt;setText(<span class="string">"0123456789"</span>);</span><br><span class="line">$barcode-&gt;setType(BarcodeGenerator::Code128);</span><br><span class="line">$barcode-&gt;setScale(<span class="number">2</span>);</span><br><span class="line">$barcode-&gt;setThickness(<span class="number">25</span>);</span><br><span class="line">$barcode-&gt;setFontSize(<span class="number">10</span>);</span><br><span class="line">$code = $barcode-&gt;generate();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:image/png;base64,'</span>.$code.<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
+<p>更多参见说明文档</p>
+<blockquote>
+<p><a href="https://packagist.org/packages/codeitnowin/barcode" target="_blank" rel="noopener">https://packagist.org/packages/codeitnowin/barcode</a><br><a href="http://www.barcodebakery.com/" target="_blank" rel="noopener">http://www.barcodebakery.com/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/05/larave结合vue仿知乎项目/" itemprop="url">
+                  larave结合vue仿知乎项目
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-05T20:33:57+08:00" content="2017-11-05">
+              2017-11-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>失去就好像，你将余生写一首长诗，却不能提及一个与她有关的字……<br></blockquote>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>基于laravel5.3 vue2.0开发的仿知乎项目，实现基本的登录注册，发布问题，关注问题，回答问题，评论问题，发送私信，系统发送邮件通知，使用千牛存储图片，使用阿里云提供的短信服务发送验证码等基本功能.</p>
+<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="发布问题"><a href="#发布问题" class="headerlink" title="发布问题"></a>发布问题</h4><p><img src="/images/zhihu01.png" alt></p>
+<h4 id="回答问题"><a href="#回答问题" class="headerlink" title="回答问题"></a>回答问题</h4><p><img src="/images/zhihu02.png" alt></p>
+<h4 id="发送私信"><a href="#发送私信" class="headerlink" title="发送私信"></a>发送私信</h4><p><img src="/images/zhihu03.png" alt></p>
+<h4 id="评论问题"><a href="#评论问题" class="headerlink" title="评论问题"></a>评论问题</h4><p><img src="/images/zhihu04.png" alt></p>
+<h4 id="私信列表"><a href="#私信列表" class="headerlink" title="私信列表"></a>私信列表</h4><p><img src="/images/zhihu05.png" alt></p>
+<h4 id="更换头像"><a href="#更换头像" class="headerlink" title="更换头像"></a>更换头像</h4><p><img src="/images/zhihu06.png" alt></p>
+<h4 id="一些代码"><a href="#一些代码" class="headerlink" title="一些代码"></a>一些代码</h4><p>路由<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'/'</span>,<span class="string">'QuestionsController@index'</span>);</span><br><span class="line"></span><br><span class="line">Auth::routes();</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'/home'</span>, <span class="string">'HomeController@index'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'email/verify/&#123;token&#125;'</span>,[<span class="string">'as'</span> =&gt; <span class="string">'email.verify'</span>, <span class="string">'uses'</span> =&gt; <span class="string">'EmailController@verify'</span>]);</span><br><span class="line"></span><br><span class="line">Route::resource(<span class="string">'questions'</span>,<span class="string">'QuestionsController'</span>,[<span class="string">'names'</span> =&gt; [</span><br><span class="line">    <span class="string">'create'</span> =&gt; <span class="string">'question.create'</span>,</span><br><span class="line">    <span class="string">'show'</span> =&gt; <span class="string">'question.show'</span>,</span><br><span class="line">]]);</span><br><span class="line"></span><br><span class="line">Route::post(<span class="string">'questions/&#123;question&#125;/answer'</span>,<span class="string">'AnswersController@store'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'question/&#123;question&#125;/follow'</span>,<span class="string">'QuestionFollowController@follow'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'notifications'</span>,<span class="string">'NotificationsController@index'</span>);</span><br><span class="line">Route::get(<span class="string">'notifications/&#123;notification&#125;'</span>,<span class="string">'NotificationsController@show'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'avatar'</span>,<span class="string">'UsersController@avatar'</span>);</span><br><span class="line">Route::post(<span class="string">'avatar'</span>,<span class="string">'UsersController@changeAvatar'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'password'</span>,<span class="string">'PasswordController@password'</span>);</span><br><span class="line">Route::post(<span class="string">'password/update'</span>,<span class="string">'PasswordController@update'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'setting'</span>,<span class="string">'SettingController@index'</span>);</span><br><span class="line">Route::post(<span class="string">'setting'</span>,<span class="string">'SettingController@store'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'inbox'</span>,<span class="string">'InboxController@index'</span>);</span><br><span class="line">Route::get(<span class="string">'inbox/&#123;dialogId&#125;'</span>,<span class="string">'InboxController@show'</span>);</span><br><span class="line">Route::post(<span class="string">'inbox/&#123;dialogId&#125;/store'</span>,<span class="string">'InboxController@store'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>邮件发送<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Mailer</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Auth</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Class UserMailer</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@package</span> App\Mailer</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserMailer</span> <span class="keyword">extends</span> <span class="title">Mailer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $email</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">followNotifyEmail</span><span class="params">($email)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = [<span class="string">'url'</span> =&gt; <span class="string">'http://zhihu.dev'</span>, <span class="string">'name'</span> =&gt; Auth::guard(<span class="string">'api'</span>)-&gt;user()-&gt;name];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendTo(<span class="string">'zhihu_app_new_user_follow'</span>, $email, $data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $email</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $token</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">passwordReset</span><span class="params">($email, $token)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = [<span class="string">'url'</span> =&gt; url(<span class="string">'password/reset'</span>, $token)];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendTo(<span class="string">'zhihu_app_password_reset'</span>, $email, $data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> User $user</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">welcome</span><span class="params">(User $user)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = [</span><br><span class="line">            <span class="string">'url'</span>  =&gt; route(<span class="string">'email.verify'</span>, [<span class="string">'token'</span> =&gt; $user-&gt;confirmation_token]),</span><br><span class="line">            <span class="string">'name'</span> =&gt; $user-&gt;name</span><br><span class="line">        ];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendTo(<span class="string">'zhihu_app_register'</span>, $user-&gt;email, $data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>关注用户组件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;button</span><br><span class="line">            <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span></span><br><span class="line">            v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"&#123;'btn-success': followed&#125;"</span></span><br><span class="line">            v-text=<span class="string">"text"</span></span><br><span class="line">            v-on:click=<span class="string">"follow"</span></span><br><span class="line">    &gt;<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    export default &#123;</span></span><br><span class="line"><span class="regexp">        props:['user'],</span></span><br><span class="line"><span class="regexp">        mounted() &#123;</span></span><br><span class="line"><span class="regexp">            this.$http.get('/</span>api/user/followers/<span class="string">' + this.user).then(response =&gt; &#123;</span></span><br><span class="line"><span class="string">                this.followed = response.data.followed</span></span><br><span class="line"><span class="string">            &#125;)</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        data() &#123;</span></span><br><span class="line"><span class="string">            return &#123;</span></span><br><span class="line"><span class="string">                followed: false</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        computed: &#123;</span></span><br><span class="line"><span class="string">            text() &#123;</span></span><br><span class="line"><span class="string">                return this.followed ? '</span>已关注<span class="string">' : '</span>关注他<span class="string">'</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        methods:&#123;</span></span><br><span class="line"><span class="string">            follow() &#123;</span></span><br><span class="line"><span class="string">                this.$http.post('</span>/api/user/follow<span class="string">',&#123;'</span>user<span class="string">':this.user&#125;).then(response =&gt; &#123;</span></span><br><span class="line"><span class="string">                    this.followed = response.data.followed</span></span><br><span class="line"><span class="string">                &#125;)</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>发送私信组件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;button</span><br><span class="line">            <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default pull-right"</span></span><br><span class="line">            style=<span class="string">"margin-top: -36px;"</span></span><br><span class="line">            @click=<span class="string">"showSendMessageForm"</span></span><br><span class="line">    &gt;发送私信&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div class="modal fade" id="modal-send-message" tabindex="-1" role="dialog"&gt;</span></span><br><span class="line"><span class="regexp">            &lt;div class="modal-dialog"&gt;</span></span><br><span class="line"><span class="regexp">                &lt;div class="modal-content"&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;div class="modal-header"&gt;</span></span><br><span class="line"><span class="regexp">                        &lt;button type="button " class="close" data-dismiss="modal" aria-hidden="true"&gt;&amp;times;&lt;/</span>button&gt;</span><br><span class="line">                        &lt;h4 <span class="class"><span class="keyword">class</span></span>=<span class="string">"modal-title"</span>&gt;</span><br><span class="line">                            发送私信</span><br><span class="line">                        &lt;<span class="regexp">/h4&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;/</span>div&gt;</span><br><span class="line">                    &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"modal-body"</span>&gt;</span><br><span class="line">                        &lt;textarea name=<span class="string">"body"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-control"</span> v-model=<span class="string">"body"</span> v-<span class="keyword">if</span>=<span class="string">"!status"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span></span><br><span class="line">                        &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"alert alert-success"</span> v-<span class="keyword">if</span>=<span class="string">"status"</span>&gt;</span><br><span class="line">                            &lt;strong&gt;私信发送成功&lt;<span class="regexp">/strong&gt;</span></span><br><span class="line"><span class="regexp">                        &lt;/</span>div&gt;</span><br><span class="line">                    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;div class="modal-footer"&gt;</span></span><br><span class="line"><span class="regexp">                        &lt;button type="button" class="btn btn-primary" @click="store"&gt;</span></span><br><span class="line"><span class="regexp">                            发送私信</span></span><br><span class="line"><span class="regexp">                        &lt;/</span>button&gt;</span><br><span class="line">                        &lt;button type=<span class="string">"button"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span> data-dismiss=<span class="string">"modal"</span>&gt;关闭&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;/</span>div&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>div&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    export default &#123;</span></span><br><span class="line"><span class="regexp">        props:['user'],</span></span><br><span class="line"><span class="regexp">        data() &#123;</span></span><br><span class="line"><span class="regexp">            return &#123;</span></span><br><span class="line"><span class="regexp">                body:'',</span></span><br><span class="line"><span class="regexp">                status: false</span></span><br><span class="line"><span class="regexp">            &#125;</span></span><br><span class="line"><span class="regexp">        &#125;,</span></span><br><span class="line"><span class="regexp">        methods:&#123;</span></span><br><span class="line"><span class="regexp">            store() &#123;</span></span><br><span class="line"><span class="regexp">                this.$http.post('/</span>api/message/store<span class="string">',&#123;'</span>user<span class="string">':this.user,'</span>body<span class="string">':this.body&#125;).then(response =&gt; &#123;</span></span><br><span class="line"><span class="string">                    this.status = response.data.status</span></span><br><span class="line"><span class="string">                    this.body = '</span><span class="string">'</span></span><br><span class="line"><span class="string">                    setTimeout(function () &#123;</span></span><br><span class="line">                        $('#modal-send-message').modal('hide')</span><br><span class="line">                    &#125;, <span class="number">2000</span>)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            showSendMessageForm() &#123;</span><br><span class="line">                $(<span class="string">'#modal-send-message'</span>).modal(<span class="string">'show'</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>说明： 本项目是结合互联网上教学视频学习练习所做，并非自己原创；</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/04/淘宝采集插件简介/" itemprop="url">
+                  淘宝采集插件简介
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-04T21:36:09+08:00" content="2017-11-04">
+              2017-11-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>中国现在处于并将长期处于社会主义初级阶段。<br></blockquote>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>一个基于chrome开发的商品采集插件， 传统的外贸网站完全使用编辑手工去淘宝等国内电商平台选品，然后商品信息复制到自己商城的后台，费时费力，我们使用chrome插件， 配合商城站提供的相关的API接口，可以实现商品的一键采集到商城站的后台。</p>
+<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p><img src="/images/ch01.png" alt></p>
+<h4 id="配置初始化"><a href="#配置初始化" class="headerlink" title="配置初始化"></a>配置初始化</h4><p><img src="/images/ch02.png" alt></p>
+<h4 id="产品抓取页面"><a href="#产品抓取页面" class="headerlink" title="产品抓取页面"></a>产品抓取页面</h4><p><img src="/images/ch03.png" alt></p>
+<h4 id="裁图页面"><a href="#裁图页面" class="headerlink" title="裁图页面"></a>裁图页面</h4><p><img src="/images/ch04.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/04/邮件发送系统简介/" itemprop="url">
+                  邮件发送系统简介
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-04T21:31:23+08:00" content="2017-11-04">
+              2017-11-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>所遇无故物，焉得不速老<br></blockquote>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>基于laravel5.3开发， 用于公司日常营销邮件的发送， 通过laravel的队列机制，linux的计划任务， 来定时监控数万个站点的邮件发送情况，并实各类现数据的统计导出；</p>
+<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="任务列表"><a href="#任务列表" class="headerlink" title="任务列表"></a>任务列表</h4><p><img src="/images/em01.png" alt></p>
+<h4 id="创建任务"><a href="#创建任务" class="headerlink" title="创建任务"></a>创建任务</h4><p><img src="/images/em02.png" alt></p>
+<h4 id="任务详细"><a href="#任务详细" class="headerlink" title="任务详细"></a>任务详细</h4><p><img src="/images/em03.png" alt></p>
+<h4 id="shell列表"><a href="#shell列表" class="headerlink" title="shell列表"></a>shell列表</h4><p><img src="/images/em04.png" alt></p>
+<h4 id="邮件模板"><a href="#邮件模板" class="headerlink" title="邮件模板"></a>邮件模板</h4><p><img src="/images/em05.png" alt></p>
+<h4 id="邮箱列表"><a href="#邮箱列表" class="headerlink" title="邮箱列表"></a>邮箱列表</h4><p><img src="/images/em06.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/31/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/33/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
+          <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lnmput" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.laruence.com/" title="风雪之隅" target="_blank">风雪之隅</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tech.youzan.com/" title="有赞技术团队" target="_blank">有赞技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tech.meituan.com/archives" title="美团点评技术团队" target="_blank">美团点评技术团队</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="點燈坊" target="_blank">點燈坊</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.turn.tw/" title="轉個彎日誌" target="_blank">轉個彎日誌</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lnmput@gmail.com</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
