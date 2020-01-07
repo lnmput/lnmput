@@ -265,6 +265,218 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/13/使用python操作elasticsearch/" itemprop="url">
+                  使用python操作elasticsearch
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-13T10:19:01+08:00" content="2016-12-13">
+              2016-12-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>和你们这些少爷不同，我们光是活着就竭尽全力了。<br></blockquote><br>Lately, here at Tryolabs, we started gaining interest in big data and search related platforms which are giving us excellent resources to create our complex web applications. One of them is Elasticsearch.<br>Elastic{ON}15, the first ES conference is coming, and since nowadays we see a lot of interest in this technology, we are taking the opportunity to give an introduction and a simple example for Python developers out there that want to begin using it or give it a try.</p>
+<h3 id="1-What-is-Elasticsearch"><a href="#1-What-is-Elasticsearch" class="headerlink" title="1. What is Elasticsearch?"></a>1. What is Elasticsearch?</h3><p>Elasticsearch is a distributed, real-time, search and analytics platform.</p>
+<h3 id="2-Yeah-but-what-IS-Elasticsearch"><a href="#2-Yeah-but-what-IS-Elasticsearch" class="headerlink" title="2. Yeah, but what IS Elasticsearch?"></a>2. Yeah, but what IS Elasticsearch?</h3><p>Good question! In the previous definition you can see all these hype-sounding tech terms (distributed, real-time, analytics), so let’s try to explain.<br>ES is distributed, it organizes information in clusters of nodes, so it will run in multiple servers if we intend it to.<br>ES is real-time, since data is indexed, we get responses to our queries super fast!<br>And last but not least, it does searches and analytics. The main problem we are solving with this tool is exploring our data!<br>A platform like ES is the foundation for any respectable search engine.</p>
+<h3 id="3-How-does-it-work"><a href="#3-How-does-it-work" class="headerlink" title="3. How does it work?"></a>3. How does it work?</h3><p>Using a restful API, Elasticsearch saves data and indexes it automatically. It assigns types to fields and that way a search can be done smartly and quickly using filters and different queries.<br>It’s uses JVM in order to be as fast as possible. It distributes indexes in “shards” of data. It replicates shards in different nodes, so it’s distributed and clusters can function even if not all nodes are operational. Adding nodes is super easy and that’s what makes it so scalable.<br>ES uses Lucene to solve searches. This is quite an advantage with comparing with, for example, Django query strings. A restful API call allows us to perform searches using json objects as parameters, making it much more flexible and giving each search parameter within the object a different weight, importance and or priority.<br>The final result ranks objects that comply with the search query requirements. You could even use synonyms, autocompletes, spell suggestions and correct typos. While the usual query strings provides results that follow certain logic rules, ES queries give you a ranked list of results that may fall in different criteria and its order depend on how they comply with a certain rule or filter.<br>ES can also provide answers for data analysis, like averages, how many unique terms and or statistics. This could be done using aggregations. To dig a little deeper in this feature check the documentation here.</p>
+<h3 id="4-Should-I-use-ES"><a href="#4-Should-I-use-ES" class="headerlink" title="4. Should I use ES?"></a>4. Should I use ES?</h3><p>The main point is scalability and getting results and insights very fast. In most cases using Lucene could be enough to have all you need.<br>It seems sometimes that these tools are designed for projects with tons of data and are distributed in order to handle tons of users. Startups dream of growing to that scenario, but may start thinking small first to build a prototype and then when the data is there, start thinking about scaling problems.<br>Does it make sense and pays off to be prepared to grow A LOT? Why not? Elasticsearch has no drawback and is easy to use, so it’s just a decision of using it to be prepared for the future.<br>I’m going to give you a quick example of a dead simple project using Elasticsearch to quickly and beautifully search for some example data. It will be quick to do, Python powered and ready to scale in case we need it to, so, best of both worlds.</p>
+<h3 id="5-Easy-first-steps-with-ES"><a href="#5-Easy-first-steps-with-ES" class="headerlink" title="5. Easy first steps with ES"></a>5. Easy first steps with ES</h3><p>For the following part it would be nice to be familiarized with concepts like Cluster, Node, Document, Index. Take a look at the official guide if you have doubts.<br>First things first, get ES from here.<br>I followed this video tutorial to get things started in just a minute. I recommend all you to check it out later.<br>Once you downloaded ES, it’s as simple as running bin/elasticsearch and you will have your ES cluster with one node running! You can interact with it at <a href="http://localhost:9200/" target="_blank" rel="noopener">http://localhost:9200/</a><br>If you hit it you will get something like this:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"status"</span> : <span class="number">200</span>,</span><br><span class="line">  <span class="attr">"name"</span> : <span class="string">"Delphine Courtney"</span>,</span><br><span class="line">  <span class="attr">"cluster_name"</span> : <span class="string">"elasticsearch"</span>,</span><br><span class="line">  <span class="attr">"version"</span> : &#123;</span><br><span class="line">    <span class="attr">"number"</span> : <span class="string">"1.4.2"</span>,</span><br><span class="line">    <span class="attr">"build_hash"</span> : <span class="string">"927caff6f05403e936c20bf4529f144f0c89fd8c"</span>,</span><br><span class="line">    <span class="attr">"build_timestamp"</span> : <span class="string">"2014-12-16T14:11:12Z"</span>,</span><br><span class="line">    <span class="attr">"build_snapshot"</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"lucene_version"</span> : <span class="string">"4.10.2"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first.json hosted with ❤ by GitHub<br>Creating another node is as simple as:<br>bin/elasticsearch -Des.node.name=Node-2<br>It automatically detects the old node as its master and joins our cluster. By default we will be able to communicate with this new node using the 9201 port <a href="http://localhost:9201" target="_blank" rel="noopener">http://localhost:9201</a>. Now we can talk with each node and receive the same data, they are supposed to be identical.</p>
+<h3 id="6-Let’s-Pythonize-this-thing"><a href="#6-Let’s-Pythonize-this-thing" class="headerlink" title="6. Let’s Pythonize this thing!"></a>6. Let’s Pythonize this thing!</h3><p>To use ES with our all time favorite language; Python, it gets easier if we install elasticsearch-py package.<br>pip install elasticsearch<br>Now we will be able to use this package to index and search data using Python.</p>
+<h3 id="7-Let’s-add-some-public-data-to-our-cluster"><a href="#7-Let’s-add-some-public-data-to-our-cluster" class="headerlink" title="7. Let’s add some public data to our cluster"></a>7. Let’s add some public data to our cluster</h3><p>So, I wanted to make this project a “real world example”, I really did, but after I found out there is a star wars API (<a href="http://swapi.co/" target="_blank" rel="noopener">http://swapi.co/</a>), I couldn’t resist it and ended up being a fictional -  ”galaxy far far away” example.  The API is dead simple to use, so we will get some data from there.<br>I’m using an IPython Notebook to do this test, I started with the sample request to make sure we can hit the ES server.</p>
+<h1 id="make-sure-ES-is-up-and-running"><a href="#make-sure-ES-is-up-and-running" class="headerlink" title="make sure ES is up and running"></a>make sure ES is up and running</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">res = requests.get(<span class="string">'http://localhost:9200'</span>)</span><br><span class="line">print(res.content)</span><br></pre></td></tr></table></figure>
+<p>view rawes_first.py hosted with ❤ by GitHub<br>Then we connect to our ES server using Python and the elasticsearch-py library:</p>
+<p>#connect to our cluster<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line">es = Elasticsearch([&#123;<span class="string">'host'</span>: <span class="string">'localhost'</span>, <span class="string">'port'</span>: <span class="number">9200</span>&#125;])</span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first3.py hosted with ❤ by GitHub<br>I added some data to test, and then deleted it. I’m skipping that part for this guide, but you can check it out in the notebook.<br>Now, using The Force, we connect to the Star Wars API and index some fictional people.</p>
+<p>#let’s iterate over swapi people documents and index them<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line">r = requests.get(<span class="string">'http://localhost:9200'</span>) </span><br><span class="line">i = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> r.status_code == <span class="number">200</span>:</span><br><span class="line">    r = requests.get(<span class="string">'http://swapi.co/api/people/'</span>+ str(i))</span><br><span class="line">    es.index(index=<span class="string">'sw'</span>, doc_type=<span class="string">'people'</span>, id=i, body=json.loads(r.content))</span><br><span class="line">    i=i+<span class="number">1</span></span><br><span class="line"> </span><br><span class="line">print(i)</span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first4.py hosted with ❤ by GitHub<br>Please, notice that we automatically created an index “sw” and a “doc_type” with de indexing command. We get 17 responses from swapi and index them with ES. I’m sure there are much more “people” in the swapi DB, but it seems we are getting a 404 with <a href="http://swapi.co/api/people/17" target="_blank" rel="noopener">http://swapi.co/api/people/17</a>. Bug report here! :-)<br>Anyway, to see if all worked with this few results, we try to get the document with id=5.<br>es.get(index=’sw’, doc_type=’people’, id=5)<br>view rawes_first10.py hosted with ❤ by GitHub<br>We will get Princess Leia:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;u'_id': u'5',</span><br><span class="line"> u'_index': u'sw',</span><br><span class="line"> u'_source': &#123;u'birth_year': u'19BBY',</span><br><span class="line">  u'created': u'2014-12-10T15:20:09.791000Z',</span><br><span class="line">  u'edited': u'2014-12-20T21:17:50.315000Z',</span><br><span class="line">  u'eye_color': u'brown',</span><br><span class="line">  u'films': [u'http://swapi.co/api/films/1/',</span><br><span class="line">   u'http://swapi.co/api/films/2/',</span><br><span class="line">   u'http://swapi.co/api/films/3/',</span><br><span class="line">   u'http://swapi.co/api/films/6/'],</span><br><span class="line">  u'gender': u'female',</span><br><span class="line">  u'hair_color': u'brown',</span><br><span class="line">  u'height': u'150',</span><br><span class="line">  u'homeworld': u'http://swapi.co/api/planets/2/',</span><br><span class="line">  u'mass': u'49',</span><br><span class="line">  u'name': u'Leia Organa',</span><br><span class="line">  u'skin_color': u'light',</span><br><span class="line">  u'species': [u'http://swapi.co/api/species/1/'],</span><br><span class="line">  u'starships': [],</span><br><span class="line">  u'url': u'http://swapi.co/api/people/5/',</span><br><span class="line">  u'vehicles': [u'http://swapi.co/api/vehicles/30/']&#125;,</span><br><span class="line"> u'_type': u'people',</span><br><span class="line"> u'_version': 1,</span><br><span class="line"> u'found': True&#125;</span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first5.py hosted with ❤ by GitHub<br>Now, let’s add more data, this time using node 2! And let’s start at the 18th person, where we stopped.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">r = requests.get(<span class="string">'http://localhost:9201'</span>)</span><br><span class="line">i = <span class="number">18</span></span><br><span class="line"><span class="keyword">while</span> r.status_code == <span class="number">200</span>:</span><br><span class="line">   r = requests.get(<span class="string">'http://swapi.co/api/people/'</span>+ str(i))</span><br><span class="line">   es.index(index=<span class="string">'sw'</span>, doc_type=<span class="string">'people'</span>, id=i,     body=json.loads(r.content))</span><br><span class="line">   i=i+<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first6.py hosted with ❤ by GitHub<br>We got the rest of the characters just fine.</p>
+<h3 id="8-Now-let’s-try-an-interesting-search"><a href="#8-Now-let’s-try-an-interesting-search" class="headerlink" title="8. Now, let’s try an interesting search"></a>8. Now, let’s try an interesting search</h3><p>Where is Darth Vader? Here is our search query:<br>es.search(index=”sw”, body={“query”: {“match”: {‘name’:’Darth Vader’}}})<br>view rawes_first7.py hosted with ❤ by GitHub<br>This will give us both Darth Vader AND Darth Maul. Id 4 and id 44 (notice that they are in the same index, even if we use different node client call the index command). Both results have a score, although Darth Vader is much higher than Darth Maul (2.77 vs 0.60) since Vader is a exact match. Take that Darth Maul!<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">&#123;u'_shards': &#123;u'failed': 0, u'successful': 5, u'total': 5&#125;,</span><br><span class="line"> u'hits': &#123;u'hits': [&#123;u'_id': u'4',</span><br><span class="line">    u'_index': u'sw',</span><br><span class="line">    u'_score': 2.7754524,</span><br><span class="line">    u'_source': &#123;u'birth_year': u'41.9BBY',</span><br><span class="line">     u'created': u'2014-12-10T15:18:20.704000Z',</span><br><span class="line">     u'edited': u'2014-12-20T21:17:50.313000Z',</span><br><span class="line">     u'eye_color': u'yellow',</span><br><span class="line">     u'films': [u'http://swapi.co/api/films/1/',</span><br><span class="line">      u'http://swapi.co/api/films/2/',</span><br><span class="line">      u'http://swapi.co/api/films/3/',</span><br><span class="line">      u'http://swapi.co/api/films/6/'],</span><br><span class="line">     u'gender': u'male',</span><br><span class="line">     u'hair_color': u'none',</span><br><span class="line">     u'height': u'202',</span><br><span class="line">     u'homeworld': u'http://swapi.co/api/planets/1/',</span><br><span class="line">     u'mass': u'136',</span><br><span class="line">     u'name': u'Darth Vader',</span><br><span class="line">     u'skin_color': u'white',</span><br><span class="line">     u'species': [u'http://swapi.co/api/species/1/'],</span><br><span class="line">     u'starships': [u'http://swapi.co/api/starships/13/'],</span><br><span class="line">     u'url': u'http://swapi.co/api/people/4/',</span><br><span class="line">     u'vehicles': []&#125;,</span><br><span class="line">    u'_type': u'people'&#125;,</span><br><span class="line">   &#123;u'_id': u'44',</span><br><span class="line">    u'_index': u'sw',</span><br><span class="line">    u'_score': 0.6085256,</span><br><span class="line">    u'_source': &#123;u'birth_year': u'54BBY',</span><br><span class="line">     u'created': u'2014-12-19T18:00:41.929000Z',</span><br><span class="line">     u'edited': u'2014-12-20T21:17:50.403000Z',</span><br><span class="line">     u'eye_color': u'yellow',</span><br><span class="line">     u'films': [u'http://swapi.co/api/films/4/'],</span><br><span class="line">     u'gender': u'male',</span><br><span class="line">     u'hair_color': u'none',</span><br><span class="line">     u'height': u'175',</span><br><span class="line">     u'homeworld': u'http://swapi.co/api/planets/36/',</span><br><span class="line">     u'mass': u'80',</span><br><span class="line">     u'name': u'Darth Maul',</span><br><span class="line">     u'skin_color': u'red',</span><br><span class="line">     u'species': [u'http://swapi.co/api/species/22/'],</span><br><span class="line">     u'starships': [u'http://swapi.co/api/starships/41/'],</span><br><span class="line">     u'url': u'http://swapi.co/api/people/44/',</span><br><span class="line">     u'vehicles': [u'http://swapi.co/api/vehicles/42/']&#125;,</span><br><span class="line">    u'_type': u'people'&#125;],</span><br><span class="line">  u'max_score': 2.7754524,</span><br><span class="line">  u'total': 2&#125;,</span><br><span class="line"> u'timed_out': False,</span><br><span class="line"> u'took': 44&#125;</span><br><span class="line">``` </span><br><span class="line">view rawes_first8.py hosted with ❤ by GitHub</span><br><span class="line">So, this query will give us results if the word is contained exactly in our indexed data. What if we want to build some kind of autocomplete input where we get the names that contain the characters we are typing?</span><br><span class="line">There are many ways to do that and another great number of queries. Take a look here to learn more. I picked this one to get all documents with prefix “lu” in their name field:</span><br><span class="line">`es.search(index="sw", body=&#123;"query": &#123;"prefix" : &#123; "name" : "lu" &#125;&#125;&#125;)`</span><br><span class="line">view rawes_first9.py hosted with ❤ by GitHub</span><br><span class="line">We will get Luke Skywalker and Luminara Unduli, both with the same 1.0 score, since they match with the same 2 initial characters.</span><br><span class="line">```json</span><br><span class="line">&#123;u'_shards': &#123;u'failed': 0, u'successful': 5, u'total': 5&#125;,</span><br><span class="line"> u'hits': &#123;u'hits': [&#123;u'_id': u'1',</span><br><span class="line">    u'_index': u'sw',</span><br><span class="line">    u'_score': 1.0,</span><br><span class="line">    u'_source': &#123;u'birth_year': u'19BBY',</span><br><span class="line">     u'created': u'2014-12-09T13:50:51.644000Z',</span><br><span class="line">     u'edited': u'2014-12-20T21:17:56.891000Z',</span><br><span class="line">     u'eye_color': u'blue',</span><br><span class="line">     u'films': [u'http://swapi.co/api/films/1/',</span><br><span class="line">      u'http://swapi.co/api/films/2/',</span><br><span class="line">      u'http://swapi.co/api/films/3/',</span><br><span class="line">      u'http://swapi.co/api/films/6/'],</span><br><span class="line">     u'gender': u'male',</span><br><span class="line">     u'hair_color': u'blond',</span><br><span class="line">     u'height': u'172',</span><br><span class="line">     u'homeworld': u'http://swapi.co/api/planets/1/',</span><br><span class="line">     u'mass': u'77',</span><br><span class="line">     u'name': u'Luke Skywalker',</span><br><span class="line">     u'skin_color': u'fair',</span><br><span class="line">     u'species': [u'http://swapi.co/api/species/1/'],</span><br><span class="line">     u'starships': [u'http://swapi.co/api/starships/12/',</span><br><span class="line">      u'http://swapi.co/api/starships/22/'],</span><br><span class="line">     u'url': u'http://swapi.co/api/people/1/',</span><br><span class="line">     u'vehicles': [u'http://swapi.co/api/vehicles/14/',</span><br><span class="line">      u'http://swapi.co/api/vehicles/30/']&#125;,</span><br><span class="line">    u'_type': u'people'&#125;,</span><br><span class="line">   &#123;u'_id': u'64',</span><br><span class="line">    u'_index': u'sw',</span><br><span class="line">    u'_score': 1.0,</span><br><span class="line">    u'_source': &#123;u'birth_year': u'58BBY',</span><br><span class="line">     u'created': u'2014-12-20T16:45:53.668000Z',</span><br><span class="line">     u'edited': u'2014-12-20T21:17:50.455000Z',</span><br><span class="line">     u'eye_color': u'blue',</span><br><span class="line">     u'films': [u'http://swapi.co/api/films/5/',</span><br><span class="line">      u'http://swapi.co/api/films/6/'],</span><br><span class="line">     u'gender': u'female',</span><br><span class="line">     u'hair_color': u'black',</span><br><span class="line">     u'height': u'170',</span><br><span class="line">     u'homeworld': u'http://swapi.co/api/planets/51/',</span><br><span class="line">     u'mass': u'56.2',</span><br><span class="line">     u'name': u'Luminara Unduli',</span><br><span class="line">     u'skin_color': u'yellow',</span><br><span class="line">     u'species': [u'http://swapi.co/api/species/29/'],</span><br><span class="line">     u'starships': [],</span><br><span class="line">     u'url': u'http://swapi.co/api/people/64/',</span><br><span class="line">     u'vehicles': []&#125;,</span><br><span class="line">    u'_type': u'people'&#125;],</span><br><span class="line">  u'max_score': 1.0,</span><br><span class="line">  u'total': 2&#125;,</span><br><span class="line"> u'timed_out': False,</span><br><span class="line"> u'took': 9&#125;</span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first11.py hosted with ❤ by GitHub<br>There are many other interesting queries we can do. If, for example, we want to get all elements similar in some way, for a related or correction search we can use something like this:<br>es.search(index=”sw”, body={“query”:<br>{“fuzzy_like_this_field” : { “name” :<br>{“like_text”: “jaba”, “max_query_terms”:5}}}})<br>view rawes_first1.py hosted with ❤ by GitHub<br>And we got Jabba although we had a typo in our search query. That is powerful!<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;u'_shards': &#123;u'failed': 0, u'successful': 5, u'total': 5&#125;,</span><br><span class="line"> u'hits': &#123;u'hits': [&#123;u'_id': u'16',</span><br><span class="line">    u'_index': u'sw',</span><br><span class="line">    u'_score': 1.5700331,</span><br><span class="line">    u'_source': &#123;u'birth_year': u'600BBY',</span><br><span class="line">     u'created': u'2014-12-10T17:11:31.638000Z',</span><br><span class="line">     u'edited': u'2014-12-20T21:17:50.338000Z',</span><br><span class="line">     u'eye_color': u'orange',</span><br><span class="line">     u'films': [u'http://swapi.co/api/films/1/',</span><br><span class="line">      u'http://swapi.co/api/films/3/',</span><br><span class="line">      u'http://swapi.co/api/films/4/'],</span><br><span class="line">     u'gender': u'hermaphrodite',</span><br><span class="line">     u'hair_color': u'n/a',</span><br><span class="line">     u'height': u'175',</span><br><span class="line">     u'homeworld': u'http://swapi.co/api/planets/24/',</span><br><span class="line">     u'mass': u'1,358',</span><br><span class="line">     u'name': u'Jabba Desilijic Tiure',</span><br><span class="line">     u'skin_color': u'green-tan, brown',</span><br><span class="line">     u'species': [u'http://swapi.co/api/species/5/'],</span><br><span class="line">     u'starships': [],</span><br><span class="line">     u'url': u'http://swapi.co/api/people/16/',</span><br><span class="line">     u'vehicles': []&#125;,</span><br><span class="line">    u'_type': u'people'&#125;],</span><br><span class="line">  u'max_score': 1.5700331,</span><br><span class="line">  u'total': 1&#125;,</span><br><span class="line"> u'timed_out': False,</span><br><span class="line"> u'took': 40&#125;</span><br></pre></td></tr></table></figure></p>
+<p>view rawes_first2.py hosted with ❤ by GitHub</p>
+<h3 id="9-Next-Steps"><a href="#9-Next-Steps" class="headerlink" title="9. Next Steps"></a>9. Next Steps</h3><p>This was just a simple overview on how to set up your Elasticsearch server and start working with some data using Python. The code used here is publicly available in this IPython notebook.<br>We encourage you to learn more about ES and specially take a look at the Elastic stack where you will be able to see beautiful analytics and insights with Kibana and go through logs using Logstash.<br>In following posts we will talk about more advanced ES features and we will try to extend this simple test and use it to show a more interesting Django app powered by this data and by ES.<br>Hope this post was useful for developers trying to enter the ES world.<br>At Tryolabs we’re Elastic official partners. If you want to talk about Elasticsearch, ELK, applications and possible projects using these technologies, drop us a line to hello@tryolabs.com (or fill out this form) and we will be glad to connect!</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/12/javascript中作用域和变量提升/" itemprop="url">
+                  javascript中作用域和变量提升
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-12T16:35:59+08:00" content="2016-12-12">
+              2016-12-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>留给中国队的时间已经不多了。<br></blockquote><br>“function函数”是一等公民！<code>编译阶段</code>，会把定义式的函数优先执行，也会把所有var变量创建，默认值为undefined，以提高程序的执行效率！<br>总结：当JavaScript引擎解析脚本时，它会在预编译期对所有声明的变量和函数进行处理！并且是先预声明变量，再预定义函数！</p>
+<h3 id="变量提升"><a href="#变量提升" class="headerlink" title="变量提升"></a>变量提升</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> v=<span class="string">'Hello World'</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(v);</span><br><span class="line">    <span class="keyword">var</span> v=<span class="string">'I love you'</span>;</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>提示说“undefined”</p>
+<h3 id="函数提升"><a href="#函数提升" class="headerlink" title="函数提升"></a>函数提升</h3><p>函数声明方式提升【成功】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myTest</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    foo();</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">"我来自 foo"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">myTest();</span><br></pre></td></tr></table></figure></p>
+<p>函数表达式方式提升【失败】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myTest</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    foo();</span><br><span class="line">   <span class="keyword">var</span> foo =<span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">"我来自 foo"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">myTest();</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/09/python投票和ip地址的伪造/" itemprop="url">
                   python投票和ip地址的伪造
                 </a>
@@ -587,226 +799,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/06/一个简单的下载图片的爬虫/" itemprop="url">
-                  一个简单的下载图片的爬虫
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-06T22:37:05+08:00" content="2016-12-06">
-              2016-12-06
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你为什么从事喜剧行业？人们总是嘲笑我，所以我想，去他妈的，干脆收他们点儿钱！<br></blockquote><br>一个简单的下载图片的爬虫<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">headers = &#123;<span class="string">'User-Agent'</span>:<span class="string">"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"</span>&#125;</span><br><span class="line">all_url = <span class="string">'http://www.mzitu.com/all'</span></span><br><span class="line">start_html = requests.get(all_url,  headers=headers)</span><br><span class="line">Soup = BeautifulSoup(start_html.text, <span class="string">'lxml'</span>)</span><br><span class="line"></span><br><span class="line">all_a = Soup.find(<span class="string">'div'</span>, class_=<span class="string">'all'</span>).find_all(<span class="string">'a'</span>)</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> all_a:</span><br><span class="line">    title = a.get_text()</span><br><span class="line">    href = a.get(<span class="string">'href'</span>)</span><br><span class="line">    html = requests.get(href, headers=headers)</span><br><span class="line">    html_Soup = BeautifulSoup(html.text, <span class="string">'lxml'</span>)</span><br><span class="line">    max_span = html_Soup.findAll(<span class="string">'span'</span>)[<span class="number">10</span>].get_text()</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1</span>, int(max_span) + <span class="number">1</span>):</span><br><span class="line">        page_url = href + <span class="string">'/'</span> + str(page)</span><br><span class="line">        img_html = requests.get(page_url, headers=headers)</span><br><span class="line">        img_Soup = BeautifulSoup(img_html.text, <span class="string">'lxml'</span>)</span><br><span class="line">        img_url = img_Soup.find(<span class="string">'div'</span>, class_=<span class="string">'main-image'</span>).find(<span class="string">'img'</span>)[<span class="string">'src'</span>]</span><br><span class="line">        name = img_url[<span class="number">-9</span>:<span class="number">-4</span>]</span><br><span class="line">        img = requests.get(img_url, headers=headers)</span><br><span class="line">        f = open(name + <span class="string">'.jpg'</span>, <span class="string">'ab'</span>)</span><br><span class="line">        f.write(img.content)</span><br><span class="line">        f.close()</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/04/laravel5-2使用JWT/" itemprop="url">
-                  laravel5.2使用JWT
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-04T13:45:40+08:00" content="2016-12-04">
-              2016-12-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>more less<br></blockquote>
-
-<p>JWT stand for Json Web Token. JWT will helps to create authentication and connect front-end and back-end function. JWT through we can create login and register API. So first we have to install “tymon/jwt-auth” package in laravel 5.2.</p>
-<h3 id="JWT-Installation"><a href="#JWT-Installation" class="headerlink" title="JWT Installation"></a>JWT Installation</h3><p>First fire following command on your terminal.</p>
-<p>Installation Package</p>
-<p><code>composer require tymon/jwt-auth</code><br>After install this package, Now open config/app.php file and add service provider and aliase.<br><code>config/app.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">	....</span><br><span class="line">	<span class="string">'Tymon\JWTAuth\Providers\JWTAuthServiceProvider'</span>,</span><br><span class="line">],</span><br><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">	....</span><br><span class="line">	<span class="string">'JWTAuth'</span> =&gt; <span class="string">'Tymon\JWTAuth\Facades\JWTAuth'</span></span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
-<p>Now we need to publish JWT configration file, that way we can change configration like token expire time etc. so, let’s fire bellow command.</p>
-<p><code>php artisan vendor:publish --provider=&quot;Tymon\JWTAuth\Providers\JWTAuthServiceProvider&quot;</code><br>At last on installation, we have to generate jwt key, fire bellow command on your terminal.</p>
-<p><code>php artisan jwt:generate</code></p>
-<h3 id="Create-API-Route"><a href="#Create-API-Route" class="headerlink" title="Create API Route"></a>Create API Route</h3><p>Now we require to create create route for API, in bellow route you can see i use two middleware “api” and “cors”. cors is not mandatory, but when you call api and found like:</p>
-<p>“Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at <a href="http://test.com/api/register" target="_blank" rel="noopener">http://test.com/api/register</a>. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing).”</p>
-<p>Then you have two must be create cors middleware by following link : Ajax - Cross-Origin Request Blocked in Larave 5?.</p>
-<p><code>app/Http/routes.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Route::group([<span class="string">'middleware'</span> =&gt; [<span class="string">'api'</span>,<span class="string">'cors'</span>],<span class="string">'prefix'</span> =&gt; <span class="string">'api'</span>], <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    Route::post(<span class="string">'register'</span>, <span class="string">'APIController@register'</span>);</span><br><span class="line">    Route::post(<span class="string">'login'</span>, <span class="string">'APIController@login'</span>);</span><br><span class="line">    Route::group([<span class="string">'middleware'</span> =&gt; <span class="string">'jwt-auth'</span>], <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    	Route::post(<span class="string">'get_user_details'</span>, <span class="string">'APIController@get_user_details'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>In above i use also added jwt-auth for token is valid or not. so we must need to create jwt-auth middleware and first fire following command.</p>
-<p><code>php artisan make:middleware authJWT</code><br>On now you can check on Middleware(app/Http/Middleware) directory, you can find authJWT.php file and put bellow code on that file.</p>
-<p><code>app/Http/Middleware/authJWT.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Middleware</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Closure</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">JWTAuth</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Exception</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">authJWT</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            $user = JWTAuth::toUser($request-&gt;input(<span class="string">'token'</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($e <span class="keyword">instanceof</span> \Tymon\JWTAuth\Exceptions\TokenInvalidException)&#123;</span><br><span class="line">                <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span>=&gt;<span class="string">'Token is Invalid'</span>]);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span> ($e <span class="keyword">instanceof</span> \Tymon\JWTAuth\Exceptions\TokenExpiredException)&#123;</span><br><span class="line">                <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span>=&gt;<span class="string">'Token is Expired'</span>]);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span>=&gt;<span class="string">'Something is wrong'</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $next($request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Ok, now register new created middleware on Kernel.php(app/Http/Kernel.php) file and append following line.</p>
-<p><code>app/Http/Kernel.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Http</span>\<span class="title">Kernel</span> <span class="title">as</span> <span class="title">HttpKernel</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kernel</span> <span class="keyword">extends</span> <span class="title">HttpKernel</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">    <span class="keyword">protected</span> $routeMiddleware = [</span><br><span class="line">        ...</span><br><span class="line">        <span class="string">'jwt-auth'</span> =&gt; \App\Http\Middleware\authJWT::class,</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Create-Controller"><a href="#Create-Controller" class="headerlink" title="Create Controller"></a>Create Controller</h3><p>Here we have to create controller that will manage all route request. so first create “APIController” and put bellow code.</p>
-<p><code>app/Http/Controllers/APIController.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">User</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Hash</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">JWTAuth</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APIController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;        </span><br><span class="line">    	$input = $request-&gt;all();</span><br><span class="line">    	$input[<span class="string">'password'</span>] = Hash::make($input[<span class="string">'password'</span>]);</span><br><span class="line">    	User::create($input);</span><br><span class="line">        <span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span>=&gt;<span class="keyword">true</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	$input = $request-&gt;all();</span><br><span class="line">    	<span class="keyword">if</span> (!$token = JWTAuth::attempt($input)) &#123;</span><br><span class="line">            <span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span> =&gt; <span class="string">'wrong email or password.'</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        	<span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span> =&gt; $token]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_user_details</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	$input = $request-&gt;all();</span><br><span class="line">    	$user = JWTAuth::toUser($input[<span class="string">'token'</span>]);</span><br><span class="line">        <span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span> =&gt; $user]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Test-API-from-Front-end"><a href="#Test-API-from-Front-end" class="headerlink" title="Test API from Front-end"></a>Test API from Front-end</h3><p>Don’t forgot to change <a href="http://learnl52.hd" target="_blank" rel="noopener">http://learnl52.hd</a> = your site url.</p>
-<p>Now we are ready to check our API from front-end side. i did make jquery ajax request example but you can also call API in angularjs. first fire register api that will return just success if user created success fully.</p>
-<p>Call Register API<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://learnl52.hd/api/register"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	data: &#123;<span class="string">"name"</span>:<span class="string">"HD"</span>,<span class="string">"email"</span>:<span class="string">"test@gmail.com"</span>,<span class="string">"password"</span>:<span class="string">"123456"</span>&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">		alert(<span class="string">"user created successfully"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>Now you can fire login API, this API will return token in result if, email and password will not wrong. that token you have to pass in all other route that way you can identify this user is current login user so fire following way:</p>
-<p>Call Login API<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://learnl52.hd/api/login"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	data: &#123;<span class="string">"email"</span>:<span class="string">"test@gmail.com"</span>,<span class="string">"password"</span>:<span class="string">"123456"</span>&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">		alert(data.result)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>At last we can fire get_user_details API, This API will take only one paramete token, token is that you find on login API. this API will return all users details if your token is valid, if token is not valid then return error message. fire ajax like this way:</p>
-<p>Call Get User Details API<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://learnl52.hd/api/get_user_details"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	data: &#123;<span class="string">"token"</span>:your toke here&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(data)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="add"><a href="#add" class="headerlink" title="add"></a>add</h3><p>Require the barryvdh/laravel-cors package in your composer.json and update your dependencies.</p>
-<p><code>composer require barryvdh/laravel-cors</code><br>Add the Cors\ServiceProvider to your<code>config/app.php</code>providers array:</p>
-<p><code>Barryvdh\Cors\ServiceProvider::class,</code></p>
-<blockquote>
-<p><a href="http://itsolutionstuff.com/post/laravel-52-api-using-jwt-authentication-tutorial-from-scratch-exampleexample.html" target="_blank" rel="noopener">http://itsolutionstuff.com/post/laravel-52-api-using-jwt-authentication-tutorial-from-scratch-exampleexample.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -850,7 +842,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-count">344</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -860,7 +852,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,223 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/10/理解算法的时间复杂度/" itemprop="url">
+                  理解算法的时间复杂度
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-10T08:16:21+08:00" content="2017-08-10">
+              2017-08-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>如果不曾遇见过你,我本可以忍受孤独.<br></blockquote></p>
+<h3 id="关于大O符号"><a href="#关于大O符号" class="headerlink" title="关于大O符号"></a>关于大O符号</h3><p>我所能想到的大O符号最好的例子就是做算术。拿两个数字（123456和789012）举例。我们在学校里学到的基本算术操作是：<br>加法；<br>减法；<br>乘法；<br>除法。<br>它们中每一个都是一次操作或一个问题。为它们(加法，减法，乘法，除法)求解的方法就被叫做算法（algorithm）。</p>
+<h4 id="加法"><a href="#加法" class="headerlink" title="加法"></a>加法</h4><p>加法是最简单的了。你把加数排成行，按列加上每个数字，把所加得的数的末位数字写到结果里。所加得的数的十位及其以上的数字转入下一列的计算中。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   <span class="number">123456</span></span><br><span class="line"> +</span><br><span class="line">   <span class="number">789012</span></span><br><span class="line">------------</span><br><span class="line">   <span class="number">912468</span>   我们一共操作了<span class="number">6</span>次</span><br></pre></td></tr></table></figure></p>
+<p>让我们假设在算法中，加上这些数是计算开销最大的操作。合乎情理的说，为了把这两个数加起来我们必须要加6次数字（并且可能进位到第7次）。如果我们把两个100位数相加，我们必须做100次加法操作。如果我们把两个10,000位数相加，我们必须做10,000次加法操作。<br>6位数相加就必须要加6次数字（并且可能进位到第7次）—最坏的情况<br><code>复杂度</code>（complexity，就是操作的数量），对于加法中较大数的数字个数n，是直接成比例的。我们称这为O(n)或者线性复杂度（linear complexity）。</p>
+<h4 id="乘法"><a href="#乘法" class="headerlink" title="乘法"></a>乘法</h4><p>乘法就不同了。你把乘数排成行，取放在下面的乘数的第1个数字，把它逆序乘以上面乘数的每一个数字。下面乘数的其余数字也这样做。所以为了乘我们的两个6位数乘数，我们必须做36次乘法操作。我们还需要做10或11次列的加法操作来得到最终结果。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="number">23</span></span><br><span class="line">x</span><br><span class="line">  <span class="number">34</span></span><br><span class="line">-------</span><br><span class="line">   <span class="number">2</span></span><br><span class="line">  <span class="number">9</span></span><br><span class="line">  <span class="number">9</span></span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">782</span></span><br><span class="line"><span class="comment">// 4次 乘法操作， 3次加法操作</span></span><br></pre></td></tr></table></figure></p>
+<p>如果我们有两个100位数相乘，我们需要做10,000次乘法操作和200次加法操作。两个100万位数相乘，我们需要做1万亿(1012)次乘法操作和200万次加法操作。<br>作为n平方的算法衡量尺度，这就是O(n2)，即平方复杂度(quadratic complexity)。现在是时候介绍另一个重要概念了：</p>
+<p>我们只关心复杂度最重要的部分。</p>
+<p>敏锐的人可能已意识到，我们可以把操作次数表示为：n2 + 2n。但正如你所看到的，我们的两个100万位数相乘的例子，第二个 2n 无关紧要（在那个阶段，2n只占操作总量的0.0002%）。</p>
+<p>有人注意到我们在这里假设场景为最坏的情况。当我们做6位数乘法时，如果其中一个是4位数另一个是6位数，那么我们只需做24次乘法操作。然而，对于那个’n’，我们仍然计算最坏情况，即乘数都是6位数的情况。因此，大O符号是关于一个算法的最坏情况的。</p>
+<h3 id="电话簿"><a href="#电话簿" class="headerlink" title="电话簿"></a>电话簿</h3><p>我所能想到的下一个最棒的例子就是电话簿，通常叫做白页电话簿或者其它类似名字，因国而异。但我要谈论的是这种电话薄，这种电话薄把人按这样的顺序排列：姓、缩写或名、地址、然后是电话号码。</p>
+<p>现在，如果你要指示计算机在一个包含<code>1,000,000</code>个名字的电话簿中查找”John Smith”的电话号码，你会怎么做？忽略也许你能猜测出S从电话簿哪里开始的事实（假设你不能猜测），你会怎么做？</p>
+<p>一种典型的实现也许是，打开电话簿的正中间，取第500,000条记录，把它和”Smith”进行比较。如果这恰好就是”Smith,John”，那我们真幸运。然而，”John Smith”更有可能在其前面或后面。如果在后面，那么我们把电话簿后面一半从中间划分开，然后重复之前的过程；如果在前面，那么我们把第一半从中间划分开，然后重复之前的过程。以此类推。</p>
+<p>这种算法叫做<code>二分搜索(binary search)</code>。</p>
+<p>因此，如果你想要在包含100万名字的电话簿中查找一个名字，事实上，通过这种算法，最多20次，你能找到任何名字。在比较搜索算法中，我们决定把比较操作作为我们的’n’。</p>
+<p>对于有3个名字的电话簿，最多需2次比较。<br>对于有7个名字的电话簿，最多需3次比较。<br>对于有15个名字的电话簿，最多需4次比较。<br>…<br>对于有1,000,000个名字的电话簿，最多需20次比较。<br>这简直好得难以置信，不是吗？</p>
+<p>用大O术语就是O(log n)，即对数复杂度（logarithmic complexity）。现在问题中的对数可以是ln(底数为e)，log10，log2 或者以其它为底数，这无关紧要，它仍然是O(log n)，正如O(2n2) 和 O(100n2) 都记为 O(n2)。</p>
+<p>现在，值得花时间说明一下，对于算法，大O符号能够被用于决定3种情况：</p>
+<p>最好情况(Best Case)：在电话簿的搜索中，最好情况是我们比较了1次就找到了名字。这就是O(1)，即常数复杂度(constant complexity)；<br>期望情况(Expected Case)：正如上面讨论过的，复杂度是O(log n)；<br>最坏情况(Worst Case)：也是O(log n)。<br>通常我们不关心最好情况。我们对期望和最坏情况感兴趣。有时，期望情况更重要，有时最坏情况更重要。</p>
+<p>回到电话簿的例子上来。</p>
+<p>如果你有一个电话号码，想要查找名字，要怎么做呢？警察有一个相反（按电话号码排列）的电话簿，但是对于一般公众，这样的查询会被拒绝，是吧？技术上，你能在普通电话簿中查找一个号码。要怎么做呢？</p>
+<p>你从第一个名字开始比较号码。如果吻合，很棒，如果不吻合，你移到下一条记录。你必须这样做，因为电话簿是无序(unordered)的(电话号码的排列是无序的)。</p>
+<p>因此，查找一个名字：</p>
+<p>最好情况(Best Case)：O(1);<br>期望情况(Expected Case)：O(n)（对应500,000）;<br>最坏情况(Worst Case)：O(n)（对应1,000,000）。</p>
+<blockquote>
+<p><a href="http://blog.jobbole.com/55184/#article-comment" target="_blank" rel="noopener">http://blog.jobbole.com/55184/#article-comment</a><br><a href="https://stackoverflow.com/questions/487258/what-is-a-plain-english-explanation-of-big-o-notation/487278#487278" target="_blank" rel="noopener">https://stackoverflow.com/questions/487258/what-is-a-plain-english-explanation-of-big-o-notation/487278#487278</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/08/09/php中的时间/" itemprop="url">
+                  php中的时间
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-09T17:51:49+08:00" content="2017-08-09">
+              2017-08-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>哪个更痛苦，努力还是后悔？<br></blockquote></p>
+<h3 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h3><p>时间戳是指格林威治时间1970年01月01日00时00分00秒(北京时间1970年01月01日08时00分00秒)起至现在的总秒数</p>
+<h3 id="php获取"><a href="#php获取" class="headerlink" title="php获取"></a>php获取</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pure php</span></span><br><span class="line">time()</span><br><span class="line"></span><br><span class="line"><span class="comment">// Carbon\Carbon</span></span><br><span class="line">Carbon::now()-&gt;timestamp</span><br></pre></td></tr></table></figure>
+<h3 id="PHP-Date-函数"><a href="#PHP-Date-函数" class="headerlink" title="PHP Date() 函数"></a>PHP Date() 函数</h3><p>date(format,timestamp)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"Y/m/d"</span>) . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"Y.m.d"</span>) . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"Y-m-d"</span>) . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"l"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="php-获取时间今天明天昨天时间戳"><a href="#php-获取时间今天明天昨天时间戳" class="headerlink" title="php 获取时间今天明天昨天时间戳"></a>php 获取时间今天明天昨天时间戳</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="string">"今天:"</span>.date(<span class="string">"Y-m-d"</span>).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"昨天:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"-1 day"</span>)), <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"明天:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+1 day"</span>)). <span class="string">"&lt;br&gt;"</span>;  </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一周后:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+1 week"</span>)). <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一周零两天四小时两秒后:"</span>.date(<span class="string">"Y-m-d G:H:s"</span>,strtotime(<span class="string">"+1 week 2 days 4 hours 2 seconds"</span>)). <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"下个星期四:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"next Thursday"</span>)). <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"上个周一:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"last Monday"</span>)).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一个月前:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"last month"</span>)).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一个月后:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+1 month"</span>)).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"十年后:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+10 year"</span>)).<span class="string">"&lt;br&gt;"</span>;    </span><br><span class="line"></span><br><span class="line"><span class="comment">//strtotime()函数的作用是将日期时间描述解析为 Unix 时间戳</span></span><br></pre></td></tr></table></figure>
+<h3 id="python获取"><a href="#python获取" class="headerlink" title="python获取"></a>python获取</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line">time.time()</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/08/javascript中的函数预解析和变量提升/" itemprop="url">
                   javascript中的函数预解析和变量提升
                 </a>
@@ -571,203 +788,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/07/计算PHP脚本的执行时间/" itemprop="url">
-                  计算PHP脚本的执行时间
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-07T22:31:52+08:00" content="2017-08-07">
-              2017-08-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你我之间本无缘分，全靠我死撑<br></blockquote></p>
-<h3 id="sleep-与usleep-的区别"><a href="#sleep-与usleep-的区别" class="headerlink" title="sleep()与usleep()的区别"></a>sleep()与usleep()的区别</h3><p>sleep()是暂停多少秒<br>usleep()是暂停多少微秒<br>注意：usleep()单位是微秒，1秒 = 1000毫秒 ，1毫秒 = 1000微秒，即1微秒等于百万分之一秒。</p>
-<h3 id="microtime"><a href="#microtime" class="headerlink" title="microtime"></a>microtime</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$start = microtime(<span class="keyword">true</span>);</span><br><span class="line">sleep(<span class="number">2</span>);</span><br><span class="line">$end = microtime(<span class="keyword">true</span>);</span><br><span class="line">$execution_time = number_format($end-$start, <span class="number">2</span>); <span class="comment">// 单位秒</span></span><br></pre></td></tr></table></figure>
-<h3 id="文件修改时间"><a href="#文件修改时间" class="headerlink" title="文件修改时间"></a>文件修改时间</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$updateTime = filemtime($tokenPath);</span><br><span class="line">$nowTime = microtime(<span class="keyword">true</span>);</span><br><span class="line">$diffTime = round($nowTime - $updateTime);</span><br><span class="line"><span class="keyword">if</span> ($diffTime &lt; <span class="number">7000</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> file_get_contents($tokenPath);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/07/移动端ui框架推荐/" itemprop="url">
-                  移动端ui框架推荐
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-07T09:11:56+08:00" content="2017-08-07">
-              2017-08-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>不要在父母需要你的时候, 只有眼泪<br></blockquote><br>不想多做介绍, 自己点开看看, 没有最好的, 只有最合适的</p>
-<h3 id="weui"><a href="#weui" class="headerlink" title="weui"></a>weui</h3><p>微信ui<br><a href="https://weui.io/" target="_blank" rel="noopener">https://weui.io/</a></p>
-<h3 id="SUI-Mobile"><a href="#SUI-Mobile" class="headerlink" title="SUI Mobile"></a>SUI Mobile</h3><p>阿里巴巴团队<br><a href="http://m.sui.taobao.org/components/" target="_blank" rel="noopener">http://m.sui.taobao.org/components/</a></p>
-<h3 id="layui"><a href="#layui" class="headerlink" title="layui"></a>layui</h3><p><a href="http://www.layui.com/" target="_blank" rel="noopener">http://www.layui.com/</a></p>
-<h3 id="ydui"><a href="#ydui" class="headerlink" title="ydui"></a>ydui</h3><p><a href="http://www.ydui.org/" target="_blank" rel="noopener">http://www.ydui.org/</a></p>
-<h3 id="frozenui"><a href="#frozenui" class="headerlink" title="frozenui"></a>frozenui</h3><p><a href="http://frozenui.github.io" target="_blank" rel="noopener">http://frozenui.github.io</a></p>
-<h3 id="zanui"><a href="#zanui" class="headerlink" title="zanui"></a>zanui</h3><p>使用于vue<br><a href="https://www.youzanyun.com/zanui" target="_blank" rel="noopener">https://www.youzanyun.com/zanui</a></p>
-<h3 id="zanui-weapp"><a href="#zanui-weapp" class="headerlink" title="zanui-weapp"></a>zanui-weapp</h3><p>微信小程序<br><a href="https://github.com/youzan/zanui-weapp" target="_blank" rel="noopener">https://github.com/youzan/zanui-weapp</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -811,7 +831,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-count">344</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -821,7 +841,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

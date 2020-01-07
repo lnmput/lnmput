@@ -265,6 +265,227 @@
             
               
                 
+                <a class="post-title-link" href="/2019/10/16/go语言中的接口/" itemprop="url">
+                  Go语言中的接口
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-10-16T15:53:00+08:00" content="2019-10-16">
+              2019-10-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>世界上最廉价的东西就是男人一事无成时的温柔。<br></blockquote>
+
+<p>Go 语言也提供了接口类型，使得我们可以面向接口编程，将实现和接口分离。在我看来，软件的抽象之美也应该以此来表达，和 Java 语言不同的是 Go 并不是那么 “强制”，它使用了一种 鸭子类型 的方式让动态类型成为可能。</p>
+<h3 id="Duck-Typing"><a href="#Duck-Typing" class="headerlink" title="Duck Typing"></a>Duck Typing</h3><p>在 Go 中没有 implements 和 extends 这种关键字，这对我们而言反倒轻松了一些，它认为 Go 的接口就像鸭子测试里的描述：</p>
+<blockquote>
+<p>当看到一只鸟走起来像鸭子、游泳起来像鸭子、叫起来也像鸭子，那么这只鸟就可以被称为鸭子。</p>
+</blockquote>
+<p>在鸭子类型中，关注点在于对象的行为，能作什么；而不是关注对象所属的类型。例如，在不使用鸭子类型的语言中，我们可以编写一个函数，它接受一个类型为 “鸭子” 的对象，并调用它的 “走” 和 “叫” 方法。</p>
+<p>在使用鸭子类型的语言中，这样的一个函数可以接受一个任意类型的对象，并调用它的 “走” 和 “叫” 方法。如果这些需要被调用的方法不存在，那么将引发一个运行时错误。</p>
+<p>任何拥有这样的正确的 “走” 和 “叫” 方法的对象都可被函数接受的这种行为引出了以上表述，这种决定类型的方式因此得名。</p>
+<h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><p>我们用 Go 语言来实现一个鸭子类型：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Duck <span class="keyword">interface</span> &#123;</span><br><span class="line">    Swim()    <span class="comment">// 游泳</span></span><br><span class="line">    Feathers() <span class="comment">// 羽毛</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里使用 Go 提供的 interface 关键字定义了一个鸭子接口类型，这个接口中提供了鸭子的两种行为：游泳和羽毛是什么样的，但是没有提供实现。</p>
+<h3 id="组合接口"><a href="#组合接口" class="headerlink" title="组合接口"></a>组合接口</h3><p>现在我们给鸭子再添加一种嘎嘎叫的能力，一种方式是在原有的接口上添加 “嘎嘎叫” 方法，这样做的话就表示所有的鸭子都应该拥有此能力，假设我们的玩具鸭并不能开口嘎嘎叫，所以它没有这种能力。这时候我们可以将会嘎嘎叫的鸭子单独定义一种类型，在 Go 可以使用组合的方式来实现：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> QuackDuck <span class="keyword">interface</span> &#123;</span><br><span class="line">    Quack()  <span class="comment">// 嘎嘎叫</span></span><br><span class="line">    Duck     <span class="comment">// 嵌入接口</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>样 QuackDuck 类型就拥有了之前 Duck 提供的两种抽象能力，同时还应该拥有嘎嘎叫的能力。</p>
+<h3 id="接口实现"><a href="#接口实现" class="headerlink" title="接口实现"></a>接口实现</h3><p>前面我们只给出了鸭子的能力定义，还没有任何实现，由于 Go 中没有继承和实现的关键字，想成为上述接口的实现非常简单，只要实现它们定义的方法就可以了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RealDuck - 真正的鸭子</span></span><br><span class="line"><span class="keyword">type</span> RealDuck <span class="keyword">struct</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(RealDuck)</span> <span class="title">Swim</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"用鸭璞向后划水"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(RealDuck)</span> <span class="title">Feathers</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"遇到水也不会湿的羽毛"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(RealDuck)</span> <span class="title">Quack</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"嘎~ 嘎~ 嘎~"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ToyDuck - 玩具鸭</span></span><br><span class="line"><span class="keyword">type</span> ToyDuck <span class="keyword">struct</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ToyDuck)</span> <span class="title">Swim</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"以固定的速度向前移动"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ToyDuck)</span> <span class="title">Feathers</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"白色的固定的塑料羽毛"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="接口使用"><a href="#接口使用" class="headerlink" title="接口使用"></a>接口使用</h3><p>接下来我们可以使用一下这个类型了：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> duck Duck</span><br><span class="line">duck = ToyDuck&#123;&#125;</span><br><span class="line">duck.Swim()</span><br><span class="line">duck.Feathers()</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/10/05/go语言中什么时候使用指针/" itemprop="url">
+                  Go语言中什么时候使用指针
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-10-05T22:47:42+08:00" content="2019-10-05">
+              2019-10-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>当快乐到来时，我就不再思考人生<br>当寂寞来临时，我就低头努力读书<br></blockquote>
+
+<p>什么是指针：即一个指针变量指向一个值的内存地址。</p>
+<h3 id="使用值类型和指针类型的区别"><a href="#使用值类型和指针类型的区别" class="headerlink" title="使用值类型和指针类型的区别"></a>使用值类型和指针类型的区别</h3><p>首先，我们来看一个计算面积的代码，如下所示。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Rect <span class="keyword">struct</span> &#123;                               <span class="comment">//定义一个结构体</span></span><br><span class="line">    width  <span class="keyword">float64</span></span><br><span class="line">    length <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rect Rect)</span> <span class="title">area</span><span class="params">()</span> <span class="title">float64</span></span> &#123;               <span class="comment">//定义一个方法，按值传递</span></span><br><span class="line">	<span class="keyword">return</span> rect.width * rect.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rect *Rect)</span> <span class="title">area1</span><span class="params">()</span> <span class="title">float64</span></span> &#123;            <span class="comment">//定义一个方法，按指针传递</span></span><br><span class="line">    rect.width *= <span class="number">2</span></span><br><span class="line">    rect.length *= <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> rect.width * rect.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> rect = <span class="built_in">new</span>(Rect)     <span class="comment">//使用new函数创建一个结构体指针rect，也就是说rect的类型是*Rect</span></span><br><span class="line">    rect.width = <span class="number">100</span></span><br><span class="line">    rect.length = <span class="number">200</span></span><br><span class="line">    fmt.Println(<span class="string">"Width:"</span>, rect.width, <span class="string">"Length:"</span>, rect.length,<span class="string">"Area:"</span>, rect.area())  <span class="comment">//通过结构体指针类型的变量调用area()方法</span></span><br><span class="line">    fmt.Println(<span class="string">"Width:"</span>, rect.width, <span class="string">"Length:"</span>, rect.length,<span class="string">"Area:"</span>, rect.area1())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Go语言中，默认是按值传递。当一个变量当作参数传递的时候，会创建一个变量的副本，然后传递给函数或者方法，你可以看到这个副本的地址和变量的地址是不一样的。当变量当做指针被传递的时候，一个新的指针被创建，它指向变量同样的内存地址，所以你可以将这个指针看成原始变量指针的副本。</p>
+<p>故此</p>
+<ul>
+<li>1.是否使用结构体指针，取决于是否要在函数内部改变传递进来的参数的值。如果你的struct足够大，使用指针可以加快效率。如果不使用指针，在函数内部则无法修改struct中的值。</li>
+<li>2.结构体赋值默认是按值传递，你要改变原来的那个值，要使用指针（即如果你要修改对象本身，那就要传指针，否则修改的是副本）。</li>
+</ul>
+<h3 id="go什么情况下使用指针"><a href="#go什么情况下使用指针" class="headerlink" title="go什么情况下使用指针"></a>go什么情况下使用指针</h3><ul>
+<li>推荐在方法上使用指针（前提是这个类型不是 map、slice 等引用类型）</li>
+<li>当结构体较大的时候使用指针会更高效，可以避免内存拷贝，“结构较大” 到底多大才算大可能需要自己或团队衡量，如超过 5 个字段或者根据结构体内存占用来计算</li>
+<li>如果要修改结构体内部的数据或状态必须使用指针</li>
+<li>如果方法的receiver是map、slice 、channel等引用类型不要使用指针</li>
+<li>小数据类型如 bool、int 等没必要使用指针传递</li>
+<li>如果该函数会修改receiver或变量等，使用指针</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/09/05/safari手机浏览器点击事件失效/" itemprop="url">
                   safari手机浏览器点击事件失效
                 </a>
@@ -603,202 +824,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/06/05/laravel大量数据库查询导致php进程内存耗尽/" itemprop="url">
-                  Laravel大量数据库查询导致php进程内存耗尽
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-06-05T12:39:26+08:00" content="2019-06-05">
-              2019-06-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>行路难，不在水，不在山，只在人情反覆间<br></blockquote>
-
-<p>Laravel框架默认存储每次请求(每次命令行执行也相当于一次请求)的所有数据库查询语句！！！<br>在普通的http中数据库请求语句并不多，所有不会导致问题，但是需要大量数据库查询的命令行工具就显然不能这么干，</p>
-<h3 id="禁用query日志"><a href="#禁用query日志" class="headerlink" title="禁用query日志"></a>禁用query日志</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::connection()-&gt;disableQueryLog();  <span class="comment">//禁用query log</span></span><br></pre></td></tr></table></figure>
-<h3 id="打印sql"><a href="#打印sql" class="headerlink" title="打印sql"></a>打印sql</h3><p>在 <code>AppServiceProvider.php</code> 的 boot 方法中添加如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (env(<span class="string">'APP_ENV'</span>) === <span class="string">'local'</span>) &#123;</span><br><span class="line">        DB::connection()-&gt;enableQueryLog();</span><br><span class="line">        Event::listen(<span class="string">'kernel.handled'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($request, $response)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ( $request-&gt;has(<span class="string">'sql-debug'</span>) ) &#123;</span><br><span class="line">                $queries = DB::getQueryLog();</span><br><span class="line">                dd($queries);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/05/30/mysql模糊查询unicode汉字/" itemprop="url">
-                  MySQL模糊查询unicode汉字
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-05-30T19:48:37+08:00" content="2019-05-30">
-              2019-05-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>最难相处的女生是那种很爱文艺但又没什么文化的<br></blockquote>
-
-<p>一般的查询：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">	* </span><br><span class="line">FROM</span><br><span class="line">	`rainlab_translate_messages` </span><br><span class="line">WHERE</span><br><span class="line">	( ( lower( message_data ) LIKE &apos;%&quot;\u4ef7\u683c&quot;%&apos; ) ) </span><br><span class="line">	AND `domain_id` = 1 </span><br><span class="line">ORDER BY</span><br><span class="line">	`message_data` ASC </span><br><span class="line">	LIMIT 500 OFFSET 0</span><br></pre></td></tr></table></figure></p>
-<p>这样的查询是查不到结果的，应该改成这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">	* </span><br><span class="line">FROM</span><br><span class="line">	`rainlab_translate_messages` </span><br><span class="line">WHERE</span><br><span class="line">	( ( lower( message_data ) LIKE &apos;%&quot;_u4ef7_u683c&quot;%&apos; ) ) </span><br><span class="line">	AND `domain_id` = 1 </span><br><span class="line">ORDER BY</span><br><span class="line">	`message_data` ASC </span><br><span class="line">	LIMIT 500 OFFSET 0</span><br></pre></td></tr></table></figure></p>
-<p>针对PHP里的，我们直接输入汉字， 可以这样进行操作：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$query = $query-&gt;searchWhere(str_replace(<span class="string">"\\"</span>,<span class="string">"_"</span>,json_encode($search)), [<span class="string">'message_data'</span>]);</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -842,7 +867,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-count">344</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -852,7 +877,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

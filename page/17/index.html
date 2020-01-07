@@ -265,6 +265,282 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/17/用php读取大文件/" itemprop="url">
+                  用php读取大文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-17T13:55:05+08:00" content="2018-04-17">
+              2018-04-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>一个国家强大了，别的国家都会来跟你建交；一个人强大了，别的人都会跟你友好，一个男人强大了，好女孩自然会来找你。所以，不要苦苦地等一个人，不要为无法赢得一个人的心而懊丧，应加强自身建设。<br></blockquote>
+
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>PHP已经为我们提供了函数<code>memory_get_peak_usage</code>,用来返回脚本运行过程中分配给 PHP 内存的峰值.单位是字节, 我们需要写一个函数将这个结果转化为我们可以轻易理解的单位, 比如<code>MB</code>;<br>memory.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">formatBytes</span><span class="params">($bytes, $precision = <span class="number">2</span>)</span> </span>&#123;</span><br><span class="line">    $units = <span class="keyword">array</span>(<span class="string">"b"</span>, <span class="string">"kb"</span>, <span class="string">"mb"</span>, <span class="string">"gb"</span>, <span class="string">"tb"</span>);</span><br><span class="line"></span><br><span class="line">    $bytes = max($bytes, <span class="number">0</span>);</span><br><span class="line">    $pow = floor(($bytes ? log($bytes) : <span class="number">0</span>) / log(<span class="number">1024</span>));</span><br><span class="line">    $pow = min($pow, count($units) - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    $bytes /= (<span class="number">1</span> &lt;&lt; (<span class="number">10</span> * $pow));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> round($bytes, $precision) . <span class="string">" "</span> . $units[$pow];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> formatBytes(memory_get_peak_usage());</span><br></pre></td></tr></table></figure></p>
+<p>然后我们准备了一个存有59w个邮箱的txt文件, 文本大小13M;</p>
+<h3 id="使用fgets"><a href="#使用fgets" class="headerlink" title="使用fgets"></a>使用fgets</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readTheFile</span><span class="params">($path)</span> </span>&#123;</span><br><span class="line">    $handle = fopen($path, <span class="string">"r"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(!feof($handle)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> trim(fgets($handle)).PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    fclose($handle);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">readTheFile(<span class="string">"59w.txt"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">"memory.php"</span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结果: 62.35 mb</p>
+</blockquote>
+<h3 id="使用生成器"><a href="#使用生成器" class="headerlink" title="使用生成器"></a>使用生成器</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readTheFile</span><span class="params">($path)</span> </span>&#123;</span><br><span class="line">    $handle = fopen($path, <span class="string">"r"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(!feof($handle)) &#123;</span><br><span class="line">        <span class="keyword">yield</span> trim(fgets($handle)).PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    fclose($handle);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$iterator = readTheFile(<span class="string">"59w.txt"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> ($iterator <span class="keyword">as</span> $iteration) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $iteration;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">"memory.php"</span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结果: 382.88 kb</p>
+</blockquote>
+<h3 id="管道间的文件"><a href="#管道间的文件" class="headerlink" title="管道间的文件"></a>管道间的文件</h3><p>在我们不需要处理数据的情况下，我们可以把文件数据传递到另一个文件。通常被称为管道（大概是因为我们看不到除了两端的管子里面，当然，它也是不透明的），我们可以通过使用流方法实现。让我们先写一个脚本从一个文件传到另一个文件。这样我们可以测量内存的占用情况：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">file_put_contents(</span><br><span class="line">    <span class="string">"test1.txt"</span>, file_get_contents(<span class="string">"59w.txt"</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">"memory.php"</span>;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>结果: 14.34 mb</p>
+</blockquote>
+<p>让我们尝试用流(管道)来传送一个文件到另一个：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$handle1 = fopen(<span class="string">"59w.txt"</span>, <span class="string">"r"</span>);</span><br><span class="line">$handle2 = fopen(<span class="string">"test2.txt"</span>, <span class="string">"w"</span>);</span><br><span class="line"></span><br><span class="line">stream_copy_to_stream($handle1, $handle2);</span><br><span class="line"></span><br><span class="line">fclose($handle1);</span><br><span class="line">fclose($handle2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">"memory.php"</span>;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>结果: 381.77 kb</p>
+<p><a href="https://www.oschina.net/translate/performant-reading-big-files-php" target="_blank" rel="noopener">https://www.oschina.net/translate/performant-reading-big-files-php</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/16/laravel-eloquent必备的实用技巧/" itemprop="url">
+                  Laravel-Eloquent必备的实用技巧
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-16T13:36:24+08:00" content="2018-04-16">
+              2018-04-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>No news is good news<br></blockquote>
+
+<p>Eloquent ORM seems like a simple mechanism, but under the hood, there’s a lot of semi-hidden functions and less-known ways to achieve more with it. In this article, I will show you a few tricks.</p>
+<h3 id="1-Increments-and-Decrements"><a href="#1-Increments-and-Decrements" class="headerlink" title="1. Increments and Decrements"></a>1. Increments and Decrements</h3><p>Instead of this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$article = Article::find($article_id);</span><br><span class="line">$article-&gt;read_count++;</span><br><span class="line">$article-&gt;save();</span><br></pre></td></tr></table></figure></p>
+<p>You can do this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$article = Article::find($article_id);</span><br><span class="line">$article-&gt;increment(<span class="string">'read_count'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Also these will work:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Article::find($article_id)-&gt;increment(<span class="string">'read_count'</span>);</span><br><span class="line">Article::find($article_id)-&gt;increment(<span class="string">'read_count'</span>, <span class="number">10</span>); <span class="comment">// +10</span></span><br><span class="line">Product::find($produce_id)-&gt;decrement(<span class="string">'stock'</span>); <span class="comment">// -1</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="2-XorY-methods"><a href="#2-XorY-methods" class="headerlink" title="2. XorY methods"></a>2. XorY methods</h3><p>Eloquent has quite a few functions that combine two methods, like “please do X, otherwise do Y”.</p>
+<p>Example 1 – <code>findOrFail()</code>:</p>
+<p>Instead of:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$user = User::find($id);</span><br><span class="line"><span class="keyword">if</span> (!$user) &#123; abort (<span class="number">404</span>); &#125;</span><br></pre></td></tr></table></figure></p>
+<p>Do this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user = User::findOrFail($id);</span><br></pre></td></tr></table></figure></p>
+<p>Example 2 – <code>firstOrCreate()</code>:</p>
+<p>Instead of:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$user = User::where(<span class="string">'email'</span>, $email)-&gt;first();</span><br><span class="line"><span class="keyword">if</span> (!$user) &#123;</span><br><span class="line">  User::create([</span><br><span class="line">    <span class="string">'email'</span> =&gt; $email</span><br><span class="line">  ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Do just this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user = User::firstOrCreate([<span class="string">'email'</span> =&gt; $email]);</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-Model-boot-method"><a href="#3-Model-boot-method" class="headerlink" title="3. Model boot() method"></a>3. Model boot() method</h3><p>There is a magical place called boot() in an Eloquent model where you can override default behavior:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">parent</span>::boot();</span><br><span class="line">        <span class="keyword">static</span>::updating(<span class="function"><span class="keyword">function</span><span class="params">($model)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="comment">// do some logging</span></span><br><span class="line">            <span class="comment">// override some property like $model-&gt;something = transform($something);</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Probably one of the most popular examples is setting some field value at the moment of creating the model object. Let’s say you want to generate UUID field at that moment.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">parent</span>::boot();</span><br><span class="line">  <span class="keyword">self</span>::creating(<span class="function"><span class="keyword">function</span> <span class="params">($model)</span> </span>&#123;</span><br><span class="line">    $model-&gt;uuid = (string)Uuid::generate();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-Relationship-with-conditions-and-ordering"><a href="#4-Relationship-with-conditions-and-ordering" class="headerlink" title="4. Relationship with conditions and ordering"></a>4. Relationship with conditions and ordering</h3><p>This is a typical way to define relationship:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">users</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasMany(<span class="string">'App\User'</span>);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>But did you know that at this point we can already add where or orderBy?<br>For example, if you want a specific relationship for some type of users, also ordered by email, you can do this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">approvedUsers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasMany(<span class="string">'App\User'</span>)-&gt;where(<span class="string">'approved'</span>, <span class="number">1</span>)-&gt;orderBy(<span class="string">'email'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-Model-properties-timestamps-appends-etc"><a href="#5-Model-properties-timestamps-appends-etc" class="headerlink" title="5. Model properties: timestamps, appends etc."></a>5. Model properties: timestamps, appends etc.</h3><p>There are a few “parameters” of an Eloquent model, in the form of properties of that class. The most popular ones are probably these:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $table = <span class="string">'users'</span>;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'email'</span>, <span class="string">'password'</span>]; <span class="comment">// which fields can be filled with User::create()</span></span><br><span class="line">    <span class="keyword">protected</span> $dates = [<span class="string">'created_at'</span>, <span class="string">'deleted_at'</span>]; <span class="comment">// which fields will be Carbon-ized</span></span><br><span class="line">    <span class="keyword">protected</span> $appends = [<span class="string">'field1'</span>, <span class="string">'field2'</span>]; <span class="comment">// additional values returned in JSON</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>But wait, there’s more:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $primaryKey = <span class="string">'uuid'</span>; <span class="comment">// it doesn't have to be "id"</span></span><br><span class="line"><span class="keyword">public</span> $incrementing = <span class="keyword">false</span>; <span class="comment">// and it doesn't even have to be auto-incrementing!</span></span><br><span class="line"><span class="keyword">protected</span> $perPage = <span class="number">25</span>; <span class="comment">// Yes, you can override pagination count PER MODEL (default 15)</span></span><br><span class="line"><span class="keyword">const</span> CREATED_AT = <span class="string">'created_at'</span>;</span><br><span class="line"><span class="keyword">const</span> UPDATED_AT = <span class="string">'updated_at'</span>; <span class="comment">// Yes, even those names can be overridden</span></span><br><span class="line"><span class="keyword">public</span> $timestamps = <span class="keyword">false</span>; <span class="comment">// or even not used at all</span></span><br></pre></td></tr></table></figure></p>
+<p>And there’s even more, I’ve listed the most interesting ones, for more please check out the code of default abstract Model class and check out all the traits used.</p>
+<h3 id="6-Find-multiple-entries"><a href="#6-Find-multiple-entries" class="headerlink" title="6. Find multiple entries"></a>6. Find multiple entries</h3><p>Everyone knows the <code>find()</code> method, right?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user = User::find(<span class="number">1</span>);</span><br></pre></td></tr></table></figure></p>
+<p>I’m quite surprised how few people know about that it can accept multiple IDs as an array:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$users = User::find([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]);</span><br></pre></td></tr></table></figure></p>
+<h3 id="7-WhereX"><a href="#7-WhereX" class="headerlink" title="7. WhereX"></a>7. WhereX</h3><p>There’s an elegant way to turn this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$users = User::where(<span class="string">'approved'</span>, <span class="number">1</span>)-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<p>Into this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$users = User::whereApproved(<span class="number">1</span>)-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<p>Yes, you can change the name of any field and append it as a suffix to “where” and it will work by magic.</p>
+<p>Also, there are some pre-defined methods in Eloquent, related to date/time:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User::whereDate(<span class="string">'created_at'</span>, date(<span class="string">'Y-m-d'</span>));</span><br><span class="line">User::whereDay(<span class="string">'created_at'</span>, date(<span class="string">'d'</span>));</span><br><span class="line">User::whereMonth(<span class="string">'created_at'</span>, date(<span class="string">'m'</span>));</span><br><span class="line">User::whereYear(<span class="string">'created_at'</span>, date(<span class="string">'Y'</span>));</span><br></pre></td></tr></table></figure></p>
+<h3 id="8-Order-by-relationship"><a href="#8-Order-by-relationship" class="headerlink" title="8. Order by relationship"></a>8. Order by relationship</h3><p>A little more complicated “trick”. What if you have forum topics but want to order them by latest post? Pretty common requirement in forums with last updated topics on the top, right?</p>
+<p>First, describe a separate relationship for the latest post on the topic:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">latestPost</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasOne(\App\Post::class)-&gt;latest();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>And then, in our controller, we can do this “magic”:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$users = Topic::with(<span class="string">'latestPost'</span>)-&gt;get()-&gt;sortByDesc(<span class="string">'latestPost.created_at'</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="9-Eloquent-when-–-no-more-if-else’s"><a href="#9-Eloquent-when-–-no-more-if-else’s" class="headerlink" title="9. Eloquent::when() – no more if-else’s"></a>9. Eloquent::when() – no more if-else’s</h3><p>Many of us write conditional queries with “<code>if-else</code>”, something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (request(<span class="string">'filter_by'</span>) == <span class="string">'likes'</span>) &#123;</span><br><span class="line">    $query-&gt;where(<span class="string">'likes'</span>, <span class="string">'&gt;'</span>, request(<span class="string">'likes_amount'</span>, <span class="number">0</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (request(<span class="string">'filter_by'</span>) == <span class="string">'date'</span>) &#123;</span><br><span class="line">    $query-&gt;orderBy(<span class="string">'created_at'</span>, request(<span class="string">'ordering_rule'</span>, <span class="string">'desc'</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>But there’s a better way – to use <code>when()</code>:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$query = Author::query();</span><br><span class="line">$query-&gt;when(request(<span class="string">'filter_by'</span>) == <span class="string">'likes'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $q-&gt;where(<span class="string">'likes'</span>, <span class="string">'&gt;'</span>, request(<span class="string">'likes_amount'</span>, <span class="number">0</span>));</span><br><span class="line">&#125;);</span><br><span class="line">$query-&gt;when(request(<span class="string">'filter_by'</span>) == <span class="string">'date'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $q-&gt;orderBy(<span class="string">'created_at'</span>, request(<span class="string">'ordering_rule'</span>, <span class="string">'desc'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>It may not feel shorter or more elegant, but the most powerful is passing of the parameters:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$query = User::query();</span><br><span class="line">$query-&gt;when(request(<span class="string">'role'</span>, <span class="keyword">false</span>), <span class="function"><span class="keyword">function</span> <span class="params">($q, $role)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> $q-&gt;where(<span class="string">'role_id'</span>, $role);</span><br><span class="line">&#125;);</span><br><span class="line">$authors = $query-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="10-BelongsTo-Default-Models"><a href="#10-BelongsTo-Default-Models" class="headerlink" title="10. BelongsTo Default Models"></a>10. BelongsTo Default Models</h3><p>Let’s say you have Post belonging to Author and then Blade code:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; $post-&gt;author-&gt;name &#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>But what if the author is deleted, or isn’t set for some reason? You will get an error, something like “property of non-object”.</p>
+<p>Of course, you can prevent it like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; $post-&gt;author-&gt;name ?? '' &#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>But you can do it on Eloquent relationship level:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">author</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Author'</span>)-&gt;withDefault();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>In this example, the <code>author()</code> relation will return an empty App\Author model if no author is attached to the post.</p>
+<p>Furthermore, we can assign default property values to that default model.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">author</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Author'</span>)-&gt;withDefault([</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'Guest Author'</span></span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="11-Order-by-Mutator"><a href="#11-Order-by-Mutator" class="headerlink" title="11. Order by Mutator"></a>11. Order by Mutator</h3><p>Imagine you have this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFullNameAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;attributes[<span class="string">'first_name'</span>] . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;attributes[<span class="string">'last_name'</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Now, you want to order by that full_name? This won’t work:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$clients = Client::orderBy(<span class="string">'full_name'</span>)-&gt;get(); <span class="comment">// doesn't work</span></span><br></pre></td></tr></table></figure></p>
+<p>The solution is quite simple. We need to order the results after we get them.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$clients = Client::get()-&gt;sortBy(&apos;full_name&apos;); // works!</span><br></pre></td></tr></table></figure></p>
+<p>Notice that the function name is different – it’s not orderBy, it’s sortBy.</p>
+<h3 id="12-Default-ordering-in-global-scope"><a href="#12-Default-ordering-in-global-scope" class="headerlink" title="12. Default ordering in global scope"></a>12. Default ordering in global scope</h3><p>What if you want to have <code>User::all()</code> always be ordered by name field? You can assign a global scope. Let’s go back to the <code>boot()</code> method, which we mentioned already above.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">parent</span>::boot();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Order by name ASC</span></span><br><span class="line">    <span class="keyword">static</span>::addGlobalScope(<span class="string">'order'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Builder $builder)</span> </span>&#123;</span><br><span class="line">        $builder-&gt;orderBy(<span class="string">'name'</span>, <span class="string">'asc'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Read more about Query Scopes here.</p>
+<h3 id="13-Raw-query-methods"><a href="#13-Raw-query-methods" class="headerlink" title="13. Raw query methods"></a>13. Raw query methods</h3><p>Sometimes we need to add raw queries to our Eloquent statements. Luckily, there are functions for that.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// whereRaw</span></span><br><span class="line">$orders = DB::table(<span class="string">'orders'</span>)</span><br><span class="line">    -&gt;whereRaw(<span class="string">'price &gt; IF(state = "TX", ?, 100)'</span>, [<span class="number">200</span>])</span><br><span class="line">    -&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// havingRaw</span></span><br><span class="line">Product::groupBy(<span class="string">'category_id'</span>)-&gt;havingRaw(<span class="string">'COUNT(*) &gt; 1'</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// orderByRaw</span></span><br><span class="line">User::where(<span class="string">'created_at'</span>, <span class="string">'&gt;'</span>, <span class="string">'2016-01-01'</span>)</span><br><span class="line">  -&gt;orderByRaw(<span class="string">'(updated_at - created_at) desc'</span>)</span><br><span class="line">  -&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="14-Replicate-make-a-copy-of-a-row"><a href="#14-Replicate-make-a-copy-of-a-row" class="headerlink" title="14. Replicate: make a copy of a row"></a>14. Replicate: make a copy of a row</h3><p>Short one. Without deep explanations, here’s the best way to make a copy of database entry:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$task = Tasks::find(<span class="number">1</span>);</span><br><span class="line">$newTask = $task-&gt;replicate();</span><br><span class="line">$newTask-&gt;save();</span><br></pre></td></tr></table></figure></p>
+<h3 id="15-Chunk-method-for-big-tables"><a href="#15-Chunk-method-for-big-tables" class="headerlink" title="15. Chunk() method for big tables"></a>15. Chunk() method for big tables</h3><p>Not exactly Eloquent related, it’s more about Collection, but still powerful – to process bigger datasets, you can chunk them into pieces.</p>
+<p>Instead of:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$users = User::all();</span><br><span class="line"><span class="keyword">foreach</span> ($users <span class="keyword">as</span> $user) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">You can <span class="keyword">do</span>:</span><br><span class="line"></span><br><span class="line">User::chunk(<span class="number">100</span>, <span class="function"><span class="keyword">function</span> <span class="params">($users)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> ($users <span class="keyword">as</span> $user) &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="16-Create-additional-things-when-creating-a-model"><a href="#16-Create-additional-things-when-creating-a-model" class="headerlink" title="16. Create additional things when creating a model"></a>16. Create additional things when creating a model</h3><p>We all know this Artisan command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:model Company</span><br></pre></td></tr></table></figure></p>
+<p>But did you know there are three useful flags to generate related files to the model?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:model Company -mcr</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>-m will create a migration file</li>
+<li>-c will create a controller</li>
+<li>-r will indicate that controller should be resourceful</li>
+</ul>
+<h3 id="17-Override-updated-at-when-saving"><a href="#17-Override-updated-at-when-saving" class="headerlink" title="17. Override updated_at when saving"></a>17. Override updated_at when saving</h3><p>Did you know that <code>-&gt;save()</code> method can accept parameters? As a result, we can tell it to “ignore” updated_at default functionality to be filled with current timestamp. See this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$product = Product::find($id);</span><br><span class="line">$product-&gt;updated_at = <span class="string">'2019-01-01 10:00:00'</span>;</span><br><span class="line">$product-&gt;save([<span class="string">'timestamps'</span> =&gt; <span class="keyword">false</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>Here we’re overriding default updated_at with our pre-defined one.</p>
+<h3 id="18-What-is-the-result-of-an-update"><a href="#18-What-is-the-result-of-an-update" class="headerlink" title="18. What is the result of an update()?"></a>18. What is the result of an update()?</h3><p>Have you ever wondered what this code actually returns?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$result = $products-&gt;whereNull(<span class="string">'category_id'</span>)-&gt;update([<span class="string">'category_id'</span> =&gt; <span class="number">2</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>I mean, the update is performed in the database, but what would that $result contain?</p>
+<p>The answer is affected rows. So if you need to check how many rows were affected, you don’t need to call anything else – <code>update()</code> method will return this number for you.</p>
+<h3 id="19-Transform-brackets-into-an-Eloquent-query"><a href="#19-Transform-brackets-into-an-Eloquent-query" class="headerlink" title="19. Transform brackets into an Eloquent query"></a>19. Transform brackets into an Eloquent query</h3><p>What if you have and-or mix in your SQL query, like this:</p>
+<p>… WHERE (gender = ‘Male’ and age &gt;= 18) or (gender = ‘Female’ and age &gt;= 65)<br>How to translate it into Eloquent? This is the wrong way:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$q-&gt;where(<span class="string">'gender'</span>, <span class="string">'Male'</span>);</span><br><span class="line">$q-&gt;orWhere(<span class="string">'age'</span>, <span class="string">'&gt;='</span>, <span class="number">18</span>);</span><br><span class="line">$q-&gt;where(<span class="string">'gender'</span>, <span class="string">'Female'</span>);</span><br><span class="line">$q-&gt;orWhere(<span class="string">'age'</span>, <span class="string">'&gt;='</span>, <span class="number">65</span>);</span><br></pre></td></tr></table></figure></p>
+<p>The order will be incorrect. The right way is a little more complicated, using closure functions as sub-queries:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$q-&gt;where(<span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">    $query-&gt;where(<span class="string">'gender'</span>, <span class="string">'Male'</span>)</span><br><span class="line">        -&gt;where(<span class="string">'age'</span>, <span class="string">'&gt;='</span>, <span class="number">18</span>);</span><br><span class="line">&#125;)-&gt;orWhere(<span class="function"><span class="keyword">function</span><span class="params">($query)</span> </span>&#123;</span><br><span class="line">    $query-&gt;where(<span class="string">'gender'</span>, <span class="string">'Female'</span>)</span><br><span class="line">        -&gt;where(<span class="string">'age'</span>, <span class="string">'&gt;='</span>, <span class="number">65</span>); </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="20-orWhere-with-multiple-parameters"><a href="#20-orWhere-with-multiple-parameters" class="headerlink" title="20. orWhere with multiple parameters"></a>20. orWhere with multiple parameters</h3><p>Finally, you can pass an array of parameters to <code>orWhere()</code>.<br>“Usual” way:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$q-&gt;where(<span class="string">'a'</span>, <span class="number">1</span>);</span><br><span class="line">$q-&gt;orWhere(<span class="string">'b'</span>, <span class="number">2</span>);</span><br><span class="line">$q-&gt;orWhere(<span class="string">'c'</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure></p>
+<p>You can do it like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$q-&gt;where(<span class="string">'a'</span>, <span class="number">1</span>);</span><br><span class="line">$q-&gt;orWhere([<span class="string">'b'</span> =&gt; <span class="number">2</span>, <span class="string">'c'</span> =&gt; <span class="number">3</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>I’m sure there are even more hidden gems, but I hope at least a few of the ones above were new to you.</p>
+<blockquote>
+<p><a href="https://laravel-news.com/eloquent-tips-tricks" target="_blank" rel="noopener">https://laravel-news.com/eloquent-tips-tricks</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/13/laravel辅助函数tap的使用方法/" itemprop="url">
                   laravel辅助函数tap的使用方法
                 </a>
@@ -580,259 +856,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/11/使用supervisor管理laravel队列进程/" itemprop="url">
-                  使用Supervisor管理Laravel队列进程
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-11T18:24:02+08:00" content="2018-04-11">
-              2018-04-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你看了一千个正确答案，还是要一秒一秒的等时间<br></blockquote>
-
-<p>Supervisor 是一个 Python 写的进程管理工具，有时一个进程需要在后台运行，并且意外挂掉后能够自动重启，就需要这么一个管理进程的工具。在 Laravel 开发中，也经常使用到队列监听，可以配合 Supervisor 来管理 Laravel 队列进程。</p>
-<h3 id="Supervisor的安装"><a href="#Supervisor的安装" class="headerlink" title="Supervisor的安装"></a>Supervisor的安装</h3><ul>
-<li><p>使用 pip 工具进行安装：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br><span class="line">sudo yum -y install  python-pip</span><br><span class="line">sudo pip install supervisor</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Ubuntu 系统使用 apt-get</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install supervisor</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>还有其他的安装方式，请见官网（<a href="http://supervisord.org/）" target="_blank" rel="noopener">http://supervisord.org/）</a></p>
-</li>
-</ul>
-<h3 id="Supervisor的配置"><a href="#Supervisor的配置" class="headerlink" title="Supervisor的配置"></a>Supervisor的配置</h3><p>一般配置文件在<code>/etc/supervisor/conf.d</code> 目录下<br>也可以运行这个命令可以生成一个默认的配置文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p>生成成功后，打开编辑这个文件，把最后的 include 块的注释打开，并修改如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[include]</span><br><span class="line">files = /etc/supervisor/*.conf</span><br></pre></td></tr></table></figure></p>
-<p>新增的 Supervisor 配置文件放在 /etc/supervisor 目录下，并且以 conf 结尾。</p>
-<p>这时我们使用新的配置文件来启动 Supervisor：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p>如果提示已经有进程在运行，那么先 kill 掉它。</p>
-<h3 id="使用Supervisor管理Laravel队列进程"><a href="#使用Supervisor管理Laravel队列进程" class="headerlink" title="使用Supervisor管理Laravel队列进程"></a>使用Supervisor管理Laravel队列进程</h3><p>我们使用 Laravel 队列，会用到 php artisan queue:work 命令，让它监听队列，我们可以通过 nohup 方式让它在后台运行，但是进程如果意外中断是不会自动重启的，所以使用 Supervisor 来监控进程是个很好的方式。</p>
-<p>首先在 /etc/supervisor 目录下新增一个 Supervisor 的配置文件，如下：<br>文件名<code>erp2-worker.conf</code>,和配置文件中指定的program保持一致<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[program:erp2-worker]</span><br><span class="line">process_name=%(program_name)s_%(process_num)<span class="number">02</span>d</span><br><span class="line">command=/usr/bin/php7 /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">autostart=<span class="keyword">true</span></span><br><span class="line">autorestart=<span class="keyword">true</span></span><br><span class="line">user=vagrant</span><br><span class="line">numprocs=<span class="number">8</span></span><br><span class="line">redirect_stderr=<span class="keyword">true</span></span><br><span class="line">stdout_logfile=/<span class="keyword">var</span>/log/supervisor/laravel-queue.log</span><br></pre></td></tr></table></figure></p>
-<p>这里 user 填写网站运行进程的用户，如 vagrant，numprocs 表示启动多少个进程来监听 Laravel 队列。<br>一切就绪后，我们使用如下命令就可以启动队列进程的监听了：</p>
-<blockquote>
-<p>注意: 修改了配置文件以后都要进行 reload 和 update<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">supervisord <span class="comment"># 先执行</span></span><br><span class="line"></span><br><span class="line">sudo supervisorctl reload</span><br><span class="line"></span><br><span class="line">sudo supervisorctl update</span><br><span class="line"></span><br><span class="line">sudo supervisorctl start erp2-worker:*</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者</span></span><br><span class="line">sudo supervisorctl start all</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<p>但是在这一步，发生了错误，提示如下：</p>
-<blockquote>
-<p>laravel-worker:laravel-worker_00: ERROR (spawn error)<br>laravel-worker:laravel-worker_01: ERROR (spawn error)<br>laravel-worker:laravel-worker_02: ERROR (spawn error)<br>laravel-worker:laravel-worker_03: ERROR (spawn error)<br>laravel-worker:laravel-worker_04: ERROR (spawn error)<br>laravel-worker:laravel-worker_05: ERROR (spawn error)<br>laravel-worker:laravel-worker_06: ERROR (spawn error)<br>laravel-worker:laravel-worker_07: ERROR (spawn error)</p>
-</blockquote>
-<p>经过一番折腾，解决方法是，把 Supervisor 的日志文件，和新增的队列配置文件中的日志文件，用 chown 把用户和组设置为正确的，如本例是 chown vagrant:vagrant file_name，另外把日志文件权限设置为 777.</p>
-<p>再次经过上述步骤，成功开启进程管理：</p>
-<blockquote>
-<p>laravel-worker:laravel-worker_00: started<br>laravel-worker:laravel-worker_01: started<br>laravel-worker:laravel-worker_02: started<br>laravel-worker:laravel-worker_03: started<br>laravel-worker:laravel-worker_04: started<br>laravel-worker:laravel-worker_05: started<br>laravel-worker:laravel-worker_06: started<br>laravel-worker:laravel-worker_07: started</p>
-</blockquote>
-<p>可以看到 Laravel 队列开始正常运行了，这里值得注意的是，如果 Laravel 处理队列的代码更改了，需要重启 Supervisor 的队列管理才能生效。</p>
-<p>查看运行情况:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep <span class="string">'queue:work'</span></span><br></pre></td></tr></table></figure></p>
-<p>结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vagrant   <span class="number">4899</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4900</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4901</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4902</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4903</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4904</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4905</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4906</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4978</span>  <span class="number">2575</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">11</span> pts/<span class="number">0</span>    <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> grep --color=auto queue:work</span><br></pre></td></tr></table></figure></p>
-<h3 id="一个错误"><a href="#一个错误" class="headerlink" title="一个错误"></a>一个错误</h3><p>使用<code>supervisorctl reload</code>却得到报错提示：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: &lt;class 'socket.error'&gt;, [Errno 2] No such file or directory: file: /usr/lib/python2.7/socket.py line: 228</span><br></pre></td></tr></table></figure></p>
-<p>在运行 reload 命令前，先运行如下两个命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisord -c /etc/supervisor/supervisord.conf  </span><br><span class="line">sudo supervisorctl -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p>或者直接<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisord</span><br></pre></td></tr></table></figure></p>
-<p>即可解决</p>
-<h3 id="Horizon"><a href="#Horizon" class="headerlink" title="Horizon"></a>Horizon</h3><p><code>Horizon</code>为 Laravel 官方出品的 Redis 队列提供了一个可以通过代码进行配置、并且非常漂亮的仪表盘，并且能够轻松监控队列的任务吞吐量、执行时间以及任务失败情况等关键指标。</p>
-<p>队列执行者的所有配置项都存放在一个简单的配置文件中，所以团队可以通过版本控制进行协作维护。</p>
-<p>生产环境中，我们需要配置一个进程管理工具来监控 php artisan horizon 命令的执行，以便在其意外退出时自动重启。当服务器部署新代码时，需要终止当前 Horizon 主进程，然后通过进程管理工具来重启，从而使用最新的代码。</p>
-<p>使用 Artisan 命令 <code>horizon:terminate</code> 来正常停止系统中的 <code>Horizon</code> 主进程，此命令执行时，<code>Horizon</code> 当前执行中的任务会被正常完成，然后 Horizon 执行结束：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan horizon:terminate</span><br></pre></td></tr></table></figure></p>
-<p>Supervisor 配置<br>可以使用进程管理工具 Supervisor 来管理 horizon 进程，下面配置文件就已够用：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[program:horizon]</span><br><span class="line">process_name=%(program_name)</span><br><span class="line">command=php /home/forge/app.com/artisan horizon</span><br><span class="line">autostart=<span class="keyword">true</span></span><br><span class="line">autorestart=<span class="keyword">true</span></span><br><span class="line">user=forge</span><br><span class="line">redirect_stderr=<span class="keyword">true</span></span><br><span class="line">stdout_logfile=/home/forge/app.com/horizon.log</span><br></pre></td></tr></table></figure></p>
-<p>注意Horizon仅仅支持redis, 不支持database等其他队列引擎;</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>配置说明:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">; 设置进程的名称，使用 supervisorctl 来管理进程时需要使用该进程名</span><br><span class="line">[program:foo] </span><br><span class="line">; 可以在 command 这里用 python 表达式传递不同的参数给每个进程</span><br><span class="line">command=python server.py --port=<span class="number">90</span>%(process_num)<span class="number">02</span>d</span><br><span class="line">directory=/home/python/tornado_server ; 执行 command 之前，先切换到工作目录</span><br><span class="line">; 若 numprocs 不为<span class="number">1</span>，process_name 的表达式中一定要包含 process_num 来区分不同的进程</span><br><span class="line">numprocs=<span class="number">2</span>                   </span><br><span class="line">process_name=%(program_name)s_%(process_num)<span class="number">02</span>d; </span><br><span class="line">user=oxygen                 ; 使用 oxygen 用户来启动该进程</span><br><span class="line">autorestart=<span class="keyword">true</span>            ; 程序崩溃时自动重启</span><br><span class="line">redirect_stderr=<span class="keyword">true</span>        ; 重定向输出的日志</span><br><span class="line">stdout_logfile = /<span class="keyword">var</span>/log/supervisor/tornado_server.log</span><br><span class="line">loglevel=info</span><br></pre></td></tr></table></figure></p>
-<p>上面这个例子会启动两个进程，process_name 分别为 foo:foo_01 和 foo:foo_02。通过这样一种方式，就可以用一个 [program:x] 配置项，来启动一组非常类似的进程。</p>
-<blockquote>
-<p><a href="https://laravel-china.org/topics/3592/using-supervisor-to-manage-laravel-queue-processes" target="_blank" rel="noopener">https://laravel-china.org/topics/3592/using-supervisor-to-manage-laravel-queue-processes</a><br><a href="https://laravel-china.org/docs/laravel/5.5/horizon" target="_blank" rel="noopener">https://laravel-china.org/docs/laravel/5.5/horizon</a><br><a href="https://www.restran.net/2015/10/04/supervisord-tutorial/" target="_blank" rel="noopener">https://www.restran.net/2015/10/04/supervisord-tutorial/</a><br><a href="http://weidwonder.leanote.com/post/Untitled-55faa25638f4111167000067-6" target="_blank" rel="noopener">http://weidwonder.leanote.com/post/Untitled-55faa25638f4111167000067-6</a><br><a href="https://linuxize.com/post/how-to-install-pip-on-centos-7/" target="_blank" rel="noopener">https://linuxize.com/post/how-to-install-pip-on-centos-7/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/11/laravel使用自定义异常类/" itemprop="url">
-                  Laravel使用自定义异常类
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-11T16:14:31+08:00" content="2018-04-11">
-              2018-04-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>今夜月明人尽望，不知秋思落谁家<br></blockquote>
-
-<h3 id="自定义异常类"><a href="#自定义异常类" class="headerlink" title="自定义异常类"></a>自定义异常类</h3><p>app\Exceptions\ExportException.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Exceptions</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Throwable</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExportException</span> <span class="keyword">extends</span> \<span class="title">Exception</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $message;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(string $message = <span class="string">""</span>, int $code = <span class="number">0</span>, Throwable $previous = null)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">parent</span>::__construct($message, $code, $previous);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;message = $message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">report</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 这里自定义发生异常发生时要额外做的事情</span></span><br><span class="line">        <span class="comment">// 比如发邮件通知管理员</span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 这里需要给浏览器或者API返回必要的通知信息</span></span><br><span class="line">        <span class="comment">// 可以是json 结构, 一般是针对API调用的</span></span><br><span class="line">        <span class="comment">// 也可以渲染一个网页, 一般是针对浏览器访问的页面</span></span><br><span class="line">        <span class="comment">// 也可以直接重定向到其他网页</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> response()-&gt;json([<span class="string">'status'</span> =&gt; <span class="number">200</span>, <span class="string">'message'</span> =&gt; <span class="keyword">$this</span>-&gt;message], <span class="number">503</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>说明:<br>如果在文件 app\Exceptions\Handler.php 中申明了以下代码, 针对该异常类的<code>report</code>方法将不会在被执行;<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span> <span class="keyword">extends</span> <span class="title">ExceptionHandler</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * A list of the exception types that are not reported.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> $dontReport = [</span><br><span class="line">        </span><br><span class="line">         ExportException::class</span><br><span class="line">    ];</span><br></pre></td></tr></table></figure></p>
-<h3 id="抛出并捕获异常"><a href="#抛出并捕获异常" class="headerlink" title="抛出并捕获异常"></a>抛出并捕获异常</h3><p>首先尝试抛出异常:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">   $res = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (\App\Exceptions\ExportException $e) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> \App\Exceptions\ExportException($e-&gt;getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>上面这段代码并不会在我们自定义的<code>ExportException</code>中捕获, 而会在全局异常中捕获,原因我们打印出这个异常类型看看<br>app\Exceptions\Handler.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">($request, Exception $exception)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   dd(get_class($exception));  <span class="comment">// ErrorException</span></span><br><span class="line">        </span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">parent</span>::render($request, $exception);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>该异常类型属于<code>ErrorException</code>, 并不是我们自定的<code>ExportException</code>, 所以并不会被我们捕获;<br>我们可以这样, 既然我们已经知道这个异常类似是<code>ErrorException</code>, 那么<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    $res = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> ( ErrorException $e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> \App\Exceptions\ExportException($e-&gt;getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当然也可以直接这样<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">   $res = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> ( <span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> \App\Exceptions\ExportException($e-&gt;getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样就可以用我们自定义的异常类来捕捉从而进一步处理了<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"status"</span>: <span class="number">200</span>,</span><br><span class="line">   <span class="attr">"message"</span>: <span class="string">"Division by zero"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="关于异常的理解"><a href="#关于异常的理解" class="headerlink" title="关于异常的理解"></a>关于异常的理解</h3><ul>
-<li>由程序员设计不足所导致的错误，需要用异常来捕捉和处理</li>
-<li>程序在运行过程中, 有可能会发生一些不可预知的错误, 无法用if…else这样的语句来处理的时候.</li>
-<li>函数无法满足调用方的期望的时候使用异常, 比如用户要请求一个API获得最新的商品信息, 但是查询结果为空的时候</li>
-</ul>
-<p>所以我们自定义的异常可以是在不符合实现给定的情况下抛出的, 而不是真正程序在运行过程中发生了错误, 在Laravel的源码中我们可以找到很多一样的例子<br>vendor\laravel\framework\src\Illuminate\Foundation\Auth\AuthenticatesUsers.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">sendFailedLoginResponse</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> ValidationException::withMessages([</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username() =&gt; [trans(<span class="string">'auth.failed'</span>)],</span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>vendor\guzzlehttp\psr7\src\functions.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">str</span><span class="params">(MessageInterface $message)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($message <span class="keyword">instanceof</span> RequestInterface) &#123;</span><br><span class="line">        $msg = trim($message-&gt;getMethod() . <span class="string">' '</span></span><br><span class="line">                . $message-&gt;getRequestTarget())</span><br><span class="line">            . <span class="string">' HTTP/'</span> . $message-&gt;getProtocolVersion();</span><br><span class="line">        <span class="keyword">if</span> (!$message-&gt;hasHeader(<span class="string">'host'</span>)) &#123;</span><br><span class="line">            $msg .= <span class="string">"\r\nHost: "</span> . $message-&gt;getUri()-&gt;getHost();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">elseif</span> ($message <span class="keyword">instanceof</span> ResponseInterface) &#123;</span><br><span class="line">        $msg = <span class="string">'HTTP/'</span> . $message-&gt;getProtocolVersion() . <span class="string">' '</span></span><br><span class="line">            . $message-&gt;getStatusCode() . <span class="string">' '</span></span><br><span class="line">            . $message-&gt;getReasonPhrase();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> \InvalidArgumentException(<span class="string">'Unknown message type'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> ($message-&gt;getHeaders() <span class="keyword">as</span> $name =&gt; $values) &#123;</span><br><span class="line">        $msg .= <span class="string">"\r\n&#123;$name&#125;: "</span> . implode(<span class="string">', '</span>, $values);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"&#123;$msg&#125;\r\n\r\n"</span> . $message-&gt;getBody();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -876,7 +899,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">342</span>
+              <span class="site-state-item-count">344</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -886,7 +909,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
