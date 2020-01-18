@@ -265,6 +265,324 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/04/在laravel中使用twig模板引擎/" itemprop="url">
+                  在laravel中使用twig模板引擎
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-04T11:30:38+08:00" content="2016-08-04">
+              2016-08-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>你走了好，不然总担心你要走。<br></blockquote></p>
+<h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><ul>
+<li>laravel 5.1</li>
+</ul>
+<h3 id="实验步骤"><a href="#实验步骤" class="headerlink" title="实验步骤"></a>实验步骤</h3><ul>
+<li>1.安装扩展包</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> rcrowe/twigbridge</span><br></pre></td></tr></table></figure>
+<ul>
+<li>2.在config/app.php下配置</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">     ...</span><br><span class="line">                TwigBridge\ServiceProvider::class,</span><br><span class="line">],</span><br><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">    ... </span><br><span class="line">                <span class="string">'Twig'</span> =&gt; TwigBridge\Facade\Twig::class,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<ul>
+<li>3.发布配置文件,该操作会在config目录下新建一个专属twig的配置文件twigbrage.php</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish --provider=<span class="string">"TwigBridge\ServiceProvider"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>4.开始使用</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回视图</span></span><br><span class="line">Route::get(<span class="string">'test'</span>,<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    $users = \App\User::all();</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'hello'</span>,compact(<span class="string">'users'</span>));</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//新建视图文件resources/views/hello.twig</span></span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &#123;%  <span class="keyword">for</span> user in users %&#125;</span><br><span class="line">        &#123;&#123; user.name &#125;&#125;</span><br><span class="line">    &#123;%  <span class="keyword">endfor</span> %&#125;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><blockquote>
+<p><a href="https://packagist.org/packages/rcrowe/twigbridge" target="_blank" rel="noopener">https://packagist.org/packages/rcrowe/twigbridge</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/29/mysql内存表的使用/" itemprop="url">
+                  mysql内存表的使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-29T09:56:40+08:00" content="2016-07-29">
+              2016-07-29
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>答案很长，我准备用一生的时间来回答，你准备要听了吗？<br></blockquote>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MySQL的内存表，表结构创建在磁盘上，数据存放在内存中，所以当MySQL启动着的时候，</span><br><span class="line">这个表是存在的，数据也是存在的，当MySQL重启后，数据消失，表结构还存在（</span><br><span class="line">临时表表结构及数据都在内存中）。内存表最大所需内存需要通过</span><br><span class="line">max_heap_table_size=<span class="number">1024</span>M设定，临时表最大所需内存需要通过tmp_table_size = <span class="number">1024</span>M</span><br><span class="line">设定。当数据超过临时表的最大值设定时，自动转为基于磁盘的MyISAM表，</span><br><span class="line">存储在指定的tmpdir目录，此时因需要进行IO操作，性能会大大下降，</span><br><span class="line">而内存表不会，内存表满后，会提示数据满错误。</span><br></pre></td></tr></table></figure>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表的表定义是存放在磁盘上的，扩展名为.frm， 重启不会丢失。</span><br><span class="line">内存表的数据是存放在内存中的，重启会丢失数据。</span><br><span class="line">MEMORY表使用一个固定的记录长度格式。</span><br><span class="line">mysql重启后，主键、自增、索引仍然存在，只是数据丢失。</span><br></pre></td></tr></table></figure>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内存表使用哈希散列索引把数据保存在内存中，因此具有极快的速度。</span><br></pre></td></tr></table></figure>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表不能包含BLOB或者TEXT列。</span><br><span class="line">内存表不支持事务。</span><br><span class="line">内存表是表锁，当修改频繁时，性能可能会下降。</span><br><span class="line">内存表数据清空或删除表后占用内存不会自动释放。</span><br></pre></td></tr></table></figure>
+<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mem_table(  </span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>(<span class="number">10</span>),  </span><br><span class="line">  <span class="keyword">num</span> <span class="built_in">int</span>(<span class="number">10</span>)  </span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">MEMORY</span>;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/28/稍微理解ORM/" itemprop="url">
+                  稍微理解ORM
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-28T17:25:22+08:00" content="2016-07-28">
+              2016-07-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>她是你姑姑，又是你师父，怎么能做你妻子！<br></blockquote>
+
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><blockquote>
+<p>ORM即Object/Relation Mapping的简写，一般称作“对象关系映射”，在Web开发中最常出没于和关系型数据库交互的地方。ORM以最基本的形式建模数据。比如ORM会将MySQL的一张表映射成一个PHP类（模型），表的字段就是这个类的成员变量</p>
+</blockquote>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>在OOP中通常我们需要写一个对应的class User来作为user数据表的数据模型:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明class User</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    $id;</span><br><span class="line">    $name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">()</span></span>&#123;<span class="comment">/*...*/</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">load</span><span class="params">($id)</span></span>&#123;<span class="comment">/*...*/</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用class User</span></span><br><span class="line">$user = <span class="keyword">new</span> User();</span><br><span class="line">$user-&gt;name = <span class="string">'fancy'</span>;</span><br><span class="line">$user-&gt;create();</span><br></pre></td></tr></table></figure></p>
+<p>但是通过ORM，我们可以不用去声明class User，可以直接继承ORM提供的工厂类，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接使用！对于熟悉MVC的亲知道这个意义之所在！</span></span><br><span class="line">$user = <span class="keyword">new</span> ORM(<span class="string">'user'</span>);  <span class="comment">// ORM都有自己的规则，这里直接使用了MySQL的表名</span></span><br><span class="line">$user-&gt;name = <span class="string">'fancy'</span>;    <span class="comment">// MySQL的表的字段就是$user对象的成员变量</span></span><br><span class="line">$user-&gt;save();            <span class="comment">// 掉用ORM提供的接口函数</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><blockquote>
+<p>在某些复杂的sql中有性能问题</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/28/关于出现php-m和phpinfo不一致的问题/" itemprop="url">
                   关于出现php-m和phpinfo不一致的问题
                 </a>
@@ -457,335 +775,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/27/PHP7-Swoole开发超高性能后台程序/" itemprop="url">
-                  PHP7+Swoole开发超高性能后台程序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-27T21:32:54+08:00" content="2016-07-27">
-              2016-07-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>父母在时，人生尚有来处。<br>父母去时，人生只剩归途。<br></blockquote>
-
-<h3 id="Yaf-Phalcon"><a href="#Yaf-Phalcon" class="headerlink" title="Yaf/Phalcon"></a>Yaf/Phalcon</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Yaf是一个C语言编写的PHP框架</span><br><span class="line">Phalcon 是开源、全功能栈、使用 C 扩展编写、针对高性能优化的 PHP <span class="number">5</span> 框架。 </span><br><span class="line">开发者不需要学习和使用 C 语言的功能，可以直接使用。</span><br></pre></td></tr></table></figure>
-<h3 id="QPS"><a href="#QPS" class="headerlink" title="QPS"></a>QPS</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">每秒查询率QPS是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准，在因特网上，</span><br><span class="line">作为域名系统服务器的机器的性能经常用每秒查询率来衡量。对应fetches/sec，</span><br><span class="line">即每秒的响应请求数，也即是最大吞吐能力。</span><br></pre></td></tr></table></figure>
-<h3 id="如何实现1W-的QPS"><a href="#如何实现1W-的QPS" class="headerlink" title="如何实现1W+的QPS"></a>如何实现1W+的QPS</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>IO操作要足够快，或者异步</span><br><span class="line">常见的IO操作有，Mysql,Redis,CURL,磁盘读写</span><br><span class="line"><span class="number">2.</span>CPU消耗足够少</span><br></pre></td></tr></table></figure>
-<h3 id="为什么不用C"><a href="#为什么不用C" class="headerlink" title="为什么不用C++"></a>为什么不用C++</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">学习成本高</span><br><span class="line">开发周期长</span><br><span class="line">调试难度大</span><br><span class="line">机器的时间可以用钱购买，人的时间无法用钱购买</span><br></pre></td></tr></table></figure>
-<h3 id="提升PHP性能"><a href="#提升PHP性能" class="headerlink" title="提升PHP性能"></a>提升PHP性能</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">使用PHP7，性能至少提高一倍</span><br><span class="line">使用yaf/phalcon</span><br><span class="line">使用swoole应用服务器</span><br></pre></td></tr></table></figure>
-<h3 id="什么是Swoole"><a href="#什么是Swoole" class="headerlink" title="什么是Swoole"></a>什么是Swoole</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PHP的异步、并行、高性能网络通信引擎，使用纯C语言编写，</span><br><span class="line">提供了PHP语言的异步多线程服务器，异步TCP/UDP网络客户端，</span><br><span class="line">异步MySQL，异步Redis，数据库连接池，AsyncTask，消息队列，</span><br><span class="line">毫秒定时器，异步文件读写，异步DNS查询。 Swoole内置了Http/WebSocket服务器</span><br><span class="line">端/客户端、Http2<span class="number">.0</span>服务器端。Swoole可以广泛应用于互联网、移动通信、企业软件、</span><br><span class="line">云计算、网络游戏、物联网（IOT）、车联网、智能家居等领域。使用PHP+Swoole作</span><br><span class="line">为网络通信框架，可以使企业IT研发团队的效率大大提升，更加专注于开发创新产品。</span><br></pre></td></tr></table></figure>
-<h3 id="大量并发连接"><a href="#大量并发连接" class="headerlink" title="大量并发连接"></a>大量并发连接</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">基于epool实现异步IO处理</span><br><span class="line">选择Nginx和swoole</span><br></pre></td></tr></table></figure>
-<h3 id="超高性能架构"><a href="#超高性能架构" class="headerlink" title="超高性能架构"></a>超高性能架构</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHP7 + swoole + yaf/phalcon + Redis</span><br></pre></td></tr></table></figure>
-<h3 id="超高性能统计运算程序"><a href="#超高性能统计运算程序" class="headerlink" title="超高性能统计运算程序"></a>超高性能统计运算程序</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">使用PHP <span class="keyword">Array</span> 全内存存储，计算数据，超大规模读写Redis会成为瓶颈</span><br><span class="line">使用Worker/Task进程实现数据的Map-Reduce</span><br><span class="line">使用PHP的SPL数据结构</span><br><span class="line">中间数据可以使用mysql内存表，汇总计算后删除数据</span><br><span class="line">PHP的GC非常靠谱，及时<span class="keyword">unset</span>掉不用的数据，连续运行无内存泄露</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://github.com/ThinkDevelopers/PHPConChina/tree/master/PHPCON2016" target="_blank" rel="noopener">https://github.com/ThinkDevelopers/PHPConChina/tree/master/PHPCON2016</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/26/mysql用户相关操作/" itemprop="url">
-                  mysql用户相关操作
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-26T22:45:49+08:00" content="2016-07-26">
-              2016-07-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>那些最容易脸红的人，往往是最善良的。<br></blockquote></p>
-<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">查看所有用户</span><br><span class="line">select host,user from user ;</span><br><span class="line">添加一个用户</span><br><span class="line">grant all on *.* to yangzie@<span class="string">"%"</span> identified by <span class="string">"123"</span> ; </span><br><span class="line">说明：</span><br><span class="line">all表示所有权限(包括增 删 改 查等权限)</span><br><span class="line">*.* 表示所有数据库，前面一个* 指的是库，后面指的是表</span><br><span class="line">yangzie为添加的用户名</span><br><span class="line"><span class="number">123</span>为密码，高版本的mysq会对密码的安全性做验证，简单的密码会导致命令执行失败</span><br><span class="line">%为匹配的所有主机，% 即可以使用其他连接工具像navicat远程连接</span><br><span class="line">删除一个用户</span><br><span class="line">delete from mysql.user where user =<span class="string">'yushan'</span> ;</span><br><span class="line"></span><br><span class="line">所有的这些操作完成以后，记得刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/25/centos下ftp相关设置/" itemprop="url">
-                  centos下ftp相关设置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T22:56:59+08:00" content="2016-07-25">
-              2016-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你如今的气质里，藏着你走过的路，读过的书，和爱过的人。<br></blockquote></p>
-<h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><p>centos6.5 64位</p>
-<h3 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h3><ul>
-<li>安装</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install vsftp</span><br><span class="line">chkconfig vsftpd on</span><br><span class="line">chkconfig --<span class="keyword">list</span> vsftpd </span><br><span class="line">service vsftpd start</span><br></pre></td></tr></table></figure>
-<ul>
-<li>匿名用户登录</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在浏览器中通过ftp://121.40.215.165这样的方式，无需输入用户名密码即可访问</span></span><br><span class="line">vim /etc/vsftpd/vsftpd.conf</span><br><span class="line">anonymous_enable=YES    <span class="comment">//匿名访问 开启</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>selinux </li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//SELinux 全称 Security Enhanced Linux (安全强化 Linux)，是 MAC (Mandatory Access Control，强制访问控制系统)</span></span><br><span class="line"><span class="comment">//的一个实现，目的在于明确的指明某个进程可以访问哪些资源(文件、网络端口等)。</span></span><br><span class="line">getenforce   <span class="comment">//查看状态</span></span><br><span class="line">setenforce <span class="number">0</span> <span class="comment">//临时关闭</span></span><br><span class="line">setenforce <span class="number">1</span> <span class="comment">//临时开启</span></span><br><span class="line"><span class="comment">//永久关闭</span></span><br><span class="line">修改/etc/selinux/config 文件</span><br><span class="line">将SELINUX=enforcing改为SELINUX=disabled</span><br><span class="line">重启机器即可</span><br></pre></td></tr></table></figure>
-<ul>
-<li>修改默认端口号</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//编辑 /etc/vsftpd/vsftpd.conf 文件，在该配置文件中添加此行：listen_port=801</span></span><br><span class="line"><span class="comment">//编辑 /etc/services 文件，将其中的 ftp 21/tcp 改为 ftp 801/tcp , ftp 21/udp 改为 ftp 801/udp</span></span><br><span class="line"><span class="comment">//执行 /etc/init.d/vsftpd restart 重新启动 vsftpd 服务.</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>ftp的配置文件</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//位于/etc/vsftpd/目录下，分别是：</span></span><br><span class="line"><span class="comment">//ftpusers    该文件用来指定那些用户不能访问ftp服务器。</span></span><br><span class="line"><span class="comment">//user_list   该文件用来指示的默认账户在默认情况下也不能访问ftp</span></span><br><span class="line"><span class="comment">//vsftpd.conf   该文件是vsftpd的主配置文件</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>建立用户以及指定目录</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useradd -d /home/ftp ftpuser</span><br><span class="line">passwd ftpuser</span><br><span class="line"><span class="comment">//此时用户ftpuser可以通过ftp登录</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//系统内所有的FTP用户都限制在家目录中,修改配置文件/etc/vsftpd/vsftpd.conf</span></span><br><span class="line">chroot_local_user=YES</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://jasonhzy.github.io/2016/03/11/linux-ftp/" target="_blank" rel="noopener">http://jasonhzy.github.io/2016/03/11/linux-ftp/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/67/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><span class="page-number current">68</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/69/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/67/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><span class="page-number current">68</span><a class="page-number" href="/page/69/">69</a><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/69/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -824,7 +818,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">344</span>
+              <span class="site-state-item-count">347</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

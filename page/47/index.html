@@ -265,6 +265,326 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/26/Mysql常用优化总结/" itemprop="url">
+                  Mysql常用优化总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-26T15:39:03+08:00" content="2017-07-26">
+              2017-07-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你这辈子只能靠自己。<br></blockquote>
+
+<h3 id="Like的参数以通配符开头时"><a href="#Like的参数以通配符开头时" class="headerlink" title="Like的参数以通配符开头时"></a>Like的参数以通配符开头时</h3><p>尽量避免Like的参数以通配符开头，否则数据库引擎会放弃使用索引而进行全表扫描。<br>以通配符开头的sql语句，例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid <span class="keyword">like</span> <span class="string">'%0'</span>\G;</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用！-或-lt-gt-操作符时"><a href="#使用！-或-lt-gt-操作符时" class="headerlink" title="使用！= 或 &lt;&gt; 操作符时"></a>使用！= 或 &lt;&gt; 操作符时</h3><p>尽量避免使用！= 或 &lt;&gt;操作符，否则数据库引擎会放弃使用索引而进行全表扫描。使用&gt;或&lt;会比较高效。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid != <span class="string">'2000000608201108010831508721'</span>\G;</span><br></pre></td></tr></table></figure></p>
+<h3 id="索引列参与计算"><a href="#索引列参与计算" class="headerlink" title="索引列参与计算"></a>索引列参与计算</h3><p>应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid +<span class="number">1</span> &gt; <span class="string">'2000000608201108010831508722'</span>\G;</span><br></pre></td></tr></table></figure></p>
+<h3 id="对字段进行null值判断"><a href="#对字段进行null值判断" class="headerlink" title="对字段进行null值判断"></a>对字段进行null值判断</h3><p>应尽量避免在where子句中对字段进行null值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：<br>低效：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid <span class="keyword">is</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure></p>
+<p>可以在Flistid上设置默认值0，确保表中Flistid列没有null值，然后这样查询：<br>高效：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid =<span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用or来连接条件"><a href="#使用or来连接条件" class="headerlink" title="使用or来连接条件"></a>使用or来连接条件</h3><p>应尽量避免在where子句中使用or来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，如：<br>低效：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid = <span class="string">'2000000608201108010831508721'</span> <span class="keyword">or</span> Flistid = <span class="string">'10000200001'</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="避免select"><a href="#避免select" class="headerlink" title="避免select *"></a>避免select *</h3><p>在解析的过程中，会将<code>&#39;*&#39;</code> 依次转换成所有的列名，这个工作是通过查询数据字典完成的，这意味着将耗费更多的时间。<br>所以，应该养成一个需要什么就取什么的好习惯。</p>
+<h3 id="order-by-语句优化"><a href="#order-by-语句优化" class="headerlink" title="order by 语句优化"></a>order by 语句优化</h3><p>任何在Order by语句的非索引项或者有计算表达式都将降低查询速度。</p>
+<ul>
+<li>1.重写order by语句以使用索引；</li>
+<li>2.为所使用的列建立另外一个索引</li>
+<li>3.绝对避免在order by子句中使用表达式。</li>
+</ul>
+<h3 id="GROUP-BY语句优化"><a href="#GROUP-BY语句优化" class="headerlink" title="GROUP BY语句优化"></a>GROUP BY语句优化</h3><p>提高GROUP BY 语句的效率, 可以通过将不需要的记录在GROUP BY 之前过滤掉</p>
+<p>低效:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> JOB , <span class="keyword">AVG</span>(SAL)</span><br><span class="line"><span class="keyword">FROM</span> EMP</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">by</span> JOB</span><br><span class="line"><span class="keyword">HAVING</span> JOB = ‘PRESIDENT<span class="string">'</span></span><br><span class="line"><span class="string">OR JOB = ‘MANAGER'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>高效:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> JOB , <span class="keyword">AVG</span>(SAL)</span><br><span class="line"><span class="keyword">FROM</span> EMP</span><br><span class="line"><span class="keyword">WHERE</span> JOB = ‘PRESIDENT<span class="string">'</span></span><br><span class="line"><span class="string">OR JOB = ‘MANAGER'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">by</span> JOB;</span><br></pre></td></tr></table></figure></p>
+<h3 id="用-exists-代替-in"><a href="#用-exists-代替-in" class="headerlink" title="用 exists 代替 in"></a>用 exists 代替 in</h3><p>很多时候用 exists 代替 in 是一个好的选择：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">num</span> <span class="keyword">from</span> a <span class="keyword">where</span> <span class="keyword">num</span> <span class="keyword">in</span>(<span class="keyword">select</span> <span class="keyword">num</span> <span class="keyword">from</span> b);</span><br></pre></td></tr></table></figure></p>
+<p>用下面的语句替换：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">num</span> <span class="keyword">from</span> a <span class="keyword">where</span> <span class="keyword">exists</span>(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> b <span class="keyword">where</span> <span class="keyword">num</span>=a.num);</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用-varchar-nvarchar-代替-char-nchar"><a href="#使用-varchar-nvarchar-代替-char-nchar" class="headerlink" title="使用 varchar/nvarchar 代替 char/nchar"></a>使用 varchar/nvarchar 代替 char/nchar</h3><p>尽可能的使用 varchar/nvarchar 代替 char/nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。</p>
+<h3 id="能用DISTINCT的就不用GROUP-BY"><a href="#能用DISTINCT的就不用GROUP-BY" class="headerlink" title="能用DISTINCT的就不用GROUP BY"></a>能用DISTINCT的就不用GROUP BY</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> OrderID <span class="keyword">FROM</span> Details <span class="keyword">WHERE</span> UnitPrice &gt; <span class="number">10</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> OrderID;</span><br></pre></td></tr></table></figure>
+<p>可改为：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> OrderID <span class="keyword">FROM</span> Details <span class="keyword">WHERE</span> UnitPrice &gt; <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最左前缀匹配原则"><a href="#最左前缀匹配原则" class="headerlink" title="最左前缀匹配原则"></a>最左前缀匹配原则</h3><p>非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">有一个复合索引：INDEX(`a`, `b`, `c`);</span><br><span class="line"></span><br><span class="line">使用方式	                                        能否用上索引</span><br><span class="line">select * from users where a = <span class="number">1</span> <span class="keyword">and</span> b = <span class="number">2</span>	能用上a、b</span><br><span class="line">select * from users where b = <span class="number">2</span> <span class="keyword">and</span> a = <span class="number">1</span>	能用上a、b（有MySQL查询优化器）</span><br><span class="line">select * from users where a = <span class="number">2</span> <span class="keyword">and</span> c = <span class="number">1</span>	能用上a</span><br><span class="line">select * from users where b = <span class="number">2</span> <span class="keyword">and</span> c = <span class="number">1</span>	不能</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://cloud.tencent.com/community/article/382852" target="_blank" rel="noopener">https://cloud.tencent.com/community/article/382852</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/26/php的trim无法去掉空格/" itemprop="url">
+                  php的trim无法去掉空格
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-26T10:35:52+08:00" content="2017-07-26">
+              2017-07-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>多少次我们无醉不欢<br>咒骂人生太短 唏嘘相见恨晚<br></blockquote></p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>在PHP开发过程中，使用<code>trim</code>想去掉空格，不成功；<br>打印出来字符串，后面确实带有空格，在控制台又显示有<code>&amp;nbsp;</code>（此处所指的nbsp是实体，而不是nbsp四个字符）<br>后来改用<code>str_replace</code>来去掉空格，依然失败；<br>到底是什么原因，于是刚开始想到了是不是全角和半角的空格问题；试着换成全角的空格，依然失败；<br>后来又使用escape尝试输出，发现是xa0，于是就想<code>trim($converted, “xa0”)</code>，无果<br>在php手册的trim函数下评论中发现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trim($otmp, chr(<span class="number">0xc2</span>) . chr(<span class="number">0xa0</span>))</span><br></pre></td></tr></table></figure></p>
+<p>使用后，成功去掉空格；另外，str_replace也可使用：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$otmp = str_replace(chr(<span class="number">0xc2</span>) . chr(<span class="number">0xa0</span>), <span class="string">''</span>, $otmp);</span><br></pre></td></tr></table></figure></p>
+<p>效果一样，成功解决~~~<br>ps:此空格产生的原因是，我在获取到html代码之后strip_tags去掉所有标签，而产生了一些实体空格</p>
+<h3 id="html实体"><a href="#html实体" class="headerlink" title="html实体"></a>html实体</h3><p>在 HTML 中，某些字符是预留的。<br>在 HTML 中不能使用小于号（&lt;）和大于号（&gt;），这是因为浏览器会误认为它们是标签。<br>如果希望正确地显示预留字符，我们必须在 HTML 源代码中使用字符实体（character entities）。<br>字符实体类似这样：&amp;entity_name;或者&amp;#entity_number;<br>如需显示小于号，我们必须这样写： <code>&amp;lt;</code>  或  <code>&amp;#60;</code><br>提示：使用实体名而不是数字的好处是，名称易于记忆。不过坏处是，浏览器也许并不支持所有实体名称（对实体数字的支持却很好）。<br>不间断空格（non-breaking space）<br>HTML 中的常用字符实体是不间断空格( <code>&amp;nbsp;</code> )。<br>浏览器总是会截短 HTML 页面中的空格。如果您在文本中写 10 个空格，在显示该页面之前，浏览器会删除它们中的 9 个。如需在页面中增加空格的数量，您需要使用 <code>&amp;nbsp;</code> 字符实体。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/25/使用swoole异步发送邮件/" itemprop="url">
+                  使用swoole异步发送邮件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-25T14:42:39+08:00" content="2017-07-25">
+              2017-07-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>父母在时，人生尚有来处。<br>父母去时，人生只剩归途。<br></blockquote></p>
+<h3 id="安装swoole"><a href="#安装swoole" class="headerlink" title="安装swoole"></a>安装swoole</h3><p>pecl 安装:<br><code>pecl install swoole</code></p>
+<p>看命令行提示，如果它提示说没有写php.ini，则自己手动在PHP.ini后面加上：<br><code>extension = &quot;swoole.so&quot;</code></p>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $serv;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv = <span class="keyword">new</span> swoole_server(<span class="string">"0.0.0.0"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;set(<span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,   <span class="comment">//一般设置为服务器CPU数的1-4倍</span></span><br><span class="line">            <span class="string">'daemonize'</span> =&gt; <span class="number">1</span>,  <span class="comment">//以守护进程执行</span></span><br><span class="line">            <span class="string">'max_request'</span> =&gt; <span class="number">10000</span>,</span><br><span class="line">            <span class="string">'dispatch_mode'</span> =&gt; <span class="number">2</span>,</span><br><span class="line">            <span class="string">'task_worker_num'</span> =&gt; <span class="number">8</span>,  <span class="comment">//task进程的数量</span></span><br><span class="line">            <span class="string">"task_ipc_mode "</span> =&gt; <span class="number">3</span> ,  <span class="comment">//使用消息队列通信，并设置为争抢模式</span></span><br><span class="line">            <span class="comment">//"log_file" =&gt; "log/taskqueueu.log" ,//日志</span></span><br><span class="line">        ));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Receive'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onReceive'</span>));</span><br><span class="line">        <span class="comment">// bind callback</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Task'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onTask'</span>));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Finish'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onFinish'</span>));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">( swoole_server $serv, $fd, $from_id, $data )</span> </span>&#123;</span><br><span class="line">        <span class="comment">//echo "Get Message From Client &#123;$fd&#125;:&#123;$data&#125;n";</span></span><br><span class="line">        <span class="comment">// send a task to task worker.</span></span><br><span class="line">        $serv-&gt;task( $data );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onTask</span><span class="params">($serv,$task_id,$from_id, $data)</span> </span>&#123;</span><br><span class="line">        $array = json_decode( $data , <span class="keyword">true</span> );</span><br><span class="line">        <span class="keyword">if</span> ($array[<span class="string">'url'</span>]) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;httpGet( $array[<span class="string">'url'</span>] , $array[<span class="string">'param'</span>]  );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onFinish</span><span class="params">($serv,$task_id, $data)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//echo "Task &#123;$task_id&#125; finishn";</span></span><br><span class="line">        <span class="comment">//echo "Result: &#123;$data&#125;n";</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">httpGet</span><span class="params">($url,$data)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($data) &#123;</span><br><span class="line">            $url .=<span class="string">'?'</span>.http_build_query($data) ;</span><br><span class="line">        &#125;</span><br><span class="line">        $curlObj = curl_init();    <span class="comment">//初始化curl，</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_URL, $url);   <span class="comment">//设置网址</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);  <span class="comment">//将curl_exec的结果返回</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, <span class="keyword">FALSE</span>);</span><br><span class="line">        curl_setopt($curlObj, CURLOPT_SSL_VERIFYHOST, <span class="keyword">FALSE</span>);</span><br><span class="line">        curl_setopt($curlObj, CURLOPT_HEADER, <span class="number">0</span>);         <span class="comment">//是否输出返回头信息</span></span><br><span class="line">        $response = curl_exec($curlObj);   <span class="comment">//执行</span></span><br><span class="line">        curl_close($curlObj);          <span class="comment">//关闭会话</span></span><br><span class="line">        <span class="keyword">return</span> $response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">$server = <span class="keyword">new</span> Server();</span><br></pre></td></tr></table></figure>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Client</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $client;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>( !<span class="keyword">$this</span>-&gt;client-&gt;connect(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span> , <span class="number">1</span>) ) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"Connect Error"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $data = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">"url"</span> =&gt;  <span class="string">"http://192.168.10.19/send_mail"</span> ,</span><br><span class="line">            <span class="string">"param"</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">"username"</span>=&gt;<span class="string">'test'</span>,</span><br><span class="line">                <span class="string">"password"</span> =&gt; <span class="string">'test'</span></span><br><span class="line">            )</span><br><span class="line">        );</span><br><span class="line">        $json_data = json_encode($data);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client-&gt;send( $json_data );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> Client();</span><br><span class="line">$client-&gt;connect();</span><br></pre></td></tr></table></figure>
+<h3 id="查看与关闭"><a href="#查看与关闭" class="headerlink" title="查看与关闭"></a>查看与关闭</h3><p>swoole好像没有很便捷的关闭方式。所以只能直接通过关闭进程来关闭。<br>查看命令：<br><code>ps -ef | grep php</code></p>
+<p>结束单个进程：<br><code>kill -9 {进程号}</code></p>
+<p>结束所有进程的命令：<br><code>killall -9 php</code></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/24/PHP-cURL多线程模拟并发请求/" itemprop="url">
                   PHP-cURL多线程模拟并发请求
                 </a>
@@ -460,304 +780,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/17/使用php按行导入txt文件的一个坑/" itemprop="url">
-                  使用php按行导入txt文件的一个坑
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-17T10:12:35+08:00" content="2017-07-17">
-              2017-07-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>岁月你别催，该来的我不推。<br>岁月你别催，走远的我不追。<br></blockquote><br>问题产品原因: windows 和  linux 换行符不一致; 所以必须存入数据库之前对一些不可见的符号过滤;<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$file = $request-&gt;file(<span class="string">'femails'</span>);</span><br><span class="line">$emails = file_get_contents($file-&gt;getRealPath());</span><br><span class="line">$emails = explode(PHP_EOL, $emails);</span><br><span class="line">$ids = [];</span><br><span class="line"><span class="keyword">foreach</span> ($emails <span class="keyword">as</span> $email) &#123;</span><br><span class="line">    $result = preg_replace(<span class="string">'/[\x00-\x1F\x80-\xFF]/'</span>, <span class="string">''</span>, $email);</span><br><span class="line">    $recipient = Recipient::firstOrCreate(</span><br><span class="line">        [</span><br><span class="line">            <span class="string">'email'</span> =&gt; trim($result)</span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="string">'is_use'</span> =&gt; <span class="number">1</span></span><br><span class="line">        ]</span><br><span class="line">    );</span><br><span class="line">    array_push($ids, $recipient-&gt;id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/16/indexeddb的简单使用/" itemprop="url">
-                  indexeddb的简单使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-16T22:00:12+08:00" content="2017-07-16">
-              2017-07-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>有一天你会知道，人生没有我并不会不同<br></blockquote><br>存储在IndexedDB里的数据是永久保存，不像cookies那样只是临时的。IndexedDB里提供了查询数据的功能，在online和offline模式下都能使用。你可以用IndexedDB存储大型数据。</p>
-<h3 id="IndexedDB-具有以下特点。"><a href="#IndexedDB-具有以下特点。" class="headerlink" title="IndexedDB 具有以下特点。"></a>IndexedDB 具有以下特点。</h3><p>（1）键值对储存。 IndexedDB 内部采用对象仓库（object store）存放数据。所有类型的数据都可以直接存入，包括 JavaScript 对象。在对象仓库中，数据以“键值对”的形式保存，每一个数据都有对应的键名，键名是独一无二的，不能有重复，否则会抛出一个错误。<br>（2）异步。 IndexedDB 操作时不会锁死浏览器，用户依然可以进行其他操作，这与 LocalStorage 形成对比，后者的操作是同步的。异步设计是为了防止大量数据的读写，拖慢网页的表现。<br>（3）支持事务。 IndexedDB 支持事务（transaction），这意味着一系列操作步骤之中，只要有一步失败，整个事务就都取消，数据库回到事务发生之前的状态，不存在只改写一部分数据的情况。<br>（4）同域限制 IndexedDB 也受到同域限制，每一个数据库对应创建该数据库的域名。来自不同域名的网页，只能访问自身域名下的数据库，而不能访问其他域名下的数据库。<br>（5）储存空间大 IndexedDB 的储存空间比 LocalStorage 大得多，一般来说不少于250MB。IE的储存上限是250MB，Chrome和Opera是剩余空间的某个百分比，Firefox 则没有上限。<br>（6）支持二进制储存。 IndexedDB 不仅可以储存字符串，还可以储存二进制数据。</p>
-<h3 id="API实例"><a href="#API实例" class="headerlink" title="API实例"></a>API实例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">'indexedDB'</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> openRequest = indexedDB.open(<span class="string">"yangzie"</span>,<span class="number">5</span>);</span><br><span class="line">        <span class="keyword">let</span> db;</span><br><span class="line">        openRequest.onupgradeneeded = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据库更新..."</span>);</span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            db = e.target.result;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!db.objectStoreNames.contains(<span class="string">'firstOS'</span>))&#123;</span><br><span class="line">                db.createObjectStore(<span class="string">"firstOS"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'表已经存在'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        openRequest.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据路打开成功!"</span>);</span><br><span class="line"></span><br><span class="line">            db = e.target.result;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 事务</span></span><br><span class="line">            <span class="keyword">let</span> transaction = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> store = transaction.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> o = &#123;<span class="attr">p</span>: <span class="string">"she is a girl"</span>&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 添加数据</span></span><br><span class="line">            <span class="keyword">let</span> request = store.add(o,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">            request.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"数据添加失败！"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            request.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"数据添加成功！"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 修改数据</span></span><br><span class="line">            <span class="keyword">let</span> tr = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> storess = tr.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line">            <span class="keyword">let</span> p = &#123; <span class="attr">p</span>:<span class="number">456</span> &#125;;</span><br><span class="line">            <span class="keyword">let</span> urequest = storess.put(p, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            urequest.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"修改成功"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            urequest.onsucces = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"修改失败"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取数据</span></span><br><span class="line">            <span class="keyword">let</span> t = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readonly"</span>);</span><br><span class="line">            <span class="keyword">let</span> stores = t.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> ob = stores.get(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            ob.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"获取数据成功"</span>);</span><br><span class="line">                <span class="built_in">console</span>.log(ob);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            transaction.oncomplete = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'事务结束'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 删除记录</span></span><br><span class="line">            <span class="keyword">let</span> tt = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line">            <span class="keyword">let</span> mrequest = tt.objectStore(<span class="string">"firstOS"</span>).delete(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            mrequest.onsuccess = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'删除成功'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            mrequest.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'删除失败'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        openRequest.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据库打开错误"</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'您的浏览器不支持'</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://javascript.ruanyifeng.com/bom/indexeddb.html" target="_blank" rel="noopener">http://javascript.ruanyifeng.com/bom/indexeddb.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/16/Emoj简介/" itemprop="url">
-                  Emoj简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-16T10:36:11+08:00" content="2017-07-16">
-              2017-07-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我对你仍有爱意，我对自己无能为力。<br></blockquote><br>早期的 Emoji 是将一些特定的符号组合替换成图片。这种方法很难标准化，能够表达的范围也有限。<br>2010年，Unicode 开始为 Emoji 分配码点。也就是说，现在的 Emoji 符号就是一个文字，它会被渲染为图形。</p>
-<p>Unicode 只是规定了 Emoji 的码点和含义，并没有规定它的样式。举例来说，码点U+1F600表示一张微笑的脸，但是这张脸长什么样，则由各个系统自己实现。<br>因此，当我们输入这个 Emoji 的时候，并不能保证所有用户看到的都是同一张脸。如果用户的系统没有实现这个 Emoji 符号，用户就会看到一个没有内容的方框，因为系统无法渲染这个码点。</p>
-<p>Emoji 虽然是文字，但是无法书写，必须使用其他方法插入文档。</p>
-<p><img src="/images/emoji.png" alt></p>
-<blockquote>
-<p><a href="http://www.ruanyifeng.com/blog/2017/04/emoji.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2017/04/emoji.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/46/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><span class="page-number current">47</span><a class="page-number" href="/page/48/">48</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/48/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/46/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><span class="page-number current">47</span><a class="page-number" href="/page/48/">48</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/48/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -796,7 +823,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">344</span>
+              <span class="site-state-item-count">347</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

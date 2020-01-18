@@ -265,6 +265,325 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/03/laravel中env函数的坑/" itemprop="url">
+                  Laravel中env函数的坑
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-03T13:50:22+08:00" content="2018-08-03">
+              2018-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不自量力的还手 直至死方休<br></blockquote>
+
+<p>最近项目中遇到了一个问题， 问题出在env函数上，在Middleware中读取环境变量时取到的竟然是null<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dump(env(<span class="string">'APP_ENV'</span>) === <span class="keyword">null</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>查看env 的代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">env</span><span class="params">($key, $default = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $value = getenv($key);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($value === <span class="keyword">false</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> value($default);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 此处省略部分代码</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以发现，实际上调用的就是php自带的<code>getenv</code>函数，如果取不到值，那必定是某段执行putenv或者操作<code>$_ENV</code>全局变量的代码没有执行，而且这些环境变量设置操作一定是在初始化的时候进行的<br>如果对Laravel的Kernel执行顺序比较了解的话，应该知道，在Kernel启动阶段会首先执行一组bootstrappers<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Illuminate/Foundation/Http/Kernel.php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kernel</span> <span class="keyword">implements</span> <span class="title">KernelContract</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The bootstrap classes for the application.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> $bootstrappers = [</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\DetectEnvironment'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\LoadConfiguration'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\ConfigureLogging'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\HandleExceptions'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\RegisterFacades'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\RegisterProviders'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\BootProviders'</span>,</span><br><span class="line">    ];</span><br></pre></td></tr></table></figure></p>
+<p>其中一个bootstrapper名为DetectEnvironment，而它的嫌疑是最大的，检查这个类<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Illuminate/Foundation/Bootstrap/DetectEnvironment.php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DetectEnvironment</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Bootstrap the given application.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Contracts\Foundation\Application  $app</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrap</span><span class="params">(Application $app)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (! $app-&gt;configurationIsCached()) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;checkForSpecificEnvironmentFile($app);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                (<span class="keyword">new</span> Dotenv($app-&gt;environmentPath(), $app-&gt;environmentFile()))-&gt;load();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InvalidPathException $e) &#123;</span><br><span class="line">                <span class="comment">//</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在代码中，我们并没有发现任何执行putenv或者操作<code>$_ENV</code>全局变量的地方，实际上在整个Laravel的框架代码里也没有发现蛛丝马迹，那么这些环境变量是如何保存进来的呢？<br>如果Laravel框架里没有执行这些代码，我们应该可以推测是框架使用的第三方组件做了这些事情<br>而事实也确实如此，可以看到在DetectEnvironment类的bootstrap方法里实例化了一个Dotenv类的对象，而Dotenv\Loader正是执行了读取.env文件，执行putenv的操作。<br>那么env获取不到值只能说明Dotenv的实例化并没有执行</p>
+<p>再仔细看一下DetectEnvironment类，在实例化Dotenv前，先进行了一个 if 判断<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (! $app-&gt;configurationIsCached())</span><br></pre></td></tr></table></figure></p>
+<p>而这个方法的作用就是判断 <code>bootstrap/cache/config.php</code> 缓存文件是否存在，如果文件存在则不会执行Dotenv的实例化操作，也就不会往<code>$_ENV</code>里存数据，自然env函数是取不到值的</p>
+<p><code>bootstrap/cache/config.php</code>是执行下面的命令生成的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:cache</span><br></pre></td></tr></table></figure></p>
+<p>清除使用命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:clear</span><br></pre></td></tr></table></figure></p>
+<p>那么，真相大白了，之前在开发时并没有出现问题，是因为没有执行 config:cache 命令，而项目上线后为了优化访问速度，生成了缓存文件，导致env取值失败</p>
+<p>如果使用了config:cache，env函数只能在config目录下的配置文件的php里使用，不可以在其他地方使用。</p>
+<p>一个非常简单的办法就是将<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env(<span class="string">'APP_ENV'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config(<span class="string">'app.env'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>config函数会优先读取 bootstrap/cache/config.php 中缓存的配置，如果没有缓存文件，则会直接读取 config 目录下的所有配置文件</p>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/83f9cd407751" target="_blank" rel="noopener">https://www.jianshu.com/p/83f9cd407751</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/08/03/linux查找含有某字符串的所有文件/" itemprop="url">
+                  Linux查找含有某字符串的所有文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-03T13:23:42+08:00" content="2018-08-03">
+              2018-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>All is well<br></blockquote>
+
+<p>如果你想在当前目录下 查找”hello,world!”字符串,可以这样:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -rn <span class="string">"hello,world!"</span> *</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">* : 表示当前目录所有文件，也可以是某个文件名</span><br><span class="line">-r 是递归查找</span><br><span class="line">-n 是显示行号</span><br><span class="line">-R 查找所有文件包含子目录</span><br><span class="line">-i 忽略大小写</span><br></pre></td></tr></table></figure>
+<p>下面是一些有意思的命令行参数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">grep -i pattern files ：不区分大小写地搜索。默认情况区分大小写， </span><br><span class="line">grep -l pattern files ：只列出匹配的文件名， </span><br><span class="line">grep -L pattern files ：列出不匹配的文件名， </span><br><span class="line">grep -w pattern files ：只匹配整个单词，而不是字符串的一部分（如匹配‘magic’，而不是‘magical’）， </span><br><span class="line">grep -C number pattern files ：匹配的上下文分别显示[number]行， </span><br><span class="line">grep pattern1 | pattern2 files ：显示匹配 pattern1 或 pattern2 的行， </span><br><span class="line">grep pattern1 files | grep pattern2 ：显示既匹配 pattern1 又匹配 pattern2 的行。</span><br></pre></td></tr></table></figure></p>
+<p>这里还有些用于搜索的特殊符号：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\&lt; 和 \&gt; 分别标注单词的开始与结尾。</span><br><span class="line">例如： </span><br><span class="line">grep man * 会匹配 ‘Batman’、‘manic’、‘man’等， </span><br><span class="line">grep <span class="string">'\&lt;man'</span> * 匹配‘manic’和‘man’，但不是‘Batman’， </span><br><span class="line">grep <span class="string">'\&lt;man\&gt;'</span> 只匹配‘man’，而不是‘Batman’或‘manic’等其他的字符串。 </span><br><span class="line"><span class="string">'^'</span>：指匹配的字符串在行首， </span><br><span class="line"><span class="string">'$'</span>：指匹配的字符串在行尾</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://blog.51cto.com/151wqooo/1162118" target="_blank" rel="noopener">http://blog.51cto.com/151wqooo/1162118</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/08/03/laravel中的锁/" itemprop="url">
+                  Laravel中的锁
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-03T10:56:40+08:00" content="2018-08-03">
+              2018-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>昔日寒山问拾得曰：世间有人谤我、欺我、辱我、笑我、轻我、贱我、恶我、骗我、如何处治乎？拾得曰：只要忍他、让他、由他、避他、耐他、敬他、不要理他，再待几年你且看他。<br></blockquote>
+
+<p>查询构造器也包含一些可以帮助你在 select 语法上实现 「悲观锁定」的函数。</p>
+<h3 id="sharedLock"><a href="#sharedLock" class="headerlink" title="sharedLock"></a>sharedLock</h3><p>共享锁可防止选中的数据列被篡改，直到事务被提交为止<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'votes'</span>, <span class="string">'&gt;'</span>, <span class="number">100</span>)-&gt;sharedLock()-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="lockForUpdate"><a href="#lockForUpdate" class="headerlink" title="lockForUpdate"></a>lockForUpdate</h3><p>使用「更新」锁可避免行被其它共享锁修改或选取<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'votes'</span>, <span class="string">'&gt;'</span>, <span class="number">100</span>)-&gt;lockForUpdate()-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="相同和不同"><a href="#相同和不同" class="headerlink" title="相同和不同"></a>相同和不同</h3><ul>
+<li>相同的地方是都能避免同一行数据被其他 transaction 进行 update。</li>
+<li>不同的地方是：<br>sharedLock 不会阻止其他 transaction 读取同一行<br>lockForUpdate 会阻止其他 transaction 读取同一行（需要特别注意的是，普通的非锁定读取读取依然可以读取到该行，只有 sharedLock 和 lockForUpdate 的读取会被阻止。）</li>
+</ul>
+<h3 id="试验"><a href="#试验" class="headerlink" title="试验"></a>试验</h3><p>事务本身并不会锁表或者锁行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// </span></span><br><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// hehe的查询操作并不会受到影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 更新也没有任何影响</span></span><br></pre></td></tr></table></figure></p>
+<p>使用共享锁<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sharedLock</span></span><br><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通的查询没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 同样使用共享锁的查询没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 使用lockForUpdate的查询会有影响</span></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;lockForUpdate()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>使用排他锁<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;lockForUpdate()-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//普通的查询并没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用了共享锁或者排他锁的查询才会有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 对更新有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/30/解决redis内存不够的问题/" itemprop="url">
                   解决redis内存不够的问题
                 </a>
@@ -464,349 +783,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/25/crontab计划任务指定执行用户/" itemprop="url">
-                  crontab计划任务指定执行用户
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-25T12:10:10+08:00" content="2018-07-25">
-              2018-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>就算终有一散，也别辜负相遇。好好相遇，好好告别。<br></blockquote>
-
-<p>linux下可以通过配置crontab来定时执行任务，执行体可以是一条系统命令或自己写的一个脚本，同时可以指派用户来执行。配置crontab有两种方法。</p>
-<h3 id="使用crontab命令，例如添加一个新的或编辑已有的，使用："><a href="#使用crontab命令，例如添加一个新的或编辑已有的，使用：" class="headerlink" title="使用crontab命令，例如添加一个新的或编辑已有的，使用："></a>使用crontab命令，例如添加一个新的或编辑已有的，使用：</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
-<p>就可以进入配置文件。此时配置crontab的执行者是当前登入用户，如果当前用户是root，需要为其他用户配置，可以使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">crontab -e -u 用户名</span><br><span class="line"></span><br><span class="line">或</span><br><span class="line">su 用户名</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure></p>
-<p>这种方法有一个缺点，就是当前系统中配置的crontab不在一个配置文件中，让管理员不方便查询系统到底有多少个crontab。</p>
-<h3 id="直接在-etc-crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息"><a href="#直接在-etc-crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息" class="headerlink" title="直接在/etc/crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息"></a>直接在/etc/crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=/</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name command to be executed</span></span><br></pre></td></tr></table></figure>
-<p>要添加新的crontab，只需要在文件最后增加即可。注意这里面需要指定用户名；而方法1中则不需要，如果指定了，它会认为是命令的一部分，从而可能导致crontab执行失败。</p>
-<p>如果服务器都是有root来管理，建议添加crontab使用方法2，这样系统中的所有计划任务都在一起，一目了然。</p>
-<h3 id="注意问题"><a href="#注意问题" class="headerlink" title="注意问题"></a>注意问题</h3><p>我在配置Laravel的计划任务的时候有这样一条配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/crontab</span><br><span class="line"></span><br><span class="line"> * * * * www /bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
-<p>正常保存以后发现计划任务并没有顺利执行， 随想这去查看日志<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail <span class="number">-10</span> /<span class="keyword">var</span>/log/cron</span><br></pre></td></tr></table></figure></p>
-<p>发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">35</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24729</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">35</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24729</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">36</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24782</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">36</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24782</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">37</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24834</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">37</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24834</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">38</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24887</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">38</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24887</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24940</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24940</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">40</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24995</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>意思就是指定某一个执行计划任务的时候需要这个用户必须有家目录， 那么进行以下操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /home</span><br><span class="line">mkdir www</span><br><span class="line">chown -R www:www www</span><br></pre></td></tr></table></figure></p>
-<p>经过以上的一番操作， 正常运行</p>
-<h3 id="ubuntu没有计划任务日志解决办法"><a href="#ubuntu没有计划任务日志解决办法" class="headerlink" title="ubuntu没有计划任务日志解决办法"></a>ubuntu没有计划任务日志解决办法</h3><p>修改rsyslog<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rsyslog.d/<span class="number">50</span>-<span class="keyword">default</span>.conf</span><br></pre></td></tr></table></figure></p>
-<p>搜索cron 把如下行之前的注释”#”去掉<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#cron.*   /var/log/cron.log</span></span><br></pre></td></tr></table></figure></p>
-<p>重启rsyslog<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo  service rsyslog  restart</span><br></pre></td></tr></table></figure></p>
-<p> 现在看看定时任务的日志<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f /<span class="keyword">var</span>/log/cron.log</span><br></pre></td></tr></table></figure></p>
-<h3 id="Debian系统"><a href="#Debian系统" class="headerlink" title="Debian系统"></a>Debian系统</h3><p>重启<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://www.netingcn.com/crontab-designate.html" target="_blank" rel="noopener">http://www.netingcn.com/crontab-designate.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/25/为什么要在eloquent中使用appends/" itemprop="url">
-                  为什么要在eloquent中使用appends
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-25T08:57:46+08:00" content="2018-07-25">
-              2018-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>讲真话的最大好处就是：不必记得自己讲过什么。<br></blockquote>
-
-<p>Eloquent has a convenient feature called Accessors – you can define your own custom fields on top of existing in the database table. But then there’s an Eloquent property $appends – should we use it or not? And what’s the difference?</p>
-<h3 id="First-–-how-Accessors-work"><a href="#First-–-how-Accessors-work" class="headerlink" title="First – how Accessors work"></a>First – how Accessors work</h3><p>For those who don’t know or have forgotten: for example, if you have User model and fields first_name and last_name in the DB table, then you can create a function in app\User.php:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFullNameAttribute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;first_name . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Then you have access to property full_name (in the function name it’s CamelCase, and the property name is with underscoresd, for example like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ho User::find(<span class="number">1</span>)-&gt;full_name;</span><br></pre></td></tr></table></figure></p>
-<p>But here’s the thing – if you just return User object, it won’t contain full_name:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd(User::find(<span class="number">1</span>)-&gt;toJSON());</span><br></pre></td></tr></table></figure></p>
-<p>The result would look something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"id"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"first_name"</span>:<span class="string">"Povilas"</span>,</span><br><span class="line">  <span class="string">"last_name"</span>:<span class="string">"Korop"</span>,</span><br><span class="line">  <span class="string">"email"</span>:<span class="string">"povilas@webcoderpro.com"</span>,</span><br><span class="line">  <span class="string">"created_at"</span>:<span class="string">"2015-06-19 08:16:58"</span>,</span><br><span class="line">  <span class="string">"updated_at"</span>:<span class="string">"2015-06-19 19:48:09"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Here’s-where-appends-comes-in"><a href="#Here’s-where-appends-comes-in" class="headerlink" title="Here’s where $appends comes in"></a>Here’s where $appends comes in</h3><p>Now this is the trick – in your User model you can add $appends attribute and list the fields that would automatically be appended:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">protected</span> $appends = [<span class="string">'full_name'</span>];</span><br></pre></td></tr></table></figure></p>
-<p>Now that attribute will be automatically added to the previous JSON:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"id"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"first_name"</span>:<span class="string">"Povilas"</span>,</span><br><span class="line">  <span class="string">"last_name"</span>:<span class="string">"Korop"</span>,</span><br><span class="line">  <span class="string">"email"</span>:<span class="string">"povilas@webcoderpro.com"</span>,</span><br><span class="line">  <span class="string">"created_at"</span>:<span class="string">"2015-06-19 08:16:58"</span>,</span><br><span class="line">  <span class="string">"updated_at"</span>:<span class="string">"2015-06-19 19:48:09"</span>,</span><br><span class="line">  <span class="string">"full_name"</span>:<span class="string">"Povilas Korop"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://laraveldaily.com/why-use-appends-with-accessors-in-eloquent/" target="_blank" rel="noopener">https://laraveldaily.com/why-use-appends-with-accessors-in-eloquent/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/25/教你如何快速构建api查询/" itemprop="url">
-                  教你如何快速构建API查询
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-25T08:35:47+08:00" content="2018-07-25">
-              2018-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>很多东西如果不是怕别人捡去，我们一定会扔掉。<br></blockquote>
-
-<p>Laravel Query Builder is a package by Alex Vanderbist and the folks at Spatie, to quickly build Eloquent queries from API requests. This package makes creating complex API queries with Laravel incredibly simple. While you may have already heard of this package (or used it), I wanted to make sure everyone is aware of this one!</p>
-<p>I highly recommend you take Query Builder for a spin and read through the README to learn what it’s capable of doing. It makes creating API filters and other query-related tasks so easy, you might feel like you’re cheating.</p>
-<p>A few basic examples of what you can do include filtering an API request, including related models, incorporating it with existing queries, sorting an API request.</p>
-<h3 id="Basic-usage"><a href="#Basic-usage" class="headerlink" title="Basic usage"></a>Basic usage</h3><ul>
-<li><p>Filtering an API request: /users?filter[name]=John:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Spatie</span>\<span class="title">QueryBuilder</span>\<span class="title">QueryBuilder</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">$users = QueryBuilder::for(User::class)</span><br><span class="line">    -&gt;allowedFilters(<span class="string">'name'</span>)</span><br><span class="line">    -&gt;get();</span><br><span class="line"><span class="comment">// all `User`s that contain the string "John" in their name</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Requesting relations from an API request: /users?include=posts:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$users = QueryBuilder::for(User::class)</span><br><span class="line">    -&gt;allowedIncludes(<span class="string">'posts'</span>)</span><br><span class="line">    -&gt;get();</span><br><span class="line"><span class="comment">// all `User`s with their `posts` loaded</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Works together nicely with existing queries:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$query = User::where(<span class="string">'active'</span>, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">$user = QueryBuilder::for($query)</span><br><span class="line">    -&gt;allowedIncludes(<span class="string">'posts'</span>, <span class="string">'permissions'</span>)</span><br><span class="line">    -&gt;where(<span class="string">'score'</span>, <span class="string">'&gt;'</span>, <span class="number">42</span>) <span class="comment">// chain on any of Laravel's query builder methods</span></span><br><span class="line">    -&gt;first();</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Sorting an API request: /users?sort=name:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$users = QueryBuilder::for(User::class)-&gt;get();</span><br><span class="line"><span class="comment">// all `User`s sorted by name</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>You can install the package via composer:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> spatie/laravel-query-builder</span><br></pre></td></tr></table></figure></p>
-<p>You can optionally publish the config file with:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish --provider=<span class="string">"Spatie\QueryBuilder\QueryBuilderServiceProvider"</span> --tag=<span class="string">"config"</span></span><br></pre></td></tr></table></figure></p>
-<p>This is the contents of the published config file:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * By default the package will use the `include`, `filter`, `sort` and `fields` query parameters.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Here you can customize those names.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="string">'parameters'</span> =&gt; [</span><br><span class="line">        <span class="string">'include'</span> =&gt; <span class="string">'include'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'filter'</span> =&gt; <span class="string">'filter'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'sort'</span> =&gt; <span class="string">'sort'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'fields'</span> =&gt; <span class="string">'fields'</span>,</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://laravel-news.com/laravel-query-builder" target="_blank" rel="noopener">https://laravel-news.com/laravel-query-builder</a><br><a href="https://packagist.org/packages/spatie/laravel-query-builder" target="_blank" rel="noopener">https://packagist.org/packages/spatie/laravel-query-builder</a><br><a href="https://github.com/spatie/laravel-query-builder" target="_blank" rel="noopener">https://github.com/spatie/laravel-query-builder</a><br><a href="https://spatie.be/en/opensource/laravel" target="_blank" rel="noopener">https://spatie.be/en/opensource/laravel</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -845,7 +826,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">344</span>
+              <span class="site-state-item-count">347</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,374 @@
             
               
                 
+                <a class="post-title-link" href="/2020/01/17/golang创建一个简单的restfulapi/" itemprop="url">
+                  golang创建一个简单的restfulapi
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-01-17T19:03:25+08:00" content="2020-01-17">
+              2020-01-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你如今的气质里，藏着你走过的路，读过的书，和爱过的人。<br></blockquote>
+
+<p>Webからエンタープライズアプリケーションまで、RESTfulというアーキテクチャーが使われています。ステートレス設計として、別々のソフトウェアコンポーネント間の通信を提供する強力な方法であります。 Web開発者として、RESTful APIを作るために、主にPythonを使いますが、最近Goプログラミング言語に出会い、興味を持ってきました。Goプログラミング言語（golangでも呼ばれる）は、Googleのプロジェクトで、マイクロサービスアーキテクチャに適当な多くの機能も提供するので、人気が増えています。</p>
+<p>本記事、golangを使ってシンプルなRESTful APIをどう作るか説明したいと思います。</p>
+<h3 id="仕様"><a href="#仕様" class="headerlink" title="仕様"></a>仕様</h3><p>RESTful APIは、通常CRUDができます。CRUDとは、データベースの四つの主要な機能、「作成（Create）」「読み出し（Read）」「更新（Update）」「削除（Delete）」ですが、今回は、簡単にするために、読み出しの機能しか作りません。そして、データがJSONの形式で書きます。</p>
+<p>そして、このエンドポイントがあります：</p>
+<ul>
+<li>/ -&gt; ホームページですが、とりあえずテキストしかを見せない</li>
+<li>/items/ -&gt; Itemのリスト、Itemデータを全部見せる</li>
+<li>/items/{id} -&gt; 特定のItemの情報<br>それぞれのItemは、「title」と「description」のデータがあって、簡単にするために、データベースを使用するのではなく、データを事前に定義します。</li>
+</ul>
+<h3 id="開発プロセス"><a href="#開発プロセス" class="headerlink" title="開発プロセス"></a>開発プロセス</h3><p>最初は、必要なパッケージをインストールします。ルーティングのために、Muxというパッケージを使っていきます。CMD / Terminalを開けて、このコマンドを実行してください：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/gorilla/mux</span><br></pre></td></tr></table></figure></p>
+<p>その後、main.goというファイルを作成して、このコードを入れてください：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line"></span><br><span class="line">    <span class="string">"github.com/gorilla/mux"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>すべてのgolangを使って作られたプログラムがパッケージで構成されています。この部分では、何のパッケージが必要かが書いてあります。この場合には、四つのパッケージが必要です。</p>
+<h3 id="ルーティング"><a href="#ルーティング" class="headerlink" title="ルーティング"></a>ルーティング</h3><p>同じファイルで、さっきの書いたコードの下に、このコードを入れてください：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Controller for the / route (home)</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">homePage</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    fmt.Fprintf(w, <span class="string">"This is the home page. Welcome!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Controller for the /items route</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">returnAllItems</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Code for returning all items here</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Controller for the /items/&#123;id&#125; route</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">returnSingleItem</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Code for returning a single item here</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleRequests</span><span class="params">()</span></span> &#123;</span><br><span class="line">    myRouter := mux.NewRouter().StrictSlash(<span class="literal">true</span>)</span><br><span class="line">    myRouter.HandleFunc(<span class="string">"/"</span>, homePage)</span><br><span class="line">    myRouter.HandleFunc(<span class="string">"/items"</span>, returnAllItems)</span><br><span class="line">    myRouter.HandleFunc(<span class="string">"/items/&#123;id&#125;"</span>, returnSingleItem)</span><br><span class="line">    log.Fatal(http.ListenAndServe(<span class="string">":8000"</span>, myRouter))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    handleRequests()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>main()</code>という関数は、このプログラムをスタートすると、自動的に実行されます。その中に、<code>handleRequests()</code>という関数が実行されます。<code>handleRequests()</code>の関数で、それぞれのエンドポイントがアクセスされると、何が起こるかが書いてあります。例えば、/のエンドポイントがアクセスされると、<code>homePage</code>という関数が実行されるとか、<code>/items</code>のエンドポイントがアクセスされると、<code>returnAllItems</code>という関数が実行されます。</p>
+<p>そして、このコード：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log.Fatal(http.ListenAndServe(<span class="string">":8000"</span>, myRouter))</span><br></pre></td></tr></table></figure></p>
+<p>の意味は、このプログラムが8000のポートで、アクセスできます。これで、もう使えるなので、スタートしてみましょう！</p>
+<p>CMD / Terminal で、このコマンドを実行してください：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> run main.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+<h3 id="サポート関数"><a href="#サポート関数" class="headerlink" title="サポート関数"></a>サポート関数</h3><p>これから、二つのパッケージが必要なので、インポートしましょう。最初のimport部分をこれに変更してください：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"encoding/json"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">    <span class="string">"strconv"</span></span><br><span class="line"></span><br><span class="line">    <span class="string">"github.com/gorilla/mux"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>encoding/jsonとstrconvというパッケージを追加しました。もうすぐこの二つを使います。</p>
+<p>それから、二つのサポート関数を書きましょう：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">respondWithError</span><span class="params">(w http.ResponseWriter, code <span class="keyword">int</span>, msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    respondWithJson(w, code, <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>&#123;<span class="string">"error"</span>: msg&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">respondWithJson</span><span class="params">(w http.ResponseWriter, code <span class="keyword">int</span>, payload <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    response, _ := json.Marshal(payload)</span><br><span class="line">    w.Header().Set(<span class="string">"Content-Type"</span>, <span class="string">"application/json"</span>)</span><br><span class="line">    w.WriteHeader(code)</span><br><span class="line">    w.Write(response)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>両方の関数は、JSONの形式でHTTP requestに答える役割があります。</p>
+<h3 id="Itemデータ構造"><a href="#Itemデータ構造" class="headerlink" title="Itemデータ構造"></a>Itemデータ構造</h3><p>Itemのデータ構造を書きましょう。importの部分の下に、このコードを入れてください：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Item representation</span></span><br><span class="line"><span class="keyword">type</span> Item <span class="keyword">struct</span> &#123;</span><br><span class="line">    Title   <span class="keyword">string</span> <span class="string">`json:"title"`</span></span><br><span class="line">    Description    <span class="keyword">string</span> <span class="string">`json:"description"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>仕様に基づいて、それぞれのItemは、「title」と「description」のデータがあります。そして、その下に、これを入れて下さい：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Global, static list of items</span></span><br><span class="line"><span class="keyword">var</span> itemList = []Item&#123;</span><br><span class="line">    Item&#123;Title: <span class="string">"Item A"</span>, Description: <span class="string">"The first item"</span>&#125;,</span><br><span class="line">    Item&#123;Title: <span class="string">"Item B"</span>, Description: <span class="string">"The second item"</span>&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>今回は、データベースを使わないので、これでデータを事前に定義します。二つのItemだけ書きましたが、自由にいくつでもいいですよ。</p>
+<h3 id="コア関数"><a href="#コア関数" class="headerlink" title="コア関数"></a>コア関数</h3><p>最後に、コア関数（returnAllItemsとreturnSingleItem）を書きます。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Controller for the /items route</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">returnAllItems</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    respondWithJson(w, http.StatusOK, itemList)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>基本的に、/itemsのエンドポイントをアクセスすると、returnAllItems()という関数がすべてのItemをJSONの形式で答えます。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Controller for the /items/&#123;id&#125; route</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">returnSingleItem</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Get query parameters using Mux</span></span><br><span class="line">    vars := mux.Vars(r)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Convert &#123;id&#125; parameter from string to int</span></span><br><span class="line">    key, err := strconv.Atoi(vars[<span class="string">"id"</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If &#123;id&#125; parameter is not valid int</span></span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        respondWithError(w, http.StatusBadRequest, <span class="string">"Invalid request payload"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If Item with ID of &#123;id&#125; does not exist</span></span><br><span class="line">    <span class="keyword">if</span> key &gt;= <span class="built_in">len</span>(itemList) &#123;</span><br><span class="line">        respondWithError(w, http.StatusNotFound, <span class="string">"Item does not exist"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    respondWithJson(w, http.StatusOK, itemList[key])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>そして、<code>returnSingleItem()</code>という関数が、idのURLパラメーターに基づいて特定のItemの情報をJSONの形式で答えます。</p>
+<p>例えば、localhost:8000/items/1をアクセスしたら、1がidになります。それから、そのidは、indexとしてitemListという配列からデータを取ってJSONの形式で答えます。idは1の場合は、二つ目のデータが取られます。そして、idは0の場合は、一つ目のデータが取られます。</p>
+<p>idは、数だけであるべきであり、Itemの数以上になってはいけないので、二つのチェックを書きました。これで、終わりです。作ってみましょう！</p>
+<h3 id="テスト"><a href="#テスト" class="headerlink" title="テスト"></a>テスト</h3><p>CMD / Terminal で、さっきのrunを閉じて、もう一回実行してください：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> run main.<span class="keyword">go</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://qiita.com/sbenemerito/items/d94b811f14ce0a546a3f" target="_blank" rel="noopener">https://qiita.com/sbenemerito/items/d94b811f14ce0a546a3f</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/01/14/nginx使用https反向代理laravel的http应用/" itemprop="url">
+                  Nginx使用HTTPS反向代理laravel的HTTP应用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-01-14T12:39:12+08:00" content="2020-01-14">
+              2020-01-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>幸有我来山未孤<br></blockquote>
+
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>反向代理的概念不多做解释，此处应用反向代理主要原因如下：</p>
+<ul>
+<li>应用服务器不必暴露在公网，躲在防火墙后，通过内网连接代理服务器（proxy server）</li>
+<li>DNS设置简单，因为有两个不同应用服务器，对应不同的子域名（a.example.com, b.example.com），只需设置DNS *.example.com 到代理服务器IP即可</li>
+<li>SSL证书管理方便，只需申请一个通配符的证书 *.example.com 配置在代理服务器</li>
+</ul>
+<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>系统环境都是Ubuntu 18.04.2，服务器都是使用Nginx，代理服务器配置SSL，使用HTTPS对外访问（HTTP强制跳转到HTTPS），应用服务器使用Laravel，HTTP对内网访问。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="应用服务器配置"><a href="#应用服务器配置" class="headerlink" title="应用服务器配置"></a>应用服务器配置</h4><p>应用服务器的nginx照常配置即可，可以设置server_name为对应的域名。</p>
+<h3 id="代理服务器配置"><a href="#代理服务器配置" class="headerlink" title="代理服务器配置"></a>代理服务器配置</h3><p>代理服务器从网上抄来一份，主要是设置proxy_pass，下面只是location block：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_set_header Host $host;</span><br><span class="line">    proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">    proxy_set_header X-Forwarded-<span class="keyword">For</span> $proxy_add_x_forwarded_for;</span><br><span class="line">    proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">    proxy_pass    http:<span class="comment">//ip;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意要加 proxy_set_header X-Forwarded-Proto $scheme 这一条，让后面被代理的应用服务器知道对应的协议是什么，这样应用服务器生成url（如css，js文件）使用相应的协议。如果代理服务器确定使用https，那$scheme替换成https也可以。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>本以为这样就搞定了，但是在用域名测试的时候发现网站不能正常加载，浏览器有如下错误：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mixed Content: The page at <span class="string">'&lt;URL&gt;'</span> was loaded over HTTPS, but requested an insecure stylesheet <span class="string">'&lt;URL&gt;'</span>. This request has been blocked; the content must be served over HTTPS.</span><br></pre></td></tr></table></figure></p>
+<p>在页面中混用了HTTPS和HTTP，浏览器会block掉不安全的HTTP链接。而HTTP链接主要是用laravel的asset生成的css, js文件，css文件没有加载上，所以就不能正常加载了。</p>
+<blockquote>
+<p><a href="https://laravel.com/docs/5.5/helpers#method-asset" target="_blank" rel="noopener">https://laravel.com/docs/5.5/helpers#method-asset</a><br>多方查询，有推荐使用proxy_redirect来替换HTTP为HTTPS，但是试用不成功。</p>
+</blockquote>
+<p>也有说这些资源文件用uri路径来表示，\css\example.css 这样，不带协议。</p>
+<p>或者页面增加一个meta，让HTTP升级为安全的HTTPS：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Security-Policy"</span> <span class="attr">content</span>=<span class="string">"upgrade-insecure-requests"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这样在生产环境没问题，但是需要改动很多代码，而且开发、测试环境也需要ssl证书，很不方便。</p>
+<p>在查询到几篇文章中，有提到后端是tomcat，需要修改tomcat的配置来接受X-Forwarded-Proto 这个Header来处理。我思考是不是laravel也需要类似设置，google一下发现了这个：</p>
+<blockquote>
+<p><a href="https://laravel.com/docs/5.5/requests#configuring-trusted-proxies" target="_blank" rel="noopener">https://laravel.com/docs/5.5/requests#configuring-trusted-proxies</a><br>When running your applications behind a load balancer that terminates TLS / SSL certificates, you may notice your application sometimes does not generate HTTPS links. Typically this is because your application is being forwarded traffic from your load balancer on port 80 and does not know it should generate secure links.</p>
+</blockquote>
+<p>Laravel从5.5开始，内置了一个 TrustProxies模块来解决这个问题，专门应对使用了Load Balancer等情况。</p>
+<p>所以按照文档，修改 protected $proxies = ‘<strong>‘，因为应用服务器在内网，所以改成</strong>也无所谓。<br>Laravel 5.5之前的版本，可以自行用composer来安装这个插件。</p>
+<p><a href="https://github.com/fideloper/TrustedProxy" target="_blank" rel="noopener">https://github.com/fideloper/TrustedProxy</a></p>
+<p>测试之后，问题解决。</p>
+<blockquote>
+<p><a href="http://alexlove77.github.io/2019/06/18/ngingx-reverse-proxy-https/" target="_blank" rel="noopener">http://alexlove77.github.io/2019/06/18/ngingx-reverse-proxy-https/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/01/11/golang返回json等格式数据/" itemprop="url">
+                  golang返回json等格式数据
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-01-11T10:45:35+08:00" content="2020-01-11">
+              2020-01-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>知我者谓我心忧，不知我者谓我何求，悠悠苍天，此何人哉<br></blockquote>
+
+<h3 id="Sending-Headers-Only"><a href="#Sending-Headers-Only" class="headerlink" title="Sending Headers Only"></a>Sending Headers Only</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  w.Header().Set(<span class="string">"Server"</span>, <span class="string">"A Go Web Server"</span>)</span><br><span class="line">  w.WriteHeader(<span class="number">200</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Rendering-Plain-Text"><a href="#Rendering-Plain-Text" class="headerlink" title="Rendering Plain Text"></a>Rendering Plain Text</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  w.Write([]<span class="keyword">byte</span>(<span class="string">"OK"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Rendering-JSON"><a href="#Rendering-JSON" class="headerlink" title="Rendering JSON"></a>Rendering JSON</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"encoding/json"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  js, err := json.Marshal(profile)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  w.Header().Set(<span class="string">"Content-Type"</span>, <span class="string">"application/json"</span>)</span><br><span class="line">  w.Write(js)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Rendering-XML"><a href="#Rendering-XML" class="headerlink" title="Rendering XML"></a>Rendering XML</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"encoding/xml"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span> <span class="string">`xml:"Hobbies&gt;Hobby"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  x, err := xml.MarshalIndent(profile, <span class="string">""</span>, <span class="string">"  "</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  w.Header().Set(<span class="string">"Content-Type"</span>, <span class="string">"application/xml"</span>)</span><br><span class="line">  w.Write(x)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Serving-a-File"><a href="#Serving-a-File" class="headerlink" title="Serving a File"></a>Serving a File</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">  <span class="string">"path"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  <span class="comment">// Assuming you want to serve a photo at 'images/foo.png'</span></span><br><span class="line">  fp := path.Join(<span class="string">"images"</span>, <span class="string">"foo.png"</span>)</span><br><span class="line">  http.ServeFile(w, r, fp)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Important: http.ServeFile() does not automatically sanitize the file path. So if you’re constructing a file path from untrusted user input, you must sanitize the input with filepath.Clean() before using it to avoid directory traversal attacks.</p>
+</blockquote>
+<h3 id="Rendering-a-HTML-Template"><a href="#Rendering-a-HTML-Template" class="headerlink" title="Rendering a HTML Template"></a>Rendering a HTML Template</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">File: templates/index.html</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;Hello &#123;&#123; .Name &#125;&#125;&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"html/template"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">  <span class="string">"path"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  fp := path.Join(<span class="string">"templates"</span>, <span class="string">"index.html"</span>)</span><br><span class="line">  tmpl, err := template.ParseFiles(fp)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> err := tmpl.Execute(w, profile); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Rendering-a-HTML-Template-to-a-String"><a href="#Rendering-a-HTML-Template-to-a-String" class="headerlink" title="Rendering a HTML Template to a String"></a>Rendering a HTML Template to a String</h3><p>Instead of passing in the http.ResponseWriter when executing your template (like in the above snippet) use a buffer instead:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">buf := <span class="built_in">new</span>(bytes.Buffer)</span><br><span class="line"><span class="keyword">if</span> err := tmpl.Execute(buf, profile); err != <span class="literal">nil</span> &#123;</span><br><span class="line">  http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">&#125;</span><br><span class="line">templateString := buf.String()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="Using-Layouts-and-Nested-Templates"><a href="#Using-Layouts-and-Nested-Templates" class="headerlink" title="Using Layouts and Nested Templates"></a>Using Layouts and Nested Templates</h3><p>File: templates/layout.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;&#123; template "title" . &#125;&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    &#123;&#123; template "content" . &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>File: templates/index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; define "title" &#125;&#125;An example layout&#123;&#123; end &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; define "content" &#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello &#123;&#123; .Name &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">&#123;&#123; end &#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>File: main.go<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"html/template"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">  <span class="string">"path"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  lp := path.Join(<span class="string">"templates"</span>, <span class="string">"layout.html"</span>)</span><br><span class="line">  fp := path.Join(<span class="string">"templates"</span>, <span class="string">"index.html"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Note that the layout file must be the first parameter in ParseFiles</span></span><br><span class="line">  tmpl, err := template.ParseFiles(lp, fp)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> err := tmpl.Execute(w, profile); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://www.alexedwards.net/blog/golang-response-snippets" target="_blank" rel="noopener">https://www.alexedwards.net/blog/golang-response-snippets</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/01/07/jquery相邻选择器/" itemprop="url">
                   jquery相邻选择器
                 </a>
@@ -313,7 +681,7 @@
 
 <h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>选择所有紧接在 “prev” 元素后的 “next” 元素.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JQuery(<span class="string">"prev + next"</span>)</span><br><span class="line">prev	任何可用的选择器.</span><br><span class="line">next	一个选择器，过滤刚好在第一个选择器后面的元素.</span><br></pre></td></tr></table></figure>
-<h3 id="例子"><a href="#例子" class="headerlink" title="例子:"></a>例子:</h3><p>找出所有紧挨在label后面的inputs<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>Name:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"name"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fieldset</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">label</span>&gt;</span>Newsletter:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"newsletter"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"none"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">$(<span class="string">"label + input"</span>).css(<span class="string">"color"</span>, <span class="string">"blue"</span>).val(<span class="string">"Labeled!"</span>)</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>找出所有紧挨在label后面的inputs<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>Name:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"name"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fieldset</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">label</span>&gt;</span>Newsletter:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"newsletter"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"none"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">$(<span class="string">"label + input"</span>).css(<span class="string">"color"</span>, <span class="string">"blue"</span>).val(<span class="string">"Labeled!"</span>)</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 
           
         
@@ -443,358 +811,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/01/05/new-shop-system-named-mshop/" itemprop="url">
-                  一个全新的外贸商城系统(mshop)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-01-05T23:54:24+08:00" content="2020-01-05">
-              2020-01-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>都说时间是良药，但治好的都是皮外伤<br></blockquote>
-
-<h3 id="产品列表"><a href="#产品列表" class="headerlink" title="产品列表"></a>产品列表</h3><p><img src="/images/mshop01.jpg" alt></p>
-<h3 id="产品详情"><a href="#产品详情" class="headerlink" title="产品详情"></a>产品详情</h3><p><img src="/images/mshop02.jpg" alt></p>
-<h3 id="分类列表"><a href="#分类列表" class="headerlink" title="分类列表"></a>分类列表</h3><p><img src="/images/mshop03.jpg" alt></p>
-<h3 id="产品归类"><a href="#产品归类" class="headerlink" title="产品归类"></a>产品归类</h3><p><img src="/images/mshop04.jpg" alt></p>
-<h3 id="产品爬虫"><a href="#产品爬虫" class="headerlink" title="产品爬虫"></a>产品爬虫</h3><p><img src="/images/mshop05.jpg" alt></p>
-<h3 id="订单列表"><a href="#订单列表" class="headerlink" title="订单列表"></a>订单列表</h3><p><img src="/images/mshop06.jpg" alt></p>
-<h3 id="订单详情"><a href="#订单详情" class="headerlink" title="订单详情"></a>订单详情</h3><p><img src="/images/mshop07.jpg" alt></p>
-<h3 id="订单促销"><a href="#订单促销" class="headerlink" title="订单促销"></a>订单促销</h3><p><img src="/images/mshop08.jpg" alt></p>
-<h3 id="产品促销"><a href="#产品促销" class="headerlink" title="产品促销"></a>产品促销</h3><p><img src="/images/mshop09.jpg" alt></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/11/26/laravel-chunk-missing-half-the-results/" itemprop="url">
-                  laravel-chunk-missing-half-the-results
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-11-26T17:43:01+08:00" content="2019-11-26">
-              2019-11-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>只要从现在开始努力，最坏不过是大器晚成<br></blockquote>
-
-<h3 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h3><p>I have a problem with Laravel’s ORM Eloquent chunk() method. It misses some results. Here is a test query :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$destinataires = Destinataire::where(<span class="string">'statut'</span>, <span class="string">'&lt;'</span>, <span class="number">3</span>)</span><br><span class="line">    -&gt;where(<span class="string">'tokenized_at'</span>, <span class="string">'&lt;'</span>, $date_active)</span><br><span class="line">    -&gt;chunk(<span class="keyword">$this</span>-&gt;chunk, <span class="function"><span class="keyword">function</span> <span class="params">($destinataires)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span>($destinataires <span class="keyword">as</span> $destinataire) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;i;</span><br></pre></td></tr></table></figure></p>
-<p>It gives 124838 results.<br>But :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$num_dest = Destinataire::where(<span class="string">'statut'</span>, <span class="string">'&lt;'</span>, <span class="number">3</span>)</span><br><span class="line">    -&gt;where(<span class="string">'tokenized_at'</span>, <span class="string">'&lt;'</span>, $date_active)</span><br><span class="line">    -&gt;count();</span><br><span class="line"><span class="keyword">echo</span> $num_dest;</span><br></pre></td></tr></table></figure></p>
-<p>gives 249676, so just TWICE as the first code example.</p>
-<h3 id="A"><a href="#A" class="headerlink" title="A"></a>A</h3><p>Use chunkById() instead of chunk().</p>
-<p>When updating or deleting records inside the chunk callback, any changes to the primary key or foreign keys could affect the chunk query. This could potentially result in records not being included in the chunked results.</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'active'</span>, <span class="keyword">false</span>)</span><br><span class="line">    -&gt;chunkById(<span class="number">100</span>, <span class="function"><span class="keyword">function</span> <span class="params">($users)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span> ($users <span class="keyword">as</span> $user) &#123;</span><br><span class="line">            DB::table(<span class="string">'users'</span>)</span><br><span class="line">                -&gt;where(<span class="string">'id'</span>, $user-&gt;id)</span><br><span class="line">                -&gt;update([<span class="string">'active'</span> =&gt; <span class="keyword">true</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://stackoverflow.com/questions/32700537/eloquent-chunk-missing-half-the-results" target="_blank" rel="noopener">https://stackoverflow.com/questions/32700537/eloquent-chunk-missing-half-the-results</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/10/27/golang中该使用指针类型还是值类型/" itemprop="url">
-                  Golang中该使用指针类型还是值类型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-10-27T11:24:39+08:00" content="2019-10-27">
-              2019-10-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>只要从现在开始努力，最坏不过是大器晚成<br></blockquote>
-
-<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Foo <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = <span class="string">"hello biezhi"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// -------------方法返回值----------------</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">returnValue</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bar</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">returnPoint</span><span class="params">()</span> *<span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;bar</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// --------------方法入参-----------------</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">modifyNameByPoint</span><span class="params">(foo *Foo)</span></span> &#123;</span><br><span class="line">    foo.Name = <span class="string">"emmmm "</span> + foo.Name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">nameToUpper</span><span class="params">(foo Foo)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    foo.Name = strings.ToUpper(foo.Name)</span><br><span class="line">    <span class="keyword">return</span> foo.Name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// --------------实例方法-----------------</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(foo Foo)</span> <span class="title">setName</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    foo.Name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(foo *Foo)</span> <span class="title">setNameByPoint</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    foo.Name = name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里我列出了 3 组方法，分别是指针类型和值类型的示例。这几个方法在编写代码的过程中都会经常遇到，我们从使用者的维度和内存的视角来分析一下这几个方法：</p>
-<h3 id="使用区别"><a href="#使用区别" class="headerlink" title="使用区别"></a>使用区别</h3><p>大部分人都在讨论函数的入参是指针还是值类型呢？我们先来看看第一组方法，返回值的情况：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s1 := returnValue()</span><br><span class="line">s2 := returnPoint()</span><br><span class="line"></span><br><span class="line">fmt.Printf(<span class="string">"s1: %v \n"</span>, s1)   <span class="comment">// s1: hello biezhi </span></span><br><span class="line">fmt.Printf(<span class="string">"s2: %v \n"</span>, *s2)  <span class="comment">// s2: hello biezhi</span></span><br></pre></td></tr></table></figure></p>
-<p>这两个方法一个返回了指针一个返回值类型，值类型是非 nil 的（在 Go 中所有的值类型都会有 初值），指针类型可以判断是否为 nil。 获取到的数据是相同的，不同之处在于取值的方式，指针类型需要使用 * 号读取数据。</p>
-<p>下面尝试传递参数，分别是指针类型参数和值类型参数：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">foo := Foo&#123;Name:<span class="string">"biezhi"</span>&#125;</span><br><span class="line">fmt.Println(<span class="string">"foo.name:"</span>, foo.Name)          <span class="comment">// foo.name: biezhi</span></span><br><span class="line"></span><br><span class="line">modifyNameByPoint(&amp;foo)</span><br><span class="line">fmt.Println(<span class="string">"foo.name:"</span>, foo.Name)          <span class="comment">// foo.name: emmmm biezhi</span></span><br><span class="line"></span><br><span class="line">fmt.Println(<span class="string">"foo.name:"</span>, nameToUpper(foo))  <span class="comment">// foo.name: EMMMM BIEZHI</span></span><br><span class="line">fmt.Println(<span class="string">"foo.name:"</span>, foo.Name)          <span class="comment">// foo.name: emmmm biezhi</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>modifyNameByPoint 需要指针类型，所以我们取 foo 的指针传入（foo是值类型所以这里用 &amp; 取其地址）。</li>
-<li>nameToUpper 需要一个值类型的参数，所以 foo 直接传入，返回值是转大写的 Name。</li>
-<li>nameToUpper 不会修改 foo.Name 的数据，最后一次输出还是旧数据</li>
-</ul>
-<h3 id="Receiver-Type"><a href="#Receiver-Type" class="headerlink" title="Receiver Type"></a>Receiver Type</h3><p>如果你编写 Java 代码的话经常会看到这样的代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bar</span> </span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看到这里有 this 关键字，在 Go 中是没有的，这里的 this 可以调用当前对象的成员变量和实例方法，当使用 this 修改了成员变量就相当于在 Go 中使用了指针，看看下面的 Go 代码：</p>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(foo *Foo)</span> <span class="title">setNameByPoint</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    foo.Name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(foo Foo)</span> <span class="title">setName</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    foo.Name = name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Go 中想要为结构体定义属于自己的方法就使用如上的两种方式，这两个方法在 Go 中称为 Receiver Type（接受者类型），可以使用结构体变量调用，我们今天只讨论结构体这种情况，来看看这两个方法有什么不同：</p>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foo := Foo&#123;Name:<span class="string">"biezhi"</span>&#125;</span><br><span class="line">foo.setName(<span class="string">"2333"</span>)</span><br><span class="line">fmt.Println(<span class="string">"foo.Name:"</span>, foo.Name)  <span class="comment">// foo.Name: biezhi</span></span><br><span class="line"></span><br><span class="line">foo.setNameByPoint(<span class="string">"2333"</span>)</span><br><span class="line">fmt.Println(<span class="string">"foo.Name:"</span>, foo.Name)  <span class="comment">// foo.Name: 2333</span></span><br></pre></td></tr></table></figure>
-<p>根据输出发现一个结构体，如果不使用指针类型的时候值是不会被修改的。这点也很容易理解，在 setName 方法中 foo 变量被作为值传递，所以如果这时候输出 foo 的内存地址会发现和外面调用的是不一样的，来看看：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(foo Foo)</span> <span class="title">setName</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"setName: %v address: %p \n"</span>, foo, &amp;foo) <span class="comment">// 2</span></span><br><span class="line">    foo.Name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(foo *Foo)</span> <span class="title">setNameByPoint</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"setNameByPoint: %v address: %p \n"</span>, foo, &amp;foo) <span class="comment">// 4</span></span><br><span class="line">    foo.Name = name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">foo := Foo&#123;Name:<span class="string">"biezhi"</span>&#125;</span><br><span class="line">fmt.Printf(<span class="string">"src foo: %v address: %p \n"</span>, foo, &amp;foo)         <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">foo.setName(<span class="string">"set name"</span>)</span><br><span class="line">fmt.Printf(<span class="string">"by value foo: %v address: %p \n"</span>, foo, &amp;foo)    <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">foo.setNameByPoint(<span class="string">"2333"</span>)</span><br><span class="line">fmt.Printf(<span class="string">"by point foo: %v address: %p \n"</span>, foo, &amp;foo)    <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line">» src foo: &#123;biezhi&#125; address: <span class="number">0xc00000e1e0</span> </span><br><span class="line">» setName: &#123;biezhi&#125; address: <span class="number">0xc00000e200</span></span><br><span class="line">» by value foo: &#123;biezhi&#125; address: <span class="number">0xc00000e1e0</span> </span><br><span class="line">» setNameByPoint: &amp;&#123;biezhi&#125; address: <span class="number">0xc00000c030</span> </span><br><span class="line">» by point foo: &#123;<span class="number">2333</span>&#125; address: <span class="number">0xc00000e1e0</span></span><br></pre></td></tr></table></figure>
-<p>而 setNameByPoint 方法和前面的指针类型传递是一样的，方法内部内存地址是一份指针的拷贝，修改数据会影响到外部指针变量的数据。</p>
-<p>一般而言，工程化的项目中会出现非常多结构体定义方法的代码，这些方法的调用也会很频繁，使用结构体将其封装起来，和 Java 中类封装是一样的，大多数情况下建议都使用指针传递，避免值拷贝的情况。</p>
-<h3 id="其他类型"><a href="#其他类型" class="headerlink" title="其他类型"></a>其他类型</h3><p>在前面我们有一张图中分了值类型和引用类型，除了那些常用的基本类型，还有像 map 和 slice 这种引用类型，它们在使用上有点像指针（但不用任何操作符如 &amp;、*），来看个例子<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">updateMap</span><span class="params">(mmp <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</span></span>  &#123;</span><br><span class="line">    mmp[<span class="string">"biezhi"</span>] = <span class="number">2333</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    mmp := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</span><br><span class="line">    mmp[<span class="string">"biezhi"</span>] = <span class="number">1024</span></span><br><span class="line">    fmt.Printf(<span class="string">"src mmp: %v address: %p \n"</span>, mmp, &amp;mmp) <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">    updateMap(mmp)</span><br><span class="line">    fmt.Printf(<span class="string">"new mmp: %v address: %p \n"</span>, mmp, &amp;mmp) <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line">» src mmp: <span class="keyword">map</span>[biezhi:<span class="number">1024</span>] address: <span class="number">0xc000094018</span> </span><br><span class="line">» <span class="built_in">new</span> mmp: <span class="keyword">map</span>[biezhi:<span class="number">2333</span>] address: <span class="number">0xc000094018</span></span><br></pre></td></tr></table></figure></p>
-<p>如果你尝试 slice 的话是同样的效果，可以看到给方法传递的并非是一个指针类型，但是 map 的值确实被修改了，这是为什么呢<br>其实拷贝一个 map 或者 slice 的时候并没有拷贝这个类型（引用类型）里面指向的数据，而是拷贝了引用类型（可简单理解为指针），如何验证这一说法呢？我们在 updateMap 中添加一行输出代码：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">updateMap</span><span class="params">(mmp <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"param mmp: %v address: %p \n"</span>, mmp, &amp;mmp)</span><br><span class="line">    mmp[<span class="string">"biezhi"</span>] = <span class="number">2333</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>再次运行代码<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">src mmp: <span class="keyword">map</span>[biezhi:<span class="number">1024</span>] address: <span class="number">0xc000094018</span> </span><br><span class="line">input mmp: <span class="keyword">map</span>[biezhi:<span class="number">1024</span>] address: <span class="number">0xc00000c038</span> </span><br><span class="line"><span class="built_in">new</span> mmp: <span class="keyword">map</span>[biezhi:<span class="number">2333</span>] address: <span class="number">0xc000094018</span></span><br></pre></td></tr></table></figure></p>
-<p>你会发现 input mmp 这行的地址发生了变化，正因为拷贝的是这个特殊的“引用类型”，会产生一个新的地址，而这个地址 0xc00000c038 和 0xc000094018 指向的是同一份数据，所以修改后外部的变量也会得到新的数据。</p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><h4 id="Receiver-Type-为什么推荐使用指针？"><a href="#Receiver-Type-为什么推荐使用指针？" class="headerlink" title="Receiver Type 为什么推荐使用指针？"></a>Receiver Type 为什么推荐使用指针？</h4><ul>
-<li>推荐在实例方法上使用指针（前提是这个类型不是一个自定义的 map、slice 等引用类型）</li>
-<li>当结构体较大的时候使用指针会更高效</li>
-<li>如果要修改结构内部的数据或状态必须使用指针</li>
-<li>当结构类型包含 sync.Mutex 或者同步这种字段时，必须使用指针以避免成员拷贝</li>
-<li>如果你不知道该不该使用指针，使用指针！</li>
-</ul>
-<blockquote>
-<p>结构较大” 到底多大才算大可能需要自己或团队衡量，如超过 5 个字段或者根据结构体内占用来计算。</p>
-</blockquote>
-<h3 id="方法参数该使用什么类型？"><a href="#方法参数该使用什么类型？" class="headerlink" title="方法参数该使用什么类型？"></a>方法参数该使用什么类型？</h3><ul>
-<li>map、slice 等类型不需要使用指针（自带 buf）</li>
-<li>指针可以避免内存拷贝，结构大的时候不要使用值类型</li>
-<li>值类型和指针类型在方法内部都会产生一份拷贝，指向不同</li>
-<li>小数据类型如 bool、int 等没必要使用指针传递</li>
-<li>初始化一个新类型时（像 NewEngine() *Engine）使用指针</li>
-<li>变量的生命周期越长则使用指针，否则使用值类型</li>
-</ul>
-<blockquote>
-<p><a href="https://blog.biezhi.me/2018/10/values-or-pointers-in-golang.html" target="_blank" rel="noopener">https://blog.biezhi.me/2018/10/values-or-pointers-in-golang.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -833,7 +854,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">344</span>
+              <span class="site-state-item-count">347</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

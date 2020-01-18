@@ -265,6 +265,305 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/21/在Laravel中使用数据库事务/" itemprop="url">
+                  在Laravel中使用数据库事务
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-21T10:36:41+08:00" content="2017-11-21">
+              2017-11-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不要盲目而残忍地成为，这世界恶意的一部分。<br></blockquote>
+
+<h3 id="使用闭包"><a href="#使用闭包" class="headerlink" title="使用闭包"></a>使用闭包</h3><p>在Laravel中要想在数据库事务中运行一组操作，则可以在 DB facade 中使用 transaction 方法。如果在事务的闭包内抛出异常，事务将会被自动还原。如果闭包运行成功，事务将被自动提交。你不需要担心在使用 transaction 方法时还需要亲自去手动还原或提交事务：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DB::transaction(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    DB::table(<span class="string">'users'</span>)-&gt;update([<span class="string">'votes'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    DB::table(<span class="string">'posts'</span>)-&gt;delete();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="手动创建事务"><a href="#手动创建事务" class="headerlink" title="手动创建事务"></a>手动创建事务</h3><p>如果你想手动处理事务并对还原或提交操作进行完全控制，则可以在 DB facade 使用 beginTransaction 方法：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DB::beginTransaction(); <span class="comment">//事务开始</span></span><br><span class="line"><span class="keyword">if</span>($somethingIsFailed)&#123;</span><br><span class="line">    DB::rollback(); <span class="comment">//事务失败 操作回滚</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">DB::commit();  <span class="comment">//事务成功 提交操作</span></span><br></pre></td></tr></table></figure></p>
+<p>注意： DB facade 的事务方法也可以用来控制 查询语句构造器 及 Eloquent ORM 的事务, 在事务中一定要定义回滚的条件, 可以用 try - catch 来捕获异常回滚, 或者是我们上面所写的这样, 根据一定的条件去判断回滚.事务的最终状态要么被提交, 要么回滚.</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>创建表的时候一定要使用InnoDB存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">up</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Schema::create(<span class="string">'fetch_taobao_billno_task_nos'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">        $table-&gt;engine = <span class="string">'InnoDB'</span>;</span><br><span class="line">        $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">        ......</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如何查看某一张表使用的存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show create table 表名;</span><br></pre></td></tr></table></figure></p>
+<p>修改某一张表的存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alter table bulk_tb_billnos engine=innodb</span><br><span class="line">alter table bulk_tb_billnos engine=myisam</span><br></pre></td></tr></table></figure></p>
+<p>看你的mysql当前默认的存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like <span class="string">'%storage_engine%'</span>;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/19/使用vue2-0实现一个TODO应用/" itemprop="url">
+                  使用vue2.0实现一个TODO应用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-19T11:58:43+08:00" content="2017-11-19">
+              2017-11-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>朋友，然后爱人，最后什么都不是。<br></blockquote><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"js/bootstrap.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-md-8 col-md-offset-2"</span> <span class="attr">style</span>=<span class="string">"margin-top: 90px;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel panel-default"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-heading"</span>&gt;</span>vue demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-body"</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">h1</span>&gt;</span>事件个数&#123;&#123; todoCount &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">todo-items</span> <span class="attr">:todos</span>=<span class="string">"todos"</span>&gt;</span><span class="tag">&lt;/<span class="name">todo-items</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">todo-form</span> <span class="attr">:todos</span>=<span class="string">"todos"</span>&gt;</span><span class="tag">&lt;/<span class="name">todo-form</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"todo-items"</span>&gt;</span></span><br><span class="line"><span class="javascript">  &lt;ul <span class="class"><span class="keyword">class</span></span>=<span class="string">"list-group"</span>&gt;</span></span><br><span class="line"><span class="javascript">    &lt;li <span class="class"><span class="keyword">class</span></span>=<span class="string">"list-group-item"</span>  v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"&#123; 'text-danger':todo.status &#125;"</span>  v-<span class="keyword">for</span>=<span class="string">"(todo, index) in todos"</span>&gt;</span></span><br><span class="line">      &#123;&#123; todo.title&#125;&#125;</span><br><span class="line"><span class="javascript">      &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-danger btn-xs pull-right"</span> v-on:click=<span class="string">"deleteTodo(index)"</span>&gt;删除&lt;<span class="regexp">/button&gt;</span></span></span><br><span class="line"><span class="javascript">      &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-xs pull-right"</span> v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"[todo.status ? 'btn-danger' : 'btn-success' ]"</span> v-on:click=<span class="string">"complete(todo)"</span>&gt;</span></span><br><span class="line"><span class="javascript">        &#123;&#123; todo.status ? <span class="string">'撤销'</span> : <span class="string">'完成'</span> &#125;&#125;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"todo-forms"</span>&gt;</span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">v-on:submit.prevent</span>=<span class="string">"addTodo(newTodo)"</span>&gt;</span></span></span><br><span class="line"><span class="javascript">    &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"add-todo"</span>&gt;</span>事件名称<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="javascript">      &lt;input type=<span class="string">"text"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-control"</span> id=<span class="string">"add-todo"</span> v-model=<span class="string">"newTodo.title"</span> &gt;</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="javascript">    &lt;button type=<span class="string">"submit"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span>&gt;添加事件&lt;<span class="regexp">/button&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"js/vue.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    Vue.component(<span class="string">'todo-form'</span>, &#123;</span></span><br><span class="line"><span class="javascript">        template:<span class="string">'#todo-forms'</span>,</span></span><br><span class="line"><span class="javascript">        props: [<span class="string">'todos'</span>],</span></span><br><span class="line">        data() &#123;</span><br><span class="line"><span class="javascript">            <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="javascript">                newTodo: &#123;<span class="string">'title'</span>: <span class="string">''</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;</span></span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods: &#123;</span><br><span class="line">            addTodo(newTodo) &#123;</span><br><span class="line"><span class="javascript">                <span class="keyword">this</span>.todos.push(newTodo);</span></span><br><span class="line"><span class="javascript">                <span class="keyword">this</span>.newTodo = &#123;<span class="string">'title'</span>: <span class="string">''</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"><span class="javascript">    Vue.component(<span class="string">'todo-items'</span>, &#123;</span></span><br><span class="line"><span class="javascript">      template:<span class="string">'#todo-items'</span>,</span></span><br><span class="line"><span class="javascript">      props: [<span class="string">'todos'</span>],</span></span><br><span class="line">      methods: &#123;</span><br><span class="line">          deleteTodo(index) &#123;</span><br><span class="line"><span class="javascript">              <span class="keyword">this</span>.todos.splice(index, <span class="number">1</span>);</span></span><br><span class="line">          &#125;,</span><br><span class="line">          complete(todo) &#123;</span><br><span class="line">              todo.status = !todo.status;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">new</span> Vue(&#123;</span></span><br><span class="line"><span class="javascript">      el:<span class="string">'#app'</span>,</span></span><br><span class="line">      data: &#123;</span><br><span class="line"><span class="javascript">          message: <span class="string">'yangzie'</span>,</span></span><br><span class="line">          todos: [</span><br><span class="line"><span class="javascript">              &#123;<span class="string">'title'</span>: <span class="string">'吃早餐'</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;,</span></span><br><span class="line"><span class="javascript">              &#123;<span class="string">'title'</span>: <span class="string">'洗漱'</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;</span></span><br><span class="line">          ]</span><br><span class="line">      &#125;,</span><br><span class="line">      computed: &#123;</span><br><span class="line">          todoCount() &#123;</span><br><span class="line"><span class="javascript">              <span class="keyword">return</span> <span class="keyword">this</span>.todos.length;</span></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/17/什么是RPC/" itemprop="url">
+                  什么是RPC
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-17T17:39:10+08:00" content="2017-11-17">
+              2017-11-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>QQ邮箱祝你生日快乐。<br></blockquote>
+
+<h3 id="什么是RPC"><a href="#什么是RPC" class="headerlink" title="什么是RPC"></a>什么是RPC</h3><p>如果用一句话概括RPC就是：远程调用框架（Remote Procedure Call）<br>那什么是远程调用？<br>通常我们调用一个php中的方法，比如这样一个函数方法: localAdd(10, 20)，localAdd方法的具体实现要么是用户自己定义的，要么是php库函数中自带的，也就说在localAdd方法的代码实现在本地，它是一个本地调用！<br>远程调用意思就是：被调用方法的具体实现不在程序运行本地，而是在别的某个远程地方。</p>
+<h3 id="远程调用原理"><a href="#远程调用原理" class="headerlink" title="远程调用原理"></a>远程调用原理</h3><p>比如 A (client) 调用 B (server) 提供的remoteAdd方法：<br>首先A与B之间建立一个TCP连接；<br>然后A把需要调用的方法名（这里是remoteAdd）以及方法参数（10， 20）序列化成字节流发送出去；<br>B接受A发送过来的字节流，然后反序列化得到目标方法名，方法参数，接着执行相应的方法调用（可能是localAdd）并把结果30返回；<br>A接受远程调用结果,输出30。<br>RPC框架就是把我刚才说的这几点些细节给封装起来，给用户暴露简单友好的API使用。</p>
+<h3 id="远程调用的好处"><a href="#远程调用的好处" class="headerlink" title="远程调用的好处"></a>远程调用的好处</h3><p>解耦：当server需要对方法内实现修改时，client完全感知不到，不用做任何变更；这种方式在跨部门，跨公司合作的时候经常用到，并且方法的提供者我们通常称为：服务的暴露。</p>
+<h3 id="RPC与Socket区别"><a href="#RPC与Socket区别" class="headerlink" title="RPC与Socket区别"></a>RPC与Socket区别</h3><p>RPC（远程过程调用）采用客户机/服务器模式实现两个进程之间相互通信。socket是RPC经常采用的通信手段之一，RPC是在Socket的基础上实现的，它比socket需要更多的网络和系统资源。除了Socket，RPC还有其他的通信方法，比如：http、操作系统自带的管道等技术来实现对于远程程序的调用。微软的Windows系统中，RPC就是采用命名管道进行通信。</p>
+<h3 id="RPC与REST区别"><a href="#RPC与REST区别" class="headerlink" title="RPC与REST区别"></a>RPC与REST区别</h3><p>通过了解RPC后，我们知道是RPC是client/server模式的，调用远程的方法，REST也是我们熟悉的一套API调用协议方法，它也是基于client/server模式的，调用远程的方法的，那他俩又有啥区别呢？<br>REST API 和 RPC 都是在 Server端 把一个个函数封装成接口暴露出去，以供 Client端 调用，不过 REST API 是基于 HTTP协议的，REST致力于通过http协议中的POST/GET/PUT/DELETE等方法和一个可读性强的URL来提供一个http请求。而 RPC 则可以不基于 HTTP协议<br>因此，如果是后端两种语言互相调用，用 RPC 可以获得更好的性能（省去了 HTTP 报头等一系列东西），应该也更容易配置。如果是前端通过 AJAX 调用后端，那么用 REST API 的形式比较好。</p>
+<blockquote>
+<p><a href="https://www.zybuluo.com/phper/note/76641" target="_blank" rel="noopener">https://www.zybuluo.com/phper/note/76641</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/13/phpstudy升级php7-1/" itemprop="url">
                   phpstudy升级php7.1
                 </a>
@@ -455,319 +754,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/08/无法在服务器使用curl命令访问https域名的问题/" itemprop="url">
-                  无法在服务器使用curl命令访问https域名的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-08T09:06:50+08:00" content="2017-11-08">
-              2017-11-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>不要说我们没有警告过你<br></blockquote>
-
-<p>今天有开发同学说无法在服务器使用curl命令访问https域名，提示curl: (35) SSL connect error，原因是nss版本有点旧了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update nss</span><br></pre></td></tr></table></figure></p>
-<p>更新一下，重新curl即可！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/07/使用laravel生成条形码/" itemprop="url">
-                  使用laravel生成条形码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-07T09:06:07+08:00" content="2017-11-07">
-              2017-11-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我已经和垃圾学校的某些垃圾学生呆够了，再他妈不努力，你这辈子就只能和他们打交道了。<br></blockquote>
-
-<h3 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h3><p>项目地址<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//packagist.org/packages/codeitnowin/barcode</span></span><br></pre></td></tr></table></figure></p>
-<p>使用composer安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> codeitnowin/barcode</span><br></pre></td></tr></table></figure></p>
-<p>无需配置</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="生成二维码"><a href="#生成二维码" class="headerlink" title="生成二维码"></a>生成二维码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">QrCode</span>;</span><br><span class="line"></span><br><span class="line">$qrCode = <span class="keyword">new</span> QrCode();</span><br><span class="line">$qrCode</span><br><span class="line">    -&gt;setText(<span class="string">'QR code by codeitnow.in'</span>)</span><br><span class="line">    -&gt;setSize(<span class="number">300</span>)</span><br><span class="line">    -&gt;setPadding(<span class="number">10</span>)</span><br><span class="line">    -&gt;setErrorCorrection(<span class="string">'high'</span>)</span><br><span class="line">    -&gt;setForegroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">0</span>, <span class="string">'g'</span> =&gt; <span class="number">0</span>, <span class="string">'b'</span> =&gt; <span class="number">0</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setBackgroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">255</span>, <span class="string">'g'</span> =&gt; <span class="number">255</span>, <span class="string">'b'</span> =&gt; <span class="number">255</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setLabel(<span class="string">'Scan Qr Code'</span>)</span><br><span class="line">    -&gt;setLabelFontSize(<span class="number">16</span>)</span><br><span class="line">    -&gt;setImageType(QrCode::IMAGE_TYPE_PNG)</span><br><span class="line">;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:'</span>.$qrCode-&gt;getContentType().<span class="string">';base64,'</span>.$qrCode-&gt;generate().<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
-<h4 id="生成条形码"><a href="#生成条形码" class="headerlink" title="生成条形码"></a>生成条形码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">BarcodeGenerator</span>;</span><br><span class="line"></span><br><span class="line">$barcode = <span class="keyword">new</span> BarcodeGenerator();</span><br><span class="line">$barcode-&gt;setText(<span class="string">"0123456789"</span>);</span><br><span class="line">$barcode-&gt;setType(BarcodeGenerator::Code128);</span><br><span class="line">$barcode-&gt;setScale(<span class="number">2</span>);</span><br><span class="line">$barcode-&gt;setThickness(<span class="number">25</span>);</span><br><span class="line">$barcode-&gt;setFontSize(<span class="number">10</span>);</span><br><span class="line">$code = $barcode-&gt;generate();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:image/png;base64,'</span>.$code.<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
-<p>更多参见说明文档</p>
-<blockquote>
-<p><a href="https://packagist.org/packages/codeitnowin/barcode" target="_blank" rel="noopener">https://packagist.org/packages/codeitnowin/barcode</a><br><a href="http://www.barcodebakery.com/" target="_blank" rel="noopener">http://www.barcodebakery.com/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/05/larave结合vue仿知乎项目/" itemprop="url">
-                  larave结合vue仿知乎项目
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-05T20:33:57+08:00" content="2017-11-05">
-              2017-11-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>失去就好像，你将余生写一首长诗，却不能提及一个与她有关的字……<br></blockquote>
-
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>基于laravel5.3 vue2.0开发的仿知乎项目，实现基本的登录注册，发布问题，关注问题，回答问题，评论问题，发送私信，系统发送邮件通知，使用千牛存储图片，使用阿里云提供的短信服务发送验证码等基本功能.</p>
-<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="发布问题"><a href="#发布问题" class="headerlink" title="发布问题"></a>发布问题</h4><p><img src="/images/zhihu01.png" alt></p>
-<h4 id="回答问题"><a href="#回答问题" class="headerlink" title="回答问题"></a>回答问题</h4><p><img src="/images/zhihu02.png" alt></p>
-<h4 id="发送私信"><a href="#发送私信" class="headerlink" title="发送私信"></a>发送私信</h4><p><img src="/images/zhihu03.png" alt></p>
-<h4 id="评论问题"><a href="#评论问题" class="headerlink" title="评论问题"></a>评论问题</h4><p><img src="/images/zhihu04.png" alt></p>
-<h4 id="私信列表"><a href="#私信列表" class="headerlink" title="私信列表"></a>私信列表</h4><p><img src="/images/zhihu05.png" alt></p>
-<h4 id="更换头像"><a href="#更换头像" class="headerlink" title="更换头像"></a>更换头像</h4><p><img src="/images/zhihu06.png" alt></p>
-<h4 id="一些代码"><a href="#一些代码" class="headerlink" title="一些代码"></a>一些代码</h4><p>路由<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'/'</span>,<span class="string">'QuestionsController@index'</span>);</span><br><span class="line"></span><br><span class="line">Auth::routes();</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'/home'</span>, <span class="string">'HomeController@index'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'email/verify/&#123;token&#125;'</span>,[<span class="string">'as'</span> =&gt; <span class="string">'email.verify'</span>, <span class="string">'uses'</span> =&gt; <span class="string">'EmailController@verify'</span>]);</span><br><span class="line"></span><br><span class="line">Route::resource(<span class="string">'questions'</span>,<span class="string">'QuestionsController'</span>,[<span class="string">'names'</span> =&gt; [</span><br><span class="line">    <span class="string">'create'</span> =&gt; <span class="string">'question.create'</span>,</span><br><span class="line">    <span class="string">'show'</span> =&gt; <span class="string">'question.show'</span>,</span><br><span class="line">]]);</span><br><span class="line"></span><br><span class="line">Route::post(<span class="string">'questions/&#123;question&#125;/answer'</span>,<span class="string">'AnswersController@store'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'question/&#123;question&#125;/follow'</span>,<span class="string">'QuestionFollowController@follow'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'notifications'</span>,<span class="string">'NotificationsController@index'</span>);</span><br><span class="line">Route::get(<span class="string">'notifications/&#123;notification&#125;'</span>,<span class="string">'NotificationsController@show'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'avatar'</span>,<span class="string">'UsersController@avatar'</span>);</span><br><span class="line">Route::post(<span class="string">'avatar'</span>,<span class="string">'UsersController@changeAvatar'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'password'</span>,<span class="string">'PasswordController@password'</span>);</span><br><span class="line">Route::post(<span class="string">'password/update'</span>,<span class="string">'PasswordController@update'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'setting'</span>,<span class="string">'SettingController@index'</span>);</span><br><span class="line">Route::post(<span class="string">'setting'</span>,<span class="string">'SettingController@store'</span>);</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'inbox'</span>,<span class="string">'InboxController@index'</span>);</span><br><span class="line">Route::get(<span class="string">'inbox/&#123;dialogId&#125;'</span>,<span class="string">'InboxController@show'</span>);</span><br><span class="line">Route::post(<span class="string">'inbox/&#123;dialogId&#125;/store'</span>,<span class="string">'InboxController@store'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>邮件发送<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Mailer</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Auth</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Class UserMailer</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@package</span> App\Mailer</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserMailer</span> <span class="keyword">extends</span> <span class="title">Mailer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $email</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">followNotifyEmail</span><span class="params">($email)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = [<span class="string">'url'</span> =&gt; <span class="string">'http://zhihu.dev'</span>, <span class="string">'name'</span> =&gt; Auth::guard(<span class="string">'api'</span>)-&gt;user()-&gt;name];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendTo(<span class="string">'zhihu_app_new_user_follow'</span>, $email, $data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $email</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $token</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">passwordReset</span><span class="params">($email, $token)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = [<span class="string">'url'</span> =&gt; url(<span class="string">'password/reset'</span>, $token)];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendTo(<span class="string">'zhihu_app_password_reset'</span>, $email, $data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> User $user</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">welcome</span><span class="params">(User $user)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = [</span><br><span class="line">            <span class="string">'url'</span>  =&gt; route(<span class="string">'email.verify'</span>, [<span class="string">'token'</span> =&gt; $user-&gt;confirmation_token]),</span><br><span class="line">            <span class="string">'name'</span> =&gt; $user-&gt;name</span><br><span class="line">        ];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendTo(<span class="string">'zhihu_app_register'</span>, $user-&gt;email, $data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>关注用户组件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;button</span><br><span class="line">            <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span></span><br><span class="line">            v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"&#123;'btn-success': followed&#125;"</span></span><br><span class="line">            v-text=<span class="string">"text"</span></span><br><span class="line">            v-on:click=<span class="string">"follow"</span></span><br><span class="line">    &gt;<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    export default &#123;</span></span><br><span class="line"><span class="regexp">        props:['user'],</span></span><br><span class="line"><span class="regexp">        mounted() &#123;</span></span><br><span class="line"><span class="regexp">            this.$http.get('/</span>api/user/followers/<span class="string">' + this.user).then(response =&gt; &#123;</span></span><br><span class="line"><span class="string">                this.followed = response.data.followed</span></span><br><span class="line"><span class="string">            &#125;)</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        data() &#123;</span></span><br><span class="line"><span class="string">            return &#123;</span></span><br><span class="line"><span class="string">                followed: false</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        computed: &#123;</span></span><br><span class="line"><span class="string">            text() &#123;</span></span><br><span class="line"><span class="string">                return this.followed ? '</span>已关注<span class="string">' : '</span>关注他<span class="string">'</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        methods:&#123;</span></span><br><span class="line"><span class="string">            follow() &#123;</span></span><br><span class="line"><span class="string">                this.$http.post('</span>/api/user/follow<span class="string">',&#123;'</span>user<span class="string">':this.user&#125;).then(response =&gt; &#123;</span></span><br><span class="line"><span class="string">                    this.followed = response.data.followed</span></span><br><span class="line"><span class="string">                &#125;)</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>发送私信组件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;button</span><br><span class="line">            <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default pull-right"</span></span><br><span class="line">            style=<span class="string">"margin-top: -36px;"</span></span><br><span class="line">            @click=<span class="string">"showSendMessageForm"</span></span><br><span class="line">    &gt;发送私信&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div class="modal fade" id="modal-send-message" tabindex="-1" role="dialog"&gt;</span></span><br><span class="line"><span class="regexp">            &lt;div class="modal-dialog"&gt;</span></span><br><span class="line"><span class="regexp">                &lt;div class="modal-content"&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;div class="modal-header"&gt;</span></span><br><span class="line"><span class="regexp">                        &lt;button type="button " class="close" data-dismiss="modal" aria-hidden="true"&gt;&amp;times;&lt;/</span>button&gt;</span><br><span class="line">                        &lt;h4 <span class="class"><span class="keyword">class</span></span>=<span class="string">"modal-title"</span>&gt;</span><br><span class="line">                            发送私信</span><br><span class="line">                        &lt;<span class="regexp">/h4&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;/</span>div&gt;</span><br><span class="line">                    &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"modal-body"</span>&gt;</span><br><span class="line">                        &lt;textarea name=<span class="string">"body"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-control"</span> v-model=<span class="string">"body"</span> v-<span class="keyword">if</span>=<span class="string">"!status"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span></span><br><span class="line">                        &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"alert alert-success"</span> v-<span class="keyword">if</span>=<span class="string">"status"</span>&gt;</span><br><span class="line">                            &lt;strong&gt;私信发送成功&lt;<span class="regexp">/strong&gt;</span></span><br><span class="line"><span class="regexp">                        &lt;/</span>div&gt;</span><br><span class="line">                    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;div class="modal-footer"&gt;</span></span><br><span class="line"><span class="regexp">                        &lt;button type="button" class="btn btn-primary" @click="store"&gt;</span></span><br><span class="line"><span class="regexp">                            发送私信</span></span><br><span class="line"><span class="regexp">                        &lt;/</span>button&gt;</span><br><span class="line">                        &lt;button type=<span class="string">"button"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span> data-dismiss=<span class="string">"modal"</span>&gt;关闭&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;/</span>div&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>div&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    export default &#123;</span></span><br><span class="line"><span class="regexp">        props:['user'],</span></span><br><span class="line"><span class="regexp">        data() &#123;</span></span><br><span class="line"><span class="regexp">            return &#123;</span></span><br><span class="line"><span class="regexp">                body:'',</span></span><br><span class="line"><span class="regexp">                status: false</span></span><br><span class="line"><span class="regexp">            &#125;</span></span><br><span class="line"><span class="regexp">        &#125;,</span></span><br><span class="line"><span class="regexp">        methods:&#123;</span></span><br><span class="line"><span class="regexp">            store() &#123;</span></span><br><span class="line"><span class="regexp">                this.$http.post('/</span>api/message/store<span class="string">',&#123;'</span>user<span class="string">':this.user,'</span>body<span class="string">':this.body&#125;).then(response =&gt; &#123;</span></span><br><span class="line"><span class="string">                    this.status = response.data.status</span></span><br><span class="line"><span class="string">                    this.body = '</span><span class="string">'</span></span><br><span class="line"><span class="string">                    setTimeout(function () &#123;</span></span><br><span class="line">                        $('#modal-send-message').modal('hide')</span><br><span class="line">                    &#125;, <span class="number">2000</span>)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            showSendMessageForm() &#123;</span><br><span class="line">                $(<span class="string">'#modal-send-message'</span>).modal(<span class="string">'show'</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>说明： 本项目是结合互联网上教学视频学习练习所做，并非自己原创；</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/31/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/33/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/31/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/33/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -806,7 +797,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">344</span>
+              <span class="site-state-item-count">347</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
