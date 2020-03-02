@@ -265,6 +265,331 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/01/php命名空间和自动载入理解/" itemprop="url">
+                  php命名空间和自动载入理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-01T16:06:57+08:00" content="2018-03-01">
+              2018-03-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br> 每个人的心里都有一片属于自己的森林，迷失的人迷失了，相遇的人会再相遇<br></blockquote><br>今天写一个demo，遇到一个问题，平时框架用多了，下意识的就以为use就能引入类，导致一直跑不成功，后来才意识到use与引用类并不是一回事。use只是指定了要使用哪个命名空间下的类，但是并不会引入类，类的引用还是需要使用include或require。</p>
+<h3 id="不使用命名空间"><a href="#不使用命名空间" class="headerlink" title="不使用命名空间"></a>不使用命名空间</h3><p>我们的所有的php文件都没有申明使用命名空间, 所有相关文件的引入使用include或require, 并需要指明文件的具体路径<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> Dog());</span><br></pre></td></tr></table></figure></p>
+<p>注意:使用 <code>include_once</code> 可以防止文件重复引入定义</p>
+<p>如果不使用命名空间, 那么我们的同一个文件夹就不能重复定义相同的类名, 如果需要解决这个重名的冲突, 就需要放在不同的文件夹下面, 或者申明不同的命名空间;</p>
+<h3 id="使用命名空间"><a href="#使用命名空间" class="headerlink" title="使用命名空间"></a>使用命名空间</h3><p>申明使用命名空间<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>申明以后所有需要引入这个文件都必须使用<code>use</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span>  <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'dog run'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果引用的文件是在同一个命名空间下, 则无需使用<code>use</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果被引入的文件没有申明命名空间,则默认全局命名空间<code>\</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Index</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Dog());</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span>  <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'dog run'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自动载入"><a href="#自动载入" class="headerlink" title="自动载入"></a>自动载入</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Index</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line">spl_autoload_register(<span class="function"><span class="keyword">function</span> <span class="params">($filename)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($filename) &#123;</span><br><span class="line">        <span class="keyword">if</span> (file_exists($filename.<span class="string">'.php'</span>)) &#123;</span><br><span class="line">            <span class="keyword">include_once</span> $filename.<span class="string">'.php'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//include_once 'AnimalInterface.php';</span></span><br><span class="line"><span class="comment">//include_once 'Cat.php';</span></span><br><span class="line"><span class="comment">//include_once 'Dog.php';</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Dog());</span><br></pre></td></tr></table></figure>
+<p>所有文件的自动载入需要在<code>spl_autoload_register</code>这个函数中通过<code>include_once</code>实现;</p>
+<h3 id="PSR"><a href="#PSR" class="headerlink" title="PSR"></a>PSR</h3><p>命名空间跟文件加载并无直接关系，只是有些语言，将命名空间结构和文件结构对应起来了。 以php为例，一般的命名空间结构，跟php文件结构是存在映射关系的，通过命名空间名称，就能算出该类的实际存储位置， 然后实例化的时候，会触发用设置的spl自动加载函数将文件引入。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/01/在PHP下理解和应用多态/" itemprop="url">
+                  在PHP下理解和应用多态
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-01T11:18:28+08:00" content="2018-03-01">
+              2018-03-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br> 后来我终于知道 ， 它并不是我的花 ，我只是恰好途径了它的盛放。<br></blockquote>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>封装是类的构建过程，php具有；php也具有继承的特性。唯独这个多态，php体现的十分模糊。原因是php是弱类型语言。<br>java的多态体现的十分清晰，大体分两类：父类引用指向子类对象；接口引用指向实现接口的类对象。java声明变量时都要给变量设定类型，所以存在什么父类引用和接口引用。而php则没有这点体现，php声明变量不需要给变量设定类型，一个变量可以指向不同的数据类型。所以，php不具有像java一样的多态。</p>
+<p>多态，作为面向对象编程中的一种设计模式，指的是通过遵循同一个interface，类可以有不同的功能实现（相当于说，有多种形态）。<br>在编程世界里，多态形式可以让我们的程序更加地模块化，易于扩展，而不是到处都是基于不同状态的条件判断，比如动不动就switch，动不动就层层嵌套if判断，这种情况下，十有八九是你的代码“有问题”了。</p>
+<h3 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h3><p>interface里可以定义方法名及相应参数，任何实现这个interface的类必须具体实现interface里定义的所有抽象方法，一个class可以实现多个interface<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThis</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正确的做法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $name;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThis</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// code that does this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// code that does that</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 无效的做法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 缺少 doThis()方法!</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这个方法必须也是public!</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 缺少 name 参数!</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Abstract Class可以说是介于interface和普通class之间，它既可以通过abstract method的形式定义统一的接口，又可以定义具体的功能实现。一个扩展了该Abstract Class的普通class，必须得具体实现该Abstract Class的所有抽象方法。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAbstract</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThis</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h3><p>假设你有一个articleclass：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $title;</span><br><span class="line">    <span class="keyword">public</span> $author;</span><br><span class="line">    <span class="keyword">public</span> $date;</span><br><span class="line">    <span class="keyword">public</span> $category;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span>  <span class="title">__construct</span><span class="params">($title, $author, $date, $category = <span class="number">0</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;title = $title;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;author = $author;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;date = $date;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;category = $category;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在呢，你想添加一个方法，来以不同的形式输出article相关的信息，比如说XML格式，或者说JSON格式。<br>可能你一开始会想着这么来处理：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">($type)</span> </span>&#123;</span><br><span class="line">        $ret = <span class="string">''</span>;</span><br><span class="line">        <span class="keyword">switch</span>($type) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'XML'</span>:</span><br><span class="line">                $ret = <span class="string">'&lt;article&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;title&gt;'</span> . $obj-&gt;title . <span class="string">'&lt;/title&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;author&gt;'</span> . $obj-&gt;author . <span class="string">'&lt;/author&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;date&gt;'</span> . $obj-&gt;date . <span class="string">'&lt;/date&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;category&gt;'</span> . $obj-&gt;category . <span class="string">'&lt;/category&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;/article&gt;'</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'JSON'</span>:</span><br><span class="line">                $array = <span class="keyword">array</span>(<span class="string">'article'</span> =&gt; $obj);</span><br><span class="line">                $ret = json_encode($array);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然功能上能实现效果，但是看上去很糟糕，不是吗？假设，将来你又想加上其他的格式，那该怎么办？再加几个case判断，这代码得多臃肿呢？</p>
+<p>关于面向对象，有一个很重要的原则就是，一个class应该只做份内之事。每当你遇到大块的条件判断的时候，你就应该有所警醒，因为很可能这个时候你已经在同一个class或method下，硬要去做太多的事情了。那么这个时候，也就是该尝试多态实现了。</p>
+<h3 id="尝试解决"><a href="#尝试解决" class="headerlink" title="尝试解决"></a>尝试解决</h3><p>定义 Interface<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Writer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Article $obj)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>具体实现 Interface</p>
+<p>XMLWriter可以这样来实现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">XMLWriter</span> <span class="keyword">implements</span> <span class="title">Writer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Article $obj)</span> </span>&#123;</span><br><span class="line">        $ret = <span class="string">'&lt;article&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;title&gt;'</span> . $obj-&gt;title . <span class="string">'&lt;/title&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;author&gt;'</span> . $obj-&gt;author . <span class="string">'&lt;/author&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;date&gt;'</span> . $obj-&gt;date . <span class="string">'&lt;/date&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;category&gt;'</span> . $obj-&gt;category . <span class="string">'&lt;/category&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;/article&gt;'</span>;</span><br><span class="line">        <span class="keyword">return</span> $ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>JSONWriter：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JSONWriter</span> <span class="keyword">implements</span> <span class="title">Writer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Article $obj)</span> </span>&#123;</span><br><span class="line">        $array = <span class="keyword">array</span>(<span class="string">'article'</span> =&gt; $obj);</span><br><span class="line">        <span class="keyword">return</span> json_encode($array);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样每一种个的class只负责各自的那一件事。</p>
+<p>具体调用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Writer $writer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $writer-&gt;write(<span class="keyword">$this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样article的write方法接收的是一个实现了Writer这个interface的具体类，article不再需要关注具体该用什么样的格式，那已经不是它要负责的了，交给背后具体的Writer去处理就好了。</p>
+<blockquote>
+<p><a href="http://pilishen.com/posts/Understanding-and-Applying-Polymorphism-in-PHP" target="_blank" rel="noopener">http://pilishen.com/posts/Understanding-and-Applying-Polymorphism-in-PHP</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/01/你的身材就是你的阶层/" itemprop="url">
+                  你的身材就是你的阶层
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-01T09:39:26+08:00" content="2018-03-01">
+              2018-03-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>人与人拼到最后，拼的就是身体。身材好，就是一种实力。<br></blockquote><br>这是个以貌取人的时代，没人有义务透过你臃肿的身材，去发现你优秀的内心。<br>你的身材，就是你的名片。<br>它能折射出你内在的品质、性格、习惯……千万别因身材让人看低了你的层次。</p>
+<h3 id="这是一个看身材的时代"><a href="#这是一个看身材的时代" class="headerlink" title="这是一个看身材的时代"></a>这是一个看身材的时代</h3><p>去年曾有一条新闻：上海某著名小学招新生，面试家长，看家长身材，肥胖的不要。<br>这条新闻一出，顿时家长们炸了锅。有赞同此举的家长留言：<br>“我觉得非常好，肥胖的人自我管理能力差，还怪小孩不听话。”<br>“我觉得太赞了。自我管理能力低下的家长肯定无力配合超一流的教育啊。老外的私立学校也很严格，有钱都能进的你愿意往里挤吗？”<br>“我觉得看家长身材肥胖可以反映出一些问题的，首先肥胖不是短时间形成的，应该是长期不注意饮食和运动造成的。<br>家长连自己都没管好，你相信他们会管好孩子吗？自己都没有信心去坚持的东西，还会指望他们鼓励孩子去坚持？”<br>“教育孩子最好的方法是让自己变得优秀，给孩子做榜样。如果想让你的孩子成为你想象中的那个人，那么，你先成为那个人吧。”……<br>这个社会对胖子太残忍了—-找对象时被嫌弃，找工作时受歧视，好不容易找到对象结婚生子了吧，以为生活总算上了正轨，结果，没想到身材还能影响下一代的教育。<br>果然，这是个看身材的时代。<br>别以为你年长，就不用看身材了，没想到，作为家长，还要看身材。<br>如果你是胖子，孩子都要被你拖累。</p>
+<h3 id="身材好，也是一种实力"><a href="#身材好，也是一种实力" class="headerlink" title="身材好，也是一种实力"></a>身材好，也是一种实力</h3><p>一个人的身材，25岁前，是爹妈给的；25岁之后，是自己修的。<br>能管好自己身材的人，往往能管理好自己的生活和工作。反之，臃肿的身材背后，可能是一团乱糟糟的生活。<br>我们公司副总裁，来自法国的欧总，就是个身材超好的高富帅，不过，是个50多岁的老帅哥。<br>他每天5:30起床，然后去操场跑步。有一段时间要参加“汉马”—-武汉马拉松赛，所以他更是加大了训练量。<br>欧总管理着公司最重要也是最忙碌的制造领域，每天提前半小时上班，还经常出差，别看他一把年纪了，可每天精力旺盛得像个小伙子。<br>的确，当领导要讲资历、论能力，但更要拼体力。经常的出差，坐飞机、坐火车，不规律的作息，没有良好的体质是吃不消的。<br>我的同事老张，就是因为胖，工作一直没有得到升迁。肥胖真的会影响一个人的职业生涯。<br>有一次，领导召开一个内容枯燥的会议。胖人精力不好，特别容易打瞌睡，老张听着听着竟然睡着了，脑袋还时不时“小鸡啄米”。<br>圆桌会议室里，他正好坐领导对面，领导重重地咳嗽了两声，老张从睡梦中惊醒，继续听讲。结果没一会儿，他又犯起困来，领导一一收在眼底。<br>肥胖，给工作带来影响，生活质量也大打折扣，还谈什么奋斗拼搏呢？<br>人与人拼到最后，拼的就是身体。身材好，就是一种实力。</p>
+<h3 id="你的身材，就是你的阶层"><a href="#你的身材，就是你的阶层" class="headerlink" title="你的身材，就是你的阶层"></a>你的身材，就是你的阶层</h3><p>判断一个人的阶层，最简单的办法，就是看TA的身材。<br>正如保罗·福塞尔在《格调》一书中所说：<br>“你的体重就是你社会等级的宣言。一百年前，肥胖是成功的标志。但那样的日子已经一去不复返了。今天，肥胖是中下阶层的标志。与中上层阶级和中产阶级相比，中下阶层的肥胖者是前者的四倍。”<br>CCL领导力调研也表明：《财富》500强公司的首席执行官中找不到一个体重超标的人。<br>想想也是。那些受过良好教育、有强烈进取心、努力奋斗、事业有成的人，象普京、奥巴马、马云、李彦宏、俞敏洪……大多都是身材匀称、温文尔雅的人。<br>而那些家境贫困、庸庸碌碌、不思进取的人群，我们更容易看到大腹便便、体态臃肿、举止粗鲁的人。<br>英国纪录片《人生7年》也印证了这一事实。该片选择了14个不同阶层的孩子进行跟踪拍摄，每七年记录一次：从7岁开始、14岁、21岁……一直到56岁。<br>这是完全的真人秀，记录了普通英国人的人生。<br>片中的一对精英阶级夫妇 56岁时依然保持着好身材；由原中产阶级晋升为精英阶级的教授夫妻和公务员夫妻，体型也不错<br>而那些底层阶级长大的男人们，虽然有几个年轻时也英俊帅气，但最终他们几乎全都成了胖子或秃子，尤其是他们的妻子，身材变形得更厉害。<br>外国如此，中国也趋于这样。<br>索福瑞集团的调研显示，在中国，中低收入群体已占肥胖人口中的绝大多数比例。<br>为什么这个社会穷人越胖，富人越瘦？</p>
+<h3 id="瘦很昂贵，你胖，因为你穷"><a href="#瘦很昂贵，你胖，因为你穷" class="headerlink" title="瘦很昂贵，你胖，因为你穷"></a>瘦很昂贵，你胖，因为你穷</h3><p>造成肥胖的原因，除遗传的影响外，主要就是不合理的饮食及运动量太少。<br>油炸食物、快餐等垃圾食品都让人容易变胖。而吃进去这么多热量，不运动，就会产生肥胖。<br>很多穷人没有生活，只有生存。<br>他们经常加班、熬夜、缺少睡眠、暴饮暴食或饮食不规律；生存的压力山大，哪有时间和精力去锻炼身体、控制饮食？<br>况且他们受教育程度普遍不高，也难有身材管理的意识和知识。所以，穷人的“过劳肥”越来越多。<br>而富人正相反。越来越多的富人意识到，拥有健康的身体是一笔无价的财富。<br>他们有时间有金钱对身体进行投资，他们愿意选择绿色、有机、低热量的食物，舍得在健身上花时间，也承担得起上健身房、请私人教练的大把银子。<br>国内曾有一项关于财富和运动关系的报告，数据显示：那些拥有财富更多的人倾向于更多的运动。大数据显示，每日行走8000步以上的人群平均收入高于8000步以下人群6.4%。<br>果然，好身材就像奢侈品，多属于富人阶层。<br>瘦很昂贵，穷人消费不起。你胖，是因为你穷。</p>
+<h3 id="你的身材里藏着自律"><a href="#你的身材里藏着自律" class="headerlink" title="你的身材里藏着自律"></a>你的身材里藏着自律</h3><p>身材和时间金钱有关，没错，但关系更大的是，自律和意志力。<br>正如网上对《人生7年》的评价：<br>人人都只看到了精英阶层与生俱来优越的家庭条件和社会地位，羡慕他们有私家健身房，有私教，认为他们能有健康体魄、匀称的身材是理所当然的，可是又有谁看到他们在饮食控制、健身等方面的自律？<br>这种自律，远远强于底层阶级。<br>要知道那些有六块腹肌的男人和永远保持好身材的女人，他们拥有你想象不到的自律和意志力。<br>钟汉良曾晒过他的早餐，只有一片面包，几个蘑菇。<br>郭富城，坚持健身二十余年，每天最少跑步半小时。即使到外地，也会要求入住24小时开放健身房的酒店，要是酒店没有健身房的话，他会自备绳子在房间跳绳。<br>刘德华，为了拥有六块腹肌与紧实的胸肌线条，把家里变成了健身房。开演唱会前他会坚持长跑练气，拍戏时他会利用空挡举哑铃，每天再忙也要运动。<br>严歌苓，不仅在写作上自律，还会在繁忙的工作中，坚持锻炼身体，游泳和跑步。她在餐厅等朋友时，还不忘趴地上做平板支撑。<br>她说：“形象是女人的纪律”。<br>正是几十年如一日，钢铁般的意志自律着，所以她60多岁了，仍保持着纤细的身材和优雅的状态……<br>人人都知道“管住嘴，迈开腿”的道理，可又有几人能像他们这样做到呢？ </p>
+<blockquote>
+<p>转载自公众号:少女兔</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/02/23/laravel-helpers-make-life-easier/" itemprop="url">
                   laravel-helpers-make-life-easier
                 </a>
@@ -448,341 +773,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/02/23/新年的第一天/" itemprop="url">
-                  新年的第一天
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-23T09:21:46+08:00" content="2018-02-23">
-              2018-02-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>努力, 奋斗<br></blockquote><br>新年第一天, 带病上班, 感冒加口腔溃疡, 难受的很.想起前天晚上看到的那篇文章, 就想发发感慨, 长大了好多事儿就觉得自己无能为力, 除了写代码, 也没有其他赚钱维生的技能, 在家里的这几天,翻看以前的旧照片, 能看到父母一点一点的变老,我们几个孩子都已经长大, 相继结婚生子, 可父母仍旧每天不辞辛劳的在外奔波, 想为他们做点儿啥, 却发现自己真的是… 没钱, 工作忙, 不敢请假, 房租, 房贷, 各种花销都让我望而却步, 一次次打消带父母出去玩的念头, 或者是让父母停下来, 找点儿轻松一点儿活儿来做, 但是, 哎….</p>
-<h3 id="如果亲人健在的时候，有什么都给他们吧。"><a href="#如果亲人健在的时候，有什么都给他们吧。" class="headerlink" title="如果亲人健在的时候，有什么都给他们吧。"></a>如果亲人健在的时候，有什么都给他们吧。</h3><p>分享柳岩的一个故事, 她说：我爸上个月身体状况不太好，然后是在医院度过70岁生日，但是我很高兴自豪的是，我有足够的经济能力，给他最好的医疗条件。她说：总是有人说要送什么祝福，最大的祝福，就是希望父母健健康康的，因为这样才能给我们机会，实现我们小时候的诺言，我要给你们买大房子，我要带你们周游世界。</p>
-<h3 id="时间不会等你，父母衰老的速度不会等你。"><a href="#时间不会等你，父母衰老的速度不会等你。" class="headerlink" title="时间不会等你，父母衰老的速度不会等你。"></a>时间不会等你，父母衰老的速度不会等你。</h3><p>一个人真正的成熟是什么？就是时间推着你往前走，你发现自己忽然在迎来客往里，变成了越来越重要的那一个人。而你，也慢慢接受着这一切，并约定俗成。中年人，是没有资格说“不”的，哪怕你私心觉得这是你的权利。上有老，下有小，是每个中年人不得不面临的。中年危机不是某个时代的焦虑，而是属于每个人的焦虑。中年人的焦虑，与生俱来，而你消失的那一刻，你已经进入了老年，那是人生的另一个阶段。中年，是一种责任，你再瘦弱也要扛起来，什么疲于奔命，如果能通过你疲于奔命，改变家族的命运，请认真努力。</p>
-<h3 id="越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。"><a href="#越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。" class="headerlink" title="越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。"></a>越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。</h3><p>李健写自己的父亲生病的时候，当时我泪如雨下。“我把当时仅有的几万块钱全拿出来了，我意识到，有些时候钱是多么重要。随后他的病情每况愈下，生命的最后阶段，我送他回哈尔滨。火车上，他已经很虚弱了，每次去洗手间都要我搀扶或者背着他，我一宿没怎么睡觉。记得当我背着他时，他说了句，原谅爸爸。那一瞬间，我强忍住了泪水。他太客气了，竟然对自己从小背到大的儿子客气，而我只是背了他几次而已。”你看，亲情有时真的是一瞬间的。你说你长大后，我就可以给你住大房子。你说你长大后，我就可以带你吃所有你喜欢的。你说你放心，你想去哪儿都可以，我有能力。请！现在！就做！一刻不停。</p>
-<h3 id="加油-好好待父母，也好好待父母爱的自己"><a href="#加油-好好待父母，也好好待父母爱的自己" class="headerlink" title="加油,好好待父母，也好好待父母爱的自己"></a>加油,好好待父母，也好好待父母爱的自己</h3><p>子欲养而亲不待。我从前是不太敏感这样的话，觉得父母健在，并未到达需要我们告别前匆匆完成的时刻。而这些年，看到一个个越来越熟悉的人经历着离别，好像一切又离自己慢慢近了。对于我们这些中年人来说，尤其是最大的骄傲，莫过于：爸妈，你们想吃什么尽管买吧，我有钱；爸妈，我有大房子，你有空来住吧；爸妈，你们别担心，万一生病了，我有足够的钱给你们治病。因为是你们的儿女，因为你们是我们的亲人。今生一见，来世不知道是否还能遇见，所以，珍惜以及相爱，毕竟匆匆而过。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/02/12/Larave的表单验证/" itemprop="url">
-                  Larave的表单验证
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-12T16:08:16+08:00" content="2018-02-12">
-              2018-02-12
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>今天完了就要回家过年了…<br></blockquote>
-
-<h3 id="同时验证两个字段唯一"><a href="#同时验证两个字段唯一" class="headerlink" title="同时验证两个字段唯一"></a>同时验证两个字段唯一</h3><p>控制器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;validate($request, SiteMail::rules());</span><br></pre></td></tr></table></figure></p>
-<p> 模型<br> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">rules</span><span class="params">($request = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">'site_id'</span> =&gt; <span class="string">'required|integer'</span>,</span><br><span class="line">        <span class="string">'subject'</span> =&gt; <span class="string">'required|max:256'</span>,</span><br><span class="line">        <span class="string">'type'</span>    =&gt;  Rule::unique(<span class="string">'site_mails'</span>)-&gt;where(<span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">            $query-&gt;where(<span class="string">'site_id'</span>, request(<span class="string">'site_id'</span>));</span><br><span class="line">        &#125;),</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/02/08/fetch-api简介/" itemprop="url">
-                  fetch-api简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-08T21:37:09+08:00" content="2018-02-08">
-              2018-02-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>在抱怨自己赚钱之少之前先努力学着让自己值钱。<br></blockquote><br>十多年来，我们一直使用 XMLHttpRequest（XHR）来发送异步请求，XHR 很实用，但并不是一个设计优良的 API，在设计上并不符合职责分离原则，输入、输出以及状态都杂糅在同一对象中，并用事件机制来跟踪状态变化。并且，基于事件的模型与最近流行的 Promise 和 generator 异步编程模型不太友好。</p>
-<p>Fetch API 旨在修正上述缺陷，它提供了与 HTTP 语义相同的 JS 语法，简单来说，它引入了 fetch() 这个实用的方法来获取网络资源。</p>
-<p>在 Fetch 规范中对 API 进行了定义，它结合 ServiceWorkers，尝试做到如下优化：</p>
-<ul>
-<li>改善离线体验</li>
-<li>保持可扩展性</li>
-</ul>
-<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><p>Fetch API 中最常用的是 fetch() 方法，该方法最简单的形式是，接受一个 URL 参数并返回以一个 promise 对象：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">"/data.json"</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// res instanceof Response == true.</span></span><br><span class="line">  <span class="keyword">if</span> (res.ok) &#123;</span><br><span class="line">    res.json().then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(data.entries);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Looks like the response wasn't perfect, got status"</span>, res.status);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Fetch failed!"</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>如果是提交一个POST请求，代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">"http://www.example.org/submit.php"</span>, &#123;</span><br><span class="line">  method: <span class="string">"POST"</span>,</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="string">"Content-Type"</span>: <span class="string">"application/x-www-form-urlencoded"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  body: <span class="string">"firstName=Nikhil&amp;favColor=blue&amp;password=easytoguess"</span></span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (res.ok) &#123;</span><br><span class="line">    alert(<span class="string">"Perfect! Your settings are saved."</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res.status == <span class="number">401</span>) &#123;</span><br><span class="line">    alert(<span class="string">"Oops! You are not authorized."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  alert(<span class="string">"Error submitting form!"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>fetch() 方法的参数和 Request() 构造函数的参数完全一致，所以你可以传任意复杂的参数来实现更强大的 fetch()，下面将详细介绍。</p>
-<h3 id="Headers"><a href="#Headers" class="headerlink" title="Headers"></a>Headers</h3><p>Fetch 引入了 3 个接口，分别是 Headers，Request 和 Response。他们直接对应于的 HTTP 中相应的概念，但是基于隐私和安全考虑，也有些区别，例如支持 CORS 规则以及保证 cookies 不能被第三方获取。</p>
-<p>Headers 接口是一个简单的键值对：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ar content = <span class="string">"Hello World"</span>;</span><br><span class="line"><span class="keyword">var</span> reqHeaders = <span class="keyword">new</span> Headers();</span><br><span class="line">reqHeaders.append(<span class="string">"Content-Type"</span>, <span class="string">"text/plain"</span></span><br><span class="line">reqHeaders.append(<span class="string">"Content-Length"</span>, content.length.toString());</span><br><span class="line">reqHeaders.append(<span class="string">"X-Custom-Header"</span>, <span class="string">"ProcessThisImmediately"</span>);</span><br></pre></td></tr></table></figure></p>
-<p>也可以给构造函数传一个多维数组或 JS 字面量对象：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">reqHeaders = <span class="keyword">new</span> Headers(&#123;</span><br><span class="line">  <span class="string">"Content-Type"</span>: <span class="string">"text/plain"</span>,</span><br><span class="line">  <span class="string">"Content-Length"</span>: content.length.toString(),</span><br><span class="line">  <span class="string">"X-Custom-Header"</span>: <span class="string">"ProcessThisImmediately"</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>Headers 的内容可被检索：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(reqHeaders.has(<span class="string">"Content-Type"</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(reqHeaders.has(<span class="string">"Set-Cookie"</span>)); <span class="comment">// false</span></span><br><span class="line">reqHeaders.set(<span class="string">"Content-Type"</span>, <span class="string">"text/html"</span>);</span><br><span class="line">reqHeaders.append(<span class="string">"X-Custom-Header"</span>, <span class="string">"AnotherValue"</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(reqHeaders.get(<span class="string">"Content-Length"</span>)); <span class="comment">// 11</span></span><br><span class="line"><span class="built_in">console</span>.log(reqHeaders.getAll(<span class="string">"X-Custom-Header"</span>)); <span class="comment">// ["ProcessThisImmediately", "AnotherValue"]</span></span><br><span class="line"> </span><br><span class="line">reqHeaders.delete(<span class="string">"X-Custom-Header"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(reqHeaders.getAll(<span class="string">"X-Custom-Header"</span>)); <span class="comment">// []</span></span><br></pre></td></tr></table></figure></p>
-<p>一些操作只在 ServiceWorkers 中可用，但这些 API 使得操作 header 更为方便。</p>
-<p>由于 header 可以在发送请求时被发送或在收到响应时被接收，并规定了那些参数可写，所以在 Headers 对象中有个一 guard 属性，来指定哪些参数可以被改变。</p>
-<p>可能的值如下：</p>
-<ul>
-<li>“none”：默认值</li>
-<li>“request”：Request.headers 对象只读</li>
-<li>“request-no-cors”：在 no-cors 模式下，Request.headers 对象只读</li>
-<li>“response”：Response.headers 对象只读</li>
-<li>“immutable”：通常在 ServiceWorkers 中使用，所有 Header 对象都为只读<br>在规范中对每个 guard 属性值有更详细的描述。例如，当 guard 为 request 时，你将不能添加或修改header 的 Content-Length 属性。</li>
-</ul>
-<p>如果使用了一个不合法的 HTTP Header 名，那么 Headers 的方法通常都抛出 TypeError 异常。如果不小心写入了一个只读属性，也会抛出一个 TypeError 异常。除此以外，失败了将不抛出任何异常。例如：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> res = Response.error();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  res.headers.set(<span class="string">"Origin"</span>, <span class="string">"http://mybank.com"</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Cannot pretend to be a bank!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Request"><a href="#Request" class="headerlink" title="Request"></a>Request</h3><p>通过构造一个 Request 对象来获取网络资源，构造函数需要 URL、method 和 headers 参数，同时也可以提供请求体（body）、请求模式（mode）、credentials 和 cache hints 等参数。</p>
-<p>最简单的形式如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> req = <span class="keyword">new</span> Request(<span class="string">"/index.html"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(req.method); <span class="comment">// "GET"</span></span><br><span class="line"><span class="built_in">console</span>.log(req.url); <span class="comment">// "http://example.com/index.html"</span></span><br></pre></td></tr></table></figure></p>
-<p>也可以将一个 Request 对象传给构造函数，这将返回该对象的一个副本（这与 clone() 方法不同，后面将介绍）。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> copy = <span class="keyword">new</span> Request(req);</span><br><span class="line"><span class="built_in">console</span>.log(copy.method); <span class="comment">// "GET"</span></span><br><span class="line"><span class="built_in">console</span>.log(copy.url); <span class="comment">// "http://example.com/index.html"</span></span><br></pre></td></tr></table></figure></p>
-<p>同时，这种形式通常只在 ServiceWorkers 中使用。</p>
-<p>除 URL 之外的参数只能通过第二个参数传递，该参数是一个键值对：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uploadReq = <span class="keyword">new</span> Request(<span class="string">"/uploadImage"</span>, &#123;</span><br><span class="line">  method: <span class="string">"POST"</span>,</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="string">"Content-Type"</span>: <span class="string">"image/png"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  body: <span class="string">"image data"</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>mode 参数用来决定是否允许跨域请求，以及哪些 response 属性可读。可选的 mode 值为 “same-origin”、”no-cors”（默认）以及 “cors”。</p>
-<h3 id="same-origin"><a href="#same-origin" class="headerlink" title="same-origin"></a>same-origin</h3><p>该模式很简单，如果一个请求是跨域的，那么将返回一个 error，这样确保所有的请求遵守同源策略。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arbitraryUrl = <span class="built_in">document</span>.getElementById(<span class="string">"url-input"</span>).value;</span><br><span class="line">fetch(arbitraryUrl, &#123; <span class="attr">mode</span>: <span class="string">"same-origin"</span> &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Response succeeded?"</span>, res.ok);</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Please enter a same-origin URL!"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="Response"><a href="#Response" class="headerlink" title="Response"></a>Response</h3><p>Response 对象通常在 fetch() 的回调中获得，也可以通过 JS 构造，不过这通常只在 ServiceWorkers 中使用。</p>
-<p>Response 对象中最常见的属性是 status（整数，默认值是 200）和statusText（默认值是 “OK”）。还有一个 ok 属性，这是 status 值为 200~299 时的语法糖。</p>
-<p>另外，还有一个 type 属性，它的值可能是 “basic”、”cors”、”default”、”error” 或 “opaque”。</p>
-<ul>
-<li>“basic”：同域的响应，除 Set-Cookie 和 Set-Cookie2 之外的所有 Header 可用</li>
-<li>“cors”：Response 从一个合法的跨域请求获得，某些 Header 和 body 可读</li>
-<li>“error”：网络错误。Response 对象的 status 属性为 0，headers 属性为空并且不可写。当 Response 对象从 Response.error() 中得到时，就是这种类型</li>
-<li>“opaque”：在 “no-cors” 模式下请求了跨域资源。依靠服务端来做限制<br>当 type 属性值为 “error” 时会导致 fetch() 方法的 Promise 被 reject，reject 回调的参数为 TypeError 对象。</li>
-</ul>
-<p>还有一些属性只在 ServerWorker 下有效。在 ServerWorker 下返回一个 Response 的正确方式为：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">addEventListener(<span class="string">'fetch'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.respondWith(<span class="keyword">new</span> Response(<span class="string">"Response body"</span>, &#123;</span><br><span class="line">    headers: &#123; <span class="string">"Content-Type"</span> : <span class="string">"text/plain"</span> &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>如你所见，Response 构造函数接收两个参数：返回的 body 和一个键值对对象，通过该对象来设置 status、statusText 和 headers 属性。</p>
-<p>静态方法 Response.error() 将返回一个错误响应，Response.redirect(url, status) 将返回一个跳转响应。</p>
-<blockquote>
-<p><a href="http://bubkoo.com/2015/05/08/introduction-to-fetch/" target="_blank" rel="noopener">http://bubkoo.com/2015/05/08/introduction-to-fetch/</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -826,7 +816,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -836,7 +826,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

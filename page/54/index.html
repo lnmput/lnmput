@@ -265,6 +265,306 @@
             
               
                 
+                <a class="post-title-link" href="/2017/04/06/php数学扩展bcmath/" itemprop="url">
+                  php数学扩展bcmath
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-06T17:14:54+08:00" content="2017-04-06">
+              2017-04-06
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我在这里准备了一百口棺材，九十九口留给贪官，一口留给自己。<br></blockquote>
+
+<h3 id="问题引出"><a href="#问题引出" class="headerlink" title="问题引出"></a>问题引出</h3><p>看下面这个代码片段的结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$res1 = <span class="number">0.07</span> * <span class="number">100</span> == <span class="number">7</span>;</span><br><span class="line">dump($res1); <span class="comment">// false</span></span><br></pre></td></tr></table></figure></p>
+<p>结果竟然是 <code>false</code><br>这个和电脑中存储小数的原理有关。大家都知道计算机只能存储0和1，我们日常生活习惯使用的是10进制的数据，像0.07这个小数在计算机中存储时会有精度损失.</p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$res2 = bcmul(<span class="number">0.07</span>, <span class="number">100</span>) == <span class="number">7</span>;</span><br><span class="line">dump($res2);  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>BC 数学 函数<br>  ● bcadd — 2个任意精度数字的加法计算<br>  ● bccomp — 比较两个任意精度的数字<br>  ● bcdiv — 2个任意精度的数字除法计算<br>  ● bcmod — 对一个任意精度数字取模<br>  ● bcmul — 2个任意精度数字乘法计算<br>  ● bcpow — 任意精度数字的乘方<br>  ● bcpowmod — Raise an arbitrary precision number to another, reduced by a specified modulus<br>  ● bcscale — 设置所有bc数学函数的默认小数点保留位数<br>  ● bcsqrt — 任意精度数字的二次方根<br>  ● bcsub — 2个任意精度数字的减法</p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$re = intval(<span class="number">18.99</span>*<span class="number">100</span>)/<span class="number">100</span>;</span><br><span class="line"><span class="keyword">echo</span> $re;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">$gg = bcdiv(bcmul(<span class="string">'18.99'</span>,<span class="string">'100'</span>), <span class="string">'100'</span>,<span class="number">2</span>);</span><br><span class="line"><span class="keyword">echo</span> $gg;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://php.net/manual/zh/book.bc.php" target="_blank" rel="noopener">http://php.net/manual/zh/book.bc.php</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/06/Laravel开发记录sql/" itemprop="url">
+                  Laravel开发记录sql
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-06T17:09:54+08:00" content="2017-04-06">
+              2017-04-06
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>啊 这瞌睡 这瞌睡像十除以三<br></blockquote>
+
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trace_sql</span><span class="params">($dump = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DB::listen(<span class="function"><span class="keyword">function</span> <span class="params">($event)</span> <span class="title">use</span><span class="params">($dump)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($dump) &#123;</span><br><span class="line">            dump($event-&gt;sql);</span><br><span class="line">            dump($event-&gt;bindings);</span><br><span class="line">        &#125;</span><br><span class="line">        Log::info($event-&gt;sql);</span><br><span class="line">        Log::info($event-&gt;bindings);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    trace_sql();</span><br><span class="line">    $query = Order::query();</span><br><span class="line">    <span class="comment">//$query-&gt;whereBetween('updated_at',[Carbon::today(), Carbon::tomorrow()]);</span></span><br><span class="line">    $query-&gt;whereHas(<span class="string">'incomeExpenditure'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">       $query-&gt;whereBetween(<span class="string">'created_at'</span>,[Carbon::today(), Carbon::tomorrow()])-&gt;where(<span class="string">'value'</span>, <span class="string">'&gt;'</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    $orders = $query-&gt;where(<span class="string">'status'</span>, <span class="string">'paid'</span>)-&gt;with(<span class="string">'products'</span>)-&gt;orderBy(<span class="string">'updated_at'</span>, <span class="string">'desc'</span>)-&gt;paginate(<span class="number">1000</span>);</span><br><span class="line">    $datas = <span class="keyword">$this</span>-&gt;todayStatistics();</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'home.index'</span>, [<span class="string">'orders'</span> =&gt; $orders, <span class="string">'datas'</span> =&gt; $datas]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/27/nginx的反向代理和负载均衡实践/" itemprop="url">
+                  nginx的反向代理和负载均衡实践
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-27T08:58:36+08:00" content="2017-03-27">
+              2017-03-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>有些人让你对明天充满期许，却再也没有出现在你的明天里。<br></blockquote></p>
+<h3 id="apache的配置"><a href="#apache的配置" class="headerlink" title="apache的配置"></a>apache的配置</h3><p>使用 Apache 模拟出两个站点,分别使用8081和8082端口<br>访问:<br><a href="http://121.42.176.99:8081/" target="_blank" rel="noopener">http://121.42.176.99:8081/</a><br><a href="http://121.42.176.99:8082/" target="_blank" rel="noopener">http://121.42.176.99:8082/</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Listen <span class="number">8081</span></span><br><span class="line">&lt;VirtualHost *:<span class="number">8081</span>&gt;</span><br><span class="line">    ServerAdmin webmaster@dummy-host2.example.com</span><br><span class="line">    DocumentRoot <span class="string">"/usr/local/httpd/htdocs/test"</span></span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">    ServerName <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    ErrorLog <span class="string">"logs/dummy-host2.example.com-error_log"</span></span><br><span class="line">    CustomLog <span class="string">"logs/dummy-host2.example.com-access_log"</span> common</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;Directory <span class="string">"/usr/local/httpd/htdocs/test"</span>&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride  all</span><br><span class="line">    allow from all</span><br><span class="line">    <span class="keyword">Require</span> all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">Listen <span class="number">8082</span></span><br><span class="line">&lt;VirtualHost *:<span class="number">8082</span>&gt;</span><br><span class="line">    ServerAdmin webmaster@dummy-host2.example.com</span><br><span class="line">    DocumentRoot <span class="string">"/usr/local/httpd/htdocs/test1"</span></span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">    ServerName <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    ErrorLog <span class="string">"logs/dummy-host2.example.com-error_log"</span></span><br><span class="line">    CustomLog <span class="string">"logs/dummy-host2.example.com-access_log"</span> common</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;Directory <span class="string">"/usr/local/httpd/htdocs/test"</span>&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride  all</span><br><span class="line">    allow from all</span><br><span class="line">    <span class="keyword">Require</span> all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure></p>
+<p>网站的内容index.php 打印出服务器变量: var_export($_SERVER);</p>
+<h3 id="反向代理nginx"><a href="#反向代理nginx" class="headerlink" title="反向代理nginx"></a>反向代理nginx</h3><p>nginx 默认使用80端口,<a href="http://121.42.176.99/" target="_blank" rel="noopener">http://121.42.176.99/</a><br>配置:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_passs http:<span class="comment">//localhost:8081</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后重启nginx<br>这时候访问<a href="http://121.42.176.99/,就会访问的是apache的8081端口" target="_blank" rel="noopener">http://121.42.176.99/,就会访问的是apache的8081端口</a></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>我们发现获取到的服务器信息不正确:<br> 1、HTTP_HOST:localhost:8081<br> 2、REMOTE_ADDR：127.0.0.1 (客户端的IP）<br>这会对我们的开发造成“迷茫”，因此要在nginx配置里加入<br>1、proxy_set_header Host $host;<br>2、proxy_set_header  X-Real-IP $remote_addr;</p>
+<p>其他的一些设置请google;</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/03/22/编译安装mysql/" itemprop="url">
                   编译安装mysql
                 </a>
@@ -515,338 +815,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/22/编译安装apache/" itemprop="url">
-                  编译安装apache
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-22T15:24:56+08:00" content="2017-03-22">
-              2017-03-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>梦想使生活得以忍受<br></blockquote></p>
-<h3 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h3><ul>
-<li>centos6.8 64</li>
-<li>httpd2.4.25</li>
-</ul>
-<h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><ul>
-<li><p>下载httpd</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//apache.fayea.com//httpd/httpd-2.4.25.tar.gz</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装apr</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">下载: wget http:<span class="comment">//mirrors.hust.edu.cn/apache//apr/apr-1.5.2.tar.bz2</span></span><br><span class="line">解压,并进入到目录</span><br><span class="line">执行 ./configure</span><br><span class="line">默认安装目录: /usr/local/apr</span><br><span class="line">make  make install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装apr-util</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//mirrors.hust.edu.cn/apache//apr/apr-util-1.5.4.tar.gz</span></span><br><span class="line"></span><br><span class="line">./configure --with-apr=/usr/local/apr (需要指明 apr的安装目录)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装 pcre</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">偷懒安装:</span><br><span class="line">yum install pcre prce-devel</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编译httpd</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/httpd --enable-MODULE=shared</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="编译完成"><a href="#编译完成" class="headerlink" title="编译完成"></a>编译完成</h3><ul>
-<li>基本操作<br>./apachectl restart<br>./apachectl start<br>./apachectl stop</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/21/linux的账号和密码文件/" itemprop="url">
-                  linux的账号和密码文件
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-21T09:35:01+08:00" content="2017-03-21">
-              2017-03-21
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>一想到时光匆匆，竟经不起半点挥霍，我就会对时间吝啬起来，因为此刻已过，便永不复还。<br></blockquote><br>Linux系统中，所有用户（包括系统管理员）的账号和密码都可以在/etc/passwd和/etc/shadow这两个文件中找到;</p>
-<h3 id="etc-passwd"><a href="#etc-passwd" class="headerlink" title="/etc/passwd"></a>/etc/passwd</h3><p>通过指令 vi /etc/passwd  打开passwd文件来看看，下面列举部分内容如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root:x:<span class="number">0</span>:<span class="number">0</span>:root:/root:/bin/bash</span><br><span class="line">daemon:x:<span class="number">1</span>:<span class="number">1</span>:daemon:/usr/sbin:/bin/sh</span><br><span class="line">bin:x:<span class="number">2</span>:<span class="number">2</span>:bin:/bin:/bin/sh</span><br><span class="line">sys:x:<span class="number">3</span>:<span class="number">3</span>:sys:/dev:/bin/sh</span><br></pre></td></tr></table></figure></p>
-<p>上面每一行都代表一个用户，每一行又通过[:]分为七个部分，下面就说说这七项都代表什么。<br>　　1、账号名称<br>　　2、原先用来保存密码的，现在密码都放在/etc/shadow中，所以这里显示x<br>　　3、UID，也就是使用者ID。默认的系统管理员的UID为0，我们添加用户的时候最好使用1000以上的UID，1-1000范围的UID最好保留给系统用。<br>　　4、GID，也就是群组ID<br>　　5、关于账号的一些说明信息（暂时可以忽略）<br>　　6、账号的家目录，家目录就是你登陆系统后默认的那个目录<br>　　7、账号使用的shell</p>
-<h3 id="etc-shadow"><a href="#etc-shadow" class="headerlink" title="/etc/shadow"></a>/etc/shadow</h3><p>看完/etc/passwd，再来看看/etc/shadow里都有啥？于是在ubuntu的终端中输入 vi /etc/shadow 会出现了下面的错误信息：</p>
-<p><code>“/etc/shadow” [Permission Denied]</code></p>
-<p>忘了ubuntu中默认登陆的不开启root账户，而/etc/shadow文件只有root账户才能够访问，那怎么办呢，只好开启ubunt的root账户了，或者 sudo vi /etc/shadow即可，搞定之后shadow的内容如下面样式：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root:!:<span class="number">15324</span>:<span class="number">0</span>:<span class="number">99999</span>:<span class="number">7</span>:::</span><br><span class="line">daemon:*:<span class="number">15259</span>:<span class="number">0</span>:<span class="number">99999</span>:<span class="number">7</span>:::</span><br><span class="line">bin:*:<span class="number">15259</span>:<span class="number">0</span>:<span class="number">99999</span>:<span class="number">7</span>:::</span><br></pre></td></tr></table></figure></p>
-<p>letuknowit:$1$cPf/cIvr$sCws95uSip2ljTK052DDB.:15400:5:60:7:2:15490:<br>这里也是由[:]来进行分割，但是这里一共分出来九个栏目，每个栏目的解释如下：<br>　　1、账户名称（密码需要与账户对应的嘛）<br>　　2、加密后的密码（总不能学CSDN放明文密码，是吧），如果这一栏的第一个字符为!或者*的话，说明这是一个不能登录的账户，从上面可以看出，ubuntu默认的就不启用root账户。<br>　　3、最近改动密码的日期（不是日期吗，咋是一堆数字，别急，这个是从1970年1月1日算起的总的天数）。那怎么才能知道今天距1970年1月1日有多少天呢？很简单，你改下密码，然后看下这个栏目中的数字是多少就可以了！<br>　　4、密码不可被变更的天数：设置了这个值，则表示从变更密码的日期算起，多少天内无法再次修改密码，如果是0的话，则没有限制<br>　　5、密码需要重新变更的天数：密码经常更换才能保证安全，为了提醒某些经常不更换密码的用户，可以设置一个天数，强制让用户更换密码，也就是说该用户的密码会在多少天后过期，如果为99999则没有限制<br>　　6、密码过期预警天数：如果在5中设置了密码需要重新变更的天数，则会在密码过期的前多少天进行提醒，提示用户其密码将在多少天后过期<br>　　7、密码过期的宽恕时间：如果在5中设置的日期过后，用户仍然没有修改密码，则该用户还可以继续使用的天数<br>　　8、账号失效日期，过了这个日期账号就不能用了<br>　　9、保留的</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/08/如何优雅地使用StackOverflow/" itemprop="url">
-                  如何优雅地使用StackOverflow
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-08T13:56:57+08:00" content="2017-03-08">
-              2017-03-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我先起，你再睡一会儿。<br></blockquote><br>一:提问前一定要搜索，先在 Google 搜索，然后在 StackOverFlow 上搜索，当实在找不到答案后再提问。    对于那些靠搜索就能得到答案的问题，StackOverFlow 上的广大群众是毫不留情的，反对票数量蹭蹭得往上加啊。<br>二:学习一些典型的提问/回答习惯，我做了一些笔记。</p>
-<p>提问：</p>
-<ul>
-<li>1，In my limited experience with ..    谦虚表达自己在某方面的经验</li>
-<li>2， I am searching for a long time on net. But no use. Please help or try to give some ideas how to achieve this.   找了很久未果，求助攻</li>
-<li>3，after searching around for a decent XX solution and found that everything out there was difficult to use.  找了N种方法都发现太TM难了。</li>
-<li>4，I’ ve looked around and apparently I’ve got the choice between these libraries/ solutions:   说明自己是努力搜索过的，然后目前有了哪几种方案</li>
-<li>5，which seems it’s a promising solution.  看起来是一个好解决方案</li>
-<li>6，Ive tried multiple variations of this, but none of them seem to work. Any ideas? 试了很多种方法都无效，求助</li>
-<li>7，Wanted to know if it’s good practice to do that and what would be the best way to do that? 我的做法是否正确，是否有更好的法子？</li>
-<li>8，Thanks in advance.  </li>
-</ul>
-<p> 先行谢过回答问题：</p>
-<ul>
-<li>1，If I understand you correctly, you want to xxx      如果我没理解错，你想。</li>
-<li>2，Can you provided more details about your use case ? Can you provide more xml and code setting the url ? </li>
-</ul>
-<p>提供更详细当别人回答你的问题后，你对回答的评论：</p>
-<ul>
-<li>1，thank you for your answer sincerely 感谢回答blabla这些感觉就差不多了，其他说来说去也都是这些套路，回答问题或者提问时多看看别人的表达习惯，也可以做记录，好记性不如烂笔头嘛。说明一下，上面的中文不是翻译，只是一个说明，方便我快速定位的。</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -890,7 +858,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -900,7 +868,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

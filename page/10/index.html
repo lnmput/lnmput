@@ -265,6 +265,346 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/09/持续集成是什么/" itemprop="url">
+                  持续集成是什么
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-09T11:16:41+08:00" content="2018-07-09">
+              2018-07-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>生活本来就不容易， 如果有一天你觉得容易了， 那一定是有人分担了你的不容易<br></blockquote>
+
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>持续集成指的是，频繁地（一天多次）将代码集成到主干。</p>
+<p>它的好处主要有两个:</p>
+<ul>
+<li>快速发现错误。每完成一点更新，就集成到主干，可以快速发现错误，定位错误也比较容易。</li>
+<li>防止分支大幅偏离主干。如果不是经常集成，主干又在不断更新，会导致以后集成的难度变大，甚至难以集成。</li>
+</ul>
+<p>持续集成的目的，就是让产品可以快速迭代，同时还能保持高质量。它的核心措施是，代码集成到主干之前，必须通过自动化测试。只要有一个测试用例失败，就不能集成。<br>Martin Fowler说过，”持续集成并不能消除Bug，而是让它们非常容易发现和改正。”<br>与持续集成相关的，还有两个概念，分别是持续交付和持续部署。</p>
+<h3 id="持续交付"><a href="#持续交付" class="headerlink" title="持续交付"></a>持续交付</h3><p>持续交付（Continuous delivery）指的是，频繁地将软件的新版本，交付给质量团队或者用户，以供评审。如果评审通过，代码就进入生产阶段。<br>持续交付可以看作持续集成的下一步。它强调的是，不管怎么更新，软件是随时随地可以交付的。</p>
+<h3 id="持续部署"><a href="#持续部署" class="headerlink" title="持续部署"></a>持续部署</h3><p>持续部署（continuous deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境。<br>持续部署的目标是，代码在任何时刻都是可部署的，可以进入生产阶段。<br>持续部署的前提是能自动化完成测试、构建、部署等步骤。</p>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>根据持续集成的设计，代码从提交到生产，整个过程有以下几步</p>
+<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>流程的第一步，是开发者向代码仓库提交代码。所有后面的步骤都始于本地代码的一次提交（commit）。</p>
+<h4 id="测试（第一轮）"><a href="#测试（第一轮）" class="headerlink" title="测试（第一轮）"></a>测试（第一轮）</h4><p>代码仓库对commit操作配置了钩子（hook），只要提交代码或者合并进主干，就会跑自动化测试。<br>测试有好几种</p>
+<ul>
+<li>单元测试：针对函数或模块的测试</li>
+<li>集成测试：针对整体产品的某个功能的测试，又称功能测试</li>
+<li>端对端测试：从用户界面直达数据库的全链路测试</li>
+</ul>
+<p>第一轮至少要跑单元测试。</p>
+<h4 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h4><p>通过第一轮测试，代码就可以合并进主干，就算可以交付了。<br>交付后，就先进行构建（build），再进入第二轮测试。所谓构建，指的是将源码转换为可以运行的实际代码，比如安装依赖，配置各种资源（样式表、JS脚本、图片）等等。<br>常用的构建工具如下</p>
+<ul>
+<li>Jenkins</li>
+<li>Travis</li>
+<li>Codeship</li>
+<li>Strider</li>
+</ul>
+<h4 id="测试（第二轮）"><a href="#测试（第二轮）" class="headerlink" title="测试（第二轮）"></a>测试（第二轮）</h4><p>建完成，就要进行第二轮测试。如果第一轮已经涵盖了所有测试内容，第二轮可以省略，当然，这时构建步骤也要移到第一轮测试前面。<br>第二轮是全面测试，单元测试和集成测试都会跑，有条件的话，也要做端对端测试。所有测试以自动化为主，少数无法自动化的测试用例，就要人工跑。<br>需要强调的是，新版本的每一个更新点都必须测试到。如果测试的覆盖率不高，进入后面的部署阶段后，很可能会出现严重的问题。</p>
+<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>通过了第二轮测试，当前代码就是一个可以直接部署的版本（artifact）。将这个版本的所有文件打包（ tar filename.tar * ）存档，发到生产服务器。<br>生产服务器将打包文件，解包成本地的一个目录，再将运行路径的符号链接（symlink）指向这个目录，然后重新启动应用。这方面的部署工具有Ansible，Chef，Puppet等。</p>
+<h4 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h4><p>一旦当前版本发生问题，就要回滚到上一个版本的构建结果。最简单的做法就是修改一下符号链接，指向上一个版本的目录。</p>
+<blockquote>
+<p><a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/08/systemd入门教程/" itemprop="url">
+                  systemd入门教程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-08T14:41:13+08:00" content="2018-07-08">
+              2018-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>同窗同读岂能位居人后，同班同学怎可甘拜下风<br></blockquote>
+
+<p>Systemd 并不是一个命令，而是一组命令，涉及到系统管理的方方面面。</p>
+<p>查看版本<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl --version</span><br></pre></td></tr></table></figure></p>
+<h3 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h3><p>systemctl是 Systemd 的主命令，用于管理系统。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重启系统</span></span><br><span class="line">$ sudo systemctl reboot</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭系统，切断电源</span></span><br><span class="line">$ sudo systemctl poweroff</span><br><span class="line"></span><br><span class="line"><span class="comment"># CPU停止工作</span></span><br><span class="line">$ sudo systemctl halt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 暂停系统</span></span><br><span class="line">$ sudo systemctl suspend</span><br><span class="line"></span><br><span class="line"><span class="comment"># 让系统进入冬眠状态</span></span><br><span class="line">$ sudo systemctl hibernate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 让系统进入交互式休眠状态</span></span><br><span class="line">$ sudo systemctl hybrid-sleep</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动进入救援状态（单用户状态）</span></span><br><span class="line">$ sudo systemctl rescue</span><br></pre></td></tr></table></figure></p>
+<h3 id="systemd-analyze"><a href="#systemd-analyze" class="headerlink" title="systemd-analyze"></a>systemd-analyze</h3><p>systemd-analyze命令用于查看启动耗时。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看启动耗时</span></span><br><span class="line">$ systemd-analyze                                                                                       </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看每个服务的启动耗时</span></span><br><span class="line">$ systemd-analyze blame</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示瀑布状的启动过程流</span></span><br><span class="line">$ systemd-analyze critical-chain</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示指定服务的启动流</span></span><br><span class="line">$ systemd-analyze critical-chain atd.service</span><br></pre></td></tr></table></figure></p>
+<h3 id="hostnamectl"><a href="#hostnamectl" class="headerlink" title="hostnamectl"></a>hostnamectl</h3><p>hostnamectl命令用于查看当前主机的信息。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示当前主机的信息</span></span><br><span class="line">$ hostnamectl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置主机名。</span></span><br><span class="line">$ sudo hostnamectl set-hostname rhel7</span><br></pre></td></tr></table></figure></p>
+<h3 id="timedatectl"><a href="#timedatectl" class="headerlink" title="timedatectl"></a>timedatectl</h3><p>timedatectl命令用于查看当前时区设置。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前时区设置</span></span><br><span class="line">$ timedatectl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示所有可用的时区</span></span><br><span class="line">$ timedatectl <span class="keyword">list</span>-timezones                                                                                   </span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置当前时区</span></span><br><span class="line">$ sudo timedatectl set-timezone America/New_York</span><br><span class="line">$ sudo timedatectl set-time YYYY-MM-DD</span><br><span class="line">$ sudo timedatectl set-time HH:MM:SS</span><br></pre></td></tr></table></figure></p>
+<h3 id="loginctl"><a href="#loginctl" class="headerlink" title="loginctl"></a>loginctl</h3><p>loginctl命令用于查看当前登录的用户。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前session</span></span><br><span class="line">$ loginctl <span class="keyword">list</span>-sessions</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出当前登录用户</span></span><br><span class="line">$ loginctl <span class="keyword">list</span>-users</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出显示指定用户的信息</span></span><br><span class="line">$ loginctl show-user ruanyf</span><br></pre></td></tr></table></figure></p>
+<h3 id="Unit-管理"><a href="#Unit-管理" class="headerlink" title="Unit 管理"></a>Unit 管理</h3><p>对于用户来说，最常用的是下面这些命令，用于启动和停止 Unit（主要是 service）。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 立即启动一个服务</span></span><br><span class="line">$ sudo systemctl start apache.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 立即停止一个服务</span></span><br><span class="line">$ sudo systemctl stop apache.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启一个服务</span></span><br><span class="line">$ sudo systemctl restart apache.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 杀死一个服务的所有子进程</span></span><br><span class="line">$ sudo systemctl kill apache.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新加载一个服务的配置文件</span></span><br><span class="line">$ sudo systemctl reload apache.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重载所有修改过的配置文件</span></span><br><span class="line">$ sudo systemctl daemon-reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示某个 Unit 的所有底层参数</span></span><br><span class="line">$ systemctl show httpd.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示某个 Unit 的指定属性的值</span></span><br><span class="line">$ systemctl show -p CPUShares httpd.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置某个 Unit 的指定属性</span></span><br><span class="line">$ sudo systemctl set-property httpd.service CPUShares=<span class="number">500</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Unit-的配置文件"><a href="#Unit-的配置文件" class="headerlink" title="Unit 的配置文件"></a>Unit 的配置文件</h3><p>每一个 Unit 都有一个配置文件，告诉 Systemd 怎么启动这个 Unit 。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有配置文件</span></span><br><span class="line">$ systemctl <span class="keyword">list</span>-unit-files</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出指定类型的配置文件</span></span><br><span class="line">$ systemctl <span class="keyword">list</span>-unit-files --type=service</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/08/shell中的特殊变量/" itemprop="url">
+                  shell中的特殊变量
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-08T12:17:27+08:00" content="2018-07-08">
+              2018-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>兄弟，这世上就一种病，你永远也治不了，那就是穷病<br></blockquote>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前进程ID</span></span><br><span class="line"><span class="keyword">echo</span> $$</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前脚本文件名</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的参数,n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2。</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的参数个数</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的所有参数</span></span><br><span class="line"><span class="keyword">echo</span> $*</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的所有参数。被双引号(" ")包含时，与 $* 稍有不同</span></span><br><span class="line"><span class="keyword">echo</span> $@</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $*和S@的差别</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\$*=$*"</span></span><br><span class="line"><span class="keyword">echo</span> --------------------------</span><br><span class="line"><span class="keyword">for</span> n in <span class="string">"$*"</span>;<span class="keyword">do</span> <span class="keyword">echo</span> $n;done</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\$@=$@"</span></span><br><span class="line"><span class="keyword">echo</span> --------------------------</span><br><span class="line"><span class="keyword">for</span> n in <span class="string">"$@"</span>;<span class="keyword">do</span> <span class="keyword">echo</span> $n;done</span><br></pre></td></tr></table></figure>
+<p>结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$*=<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line">--------------------------</span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line"></span><br><span class="line">$@=<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line">--------------------------</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line">asdf $asdfasdf</span><br></pre></td></tr></table></figure></p>
+<p>从上面结果可以看到：<br><code>$*</code>将所有位置参数当做一个字符串输出；<br><code>$@</code>将每个位置参数当做独立的元素处理，带空格的参数也当做一个整体。</p>
+<blockquote>
+<p><a href="http://xstarcd.github.io/wiki/shell/shell_special_variables.html" target="_blank" rel="noopener">http://xstarcd.github.io/wiki/shell/shell_special_variables.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/08/curl命令详解/" itemprop="url">
                   curl命令详解
                 </a>
@@ -454,352 +794,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/03/nginx的empty-gif模块/" itemprop="url">
-                  nginx的empty_gif模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-03T20:05:37+08:00" content="2018-07-03">
-              2018-07-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你对自由的理解是什么？说「不」的能力。<br></blockquote>
-
-<p>用过百度统计的都知道百度使用1x1的空白图片传递统计参数，自己做异步统计的兄弟是否使用静态文件来传递参数。为什么使用空白图片呢，而不是自己存放一张小图呢，nginx里面的空白图片是保存在内存中的，速度绝对比硬盘上读取的快. 看下如何使用empty_gif生成响应1x1的空白图片吧.</p>
-<p>或许哪天ttlsa自己要做统计，咱们也可以使用empty_gif来传递参数，说归说，肯定性还是比较小，能用第三方的统计就用第三方统计。</p>
-<h3 id="nginx配置"><a href="#nginx配置" class="headerlink" title="nginx配置"></a>nginx配置</h3><p>nginx的模块 ngx_http_empty_gif_module， 编译安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location = /_.gif &#123;</span><br><span class="line">    empty_gif;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>自定义配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       <span class="number">80</span>;</span><br><span class="line">    server_name  test.ttlsa.com;</span><br><span class="line">    access_log  /data/logs/nginx/test.ttlsa.com.access.log  main;</span><br><span class="line"></span><br><span class="line">    index index.html index.php index.html;</span><br><span class="line">    root /data/site/test.ttlsa.com;</span><br><span class="line"></span><br><span class="line">    location ~* /<span class="number">3145</span>/</span><br><span class="line">    &#123;</span><br><span class="line">        empty_gif;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>我们在访问的时候带上所要统计的参数就可以<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test.ttlsa.com/<span class="number">3145</span>?time=hhh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://nginx.org/en/docs/http/ngx_http_empty_gif_module.html" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_empty_gif_module.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/28/使用docker搭建lnmp环境/" itemprop="url">
-                  使用docker搭建lnmp环境
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-28T14:32:31+08:00" content="2018-06-28">
-              2018-06-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>若家境殷实，谁愿颠沛流离。<br></blockquote>
-
-<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8000</span><span class="string">:80</span></span><br><span class="line">    <span class="attr">networks:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="string">lnmp</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./wwwroot:/usr/share/nginx/html</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/nginx.conf:/etc/nginx/nginx.conf</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/conf.d:/etc/nginx/conf.d/</span></span><br><span class="line">  <span class="attr">php:</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">php</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">php:7.2.6-fpm</span></span><br><span class="line">    <span class="attr">networks:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="string">lnmp</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./wwwroot:/usr/share/nginx/html</span> </span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:5.7.22</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">3307</span><span class="string">:3306</span></span><br><span class="line">    <span class="attr">networks:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="string">lnmp</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql/conf:/etc/mysql/conf.d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql/data:/var/lib/mysql</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">--character-set-server=utf8mb4</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="number">123456</span></span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">wp</span></span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">yangzie</span></span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="number">123456</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">lnmp:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
-<h3 id="nginx配置"><a href="#nginx配置" class="headerlink" title="nginx配置"></a>nginx配置</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       <span class="number">80</span>;</span><br><span class="line">    server_name  localhost;</span><br><span class="line">    root   /usr/share/nginx/html;</span><br><span class="line">    index  index.html index.htm index.php;</span><br><span class="line"></span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_split_path_info ^(.+\.php)(/.+)$;</span><br><span class="line">        fastcgi_pass php:<span class="number">9000</span>;</span><br><span class="line">        fastcgi_index index.php;</span><br><span class="line">        <span class="keyword">include</span> fastcgi_params;</span><br><span class="line">        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;        </span><br><span class="line">        fastcgi_intercept_errors off;</span><br><span class="line">        fastcgi_buffer_size <span class="number">16</span>k;</span><br><span class="line">        fastcgi_buffers <span class="number">4</span> <span class="number">16</span>k;</span><br><span class="line">        fastcgi_connect_timeout <span class="number">300</span>;</span><br><span class="line">        fastcgi_send_timeout <span class="number">300</span>;</span><br><span class="line">        fastcgi_read_timeout <span class="number">300</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h47<span class="number">.98</span><span class="number">.174</span><span class="number">.48</span> -P <span class="number">3307</span> -uroot -p123456</span><br></pre></td></tr></table></figure>
-<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├── docker-compose.yml</span><br><span class="line">├── mysql</span><br><span class="line">│   ├── conf</span><br><span class="line">│   └── data</span><br><span class="line">├── nginx</span><br><span class="line">│   ├── conf.d</span><br><span class="line">│   └── nginx.conf</span><br><span class="line">├── php</span><br><span class="line">│   └── ini</span><br><span class="line">└── wwwroot</span><br><span class="line">    ├── index.php</span><br><span class="line">    └── tp5</span><br></pre></td></tr></table></figure>
-<h3 id="截图"><a href="#截图" class="headerlink" title="截图"></a>截图</h3><p><img style="margin-left: 0;" src="/images/docker-lnmp.png"></p>
-<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
-<li>php容器也要配置目录映射， 不然找不到php文件</li>
-<li>nginx的server配置中监听9000端口：php:9000</li>
-<li>找不到的配置可以在Dockerfile文件中找</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/27/阿里云ecs服务器挂载磁盘/" itemprop="url">
-                  阿里云ECS服务器挂载磁盘
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-27T13:44:26+08:00" content="2018-06-27">
-              2018-06-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>不要到处宣扬自己的内心，这世上不止你一个人有故事<br></blockquote>
-
-<p>使用阿里云ECS服务器， 购买的40G高效云盘已经不够用， 所以又购买了一块云盘， 但是仅仅通过控制台操作并不能将磁盘挂载到系统， 接下来记录我的挂载流程； 为了安全起见， 建议先去做一个磁盘快照</p>
-<ul>
-<li><p>检查磁盘现在的情况</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail <span class="keyword">Use</span>% <span class="title">Mounted</span> <span class="title">on</span></span><br><span class="line">/<span class="title">dev</span>/<span class="title">vda1</span>        40<span class="title">G</span>   35<span class="title">G</span>  3.2<span class="title">G</span>  92% /</span><br><span class="line"><span class="title">devtmpfs</span>        3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span>/<span class="title">shm</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>  632<span class="title">K</span>  3.9<span class="title">G</span>   1% /<span class="title">run</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">sys</span>/<span class="title">fs</span>/<span class="title">cgroup</span></span><br><span class="line"><span class="title">tmpfs</span>           783<span class="title">M</span>     0  783<span class="title">M</span>   0% /<span class="title">run</span>/<span class="title">user</span>/0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看硬盘个数及分区 </p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/vda: <span class="number">42.9</span> GB, <span class="number">42949672960</span> bytes, <span class="number">83886080</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x0008d73a</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83884031</span>    <span class="number">41940992</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">21.5</span> GB, <span class="number">21474836480</span> bytes, <span class="number">41943040</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br></pre></td></tr></table></figure>
-<p>我们可以看到那块20GB的磁盘：/dev/xdb</p>
-</li>
-<li><p>对这块硬盘进行分区<br><img style="margin-left: 0;" src="/images/20160103150446502.png"></p>
-</li>
-<li><p>查看</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/vda: <span class="number">42.9</span> GB, <span class="number">42949672960</span> bytes, <span class="number">83886080</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x0008d73a</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83884031</span>    <span class="number">41940992</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">21.5</span> GB, <span class="number">21474836480</span> bytes, <span class="number">41943040</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x7a2b9a92</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vdb1            <span class="number">2048</span>    <span class="number">41943039</span>    <span class="number">20970496</span>   <span class="number">83</span>  Linux</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>格式化新分区</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext3 /dev/vdb1</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建挂载目录<br>建议挂载到mnt目录， 也可以自己创建新的目录</p>
-</li>
-<li><p>挂载分区到目录</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/vdb1 /mnt</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail <span class="keyword">Use</span>% <span class="title">Mounted</span> <span class="title">on</span></span><br><span class="line">/<span class="title">dev</span>/<span class="title">vda1</span>        40<span class="title">G</span>   35<span class="title">G</span>  3.1<span class="title">G</span>  92% /</span><br><span class="line"><span class="title">devtmpfs</span>        3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span>/<span class="title">shm</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>  636<span class="title">K</span>  3.9<span class="title">G</span>   1% /<span class="title">run</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">sys</span>/<span class="title">fs</span>/<span class="title">cgroup</span></span><br><span class="line"><span class="title">tmpfs</span>           783<span class="title">M</span>     0  783<span class="title">M</span>   0% /<span class="title">run</span>/<span class="title">user</span>/0</span><br><span class="line">/<span class="title">dev</span>/<span class="title">vdb1</span>        20<span class="title">G</span>   45<span class="title">M</span>   19<span class="title">G</span>   1% /<span class="title">mnt</span></span><br><span class="line">```  </span><br><span class="line">- 设置开机自动挂载 </span><br><span class="line">```<span class="title">php</span></span><br><span class="line"><span class="title">cat</span> /<span class="title">etc</span>/<span class="title">fstab</span></span><br><span class="line">#</span><br><span class="line"># /<span class="title">etc</span>/<span class="title">fstab</span></span><br><span class="line"># <span class="title">Created</span> <span class="title">by</span> <span class="title">anaconda</span> <span class="title">on</span> <span class="title">Sun</span> <span class="title">Oct</span> 15 15:19:00 2017</span><br><span class="line">#</span><br><span class="line"># <span class="title">Accessible</span> <span class="title">filesystems</span>, <span class="title">by</span> <span class="title">reference</span>, <span class="title">are</span> <span class="title">maintained</span> <span class="title">under</span> '/<span class="title">dev</span>/<span class="title">disk</span>'</span><br><span class="line"># <span class="title">See</span> <span class="title">man</span> <span class="title">pages</span> <span class="title">fstab</span>(5), <span class="title">findfs</span>(8), <span class="title">mount</span>(8) <span class="title">and</span>/<span class="title">or</span> <span class="title">blkid</span>(8) <span class="title">for</span> <span class="title">more</span> <span class="title">info</span></span><br><span class="line">#</span><br><span class="line"><span class="title">UUID</span>=<span class="title">eb448abb</span>-3012-4<span class="title">d8d</span>-<span class="title">bcde</span>-94434<span class="title">d586a31</span> /                       <span class="title">ext4</span>    <span class="title">defaults</span>        1 1</span><br></pre></td></tr></table></figure>
-<p>修改</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/fstab</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># /etc/fstab</span></span><br><span class="line"><span class="comment"># Created by anaconda on Sun Oct 15 15:19:00 2017</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Accessible filesystems, by reference, are maintained under '/dev/disk'</span></span><br><span class="line"><span class="comment"># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">UUID=eb448abb<span class="number">-3012</span><span class="number">-4</span>d8d-bcde<span class="number">-94434</span>d586a31 /                       ext4    defaults        <span class="number">1</span> <span class="number">1</span></span><br><span class="line">/dev/vdb1                                 /mnt                    ext3    defaults        <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启</p>
-</li>
-</ul>
-<blockquote>
-<p><a href="https://help.aliyun.com/document_detail/25426.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/25426.html</a><br><a href="https://blog.csdn.net/wyzhangchengjin123/article/details/50451065" target="_blank" rel="noopener">https://blog.csdn.net/wyzhangchengjin123/article/details/50451065</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -843,7 +837,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -853,7 +847,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

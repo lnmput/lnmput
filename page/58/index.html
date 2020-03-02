@@ -265,6 +265,317 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/07/关于php的PECL和PEAR/" itemprop="url">
+                  关于php的PECL和PEAR
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-07T11:09:44+08:00" content="2017-02-07">
+              2017-02-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>总有一天，我会拥有我梦寐以求的6块腹肌，可是我还是先把这个汉堡吃完……<br></blockquote>
+
+<h3 id="什么是PEAR"><a href="#什么是PEAR" class="headerlink" title="什么是PEAR"></a>什么是PEAR</h3><p>PEAR的全称是PHP Extension and Application Repository，是PHP的扩展库，采用PHP语言编写。所以我们可以直接下载，并在我们的代码中包含(include)扩展库。</p>
+<h3 id="什么是PECL"><a href="#什么是PECL" class="headerlink" title="什么是PECL"></a>什么是PECL</h3><p>PECL的全称是PHP Extension Community Library，它也是PHP的扩展库。PECL的扩展都是采用C语言编写的，可以被载入PHP中，给PHP增加额外的功能，比如PHP的Mongo扩展。<br>即 php 的 so 格式的扩展</p>
+<h4 id="centos"><a href="#centos" class="headerlink" title="centos"></a>centos</h4><ul>
+<li>安装: yum install php-pear</li>
+</ul>
+<h4 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h4><ul>
+<li>安装: sudo apt-get install php-pear</li>
+</ul>
+<h3 id="phpize"><a href="#phpize" class="headerlink" title="phpize"></a>phpize</h3><h4 id="centos-1"><a href="#centos-1" class="headerlink" title="centos"></a>centos</h4><ul>
+<li>安装: yum install php-devel</li>
+<li>查看: which phpize</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>在网页中打印phpinfo()看到安装了某个扩展，不代表命令行的PHP CLI也安装了对应的扩展。</p>
+<ul>
+<li>如何确定PHP CLI安装了哪些扩展</li>
+</ul>
+<p>运行 <code>php -m</code> 会列出命令行 PHP CLI 已经安装的扩展</p>
+<ul>
+<li>如何确定PHP CLI 的php.ini文件的位置</li>
+</ul>
+<p>可以运行<code>php --ini</code>查找PHP CLI的ini文件位置</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/05/git丢弃本地修改的所有文件/" itemprop="url">
+                  git丢弃本地修改的所有文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-05T14:28:43+08:00" content="2017-02-05">
+              2017-02-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我喜欢你，像风走了八万里，不问归期。<br></blockquote><br>git checkout . #本地所有修改的。没有的提交的，都返回到原来的状态<br>git stash #把所有没有提交的修改暂存到stash里面。可用git stash pop回复。<br>git reset –hard HASH #返回到某个节点，不保留修改。<br>git reset –soft HASH #返回到某个节点。保留修改</p>
+<p>git clean -df #返回到某个节点<br>git clean 参数<br>    -n 显示 将要 删除的 文件 和  目录<br>    -f 删除 文件<br>    -df 删除 文件 和 目录<br>也可以使用：</p>
+<p>git checkout . &amp;&amp; git clean -xdf</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/24/MYSQL静态表-动态表-压缩表/" itemprop="url">
+                  MYSQL静态表-动态表-压缩表
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-24T15:26:52+08:00" content="2017-01-24">
+              2017-01-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我是主角，我不能死。<br></blockquote><br>mysql在创建表的时候定义表的性质（也叫表的类型），共有三种：静态表，动态表，压缩表。默认是静态表，如果存在varchar、blob、text字段，表类型就是动态了。</p>
+<h3 id="静态表"><a href="#静态表" class="headerlink" title="静态表"></a>静态表</h3><p>字段有固定长度，例如：char(20)。如果使用gbk字符集存储中文username，将占用40byte，如果username的实际内容没有达到 40byte，将会填充空格，以达到40byte。速度很快，因为mysql知道username总是从第41个字节开始，容易缓存，出现问题后也容易恢 复（mysql知道记录的确切位置），需要更多的硬盘空间（如果有三个上面的字段，一条记录就会占120字节，即使实际只用了其中一部分）</p>
+<h3 id="动态表"><a href="#动态表" class="headerlink" title="动态表"></a>动态表</h3><p>字 段不定长（变长），这种表格式比较节省空间，但是复杂度更高，每条记录都有一个header，作用就是表明该记录有多长，所有的字符串列都是动态的（除非 小于4个字节，这种情况下，节省的空间可以忽略不计，增加的复杂度会反而会导致性能丢失），通常占用比静态表少的多地空间，但是必须经常维护（避免碎 片），例如：更新了用户名somebody为somebodyt，t不能立刻就出现在y的后面，因为空间被其他记录占用，对于出现碎片的列，每个新连接会 损失6个字节。而且出现问题后不容易重建（前面我说的静态表正好相反），如果碎片严重，有可能出现库爆炸（^_^）.</p>
+<p>不包括连接的动态记录的空间消耗可以用下面的公式计算：<br>3+(列数+7)/8+（字符列数）+数字列的打包尺寸+字符串长度+（空列的数量+7）/8</p>
+<p>每条记录的header可以表明那个字符串列是空的，那个数字列包含0（非空），在那种情况下不向磁盘存储，非空字符串包含一个长度字节加上字符串内容。</p>
+<h3 id="压缩表"><a href="#压缩表" class="headerlink" title="压缩表"></a>压缩表</h3><p>只读，使用很少的空间，用myisampack工具创建，表要少得多，每条记录分开压缩，所以不能同时访问，可以压缩静态表和动态表。<br>创建方法：myisampack [options] filename</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/23/安装phpRedisAdmin/" itemprop="url">
                   安装phpRedisAdmin
                 </a>
@@ -446,327 +757,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/10/使用redis记录产品的每日浏览量/" itemprop="url">
-                  使用redis记录产品的每日浏览量
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-10T12:05:44+08:00" content="2017-01-10">
-              2017-01-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>全体听令，除我之外~冲锋！<br></blockquote></p>
-<h3 id="配置文件database-php"><a href="#配置文件database-php" class="headerlink" title="配置文件database.php"></a>配置文件database.php</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'redis'</span> =&gt; [</span><br><span class="line"></span><br><span class="line">       <span class="string">'cluster'</span> =&gt; <span class="keyword">false</span>,</span><br><span class="line"></span><br><span class="line">       <span class="string">'default'</span> =&gt; [</span><br><span class="line">           <span class="string">'host'</span>     =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'localhost'</span>),</span><br><span class="line">           <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),</span><br><span class="line">           <span class="string">'port'</span>     =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),</span><br><span class="line">           <span class="string">'database'</span> =&gt; <span class="number">0</span>,</span><br><span class="line">       ],</span><br><span class="line"></span><br><span class="line">       <span class="string">'product'</span> =&gt; [</span><br><span class="line">           <span class="string">'host'</span>     =&gt; <span class="string">'localhost'</span>,</span><br><span class="line">           <span class="string">'password'</span> =&gt;  <span class="keyword">null</span>,</span><br><span class="line">           <span class="string">'port'</span>     =&gt;  <span class="number">6379</span>,</span><br><span class="line">           <span class="string">'database'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">       ]</span><br><span class="line">   ],</span><br></pre></td></tr></table></figure>
-<h3 id="连接存储"><a href="#连接存储" class="headerlink" title="连接存储"></a>连接存储</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 连接</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">connectDatabase</span><span class="params">($name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">return</span> Redis::connection($name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 存储</span></span><br><span class="line">$redisConnection = <span class="keyword">parent</span>::getRedisConnectName();</span><br><span class="line">$redis = RedisHelper::connectDatabase($redisConnection[<span class="string">'store'</span>]);</span><br><span class="line">$redis-&gt;rpush(<span class="string">'productView'</span>, $product_id);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取出</span></span><br><span class="line">$products = array_count_values($redis-&gt;lrange(<span class="string">'productView'</span>,<span class="number">0</span>,<span class="number">-1</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除</span></span><br><span class="line">$redis-&gt;del(<span class="string">'productView'</span>);</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/30/linux的输出定向/" itemprop="url">
-                  linux的输出定向
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T13:37:17+08:00" content="2016-12-30">
-              2016-12-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你懂的越多，懂你的越少。<br></blockquote><br>最近Laravel文档里的一句配置引起了我的兴趣<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * php /path/to/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
-<p>她是什么意思呢？</p>
-<p>shell中可能经常能看到：</p>
-<p>1：&gt; 代表重定向到哪里，例如：echo “123″ &gt; /home/123.txt</p>
-<p>2：/dev/null 代表空设备文件</p>
-<p>3：2&gt; 表示stderr标准错误</p>
-<p>4：&amp; 表示等同于的意思，2&gt;&amp;1，表示2的输出重定向等同于1</p>
-<p>5：1 表示stdout标准输出，系统默认值是1，所以”&gt;/dev/null”等同于 “1&gt;/dev/null”</p>
-<p>分解这个组合：“&gt;/dev/null 2&gt;&amp;1” 为五部分。</p>
-<p>因此，&gt;/dev/null 2&gt;&amp;1也可以写成“1&gt; /dev/null 2&gt; &amp;1”</p>
-<p>那么本文标题的语句执行过程为：</p>
-<p>1&gt;/dev/null ：首先表示标准输出重定向到空设备文件，也就是不输出任何信息到终端，说白了就是不显示任何信息。</p>
-<p>2&gt;&amp;1 ：接着，标准错误输出重定向 到 标准输出，因为之前标准输出已经重定向到了空设备文件，所以标准错误输出也重定向到空设备文件。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/28/php-cli的使用/" itemprop="url">
-                  php-cli的使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-28T09:22:49+08:00" content="2016-12-28">
-              2016-12-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>关山难越，谁悲失路之人？<br>萍水相逢，尽是他乡之客。<br></blockquote><br>HP作为一门web开发语言，通常情况下我们都是在Web Server中运行PHP，使用浏览器访问，因此很少关注其命令行操作以及相关参数的使用，但是，特别是在类Unix操作系统上，PHP可以作为一门脚本语言执行与shell类似的处理任务。</p>
-<blockquote>
-<p>运行时间：php-cli默认运行时间是无穷，而网页php默认设置是30s。</p>
-</blockquote>
-<h3 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h3><ul>
-<li><p>运行指定php文件</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php my_script.php</span><br><span class="line"> </span><br><span class="line">php -f  <span class="string">"my_script.php"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行php代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php -r <span class="string">"print_r(get_defined_constants());"</span></span><br><span class="line"><span class="comment">// laravel安装时的一条命令</span></span><br><span class="line">php -r <span class="string">"file_exists('.env') || copy('.env.example', '.env');"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>语法检查</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -l index.php</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看版本信息</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -v</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示配置文件</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php --ini</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>接收参数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'命令行参数个数: '</span> . $argc . <span class="string">"\n"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"命令行参数:\n"</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($argv <span class="keyword">as</span> $index =&gt; $arg) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"    &#123;$index&#125; : &#123;$arg&#125;\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 执行命令</span></span><br><span class="line">php console.php hello world</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>开启服务器</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在指定目录下运行该命令，通过url访问http://localhost:8000/hello.php</span></span><br><span class="line">php -S localhost:<span class="number">8000</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -810,7 +800,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -820,7 +810,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

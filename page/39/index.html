@@ -265,6 +265,312 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/18/php编译参数详解/" itemprop="url">
+                  php编译参数详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-18T14:26:46+08:00" content="2017-09-18">
+              2017-09-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你从未珍惜眼前，你活该失去所有。<br></blockquote>
+
+<h3 id="php各参数配置详解"><a href="#php各参数配置详解" class="headerlink" title="php各参数配置详解"></a>php各参数配置详解</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">--prefix=/usr/local/php                      <span class="comment">//指定 php 安装目录 </span></span><br><span class="line">--with-apxs2=/usr/local/apache/bin/apxs      <span class="comment">//整合apache，</span></span><br><span class="line">                        <span class="comment">//apxs功能是使用mod_so中的LoadModule指令，</span></span><br><span class="line">                       <span class="comment">//加载指定模块到 apache，要求 apache 要打开SO模块</span></span><br><span class="line">--with-config-file-path=/usr/local/php/etc    <span class="comment">//指定php.ini位置</span></span><br><span class="line">--with-MySQL=/usr/local/mysql                 <span class="comment">//mysql安装目录，对mysql的支持</span></span><br><span class="line">--with-mysqli=/usr/local/mysql/bin/mysql_config</span><br><span class="line">                      <span class="comment">//mysqli扩展技术不仅可以调用MySQL的存储过程、处理MySQL事务，</span></span><br><span class="line">                      <span class="comment">//而且还可以使访问数据库工作变得更加稳定。</span></span><br><span class="line">--enable-safe-mode    <span class="comment">//打开安全模式 </span></span><br><span class="line">--enable-ftp          <span class="comment">//打开ftp的支持 </span></span><br><span class="line">--enable-zip          <span class="comment">//打开对zip的支持 </span></span><br><span class="line"></span><br><span class="line">--with-bz2            <span class="comment">//打开对bz2文件的支持 </span></span><br><span class="line">--with-jpeg-dir       <span class="comment">//打开对jpeg图片的支持 </span></span><br><span class="line">--with-png-dir        <span class="comment">//打开对png图片的支持 </span></span><br><span class="line">--with-freetype-dir   <span class="comment">//打开对freetype字体库的支持 </span></span><br><span class="line">--without-iconv       <span class="comment">//关闭iconv函数，各种字符集间的转换 </span></span><br><span class="line">--with-libXML-dir     <span class="comment">//打开libxml2库的支持 </span></span><br><span class="line">--with-XMLrpc         <span class="comment">//打开xml-rpc的c语言 </span></span><br><span class="line">--with-zlib-dir       <span class="comment">//打开zlib库的支持 </span></span><br><span class="line">--with-gd             <span class="comment">//打开gd库的支持 </span></span><br><span class="line">--enable-gd-native-ttf <span class="comment">//支持TrueType字符串函数库 </span></span><br><span class="line">--with-curl            <span class="comment">//打开curl浏览工具的支持 </span></span><br><span class="line">--with-curlwrappers    <span class="comment">//运用curl工具打开url流 </span></span><br><span class="line">--with-ttf             <span class="comment">//打开freetype1.*的支持，可以不加了 </span></span><br><span class="line">--with-xsl             <span class="comment">//打开XSLT 文件支持，扩展了libXML2库 ，需要libxslt软件 </span></span><br><span class="line">--with-gettext         <span class="comment">//打开gnu 的gettext 支持，编码库用到 </span></span><br><span class="line">--with-pear            <span class="comment">//打开pear命令的支持，PHP扩展用的 </span></span><br><span class="line">--enable-calendar      <span class="comment">//打开日历扩展功能 </span></span><br><span class="line">--enable-mbstring      <span class="comment">//多字节，字符串的支持 </span></span><br><span class="line">--enable-bcmath        <span class="comment">//打开图片大小调整,用到zabbix监控的时候用到了这个模块</span></span><br><span class="line">--enable-sockets       <span class="comment">//打开 sockets 支持</span></span><br><span class="line">--enable-exif          <span class="comment">//图片的元数据支持 </span></span><br><span class="line">--enable-magic-quotes  <span class="comment">//魔术引用的支持 </span></span><br><span class="line">--disable-rpath        <span class="comment">//关闭额外的运行库文件 </span></span><br><span class="line">--disable-debug        <span class="comment">//关闭调试模式 </span></span><br><span class="line">--with-mime-magic=/usr/share/file/magic.mime  <span class="comment">//魔术头文件位置</span></span><br></pre></td></tr></table></figure>
+<h3 id="CGI方式安装才用的参数"><a href="#CGI方式安装才用的参数" class="headerlink" title="CGI方式安装才用的参数"></a>CGI方式安装才用的参数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">--enable-fpm                 <span class="comment">//打上PHP-fpm 补丁后才有这个参数，CGI方式安装的启动程序</span></span><br><span class="line">--enable-fastCGI             <span class="comment">//支持fastcgi方式启动PHP</span></span><br><span class="line">--enable-force-CGI-redirect  <span class="comment">//重定向方式启动PHP</span></span><br><span class="line">--with-ncurses         <span class="comment">//支持ncurses 屏幕绘制以及基于文本终端的图形互动功能的动态库</span></span><br><span class="line">--enable-pcntl         <span class="comment">//freeTDS需要用到的，可能是链接mssql 才用到</span></span><br><span class="line">--with-mcrypt          <span class="comment">//mcrypt算法的扩展</span></span><br><span class="line">--with-mhash           <span class="comment">//mhash算法的扩展</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//以上函数库需要安装</span></span><br><span class="line"></span><br><span class="line">--with-gmp                     <span class="comment">//应该是支持一种规范</span></span><br><span class="line">--enable-inline-optimization   <span class="comment">//优化线程</span></span><br><span class="line">--with-openssl                 <span class="comment">//openssl的支持，加密传输时用到的</span></span><br><span class="line">--enable-dbase                 <span class="comment">//建立DBA 作为共享模块</span></span><br><span class="line">--with-pcre-dir=/usr/local/bin/pcre-config       <span class="comment">//perl的正则库案安装位置</span></span><br><span class="line">--disable-dmalloc</span><br><span class="line">--with-gdbm            <span class="comment">//dba的gdbm支持</span></span><br><span class="line">--enable-sigchild</span><br><span class="line">--enable-sysvsem</span><br><span class="line">--enable-sysvshm</span><br><span class="line">--enable-zend-multibyte  <span class="comment">//支持zend的多字节</span></span><br><span class="line">--enable-mbregex</span><br><span class="line">--enable-wddx</span><br><span class="line">--enable-shmop</span><br><span class="line">--enable-soap</span><br></pre></td></tr></table></figure>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>指定了–with-apxs2=/usr/local/apache/bin/apxs以后，就不要再激活–enable-fpm和–enable-fastCGI，apxs是以php module的模式加载PHP的。</p>
+<blockquote>
+<p><a href="http://www.jianshu.com/p/0a79847c8151" target="_blank" rel="noopener">http://www.jianshu.com/p/0a79847c8151</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/14/php的短路原则以及位运算/" itemprop="url">
+                  php的短路原则以及位运算
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-14T13:53:19+08:00" content="2017-09-14">
+              2017-09-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我想我还是不习惯，从默默无闻到有人喜欢！<br></blockquote></p>
+<h3 id="短路作用"><a href="#短路作用" class="headerlink" title="短路作用"></a>短路作用</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">false</span> || $b = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">echo</span> $b;</span><br></pre></td></tr></table></figure>
+<p>当 || 前面的值为 false 时， || 后的表达式才会被执行， 此时结果为5；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">true</span> || $b = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">echo</span> $b;</span><br></pre></td></tr></table></figure></p>
+<p>当 || 前面的值为 true 时， || 后的表达式不会被执行， 此时结果就找不到 $b<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="keyword">false</span> &amp;&amp; $a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span> $a;</span><br></pre></td></tr></table></figure></p>
+<p>当 &amp;&amp; 前面的值为false 时， 后面的表达式不会被执行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="keyword">true</span> &amp;&amp; $a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span> $a;</span><br></pre></td></tr></table></figure></p>
+<p>只有当 &amp;&amp; 前面的值为true 时， 后面的表达式才会被执行</p>
+<h3 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h3><h4 id="左移-lt-lt"><a href="#左移-lt-lt" class="headerlink" title="左移 &lt;&lt;"></a>左移 &lt;&lt;</h4><p>左移运算的实质是将对应的数据的二进制值逐位左移若干位，并在空出的位置上填0，最高位溢出并舍弃。<br>左移一位, 就实现了乘2运算<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line"><span class="comment">//结果是 80</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &lt;&lt; <span class="number">2</span>;</span><br><span class="line"><span class="comment">//结果是160</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="右移-gt-gt"><a href="#右移-gt-gt" class="headerlink" title="右移 &gt;&gt;"></a>右移 &gt;&gt;</h4><p>可以实现 除 2 运算<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &gt;&gt; <span class="number">1</span>;</span><br><span class="line"><span class="comment">//结果是 20</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line"><span class="comment">//结果是 10</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">9</span> &gt;&gt; <span class="number">1</span>;</span><br><span class="line"><span class="comment">//结果是4</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/12/mysql使用profile进行语句优化/" itemprop="url">
+                  mysql使用profile进行语句优化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-12T10:49:53+08:00" content="2017-09-12">
+              2017-09-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>只是我回首来时路的每一步都走的好孤独。<br></blockquote><br>Profiling只是针对单个session的，如果session结束，profiling信息将丢失,可以在 <code>INFORMATION_SCHEMA</code>中的<code>profiling</code>表中获取profiling信息.</p>
+<h3 id="查看profiling系统变量"><a href="#查看profiling系统变量" class="headerlink" title="查看profiling系统变量"></a>查看profiling系统变量</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like '%profil%';  </span><br><span class="line">+<span class="comment">------------------------+-------+</span></span><br><span class="line">| Variable_name          | Value |</span><br><span class="line">+<span class="comment">------------------------+-------+</span></span><br><span class="line">| have_profiling         | YES   |  <span class="comment">#只读变量,用于控制是否由系统变量开启或禁用profiling;</span></span><br><span class="line">| profiling              | OFF   |  <span class="comment">#开启或关闭SQL语句剖析功能;</span></span><br><span class="line">| profiling_history_size | 15    |  <span class="comment">#设置保留profiling的数目,缺省为15,范围为0至100,为0时将禁用profiling;</span></span><br><span class="line">+<span class="comment">------------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<h3 id="查看是否开启"><a href="#查看是否开启" class="headerlink" title="查看是否开启"></a>查看是否开启</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> @@profiling;</span><br></pre></td></tr></table></figure>
+<h3 id="设置开启"><a href="#设置开启" class="headerlink" title="设置开启"></a>设置开启</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> profiling = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">profiles</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="查看具体的某一条sql"><a href="#查看具体的某一条sql" class="headerlink" title="查看具体的某一条sql"></a>查看具体的某一条sql</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile <span class="keyword">all</span> <span class="keyword">for</span> <span class="keyword">query</span> <span class="number">18</span> ;</span><br></pre></td></tr></table></figure>
+<h3 id="查看cpu信息"><a href="#查看cpu信息" class="headerlink" title="查看cpu信息"></a>查看cpu信息</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile cpu <span class="keyword">for</span> <span class="keyword">query</span> <span class="number">18</span> ;</span><br></pre></td></tr></table></figure>
+<h3 id="查看内存"><a href="#查看内存" class="headerlink" title="查看内存"></a>查看内存</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile <span class="keyword">memory</span> <span class="keyword">for</span> <span class="keyword">query</span> <span class="number">18</span> ;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.ywnds.com/?p=8677" target="_blank" rel="noopener">http://www.ywnds.com/?p=8677</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/11/linux环境变量设置/" itemprop="url">
                   linux环境变量设置
                 </a>
@@ -477,321 +783,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/07/依赖注入设计模式/" itemprop="url">
-                  依赖注入设计模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-07T14:02:47+08:00" content="2017-09-07">
-              2017-09-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>这个妹妹我曾见过的。<br></blockquote><br>不是我自身的，却是我需要的，都是我所依赖的。一切需要外部提供的，都是需要进行依赖注入的。</p>
-<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 汽车 需要 run， 就必须需要 轮胎 roll</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Luntai</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roll</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"轮胎滚"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $luntai = <span class="keyword">new</span> Luntai();</span><br><span class="line">        $luntai-&gt;roll();</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"汽车跑起来了"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这种 在一个类里实例化另外一个类，耦合程度太高，改写:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 汽车 需要 run， 就必须需要 轮胎 roll</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Luntai</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roll</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"轮胎滚"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $luntai;</span><br><span class="line">    <span class="comment">// 在这里将 实例化后的 轮胎 类传递进来</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($luntai)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;luntai = $luntai;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;luntai-&gt;roll();</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"汽车跑起来了"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">(<span class="keyword">new</span> Car(<span class="keyword">new</span> Luntai()))-&gt;run();</span><br></pre></td></tr></table></figure></p>
-<h3 id="控制反转和依赖注入的关系"><a href="#控制反转和依赖注入的关系" class="headerlink" title="控制反转和依赖注入的关系"></a>控制反转和依赖注入的关系</h3><p>有时候我们会把控制反转和依赖注入等同，但实际上它们有着本质上的不同。<br>控制反转是一种思想<br>依赖注入是一种设计模式<br>IoC框架使用依赖注入作为实现控制反转的方式，但是控制反转还有其他的实现方式，所以不能将控制反转和依赖注入等同。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/30/简单说说PHP类方法的链式调用/" itemprop="url">
-                  简单说说PHP类方法的链式调用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-30T11:41:11+08:00" content="2017-08-30">
-              2017-08-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>是谁来自山川湖海，却囿于昼夜、厨房与爱。<br></blockquote></p>
-<h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><p>如果你使用过PHP的框架，你应该使用过此类代码：<br>如在laravel框架中：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'xx'</span>)-&gt;select(<span class="string">'xxxx'</span>)-&gt;where(<span class="string">'xxxx'</span>,<span class="string">'='</span>,<span class="string">'xx'</span>)-&gt;orderBy(<span class="string">'xx'</span>,<span class="string">'desc'</span>)-&gt;get();</span><br></pre></td></tr></table></figure></p>
-<p>在CI(codeigniter)框架中：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$res =<span class="keyword">$this</span>-&gt;db-&gt;from(<span class="string">'blogs'</span>)-&gt;select(<span class="string">'*'</span>)-&gt;join(<span class="string">'comments'</span>, <span class="string">'comments.id = blogs.id'</span>)-&gt;get();</span><br></pre></td></tr></table></figure></p>
-<h3 id="创建链式方法"><a href="#创建链式方法" class="headerlink" title="创建链式方法"></a>创建链式方法</h3><p>如果我们有这么一个类：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> $var = <span class="keyword">array</span>();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">$this</span>-&gt;var[<span class="string">'name'</span>] = $name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setYear</span><span class="params">($year)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;var[<span class="string">'year'</span>] = $year;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getVar</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span>  <span class="keyword">$this</span>-&gt;var;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$test = <span class="keyword">new</span> test();</span><br></pre></td></tr></table></figure></p>
-<p>那么只需要在相应的方法后添加 return $this，就可以了。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> $var = <span class="keyword">array</span>();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;var[<span class="string">'name'</span>] = $name;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">$this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setYear</span><span class="params">($year)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;var[<span class="string">'year'</span>] = $year;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">$this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getVar</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span>  <span class="keyword">$this</span>-&gt;var;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>调用时：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$test = <span class="keyword">new</span> test();</span><br><span class="line">var_dump($test-&gt;setName(<span class="string">'fc'</span>)-&gt;setYear(<span class="string">'23'</span>)-&gt;getVar());</span><br></pre></td></tr></table></figure></p>
-<p>这种技术虽然不会让你的PHP代码在本质上发生变化（如性能），但可使你的代码看起来更整洁，并且更容易维护。</p>
-<h3 id="静态方法-static-如何处理"><a href="#静态方法-static-如何处理" class="headerlink" title="静态方法(static)如何处理"></a>静态方法(static)如何处理</h3><p>要让静态方法也能使用链式调用，只需要加入 return new self<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test2</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span>  $var = <span class="keyword">array</span>();</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">self</span>::$var[<span class="string">'name'</span>] = $name;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">self</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getVar</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">self</span>::$var;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://fc-lamp.blog.163.com/blog/static/1745666872013106111248929/" target="_blank" rel="noopener">http://fc-lamp.blog.163.com/blog/static/1745666872013106111248929/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/30/PHP中的Traits详解/" itemprop="url">
-                  PHP中的Traits详解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-30T11:27:17+08:00" content="2017-08-30">
-              2017-08-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>醉后不知天在水，满船清梦压星河<br></blockquote><br>PHP是单继承的语言，在PHP 5.4 Traits出现之前，PHP的类无法同时从两个基类继承属性或方法。php的Traits和Go语言的组合功能类似，通过在类中使用use关键字声明要组合的Trait名称，而具体某个Trait的声明使用trait关键词，Trait不能直接实例化<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Drive &#123;</span><br><span class="line">    <span class="keyword">public</span> $carName = <span class="string">'trait'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">driving</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"driving &#123;$this-&gt;carName&#125;\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"eat\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Drive</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">study</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"study\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$student = <span class="keyword">new</span> Student();</span><br><span class="line">$student-&gt;study();</span><br><span class="line">$student-&gt;eat();</span><br><span class="line">$student-&gt;driving();</span><br></pre></td></tr></table></figure></p>
-<p>输出结果:<br>study<br>eat<br>driving trait<br>上面的例子中，Student类通过继承Person，有了eat方法，通过组合Drive，有了driving方法和属性carName。</p>
-<p>如果Trait、基类和本类中都存在某个同名的属性或者方法，最终会保留哪一个呢？通过下面的代码测试一下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">trait</span> Drive &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"hello drive\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">driving</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"driving from drive\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"hello person\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">driving</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"driving from person\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Drive</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"hello student\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$student = <span class="keyword">new</span> Student();</span><br><span class="line">$student-&gt;hello();</span><br><span class="line">$student-&gt;driving()</span><br></pre></td></tr></table></figure></p>
-<p>输出结果如下：</p>
-<p>hello student<br>driving from drive</p>
-<p>因此得出结论：当方法或属性同名时，当前类中的方法会覆盖 trait的 方法，而 trait 的方法又覆盖了基类中的方法。</p>
-<p>如果要组合多个Trait，通过逗号分隔 Trait名称：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span>;</span><br></pre></td></tr></table></figure></p>
-<p>如果多个Trait中包含同名方法或者属性时，会怎样呢？答案是当组合的多个Trait包含同名属性或者方法时，需要明确声明解决冲突，否则会产生一个致命错误。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Trait1 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">trait</span> Trait2 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Class1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>结果:</p>
-<p>PHP Fatal error:  Trait method hello has not been applied, because there are collisions with other trait methods on Class1 in ~/php54/trait_3.php on line 20</p>
-<p>使用insteadof和as操作符来解决冲突，insteadof是使用某个方法替代另一个，而as是给方法取一个别名，具体用法请看代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Trait1 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">trait</span> Trait2 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Class1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span> &#123;</span><br><span class="line">        <span class="title">Trait2</span>::<span class="title">hello</span> <span class="title">insteadof</span> <span class="title">Trait1</span>;</span><br><span class="line">        Trait1::hi <span class="keyword">insteadof</span> Trait2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Class2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span> &#123;</span><br><span class="line">        <span class="title">Trait2</span>::<span class="title">hello</span> <span class="title">insteadof</span> <span class="title">Trait1</span>;</span><br><span class="line">        Trait1::hi <span class="keyword">insteadof</span> Trait2;</span><br><span class="line">        Trait2::hi <span class="keyword">as</span> hei;</span><br><span class="line">        Trait1::hello <span class="keyword">as</span> hehe;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$Obj1 = <span class="keyword">new</span> Class1();</span><br><span class="line">$Obj1-&gt;hello();</span><br><span class="line">$Obj1-&gt;hi();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\n"</span>;</span><br><span class="line">$Obj2 = <span class="keyword">new</span> Class2();</span><br><span class="line">$Obj2-&gt;hello();</span><br><span class="line">$Obj2-&gt;hi();</span><br><span class="line">$Obj2-&gt;hei();</span><br><span class="line">$Obj2-&gt;hehe();</span><br></pre></td></tr></table></figure></p>
-<p>输出结果如下：</p>
-<p>Trait2::hello<br>Trait1::hi</p>
-<p>Trait2::hello<br>Trait1::hi<br>Trait2::hi<br>Trait1::hello</p>
-<p>as关键词还有另外一个用途，那就是修改方法的访问控制：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">trait</span> Hello &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"hello,trait\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Class1</span> </span>&#123;</span><br><span class="line">        <span class="keyword">use</span> <span class="title">Hello</span> &#123;</span><br><span class="line">            <span class="title">hello</span> <span class="title">as</span> <span class="title">protected</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Class2</span> </span>&#123;</span><br><span class="line">        <span class="keyword">use</span> <span class="title">Hello</span> &#123;</span><br><span class="line">            <span class="title">Hello</span>::<span class="title">hello</span> <span class="title">as</span> <span class="title">private</span> <span class="title">hi</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $Obj1 = <span class="keyword">new</span> Class1();</span><br><span class="line">    $Obj1-&gt;hello(); <span class="comment"># 报致命错误，因为hello方法被修改成受保护的</span></span><br><span class="line">    $Obj2 = <span class="keyword">new</span> Class2();</span><br><span class="line">    $Obj2-&gt;hello(); <span class="comment"># 原来的hello方法仍然是公共的</span></span><br><span class="line">    $Obj2-&gt;hi();  <span class="comment"># 报致命错误，因为别名hi方法被修改成私有的</span></span><br></pre></td></tr></table></figure></p>
-<p>Trait 也能组合Trait，Trait中支持抽象方法、静态属性及静态方法，测试代码如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Hello &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">trait</span> World &#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Hello</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sayWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"World\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWorld</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> $c = <span class="number">0</span>;</span><br><span class="line">        $c = $c + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"$c\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Doing something\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">World</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'get World'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$Obj = <span class="keyword">new</span> HelloWorld();</span><br><span class="line">$Obj-&gt;sayHello();</span><br><span class="line">$Obj-&gt;sayWorld();</span><br><span class="line"><span class="keyword">echo</span> $Obj-&gt;getWorld() . <span class="string">"\n"</span>;</span><br><span class="line">HelloWorld::doSomething();\</span><br><span class="line">$Obj-&gt;inc();</span><br><span class="line">$Obj-&gt;inc();</span><br></pre></td></tr></table></figure></p>
-<p>输出结果如下：</p>
-<p>Hello<br>World<br>get World<br>Doing something<br>1<br>2</p>
-<blockquote>
-<p><a href="http://tabalt.net/blog/php-traits/" target="_blank" rel="noopener">http://tabalt.net/blog/php-traits/</a><br><a href="https://stackoverflow.com/questions/47269922/php-traits-how-to-circumvenient-constructors-or-force-them-to-be-called" target="_blank" rel="noopener">https://stackoverflow.com/questions/47269922/php-traits-how-to-circumvenient-constructors-or-force-them-to-be-called</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -835,7 +826,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -845,7 +836,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

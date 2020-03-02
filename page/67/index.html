@@ -265,6 +265,334 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/18/请手动释放你的资源/" itemprop="url">
+                  请手动释放你的资源
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-18T19:16:12+08:00" content="2016-08-18">
+              2016-08-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>谢谢那些喜欢我的人<br></blockquote><br>我从来不认为这个问题是个问题, 直到昨天.</p>
+<p>昨天晚上的时候, 我提交了一个RFC, 关于引入finally到PHP, 实现这个功能的出发点很简单, 因为我看见不少人的需求, 另外还有就是Stas说, 一直只看到讨论, 没看到有人实现. 于是我就给实现了.</p>
+<p>发到邮件组以后, 一个开发组的同学Nikita Popov(nikic), 表示强烈反对这个RFC, 当然最初的论点他说了很多, 最后我们在线讨论的时候, 他表达了一个他的观点:</p>
+<p>“PHP在请求结束后会释放所有的资源, 所以我们没有必要调用fclose,或者mysql_close来释放资源, PHP会替我们做”</p>
+<p>并且他表示, 他从来都不会调用fclose, 认为fclose的存在只是为了继承C函数族.</p>
+<p>我很惊讶, 我也不知道还有多少人是和他一样的想法, 所以我决定写这篇文章.</p>
+<p>在PHP5.2以前, PHP使用引用计数(Reference count)来做资源管理, 当一个zval的引用计数为0的时候, 它就会被释放. 虽然存在循环引用(Cycle reference), 但这样的设计对于开发Web脚本来说, 没什么问题, 因为Web脚本的特点和它追求的目标就是执行时间短, 不会长期运行. 对于循环引用造成的资源泄露, 会在请求结束时释放掉. 也就是说, 请求结束时释放资源, 是一种部补救措施(backup).</p>
+<p>然而, 随着PHP被越来越多的人使用, 就有很多人在一些后台脚本使用PHP, 这些脚本的特点是长期运行, 如果存在循环引用, 导致引用计数无法及时释放不用的资源, 则这个脚本最终会内存耗尽退出.</p>
+<p>所以在PHP5.3以后, 我们引入了GC, 也就是说, 我们引入GC是为了解决用户无法解决的问题.</p>
+<p>这个是历史, 我简单介绍下, 现在让我们回头来看开头的问题, 是不是因为PHP会在请求结束后释放所有的资源, 于是我们就可以不用手动释放呢?</p>
+<p>看一个例子:<br>Mysql最大连接数(mysql.max_connections)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">   $db = mysql_connect() ;</span><br><span class="line">   $resut = mysql_query();</span><br><span class="line">   <span class="comment">// process result...</span></span><br><span class="line">   usleep(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">   <span class="comment">//mysql_close($db);  let's say, you didn't call to this</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// other logic, assuming it costs 5s</span></span><br><span class="line">   sleep(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">exit</span>(<span class="number">0</span>); <span class="comment">//finish</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的例子, 我们会保持一个和Mysql的连接5秒钟, 这样的脚本对于一般的应用来说没有关系, 但是对于一个请求量很大的脚本来说, 会导致一个致命问题:</p>
+<p>比如一个繁忙的应用, 每秒要处理来自用户的1000个请求, 那么5秒钟请求多少个? 5 * 1000 = 5000, 而Mysql有最大连接数限制(mysql.max_connections), 这个数字一般不超过2000, 默认的会更低:(mysql.max_connections),</p>
+<p>那么, 这样代码会导致你的应用, 根本无法正常提供服务. 而如果我们在对Mysql的处理完成后就关闭这个连接, 那么就不会触发这个问题.</p>
+<p>而我们在实践中, 遇到过一个更加实际的问题, 看下面的例子:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line">$mmc = <span class="keyword">new</span> Memcached();</span><br><span class="line">$mysql = mysql_connect();</span><br><span class="line"><span class="comment">//process</span></span><br><span class="line">mysql_close($mysql);</span><br><span class="line">$mmc-&gt;close();</span><br></pre></td></tr></table></figure>
+<p>这是一个真实的教训, 代码如上面所示, 突然有一天我们的Mysql出现了问题, 导致连接Mysql的耗时增大, 然后就导致, 一个脚本对Memcached连接占用过长, 最后Memcache因为连接数太多, 就拒绝服务了..</p>
+<p>所以, 我们一定要让连接代价最高的资源, 最先初始化.</p>
+<p>系统最大句柄 (/proc/sys/fs/file-max)</p>
+<p>这个很简单, 如果你持续打开句柄, 而不释放, 那么你有可能触发系统最大句柄限制, 对于进程来说, 自己还有进程可打开句柄数限制(ulimit -n).</p>
+<p>系统调用是昂贵的(System call is expensive)</p>
+<p>PHP之所以会在请求结束后正确的释放掉所有的资源, 内存, 这是因为当我们在脚本中使用新的内存的时候, PHP会向OS申请一大块内存(ZEND_MM_SEG_SIZE大小), 然后分给你你需要的合适的一块小内存.</p>
+<p>当你不使用这块小内存的时候, PHP也不会返还给OS, 而是保留下来给后续的处理使用.</p>
+<p>我们知道, malloc(3)会导致系统调用(brk(2))(当然也可能是mmap, 我们此处不考虑这个细节, thanks to 华裔), 而系统调用是昂贵的.</p>
+<p>所以, 如果你使用完了资源不及时释放, 那么后续的逻辑如果请求内存, PHP发现之前申请的一大块内存已经分光了, 它就只好再次向OS发起malloc调用, 得到一块新的大内存. 并且它还需要对这个大内存做一些标记处理..</p>
+<p>而如果你使用完资源, 及时释放的话, 那么下次脚本申请内存的时候, 你之前归还的内存块就可以被重复利用, 那么也许你的整个脚本只需要和OS申请一次内存.</p>
+<p>内存峰值(Memory peak usage)</p>
+<p>这个和上面的有一定的关系, 当你使用完资源就释放, 然后后续又使用这样的资源. 那么PHP的内存占用会是:</p>
+<p>资源+1 -&gt; 资源-1 -&gt; 资源+1 -&gt; 资源-1 (峰值是1)</p>
+<p>而如果你是等到PHP请求结束再释放:</p>
+<p>资源+1 -&gt; 资源 + 1 …. -&gt; 资源 -1 -&gt; 资源 – 1 (峰值是2)</p>
+<p>也就说, 一个良好的编写的脚本可能要比一个瞎写的脚本, 要省很多峰值内存..</p>
+<p>考虑一个极端情况, 对一个很繁忙的服务器来说, 比如有10个PHP进程, 每个PHP进程最大1G内存, 而服务器只有8G内存.</p>
+<p>结论 (conclusion)</p>
+<p>结论很明显, 我开头也说过了, 我从来不认为这个是个问题.</p>
+<p>这里说一句, 如果你买了一本PHP的书, 它告诉你: “不用在PHP主动释放资源, 因为PHP会帮你释放”的话, 我建议你, 烧了它.</p>
+<blockquote>
+<p><a href="http://www.laruence.com/2012/08/06/2681.html" target="_blank" rel="noopener">http://www.laruence.com/2012/08/06/2681.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/15/预防CSRF攻击/" itemprop="url">
+                  预防CSRF攻击
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-15T19:18:44+08:00" content="2016-08-15">
+              2016-08-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你这么擅长安慰他人，一定度过了很多自己安慰自己的日子吧<br></blockquote>
+
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>CSRF（Cross-site request forgery），中文名称：跨站请求伪造，也被称为：one click attack/session riding，缩写为：CSRF/XSRF。<br>那么CSRF到底能够干嘛呢？你可以这样简单的理解：攻击者可以盗用你的登陆信息，以你的身份模拟发送各种请求。攻击者只要借助少许的社会工程学的诡计，例如通过QQ等聊天软件发送的链接(有些还伪装成短域名，用户无法分辨)，攻击者就能迫使Web应用的用户去执行攻击者预设的操作。例如，当用户登录网络银行去查看其存款余额，在他没有退出时，就点击了一个QQ好友发来的链接，那么该用户银行帐户中的资金就有可能被转移到攻击者指定的帐户中。<br>所以遇到CSRF攻击时，将对终端用户的数据和操作指令构成严重的威胁；当受攻击的终端用户具有管理员帐户的时候，CSRF攻击将危及整个Web应用程序。</p>
+<h3 id="CSRF的攻击过程"><a href="#CSRF的攻击过程" class="headerlink" title="CSRF的攻击过程"></a>CSRF的攻击过程</h3><p>要完成一次CSRF攻击，受害者必须依次完成两个步骤 ：<br>1.登录受信任网站A，并在本地生成Cookie 。<br>2.在不退出A的情况下，访问危险网站B。<br>看到这里，读者也许会问：“如果我不满足以上两个条件中的任意一个，就不会受到CSRF的攻击”。是的，确实如此，但你不能保证以下情况不会发生：<br>你不能保证你登录了一个网站后，不再打开一个tab页面并访问另外的网站，特别现在浏览器都是支持多tab的。<br>你不能保证你关闭浏览器了后，你本地的Cookie立刻过期，你上次的会话已经结束。<br>上图中所谓的攻击网站，可能是一个存在其他漏洞的可信任的经常被人访问的网站。<br>因此对于用户来说很难避免在登陆一个网站之后不点击一些链接进行其他操作，所以随时可能成为CSRF的受害者。<br>CSRF攻击主要是因为Web的隐式身份验证机制，Web的身份验证机制虽然可以保证一个请求是来自于某个用户的浏览器，但却无法保证该请求是用户批准发送的</p>
+<h3 id="如何预防CSRF"><a href="#如何预防CSRF" class="headerlink" title="如何预防CSRF"></a>如何预防CSRF</h3><p>CSRF的防御可以从服务端和客户端两方面着手，防御效果是从服务端着手效果比较好，现在一般的CSRF防御也都在服务端进行。<br>服务端的预防CSRF攻击的方式方法有多种，但思想上都是差不多的，主要从以下2个方面入手：<br>1、正确使用GET,POST和Cookie；<br>2、在非GET请求中增加伪随机数；</p>
+<p>为每个用户生成一个唯一的cookie token，所有表单都包含同一个伪随机值，这种方案最简单，因为攻击者不能获得第三方的Cookie(理论上)，所以表单中的数据也就构造失败，但是由于用户的Cookie很容易由于网站的XSS漏洞而被盗取，所以这个方案必须要在没有XSS的情况下才安全。<br>每个请求使用验证码，这个方案是完美的，因为要多次输入验证码，所以用户友好性很差，所以不适合实际运用。<br>不同的表单包含一个不同的伪随机值，我们在4.4小节介绍“如何防止表单多次递交”时介绍过此方案，复用相关代码，实现如下：</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/git-stash的用法/" itemprop="url">
+                  git-stash的用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-11T23:50:19+08:00" content="2016-08-11">
+              2016-08-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>生活总是有很多出人意料的事情，比如，你以为我要举个例子。<br></blockquote>
+
+<h3 id="应用前提"><a href="#应用前提" class="headerlink" title="应用前提"></a>应用前提</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">分支里面的代码如果没有提交commit ，那么切换到其他分支下还是可以看</span><br><span class="line">到(git status)这个分支下的代码.</span><br><span class="line"></span><br><span class="line">但是如果我们现在想要切换到别的分支但是同时又不想提交commit我们的代码</span><br><span class="line">该如何处理？</span><br></pre></td></tr></table></figure>
+<h3 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在你切换分支前，运行：git stash 就可以了</span><br><span class="line">当你在其他分支改好了代码并切换回当前分支的时候，请git stash pop</span><br></pre></td></tr></table></figure>
+<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br><span class="line">保存当前的工作进度。会分别对暂存区和工作区的状态进行保存</span><br><span class="line"></span><br><span class="line">git stash save <span class="string">"message..."</span></span><br><span class="line">这条命令实际上是第一条 git stash 命令的完整版</span><br><span class="line"></span><br><span class="line">git stash <span class="keyword">list</span></span><br><span class="line">显示进度列表。此命令显然暗示了git stash 可以多次保存工作进度，并用在恢复时候进行选择</span><br><span class="line"></span><br><span class="line">git stash pop [--index] [&lt;stash&gt;]</span><br><span class="line">如果不使用任何参数，会恢复最新保存的工作进度，</span><br><span class="line">并将恢复的工作进度从存储的工作进度列表中清除。</span><br><span class="line">如果提供参数（来自 git stash <span class="keyword">list</span> 显示的列表），则从该 &lt;stash&gt; 中恢复。恢复完毕也将从进度列表中删除 &lt;stash&gt;。</span><br><span class="line">选项--index 除了恢复工作区的文件外，还尝试恢复暂存区。</span><br><span class="line"></span><br><span class="line">git stash apply [--index] [&lt;stash&gt;]</span><br><span class="line">除了不删除恢复的进度之外，其余和 git stash pop 命令一样</span><br><span class="line"></span><br><span class="line">git stash clear</span><br><span class="line">删除所有存储的进度</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/11/ssdb一个高性能的nosql数据库/" itemprop="url">
                   ssdb一个高性能的nosql数据库
                 </a>
@@ -450,328 +778,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/07/PHP生成器的简单理解/" itemprop="url">
-                  PHP生成器的简单理解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-07T20:15:30+08:00" content="2016-08-07">
-              2016-08-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>最初不相识，最终不相认<br></blockquote><br>生成器允许你在 foreach 代码块中写代码来迭代一组数据而不需要在内存中创建一个数组, 那会使你的内存达到上限，或者会占据可观的处理时间。相反，你可以写一个生成器函数，就像一个普通的自定义函数一样, 和普通函数只返回一次不同的是, 生成器可以根据需要 yield 多次，以便生成需要迭代的值。<br>一个简单的例子就是使用生成器来重新实现 range() 函数。 标准的 range() 函数需要在内存中生成一个数组包含每一个在它范围内的值，然后返回该数组, 结果就是会产生多个很大的数组。 比如，调用 range(0, 1000000) 将导致内存占用超过 100 MB。<br>做为一种替代方法, 我们可以实现一个 xrange() 生成器, 只需要足够的内存来创建 Iterator 对象并在内部跟踪生成器的当前状态，这样只需要不到1K字节的内存。</p>
-<h3 id="简单理解"><a href="#简单理解" class="headerlink" title="简单理解"></a>简单理解</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">官方的定义中：生成器就是简单的迭代器。</span><br><span class="line">不同于标准的PHP迭代器，PHP的生成器并不要求你一定要在一个重量级的类中实现Iterator接口。</span><br><span class="line">相反，生成器会按需求计算并交出迭代值。这对应用程序的性能有着深远的意义。想想吧，</span><br><span class="line">一个标准的PHP迭代器通常都是基于内存中全部计算过的数据集进行迭代。这样做效率不高。</span><br><span class="line">尤其是大量可计算的公式化数据集。使用生成器我们可以动态的计算并交出下一个值而不占用</span><br><span class="line">宝贵的系统内存，这就是我们使用生成器的原因。</span><br></pre></td></tr></table></figure>
-<h3 id="创建一个生成器"><a href="#创建一个生成器" class="headerlink" title="创建一个生成器"></a>创建一个生成器</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myGenerator</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value1'</span>;  </span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value2'</span>;  </span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value3'</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="使用这个生成器"><a href="#使用这个生成器" class="headerlink" title="使用这个生成器"></a>使用这个生成器</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="keyword">foreach</span> (myGenerator() <span class="keyword">as</span> $yieldedValue) &#123;  </span><br><span class="line">    <span class="keyword">echo</span> $yieldedValue, PHP_EOL;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果：<br>value1<br>value2<br>value3</p>
-<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><ul>
-<li>Range生成器（糟糕的实现）</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRange</span><span class="params">($length)</span> </span>&#123;  </span><br><span class="line">    $dataset = [];  </span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; $length; $i++) &#123;  </span><br><span class="line">        $dataset[] = $i;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> $dataset;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">$customRange = makeRange(<span class="number">1000000</span>);  </span><br><span class="line"><span class="keyword">foreach</span> ($customRange <span class="keyword">as</span> $i) &#123;  </span><br><span class="line">    <span class="keyword">echo</span> $i, PHP_EOL;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Range生成器（好的实现）</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRange</span><span class="params">($length)</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; $length; $i++) &#123;  </span><br><span class="line">        <span class="keyword">yield</span> $i;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">foreach</span> (makeRange(<span class="number">1000000</span>) <span class="keyword">as</span> $i) &#123;  </span><br><span class="line">    <span class="keyword">echo</span> $i, PHP_EOL;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的例子并不实用。但是，联想一下所有你可能用来计算的数据集。序列数（例如斐波纳挈数）就是很典型的例子。同样你还可以遍历文件流资源。想象一下，如果你需要遍历一个4G的逗号分隔值（CSV）文件，而你的虚拟个人服务器（VPS）上PHP只分配了1G的内存。你根本没法把整个文件读取到内存中。</p>
-<ul>
-<li>CSV生成器</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRows</span><span class="params">($file)</span> </span>&#123;  </span><br><span class="line">    $handle = fopen($file, <span class="string">'rb'</span>);  </span><br><span class="line">    <span class="keyword">if</span> ($handle === <span class="keyword">false</span>) &#123;  </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">Exception</span>();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">while</span> (feof($handle) === <span class="keyword">false</span>) &#123;  </span><br><span class="line">        <span class="keyword">yield</span> fgetcsv($handle);  </span><br><span class="line">    &#125;  </span><br><span class="line">    fclose($handle);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">foreach</span> (getRows(<span class="string">'data.csv'</span>) <span class="keyword">as</span> $row) &#123;  </span><br><span class="line">    print_r($row);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="接收参数"><a href="#接收参数" class="headerlink" title="接收参数"></a>接收参数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">printer</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        printf(<span class="string">"receive: %s\n"</span>, <span class="keyword">yield</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$printer = printer();</span><br><span class="line"></span><br><span class="line">$printer-&gt;send(<span class="string">'hello'</span>);</span><br><span class="line">$printer-&gt;send(<span class="string">'world'</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>生成器的确使用了很少的内存却大大简化了某些任务。如果你需要更强大的功能诸如重置、快进、或者数据集的检索，你最好还是自定义一个实现Iterator interface接口的类，或者使用PHP现成的Standard PHP Library（SPL）迭代器。</p>
-<p><code>yield</code> 和 <code>return</code> 都会返回值，但区别在于一个 return 是返回既定结果，一次返回完毕就不再返回新的结果，而 yield 是不断产出直到无法产出为止。</p>
-<blockquote>
-<p><a href="http://blog.csdn.net/bandita/article/details/47723815" target="_blank" rel="noopener">http://blog.csdn.net/bandita/article/details/47723815</a><br><a href="https://laravel-china.org/articles/1430/single-php-generator-complete-knowledge-generator-implementation-process" target="_blank" rel="noopener">https://laravel-china.org/articles/1430/single-php-generator-complete-knowledge-generator-implementation-process</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/04/PHP的迭代器/" itemprop="url">
-                  PHP的迭代器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-04T20:55:16+08:00" content="2016-08-04">
-              2016-08-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>最孤独的，不是不能跟一个人在一起，而是根本不知道想跟谁在一起……<br></blockquote>
-
-<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>PHP5开始支持了接口， 并且内置了<code>Iterator</code>接口， 所以如果你定义了一个类，并实现了<code>Iterator</code>接口，<br>那么你的这个类对象就是<code>ZEND_ITER_OBJECT</code>,否则就是<code>ZEND_ITER_PLAIN_OBJECT</code>.<br>对于<code>ZEND_ITER_PLAIN_OBJEC</code>T的类，foreach会通过HASH_OF获取该对象的默认属性数组，然后对该数组进行foreach.<br>而对于<code>END_ITER_OBJECT</code>的类对象，则会通过调用对象实现的Iterator接口相关函数来进行foreach。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Iterator模式的简单实现类</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sample</span> <span class="keyword">implements</span> <span class="title">Iterator</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_items ;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(&amp;$data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_items = $data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> current(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        next(<span class="keyword">$this</span>-&gt;_items);   </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> key(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        reset(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span><span class="params">()</span> </span>&#123;                                                                              </span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">$this</span>-&gt;current() !== <span class="keyword">FALSE</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/** DEMO */</span></span><br><span class="line">$data = <span class="keyword">array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br><span class="line">$sa = <span class="keyword">new</span> sample($data);</span><br><span class="line"><span class="keyword">foreach</span> ($sa <span class="keyword">AS</span> $key =&gt; $row) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $key, <span class="string">' '</span>, $row, <span class="string">'&lt;br /&gt;'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h3><ul>
-<li>使用返回迭代器的包或库时（如PHP5中的SPL迭代器）</li>
-<li>无法在一次的调用获取容器的所有元素时</li>
-<li>要处理数量巨大的无素时（数据库中的表以GB计的数据）</li>
-<li>……</li>
-</ul>
-<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>一般是使用foreach来使用迭代器，下面整理了一下代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>   </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sample</span> <span class="keyword">implements</span> <span class="title">Iterator</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_items = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                  ;<span class="comment">//void</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span><span class="params">()</span> </span>&#123; reset(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> current(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> key(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> next(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> ( <span class="keyword">$this</span>-&gt;current() !== <span class="keyword">false</span> ); &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">$sa = <span class="keyword">new</span> sample();</span><br><span class="line"><span class="keyword">foreach</span>($sa <span class="keyword">as</span> $key =&gt; $val)&#123;</span><br><span class="line">    <span class="keyword">print</span> $key . <span class="string">"=&gt;"</span> .$val;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/04/关于PHP迭代器的一道笔试题/" itemprop="url">
-                  关于PHP迭代器的一道笔试题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-04T20:17:45+08:00" content="2016-08-04">
-              2016-08-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我做事三分钟热度，却也爱你那么久。<br></blockquote></p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使对象可以像数组一样进行<span class="keyword">foreach</span>循环，要求属性必须是私有。</span><br></pre></td></tr></table></figure>
-<h3 id="鸟哥给出的答案"><a href="#鸟哥给出的答案" class="headerlink" title="鸟哥给出的答案"></a>鸟哥给出的答案</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sample</span> <span class="keyword">implements</span> <span class="title">Iterator</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_items = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ;<span class="comment">//void</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        reset(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> current(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> key(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> next(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ( <span class="keyword">$this</span>-&gt;current() !== <span class="keyword">false</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$sa = <span class="keyword">new</span> sample();</span><br><span class="line"><span class="keyword">foreach</span>($sa <span class="keyword">as</span> $key =&gt; $val)&#123;</span><br><span class="line">    <span class="keyword">print</span> $key . <span class="string">"=&gt;"</span> .$val.<span class="string">'&lt;br&gt;'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="拓展说明"><a href="#拓展说明" class="headerlink" title="拓展说明"></a>拓展说明</h3><p>使用foreach只可以循环出数组的public属性，protected和private属性无法得到<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $a = <span class="string">'tom'</span>;</span><br><span class="line">    <span class="keyword">protected</span>  $b = <span class="string">'lilei'</span>;</span><br><span class="line">    <span class="keyword">private</span>  $c = <span class="string">'hanmeimei'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="keyword">new</span> User() <span class="keyword">as</span> $user)&#123;</span><br><span class="line">    <span class="keyword">echo</span> $user.<span class="string">'&lt;br&gt;'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>但是在类的内部可以<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $a = <span class="string">'tom'</span>;</span><br><span class="line">    <span class="keyword">protected</span>  $b = <span class="string">'lilei'</span>;</span><br><span class="line">    <span class="keyword">private</span>  $c = <span class="string">'hanmeimei'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">do_something</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">$this</span> <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"$key =&gt; $value\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$user = <span class="keyword">new</span> User();</span><br><span class="line">$user-&gt;do_something();</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://www.laruence.com/2008/10/31/574.html" target="_blank" rel="noopener">http://www.laruence.com/2008/10/31/574.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -815,7 +821,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -825,7 +831,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

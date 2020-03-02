@@ -265,6 +265,346 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/08/swoole的核心概念/" itemprop="url">
+                  swoole的核心概念
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-08T09:29:04+08:00" content="2018-05-08">
+              2018-05-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>只要从现在开始努力，最坏不过是大器晚成<br></blockquote>
+
+<p>当 Swoole 启动时, 一共会建立 2 + n + m 个进程，其 n 为 Worker 数， m 为 TaskWorker 数，2 为一个 Master 进程和一个 Manager 进程</p>
+<h3 id="Swoole框架模型"><a href="#Swoole框架模型" class="headerlink" title="Swoole框架模型"></a>Swoole框架模型</h3><p>Swoole Server 中有以下几种角色，分别是：Master(Process)、Reactor(Thread)、Manager(Process)、Worker(Process) 和 TaskWoker(Process);<br><img style="margin-left: 0;" src="/images/swoole01.png"></p>
+<h4 id="Master-Process"><a href="#Master-Process" class="headerlink" title="Master(Process)"></a>Master(Process)</h4><p>Master 是 Swoole 的主要 Process，当我们启动 Swoole 时，当下的 Process 就会成为 Master Process 并负责建立 Main Reactor、建立和管理 Reactor、建立 Manager 并开始接受客户端请求等工作。</p>
+<p>首先 Master 会透过 fork 函数建立一个 Manager，接着建立 Reactor，当全部建立完成后会呼叫 onStart 的 callback function，此时可以在这个 callback function 中对 Master 做一些处理或修改。如：将 Master 重新命名，保存 Master 的 PID 档桉等。</p>
+<p>这裡要特别注意，因为 Master 不应该存在任何商业逻辑，因此 Swoole 底层会禁止你在此处做一些行为，如：发送请求、呼叫 Swoole 的异步 API 等等。</p>
+<h4 id="Reactor-Thread"><a href="#Reactor-Thread" class="headerlink" title="Reactor(Thread)"></a>Reactor(Thread)</h4><p>Reactor 以 Multi-Thread 的方式执行，Reactor 底层由 epoll 函数来实现（在Mac系统是透过 Kqueue），用于实际监听和处理来自客户端的 Connect 请求，并完全是透过异步、非阻塞的模式来运作。</p>
+<h4 id="Manager-Process"><a href="#Manager-Process" class="headerlink" title="Manager(Process)"></a>Manager(Process)</h4><p>Swoole 中 Worker/Task worker 都是由 Manager 所 fork 并管理的。当 Manager 被建立时，会呼叫 onManagerStart 的 callback function 通知上层的应用。</p>
+<p>当底下的某个 Worker 意外结束执行时，Manager 会负责回收的工作，并同时建立新的 Worker 补足固定的数量维持 Swoole 的正常运作。</p>
+<p>当 Manager 退出时，会呼叫 onManagerStop 的 callback function，可以利用此时进行一些回收逻辑。</p>
+<h4 id="Worker-Process"><a href="#Worker-Process" class="headerlink" title="Worker(Process)"></a>Worker(Process)</h4><p>Worker 以 Multi-Process 的方式执行，是 Swoole 中执行大部分逻辑的地方，因此在 Worker 中所对应的 callback function 数量也是最多的。</p>
+<p>当 Worker 启动后会呼叫 onWorkerStart 的 callback function，在这裡我们就能够使用全部 Swoole 所提供的 API 了。</p>
+<p>当上层的 Reactor 收到客户端的请求后，就会将数据打包发送给 Worker，并在相对应的 callback function 中（如：onReceive、onRequest、onMessage等）处理这些资料，并可以将处理结果回传给 Reactor，再回传至客户端中。如果 Worker 正常退出，会呼叫 onWorkerStop 的 callback function，若是处理数据过程中出现严重错误或者 Worker 请求达到处理上限时，则会呼叫 onWorkerError 的 callback function 并结束该 Worker。</p>
+<h4 id="Task-Worker-Process"><a href="#Task-Worker-Process" class="headerlink" title="Task Worker(Process)"></a>Task Worker(Process)</h4><p>Task Worker 一样以 Multi-Process 的方式执行，只接受由 Worker 中透过 swoole_server-&gt;task/taskwait 方法指派过来的任务，并将结果回传给 Worker。</p>
+<h3 id="Process-间的通讯"><a href="#Process-间的通讯" class="headerlink" title="Process 间的通讯"></a>Process 间的通讯</h3><p>在 Swoole 中，Process 间的通讯可以分为以下几三种状况：</p>
+<ul>
+<li>Master &lt;=&gt; Worker</li>
+<li>Worker &lt;=&gt; Worker</li>
+<li>Worker &lt;=&gt; Task Worker</li>
+</ul>
+<p>前两种情形，在 Swoole 底层统一使用 Unix Socket 进行通讯，这些 socket 也都归併到各自 Process 的 Reactor 中进行管理。而第三种情况，除了预设的 Unix Socket 外，还可以使用由系统提供的 Message Queue 来实作。</p>
+<h3 id="Reactor-Worker-Task的关系"><a href="#Reactor-Worker-Task的关系" class="headerlink" title="Reactor,Worker,Task的关系"></a>Reactor,Worker,Task的关系</h3><p>一个通俗的比喻，假设Server就是一个工厂，那Reactor就是销售，接受客户订单。而Worker就是工人，当销售接到订单后，Worker去工作生产出客户要的东西。而TaskWorker可以理解为行政人员，可以帮助Worker干些杂事，让Worker专心工作。</p>
+<blockquote>
+<p><a href="https://wiki.swoole.com/wiki/page/163.html" target="_blank" rel="noopener">https://wiki.swoole.com/wiki/page/163.html</a><br><a href="https://blog.albert-chen.com/swoole-basic-concepts/" target="_blank" rel="noopener">https://blog.albert-chen.com/swoole-basic-concepts/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/03/laravel中使用macro方法实例举例/" itemprop="url">
+                  laravel中使用macro方法实例举例
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-03T15:35:19+08:00" content="2018-05-03">
+              2018-05-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>谢谢你啊<br></blockquote>
+
+<p>在一般编程中，我们要扩展一个基础类，我们需要进行继承才能扩充。然而Laravel利用PHP的特性，编写了一套叫做Macroable的Traits，这样，凡是使用Macroable的类，都是可以使用这个方法扩充的。</p>
+<h3 id="邮件发送动态设置"><a href="#邮件发送动态设置" class="headerlink" title="邮件发送动态设置"></a>邮件发送动态设置</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">\Mail::macro(<span class="string">'setConfig'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(string $key, string $domain)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    $transport = <span class="keyword">$this</span>-&gt;getSwiftMailer()-&gt;getTransport();</span><br><span class="line">    $transport-&gt;setKey($key);</span><br><span class="line">    $transport-&gt;setDomain($domain);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">build</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   </span><br><span class="line">    $to = <span class="string">'lnmput@gmail.com'</span>;</span><br><span class="line"></span><br><span class="line">    $mailgunConfig = <span class="string">'erp.template.'</span>.$mailTplDir.<span class="string">'.mailgun.'</span>;</span><br><span class="line"></span><br><span class="line">    \Mail::setConfig(config($mailgunConfig.<span class="string">'secret'</span>), config($mailgunConfig.<span class="string">'domain'</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;to($to)-&gt;subject($subject)-&gt;from($mailFrom, $mailFromName)-&gt;view($view);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="集合转小写"><a href="#集合转小写" class="headerlink" title="集合转小写"></a>集合转小写</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collection::macro(<span class="string">'uppercase'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> collect(<span class="keyword">$this</span>-&gt;items)-&gt;map(<span class="function"><span class="keyword">function</span> <span class="params">($item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> strtoupper($item);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">collect([<span class="string">"hello"</span>, <span class="string">"world"</span>])-&gt;uppercase();</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义响应"><a href="#自定义响应" class="headerlink" title="自定义响应"></a>自定义响应</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">\Response::macro(<span class="string">'xml'</span>, <span class="function"><span class="keyword">function</span><span class="params">(array $vars, $status = <span class="number">200</span>, array $header = [], $xml = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_null($xml)) &#123;</span><br><span class="line">        $xml = <span class="keyword">new</span> \SimpleXMLElement(<span class="string">'&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;response/&gt;'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> ($vars <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_array($value)) &#123;</span><br><span class="line">            \Response::xml($value, $status, $header, $xml-&gt;addChild($key));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $xml-&gt;addChild($key, $value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>($header)) &#123;</span><br><span class="line">        $header[<span class="string">'Content-Type'</span>] = <span class="string">'application/xml'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> \Response::make($xml-&gt;asXML(), $status, $header);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$data = [<span class="string">'status'</span> =&gt; <span class="string">'OK'</span>, <span class="string">'data'</span> =&gt; [</span><br><span class="line">    <span class="string">'name'</span> =&gt; <span class="string">'yangguoqi'</span>,</span><br><span class="line">    <span class="string">'age'</span>  =&gt; <span class="number">27</span></span><br><span class="line">]];</span><br><span class="line">    </span><br><span class="line"><span class="keyword">return</span> Response::xml($data);</span><br></pre></td></tr></table></figure></p>
+<h3 id="统计字符串中单词数量"><a href="#统计字符串中单词数量" class="headerlink" title="统计字符串中单词数量"></a>统计字符串中单词数量</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Str</span>;</span><br><span class="line"></span><br><span class="line">Str::macro(<span class="string">'countWords'</span>, <span class="function"><span class="keyword">function</span><span class="params">($value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> str_word_count($value); </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$value = Str::countWords(<span class="string">'This is test'</span>); <span class="comment">//3</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="字符串CSV转array"><a href="#字符串CSV转array" class="headerlink" title="字符串CSV转array"></a>字符串CSV转array</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Str::macro(<span class="string">'csvToArray'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($string)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> array_filter(array_map(<span class="string">'trim'</span>, str_getcsv($string)));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$string = <span class="string">"some, crazy, , , , mixed, bag, of , comma-separated values, , ,"</span>;</span><br><span class="line">$array = \Illuminate\Support\Str::csvToArray($string);</span><br><span class="line">dd($array);</span><br></pre></td></tr></table></figure></p>
+<h3 id="模型是否分页"><a href="#模型是否分页" class="headerlink" title="模型是否分页"></a>模型是否分页</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Builder::macro(<span class="string">'paginateIf'</span>, <span class="function"><span class="keyword">function</span><span class="params">($callback = true)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>($callback) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;paginate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;get();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$data = Model::oldest()-&gt;paginateIf($request-&gt;has(<span class="string">'page'</span>));</span><br></pre></td></tr></table></figure></p>
+<h3 id="哪些类可以使用marco"><a href="#哪些类可以使用marco" class="headerlink" title="哪些类可以使用marco"></a>哪些类可以使用marco</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Illuminate\Database\Query\Builder</span><br><span class="line">Illuminate\Database\Eloquent\Builder</span><br><span class="line">Illuminate\Database\Eloquent\Relations\Relation</span><br><span class="line">Illuminate\Http\Request</span><br><span class="line">Illuminate\Http\RedirectResponse</span><br><span class="line">Illuminate\Http\UploadedFile</span><br><span class="line">Illuminate\Routing\Router</span><br><span class="line">Illuminate\Routing\ResponseFactory</span><br><span class="line">Illuminate\Routing\UrlGenerator</span><br><span class="line">Illuminate\Support\Arr</span><br><span class="line">Illuminate\Support\Str</span><br><span class="line">Illuminate\Support\Collection</span><br><span class="line">Illuminate\Cache\Repository</span><br><span class="line">Illuminate\Console\Scheduling\Event</span><br><span class="line">Illuminate\Filesystem\Filesystem</span><br><span class="line">Illuminate\Foundation\Testing\TestResponse</span><br><span class="line">Illuminate\Translation\Translator</span><br><span class="line">Illuminate\Validation\Rule</span><br><span class="line">Mail</span><br></pre></td></tr></table></figure>
+<p>等等,使用了Marcoable的Traits，如果是自己编写的类，使用了Marcoable，也可以这样扩充使用（写Laravel开源库的时候）</p>
+<blockquote>
+<p><a href="https://laravel-tricks.com/tricks/responsexml-macro" target="_blank" rel="noopener">https://laravel-tricks.com/tricks/responsexml-macro</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/03/如何利用macro方法来扩展laravel的基础类的功能/" itemprop="url">
+                  如何利用macro方法来扩展Laravel的基础类的功能
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-03T15:17:45+08:00" content="2018-05-03">
+              2018-05-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你只见到这么多人说他不好时，却看到他有出来说別人一句吗？<br></blockquote>
+
+<p>Laravel 5.2 provides some nice additions to the framework. One handy feature that I don’t see listed in the release notes is that Collection now is macroable.  Using it’s macro function you can easily extend Illuminate\Support\Collection with your own custom functions.</p>
+<p>Take a look at this piece of code to uppercase every string in a collection.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$uppercaseWords = collect([<span class="string">'code'</span>, <span class="string">'ferengi'</span>])-&gt;map(<span class="function"><span class="keyword">function</span><span class="params">($word)</span>  </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> strtoupper($word);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>That’s good code, but image you need to uppercase a lot of collections. Typing the same closure will get very tiresome. Let’s improve this with a macro.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Collection</span>;</span><br><span class="line"></span><br><span class="line">Collection::macro(<span class="string">'uppercase'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> collect(<span class="keyword">$this</span>-&gt;items)-&gt;map(<span class="function"><span class="keyword">function</span><span class="params">($word)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> strtoupper($word);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>You could create a service provider to load up these macro’s. Now that the macro is defined let’s uppercase collections like there’s no tomorrow:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$uppercaseWords = collect([<span class="string">'code'</span>, <span class="string">'ferengi'</span>])-&gt;uppercase();</span><br><span class="line">$moreUppercaseWords = collect([<span class="string">'love'</span>, <span class="string">'the'</span>, <span class="string">'facade'</span>])-&gt;uppercase();</span><br><span class="line">$evenMoreUppercaseWords = collect([<span class="string">'activerecord'</span>, <span class="string">'forever'</span>])-&gt;uppercase();</span><br></pre></td></tr></table></figure>
+<p>You could be thinking “Why should I use a macro? I can easily to this with a regular function.”. Consider this piece of code.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">uppercase</span><span class="params">($collection)</span> </span>&#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$uppercaseWords = uppercase(collect([<span class="string">'halo'</span>,<span class="string">'five'</span>]));</span><br></pre></td></tr></table></figure></p>
+<p>It works, but you have to encapsulate the collection with your function. The last executed function is put first, which is confusing. With macro’s you can still chain functions and greatly improve readability.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//lots of functions</span></span><br><span class="line">function4(function3(function2(function1(collect([<span class="string">'jack'</span>,<span class="string">'cheats'</span>])))));</span><br><span class="line"></span><br><span class="line"><span class="comment">//lots of macros</span></span><br><span class="line">collect([<span class="string">'i'</span>, <span class="string">'want'</span>, <span class="string">'to'</span>, <span class="string">'live'</span>, <span class="string">'in'</span>, <span class="string">'a'</span>, <span class="string">'desert'</span>])</span><br><span class="line">  -&gt;function1()</span><br><span class="line">  -&gt;function2()</span><br><span class="line">  -&gt;function3()</span><br><span class="line">  -&gt;function4();</span><br></pre></td></tr></table></figure></p>
+<p>Sure, the examples use in this post were a bit contrived, but I hope you see that collection macro’s can be very handy.</p>
+<blockquote>
+<p><a href="https://murze.be/using-collection-macros-in-laravel" target="_blank" rel="noopener">https://murze.be/using-collection-macros-in-laravel</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/02/mysql事务隔离和锁的深入分析/" itemprop="url">
                   mysql事务隔离和锁的深入分析
                 </a>
@@ -507,350 +847,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/26/编译安装nginx/" itemprop="url">
-                  编译安装nginx
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-26T15:25:58+08:00" content="2018-04-26">
-              2018-04-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>等一个不爱你的人，就像在机场等一艘船<br></blockquote>
-
-<h3 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h3><p>在linux使用make方式安装，需要保证linux已经具备比较OK的编译环境，例如gcc等编译工具。一般而言，服务器提供商在安装的系统中已经默认集成了这些软件，但是为了保险起见，我们还是通过一些较为基础的方式，把这些依赖包都跑一遍，以防在之后的编译中出差错。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc gcc-c++ autoconf automake libtool make cmake<span class="comment"># yum -y install zlib zlib-devel openssl openssl-devel pcre-devel</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="创建用来运行nginx的用户及组"><a href="#创建用来运行nginx的用户及组" class="headerlink" title="创建用来运行nginx的用户及组"></a>创建用来运行nginx的用户及组</h3><p>我们创建一个新的用户和用户组来运行nginx，这样可以把nginx和root分开，保证nginx不具备root权限。但是，我们并不希望nginx成为一个真实的可以登陆到远程进行操作的用户，所以，我们并不给它创建家目录，在useradd的时候，用-M参数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd nginx</span><br><span class="line">useradd -g nginx -M nginx</span><br></pre></td></tr></table></figure></p>
-<p>-g参数为nginx用户指定了一个组<br>-M参数保证其不自动生成home目录</p>
-<p>禁止用户登陆也很方便，只需要修改配置文件中有关用户和用户组的信息即可。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/passwd</span></span><br></pre></td></tr></table></figure></p>
-<p>找到nginx，将后面的<code>/bin/bash</code>改为<code>/sbin/nologin</code>即可。</p>
-<h3 id="编译安装Nginx"><a href="#编译安装Nginx" class="headerlink" title="编译安装Nginx"></a>编译安装Nginx</h3><ul>
-<li><p>下载</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//xxxxxxxxxx/nginx1.7.x.tar.gz# tar zxvf nginx1.7.x.tar.gz# cd nginx1.7.x</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./configure --prefix=/usr/local/nginx \--pid-path=/usr/local/nginx/run/nginx.pid \--with-http_ssl_module \--user=nginx \ --group=nginx \--with-pcre \--without-mail_pop3_module \--without-mail_imap_module \--without-mail_smtp_module</span></span><br></pre></td></tr></table></figure>
-<p>说明可以使用<code>./configure --help</code>查看一些配置信息</p>
-</li>
-<li><p>编译</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/nginx</span><br><span class="line">ls</span><br><span class="line">sbin/nginx</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="nginx服务的载入"><a href="#nginx服务的载入" class="headerlink" title="nginx服务的载入"></a>nginx服务的载入</h3><p>make编译安装的软件，可不像yum安装的服务，我们熟悉的service命令并不起效，不然你用service nginx restart试试看。这是因为service调用/etc/ini.d/目录下的程序完成，而该目录下并不存在nginx这个程序。那么这个时候怎么重启nginx呢？如下操作：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
-<p>这个操作可以重新加载nginx的配置文件，相当于重启。如果一定要重启整个服务，那只能通过杀死nginx进程，然后在运行程序了。</p>
-<p>不过为了使用我们熟悉的service操作, 现在提供一个文件(nginx)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> nginx Startup script for the Nginx HTTP Server</span><br><span class="line"><span class="meta">#</span> this script create it by ivan at 2010.12.29.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> chkconfig: - 85 15</span><br><span class="line"><span class="meta">#</span> description: Nginx is a high-performance web and proxy server.</span><br><span class="line"><span class="meta">#</span>              It has a lot of features, but it's not for everyone.</span><br><span class="line"><span class="meta">#</span> processname: nginx</span><br><span class="line"><span class="meta">#</span> pidfile: /var/run/nginx.pid</span><br><span class="line"><span class="meta">#</span> config: /etc/nginx.conf</span><br><span class="line"></span><br><span class="line">nginxd=/usr/local/nginx/sbin/nginx</span><br><span class="line">nginx_config=/usr/local/nginx/conf/nginx.conf</span><br><span class="line">nginx_pid=/usr/local/nginx/run/nginx.pid</span><br><span class="line"></span><br><span class="line">RETVAL=0</span><br><span class="line">prog="nginx"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Source function library.</span><br><span class="line">. /etc/rc.d/init.d/functions</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Source networking configuration.</span><br><span class="line">. /etc/sysconfig/network</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Check that networking is up.</span><br><span class="line">[ $&#123;NETWORKING&#125; = "no" ] &amp;&amp; exit 0</span><br><span class="line">[ -x $nginxd ] || exit 0</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Start nginx daemons functions.</span><br><span class="line">start()&#123;</span><br><span class="line"></span><br><span class="line">        if [ -e $nginx_pid ]; then</span><br><span class="line">                echo "nginx already running..."</span><br><span class="line">                exit 1</span><br><span class="line">        fi</span><br><span class="line">        echo -n $"Starting $prog:"</span><br><span class="line">        daemon $nginxd -c $&#123;nginx_config&#125;</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">        [ $RETVAL = 0 ] &amp;&amp; touch /var/lock/subsys/nginx</span><br><span class="line">        return $RETVAL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Stop nginx daemons functions.</span><br><span class="line">stop()&#123;</span><br><span class="line">        echo -n $"Stopping $prog:"</span><br><span class="line">        killproc $nginxd</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">        [ $RETVAL = 0 ] &amp;&amp; rm -f /var/lock/subsys/nginx $nginx_pid</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>reload nginx service functions.</span><br><span class="line">reload()&#123;</span><br><span class="line">        echo -n $"Reloading $proc:"</span><br><span class="line">        killproc $nginxd -HUP</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> See how we were called.</span><br><span class="line">case "$1" in</span><br><span class="line">        start)</span><br><span class="line">                start</span><br><span class="line">                ;;</span><br><span class="line">        stop)</span><br><span class="line">                stop</span><br><span class="line">                ;;</span><br><span class="line">        reload)</span><br><span class="line">                reload</span><br><span class="line">                ;;</span><br><span class="line">        restart)</span><br><span class="line">                stop</span><br><span class="line">                start</span><br><span class="line">                ;;</span><br><span class="line">        status)</span><br><span class="line">                status $prog</span><br><span class="line">                RETVAL=$?</span><br><span class="line">                ;;</span><br><span class="line">        *)</span><br><span class="line">                echo $"Usage: $prog &#123;start|stop|restart|reload|status|help&#125;"</span><br><span class="line">                exit 1</span><br><span class="line">esac</span><br><span class="line"></span><br><span class="line">exit $RETVAL</span><br></pre></td></tr></table></figure></p>
-<p>放到/etc/ini.d/目录下，并执行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/init.d/nginx <span class="comment"># chkconfig --add nginx# chkconfig nginx on</span></span><br></pre></td></tr></table></figure></p>
-<p>这样就可以通过service nginx restart等方法来操作nginx了。</p>
-<blockquote>
-<p><a href="https://www.tangshuang.net/1774.html" target="_blank" rel="noopener">https://www.tangshuang.net/1774.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/25/使用swoole进行系统监控/" itemprop="url">
-                  使用swoole进行系统监控
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-25T09:13:22+08:00" content="2018-04-25">
-              2018-04-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>问世间情为何物，两岸猿声啼不住。<br></blockquote>
-
-<p>通常情况下我们需要对服务器的某一个服务进行监控, 以确定该服务是在正常运行, 一般使用linux的计划任务可以实现, 但是计划任务的最小执行时间间隔是秒,往往并不能满足我们的要求, 这时候<code>Swoole</code>的毫秒定时器就该出场了</p>
-<h3 id="监控代码"><a href="#监控代码" class="headerlink" title="监控代码"></a>监控代码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> PORT = <span class="number">80</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">port</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        $shell  =  <span class="string">"netstat -anp 2&gt;/dev/null | grep "</span>. <span class="keyword">self</span>::PORT . <span class="string">" | grep LISTEN | wc -l"</span>;</span><br><span class="line"></span><br><span class="line">        $result = shell_exec($shell);</span><br><span class="line">        <span class="keyword">if</span>($result != <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 发送报警服务 邮件 短信</span></span><br><span class="line">            <span class="comment">/// todo</span></span><br><span class="line">            <span class="keyword">echo</span> date(<span class="string">"Ymd H:i:s"</span>).<span class="string">"error"</span>.PHP_EOL;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> date(<span class="string">"Ymd H:i:s"</span>).<span class="string">"succss"</span>.PHP_EOL;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// nohup</span></span><br><span class="line">swoole_timer_tick(<span class="number">2000</span>, <span class="function"><span class="keyword">function</span><span class="params">($timer_id)</span> </span>&#123;</span><br><span class="line">    (<span class="keyword">new</span> Server())-&gt;port();</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"time-start"</span>.PHP_EOL;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>注意以下命令要求使用绝对路径<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup /usr/bin/php /home/vagrant/code/swoole/script/bin/jian.php &gt; /home/vagrant/code/swoole/script/bin/log.txt &amp;</span><br></pre></td></tr></table></figure></p>
-<h3 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h3><h4 id="amp"><a href="#amp" class="headerlink" title="&amp;"></a>&amp;</h4><p>当在前台运行某个作业时，终端被该作业占据；可以在命令后面加上&amp; 实现后台运行。例如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh test.sh &amp;</span><br></pre></td></tr></table></figure></p>
-<p>适合在后台运行的命令有<code>find</code>、费时的排序及一些<code>shell</code>脚本。在后台运行作业时要当心：需要用户交互的命令不要放在后台执行，因为这样你的机器就会在那里傻等。不过，作业在后台运行一样会将结果输出到屏幕上，干扰你的工作。如果放在后台运行的作业会产生大量的输出，最好使用下面的方法把它的输出重定向到某个文件中：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command &gt; out.file <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure></p>
-<p>这样，所有的标准输出和错误输出都将被重定向到一个叫做<code>out.file</code>的文件中。</p>
-<h4 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h4><p>使用<code>&amp;</code>命令后，作业被提交到后台运行，当前控制台没有被占用，但是一但把当前控制台关掉(退出帐户时)，作业就会停止运行。<code>nohup</code>命令可以在你退出帐户之后继续运行相应的进程。<code>nohup</code>就是不挂起的意思(no hang up)。该命令的一般形式为：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup command &amp;</span><br></pre></td></tr></table></figure></p>
-<p>如果使用<code>nohup</code>命令提交作业，那么在缺省情况下该作业的所有输出都被重定向到一个名为<code>nohup.out</code>的文件中，除非另外指定了输出文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup command &gt; myout.file <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure></p>
-<p>使用了<code>nohup</code>之后，很多人就这样不管了，其实这样有可能在当前账户非正常退出或者结束的时候，命令还是自己结束了。所以在使用<code>nohup</code>命令后台运行命令之后，需要使用exit正常退出当前账户，这样才能保证命令一直在后台运行。</p>
-<h4 id="2-gt-amp-1解析"><a href="#2-gt-amp-1解析" class="headerlink" title="2&gt;&amp;1解析"></a>2&gt;&amp;1解析</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command &gt;out.file <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>command&gt;out.file是将command的输出重定向到out.file文件，即输出内容不打印到屏幕上，而是输出到out.file文件中。</li>
-<li>2&gt;&amp;1 是将标准出错重定向到标准输出，这里的标准输出已经重定向到了out.file文件，即将标准出错也输出到out.file文件中。最后一个&amp;， 是让该命令在后台执行。</li>
-<li>试想2&gt;1代表什么，2与&gt;结合代表错误重定向，而1则代表错误重定向到一个文件1，而不代表标准输出；换成2&gt;&amp;1，&amp;与1结合就代表标准输出了，就变成错误重定向到标准输出.</li>
-</ul>
-<blockquote>
-<p><a href="https://blog.csdn.net/liuyanfeier/article/details/62422742" target="_blank" rel="noopener">https://blog.csdn.net/liuyanfeier/article/details/62422742</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/24/laravel在eloquent中管理对应的url/" itemprop="url">
-                  laravel在eloquent中管理对应的url
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-24T16:17:02+08:00" content="2018-04-24">
-              2018-04-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>No pain, no gain.<br></blockquote>
-
-<p>It’s not uncommon to have tens, if not hundreds of views in a Laravel application. Something that soon gets out of hand is the various references to routes. Think about how many times you’ve done something like this in your blade views:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"&#123;&#123; route('users.show', $user) &#125;&#125;"</span>&gt;&#123;&#123; $user-&gt;name &#125;&#125;&lt;/a&gt;</span><br></pre></td></tr></table></figure></p>
-<p>If for whatever reason we have to make a change to either the route alias or default query string values you’ll soon find yourself doing mass string replacements across your entire application which brings the risk of breakage within many files.</p>
-<p>What can we do to possibly better handle this? There are a couple of different approaches.</p>
-<h3 id="Eloquent-Only"><a href="#Eloquent-Only" class="headerlink" title="Eloquent Only"></a>Eloquent Only</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> $appends = [</span><br><span class="line">    <span class="string">'url'</span></span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getUrlAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> route(<span class="string">'users.show'</span>, <span class="keyword">$this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Then in your views it would look like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; $user-&gt;url &#125;&#125;"</span>&gt;</span>&#123;&#123; $user-&gt;name &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>Super clean, right? For you advanced developers you’ll probably want to go with this next approach.</p>
-<h3 id="Eloquent-with-URL-Presenter"><a href="#Eloquent-with-URL-Presenter" class="headerlink" title="Eloquent with URL Presenter"></a>Eloquent with URL Presenter</h3><p>At first glance, you’ll see some similarities, but the key difference is that our accessor will return an instance of the presenter.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Presenters</span>\<span class="title">User</span>\<span class="title">UrlPresenter</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> $appends = [</span><br><span class="line">    <span class="string">'url'</span></span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getUrlAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> UrlPresenter(<span class="keyword">$this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Presenters</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlPresenter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $user;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(User $user)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;user = $user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(method_exists(<span class="keyword">$this</span>, $key))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;$key();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;$key;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.delete'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">edit</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.edit'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.show'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.update'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Then you would use it like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; $user-&gt;url-&gt;show &#125;&#125;"</span>&gt;</span>&#123;&#123; $user-&gt;name &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>As you can see with either approach, the view now doesn’t care about how we determine the URL, just that a URL is returned. The beauty to this is should you have to adjust any routes you only have to edit two files, not hundreds.</p>
-<blockquote>
-<p><a href="https://laravel-news.com/leverage-eloquent-to-prepare-your-urls" target="_blank" rel="noopener">https://laravel-news.com/leverage-eloquent-to-prepare-your-urls</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -894,7 +890,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">347</span>
+              <span class="site-state-item-count">350</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -904,7 +900,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
