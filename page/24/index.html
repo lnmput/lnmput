@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/16/mysql的with-rollup的用法/" itemprop="url">
+                  mysql的with-rollup的用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-16T09:44:52+08:00" content="2018-03-16">
+              2018-03-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>世人谓我恋长安，其实只恋长安某。<br></blockquote><br>今天在做按照商品的SPU批量采购的时候, 遇到了一个问题, 就是安装SPU<code>groupBy</code>后计算的<code>sum</code>值仅仅只是每个SPU下的产品数量之和, 这可以满足在每个列表中的正常显示,但是现在需要在页面的顶部显示一个全部的SPU下的产品数量, 因为数据是分页的, 就很难计算了.起初我的代码是这样的:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$query = WaitingForPurchase::query()</span><br><span class="line">        -&gt;selectRaw(<span class="string">'id, site_id, ps_type_id, ps_shop_id, ps_product_id, order_product_id, shop_product_id, sum(qty) as qty'</span>)</span><br><span class="line">        -&gt;where([<span class="string">'ps_type_id'</span> =&gt; $type_id, <span class="string">'ps_shop_id'</span> =&gt; $shop_id])</span><br><span class="line">        -&gt;groupBy(<span class="string">'shop_product_id'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在GOOGLE了一番以后, 才知道<code>mysql</code>竟然还有这样的用法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$query = WaitingForPurchase::query()</span><br><span class="line">        -&gt;selectRaw(<span class="string">'id, site_id, ps_type_id, ps_shop_id, ps_product_id, order_product_id, shop_product_id, sum(qty) as qty'</span>)</span><br><span class="line">        -&gt;where([<span class="string">'ps_type_id'</span> =&gt; $type_id, <span class="string">'ps_shop_id'</span> =&gt; $shop_id])</span><br><span class="line">        -&gt;groupBy(DB::raw(<span class="string">'shop_product_id WITH ROLLUP'</span>));</span><br></pre></td></tr></table></figure></p>
+<p>这样得到的结果就是在我们的查询结果中会多出一条数据,用来显示额外的统计信息.<br>在使用Laravel框架的情况下, 我们还可以这样统计:</p>
+<pre><code class="php">$query = WaitingForPurchase::query()
+        -&gt;selectRaw(<span class="string">'id, site_id, ps_type_id, ps_shop_id, ps_product_id, order_product_id, shop_product_id, sum(qty) as qty'</span>)
+        -&gt;where([<span class="string">'ps_type_id'</span> =&gt; $type_id, <span class="string">'ps_shop_id'</span> =&gt; $shop_id]);
+
+    WaitingForPurchase::setFilters($query, $conditions);
+
+    $sum = $query-&gt;sum(<span class="string">'qty'</span>);
+
+    $query-&gt;groupBy(<span class="string">'shop_product_id'</span>)
+        -&gt;orderByDesc(<span class="string">'qty'</span>);
+
+    $items = $query-&gt;paginate(<span class="number">20</span>);
+</code></pre>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/08/Laravel的路由命名空间/" itemprop="url">
                   Laravel的路由命名空间
                 </a>
@@ -670,116 +779,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/02/PHP的后期静态绑定/" itemprop="url">
-                  PHP的后期静态绑定
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-02T14:39:02+08:00" content="2018-03-02">
-              2018-03-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>….<br></blockquote>
-
-<p>自 PHP 5.3.0 起，PHP 增加了一个叫做后期静态绑定的功能，用于在继承范围内引用静态调用的类。<br>当进行静态方法调用时，该类名即为明确指定的那个（通常在 <code>::</code> 运算符左侧部分）；当进行非静态方法调用时，即为该对象所属的类。<br>“后期绑定”的意思是说，static:: 不再被解析为定义当前方法所在的类，而是在实际运行时计算的。也可以称之为“静态绑定”，因为它可以用于（但不限于）静态方法的调用。</p>
-<h3 id="解释说明"><a href="#解释说明" class="headerlink" title="解释说明"></a>解释说明</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">self</span>::who();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">B::test();</span><br></pre></td></tr></table></figure>
-<p>以上例程会输出：A, 因为 self 关键词只能取到定义当前方法所在的类, 或者说它只能取到自己所在的那个类, 最终引用的类是A, 而不是B<br>好吧, 但是如果我们想要运行时最终运行的是B该如何呢?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::who(); <span class="comment">// 后期静态绑定从这里开始</span></span><br><span class="line">    以上例程会输出：B&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">B::test();</span><br></pre></td></tr></table></figure></p>
-<p>以上例程会输出：B</p>
-<h3 id="实际用法"><a href="#实际用法" class="headerlink" title="实际用法"></a>实际用法</h3><p>在Laravel框架中<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(array $attributes = [])</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $model = <span class="keyword">new</span> <span class="keyword">static</span>($attributes);</span><br><span class="line"></span><br><span class="line">        $model-&gt;save();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $model;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Task::create([</span><br><span class="line">	<span class="string">'title'</span>=&gt;<span class="string">'学习laravel'</span>,</span><br><span class="line">	<span class="string">'author'</span>=&gt;<span class="string">'pilishen'</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
-<p>当执行Task::create()的时候，因为extends了Model，所以就到了Model里的create方法，由于$model = new static($attributes);使用了static关键词，所以此时也就相当于是执行了new Task();，也就是借助static静态绑定，我们在laravel里的自己创建的各个model，就可以共用一系列提前定义好的方法，同时在实际调用的时候，又将结果或过程只作用于自己，从而实现了一个典型的active record design pattern。</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getSelf</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">self</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getStatic</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">static</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Son::getSelf());  <span class="comment">// Father</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Son::getStatic()); <span class="comment">// Son</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Father::getSelf()); <span class="comment">// Father</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Father::getStatic()); <span class="comment">// Father</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://pilishen.com/posts/php-late-static-bindings-in-laravel" target="_blank" rel="noopener">http://pilishen.com/posts/php-late-static-bindings-in-laravel</a><br><a href="http://php.net/manual/zh/language.oop5.late-static-bindings.php" target="_blank" rel="noopener">http://php.net/manual/zh/language.oop5.late-static-bindings.php</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -818,7 +822,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -828,7 +832,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/29/mysql内存表的使用/" itemprop="url">
+                  mysql内存表的使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-29T09:56:40+08:00" content="2016-07-29">
+              2016-07-29
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>答案很长，我准备用一生的时间来回答，你准备要听了吗？<br></blockquote>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MySQL的内存表，表结构创建在磁盘上，数据存放在内存中，所以当MySQL启动着的时候，</span><br><span class="line">这个表是存在的，数据也是存在的，当MySQL重启后，数据消失，表结构还存在（</span><br><span class="line">临时表表结构及数据都在内存中）。内存表最大所需内存需要通过</span><br><span class="line">max_heap_table_size=<span class="number">1024</span>M设定，临时表最大所需内存需要通过tmp_table_size = <span class="number">1024</span>M</span><br><span class="line">设定。当数据超过临时表的最大值设定时，自动转为基于磁盘的MyISAM表，</span><br><span class="line">存储在指定的tmpdir目录，此时因需要进行IO操作，性能会大大下降，</span><br><span class="line">而内存表不会，内存表满后，会提示数据满错误。</span><br></pre></td></tr></table></figure>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表的表定义是存放在磁盘上的，扩展名为.frm， 重启不会丢失。</span><br><span class="line">内存表的数据是存放在内存中的，重启会丢失数据。</span><br><span class="line">MEMORY表使用一个固定的记录长度格式。</span><br><span class="line">mysql重启后，主键、自增、索引仍然存在，只是数据丢失。</span><br></pre></td></tr></table></figure>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内存表使用哈希散列索引把数据保存在内存中，因此具有极快的速度。</span><br></pre></td></tr></table></figure>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表不能包含BLOB或者TEXT列。</span><br><span class="line">内存表不支持事务。</span><br><span class="line">内存表是表锁，当修改频繁时，性能可能会下降。</span><br><span class="line">内存表数据清空或删除表后占用内存不会自动释放。</span><br></pre></td></tr></table></figure>
+<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mem_table(  </span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>(<span class="number">10</span>),  </span><br><span class="line">  <span class="keyword">num</span> <span class="built_in">int</span>(<span class="number">10</span>)  </span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">MEMORY</span>;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/28/稍微理解ORM/" itemprop="url">
                   稍微理解ORM
                 </a>
@@ -667,106 +766,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/26/mysql用户相关操作/" itemprop="url">
-                  mysql用户相关操作
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-26T22:45:49+08:00" content="2016-07-26">
-              2016-07-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>那些最容易脸红的人，往往是最善良的。<br></blockquote></p>
-<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">查看所有用户</span><br><span class="line">select host,user from user ;</span><br><span class="line">添加一个用户</span><br><span class="line">grant all on *.* to yangzie@<span class="string">"%"</span> identified by <span class="string">"123"</span> ; </span><br><span class="line">说明：</span><br><span class="line">all表示所有权限(包括增 删 改 查等权限)</span><br><span class="line">*.* 表示所有数据库，前面一个* 指的是库，后面指的是表</span><br><span class="line">yangzie为添加的用户名</span><br><span class="line"><span class="number">123</span>为密码，高版本的mysq会对密码的安全性做验证，简单的密码会导致命令执行失败</span><br><span class="line">%为匹配的所有主机，% 即可以使用其他连接工具像navicat远程连接</span><br><span class="line">删除一个用户</span><br><span class="line">delete from mysql.user where user =<span class="string">'yushan'</span> ;</span><br><span class="line"></span><br><span class="line">所有的这些操作完成以后，记得刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/68/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><span class="page-number current">69</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/70/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/68/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><span class="page-number current">69</span><a class="page-number" href="/page/70/">70</a><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/70/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -805,7 +809,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -815,7 +819,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

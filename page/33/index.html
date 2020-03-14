@@ -265,6 +265,100 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/19/使用vue2-0实现一个TODO应用/" itemprop="url">
+                  使用vue2.0实现一个TODO应用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-19T11:58:43+08:00" content="2017-11-19">
+              2017-11-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>朋友，然后爱人，最后什么都不是。<br></blockquote><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"js/bootstrap.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-md-8 col-md-offset-2"</span> <span class="attr">style</span>=<span class="string">"margin-top: 90px;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel panel-default"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-heading"</span>&gt;</span>vue demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-body"</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">h1</span>&gt;</span>事件个数&#123;&#123; todoCount &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">todo-items</span> <span class="attr">:todos</span>=<span class="string">"todos"</span>&gt;</span><span class="tag">&lt;/<span class="name">todo-items</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">todo-form</span> <span class="attr">:todos</span>=<span class="string">"todos"</span>&gt;</span><span class="tag">&lt;/<span class="name">todo-form</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"todo-items"</span>&gt;</span></span><br><span class="line"><span class="javascript">  &lt;ul <span class="class"><span class="keyword">class</span></span>=<span class="string">"list-group"</span>&gt;</span></span><br><span class="line"><span class="javascript">    &lt;li <span class="class"><span class="keyword">class</span></span>=<span class="string">"list-group-item"</span>  v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"&#123; 'text-danger':todo.status &#125;"</span>  v-<span class="keyword">for</span>=<span class="string">"(todo, index) in todos"</span>&gt;</span></span><br><span class="line">      &#123;&#123; todo.title&#125;&#125;</span><br><span class="line"><span class="javascript">      &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-danger btn-xs pull-right"</span> v-on:click=<span class="string">"deleteTodo(index)"</span>&gt;删除&lt;<span class="regexp">/button&gt;</span></span></span><br><span class="line"><span class="javascript">      &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-xs pull-right"</span> v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"[todo.status ? 'btn-danger' : 'btn-success' ]"</span> v-on:click=<span class="string">"complete(todo)"</span>&gt;</span></span><br><span class="line"><span class="javascript">        &#123;&#123; todo.status ? <span class="string">'撤销'</span> : <span class="string">'完成'</span> &#125;&#125;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"todo-forms"</span>&gt;</span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">v-on:submit.prevent</span>=<span class="string">"addTodo(newTodo)"</span>&gt;</span></span></span><br><span class="line"><span class="javascript">    &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"add-todo"</span>&gt;</span>事件名称<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="javascript">      &lt;input type=<span class="string">"text"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-control"</span> id=<span class="string">"add-todo"</span> v-model=<span class="string">"newTodo.title"</span> &gt;</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="javascript">    &lt;button type=<span class="string">"submit"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span>&gt;添加事件&lt;<span class="regexp">/button&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"js/vue.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    Vue.component(<span class="string">'todo-form'</span>, &#123;</span></span><br><span class="line"><span class="javascript">        template:<span class="string">'#todo-forms'</span>,</span></span><br><span class="line"><span class="javascript">        props: [<span class="string">'todos'</span>],</span></span><br><span class="line">        data() &#123;</span><br><span class="line"><span class="javascript">            <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="javascript">                newTodo: &#123;<span class="string">'title'</span>: <span class="string">''</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;</span></span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods: &#123;</span><br><span class="line">            addTodo(newTodo) &#123;</span><br><span class="line"><span class="javascript">                <span class="keyword">this</span>.todos.push(newTodo);</span></span><br><span class="line"><span class="javascript">                <span class="keyword">this</span>.newTodo = &#123;<span class="string">'title'</span>: <span class="string">''</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"><span class="javascript">    Vue.component(<span class="string">'todo-items'</span>, &#123;</span></span><br><span class="line"><span class="javascript">      template:<span class="string">'#todo-items'</span>,</span></span><br><span class="line"><span class="javascript">      props: [<span class="string">'todos'</span>],</span></span><br><span class="line">      methods: &#123;</span><br><span class="line">          deleteTodo(index) &#123;</span><br><span class="line"><span class="javascript">              <span class="keyword">this</span>.todos.splice(index, <span class="number">1</span>);</span></span><br><span class="line">          &#125;,</span><br><span class="line">          complete(todo) &#123;</span><br><span class="line">              todo.status = !todo.status;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">new</span> Vue(&#123;</span></span><br><span class="line"><span class="javascript">      el:<span class="string">'#app'</span>,</span></span><br><span class="line">      data: &#123;</span><br><span class="line"><span class="javascript">          message: <span class="string">'yangzie'</span>,</span></span><br><span class="line">          todos: [</span><br><span class="line"><span class="javascript">              &#123;<span class="string">'title'</span>: <span class="string">'吃早餐'</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;,</span></span><br><span class="line"><span class="javascript">              &#123;<span class="string">'title'</span>: <span class="string">'洗漱'</span>, <span class="string">'status'</span>: <span class="literal">false</span>&#125;</span></span><br><span class="line">          ]</span><br><span class="line">      &#125;,</span><br><span class="line">      computed: &#123;</span><br><span class="line">          todoCount() &#123;</span><br><span class="line"><span class="javascript">              <span class="keyword">return</span> <span class="keyword">this</span>.todos.length;</span></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/17/什么是RPC/" itemprop="url">
                   什么是RPC
                 </a>
@@ -655,115 +749,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/07/使用laravel生成条形码/" itemprop="url">
-                  使用laravel生成条形码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-07T09:06:07+08:00" content="2017-11-07">
-              2017-11-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我已经和垃圾学校的某些垃圾学生呆够了，再他妈不努力，你这辈子就只能和他们打交道了。<br></blockquote>
-
-<h3 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h3><p>项目地址<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//packagist.org/packages/codeitnowin/barcode</span></span><br></pre></td></tr></table></figure></p>
-<p>使用composer安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> codeitnowin/barcode</span><br></pre></td></tr></table></figure></p>
-<p>无需配置</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="生成二维码"><a href="#生成二维码" class="headerlink" title="生成二维码"></a>生成二维码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">QrCode</span>;</span><br><span class="line"></span><br><span class="line">$qrCode = <span class="keyword">new</span> QrCode();</span><br><span class="line">$qrCode</span><br><span class="line">    -&gt;setText(<span class="string">'QR code by codeitnow.in'</span>)</span><br><span class="line">    -&gt;setSize(<span class="number">300</span>)</span><br><span class="line">    -&gt;setPadding(<span class="number">10</span>)</span><br><span class="line">    -&gt;setErrorCorrection(<span class="string">'high'</span>)</span><br><span class="line">    -&gt;setForegroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">0</span>, <span class="string">'g'</span> =&gt; <span class="number">0</span>, <span class="string">'b'</span> =&gt; <span class="number">0</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setBackgroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">255</span>, <span class="string">'g'</span> =&gt; <span class="number">255</span>, <span class="string">'b'</span> =&gt; <span class="number">255</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setLabel(<span class="string">'Scan Qr Code'</span>)</span><br><span class="line">    -&gt;setLabelFontSize(<span class="number">16</span>)</span><br><span class="line">    -&gt;setImageType(QrCode::IMAGE_TYPE_PNG)</span><br><span class="line">;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:'</span>.$qrCode-&gt;getContentType().<span class="string">';base64,'</span>.$qrCode-&gt;generate().<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
-<h4 id="生成条形码"><a href="#生成条形码" class="headerlink" title="生成条形码"></a>生成条形码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">BarcodeGenerator</span>;</span><br><span class="line"></span><br><span class="line">$barcode = <span class="keyword">new</span> BarcodeGenerator();</span><br><span class="line">$barcode-&gt;setText(<span class="string">"0123456789"</span>);</span><br><span class="line">$barcode-&gt;setType(BarcodeGenerator::Code128);</span><br><span class="line">$barcode-&gt;setScale(<span class="number">2</span>);</span><br><span class="line">$barcode-&gt;setThickness(<span class="number">25</span>);</span><br><span class="line">$barcode-&gt;setFontSize(<span class="number">10</span>);</span><br><span class="line">$code = $barcode-&gt;generate();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:image/png;base64,'</span>.$code.<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
-<p>更多参见说明文档</p>
-<blockquote>
-<p><a href="https://packagist.org/packages/codeitnowin/barcode" target="_blank" rel="noopener">https://packagist.org/packages/codeitnowin/barcode</a><br><a href="http://www.barcodebakery.com/" target="_blank" rel="noopener">http://www.barcodebakery.com/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/32/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/32/">32</a><span class="page-number current">33</span><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/34/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/32/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/32/">32</a><span class="page-number current">33</span><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/34/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -802,7 +792,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -812,7 +802,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

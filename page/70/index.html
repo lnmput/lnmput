@@ -265,6 +265,101 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/26/mysql用户相关操作/" itemprop="url">
+                  mysql用户相关操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-26T22:45:49+08:00" content="2016-07-26">
+              2016-07-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>那些最容易脸红的人，往往是最善良的。<br></blockquote></p>
+<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">查看所有用户</span><br><span class="line">select host,user from user ;</span><br><span class="line">添加一个用户</span><br><span class="line">grant all on *.* to yangzie@<span class="string">"%"</span> identified by <span class="string">"123"</span> ; </span><br><span class="line">说明：</span><br><span class="line">all表示所有权限(包括增 删 改 查等权限)</span><br><span class="line">*.* 表示所有数据库，前面一个* 指的是库，后面指的是表</span><br><span class="line">yangzie为添加的用户名</span><br><span class="line"><span class="number">123</span>为密码，高版本的mysq会对密码的安全性做验证，简单的密码会导致命令执行失败</span><br><span class="line">%为匹配的所有主机，% 即可以使用其他连接工具像navicat远程连接</span><br><span class="line">删除一个用户</span><br><span class="line">delete from mysql.user where user =<span class="string">'yushan'</span> ;</span><br><span class="line"></span><br><span class="line">所有的这些操作完成以后，记得刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/25/centos下ftp相关设置/" itemprop="url">
                   centos下ftp相关设置
                 </a>
@@ -713,105 +808,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/23/PHP是最好的语言/" itemprop="url">
-                  PHP是最好的语言
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-23T16:02:22+08:00" content="2016-07-23">
-              2016-07-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>    PHP是最好的语言<br>    呵呵<br></blockquote><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'PHP 是最好的语言'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//关于我</span></span><br><span class="line"></span><br><span class="line">define(<span class="string">'NAME'</span>,<span class="string">'杨国奇'</span>);</span><br><span class="line">define(<span class="string">'JOB'</span>,<span class="string">'PHPER'</span>);</span><br><span class="line">define(<span class="string">'LOCATION'</span>,<span class="string">'陕西西安'</span>);</span><br><span class="line">define(<span class="string">'WECHAT'</span>,<span class="string">'ygq1192'</span>);</span><br><span class="line">define(<span class="string">'EMAIL'</span>,<span class="string">'lnmput@gmail.com'</span>);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/69/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><span class="page-number current">70</span>
+    <a class="extend prev" rel="prev" href="/page/69/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><span class="page-number current">70</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/71/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -850,7 +851,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -860,7 +861,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

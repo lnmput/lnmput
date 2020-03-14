@@ -265,6 +265,118 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/28/php的配置文件相关参数解读/" itemprop="url">
+                  php的配置文件相关参数解读
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-28T16:11:39+08:00" content="2018-03-28">
+              2018-03-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>何时杖尔看南雪, 我与梅花两白头<br></blockquote>
+
+<h3 id="max-execution-time"><a href="#max-execution-time" class="headerlink" title="max_execution_time"></a>max_execution_time</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max_execution_time = <span class="number">30</span></span><br></pre></td></tr></table></figure>
+<p>影响脚本本身执行的时间, 默认值是30S, 在CLI命令行被硬编码为0, 即没有执行时间的限制, 函数<code>set_time_limit()</code>,在相关脚本执行之前执行该函数可以改变这个系统设置, 如果被设置成<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_time_limit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<p>则表示脚本不受执行时间的限制</p>
+<h3 id="sql-safe-mode"><a href="#sql-safe-mode" class="headerlink" title="sql.safe_mode"></a>sql.safe_mode</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sql.safe_mode = Off</span><br></pre></td></tr></table></figure>
+<p>如果打开，指定默认值的数据库连接函数将使用这些值代替提供的参数。也就是说像<code>mysql_connect()</code>和<code>mysql_pconnect()</code>就忽视传送给它们的任何变量,第三方开源应用程序（如WordPress）及其他应用程序可能根本运行不了。</p>
+<h3 id="post-max-size"><a href="#post-max-size" class="headerlink" title="post_max_size"></a>post_max_size</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">post_max_size=<span class="number">10240</span>K</span><br></pre></td></tr></table></figure>
+<p>限制PHP将处理的POST请求的最大大小</p>
+<h3 id="upload-max-filesize"><a href="#upload-max-filesize" class="headerlink" title="upload_max_filesize"></a>upload_max_filesize</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upload_max_filesize=<span class="number">1</span>M</span><br></pre></td></tr></table></figure>
+<p>该设置限制了PHP允许通过上传的文件的最大值</p>
+<h3 id="max-input-vars"><a href="#max-input-vars" class="headerlink" title="max_input_vars"></a>max_input_vars</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max_input_vars = <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<p>提交表单字段数量的最大值</p>
+<h3 id="allow-url-fopen"><a href="#allow-url-fopen" class="headerlink" title="allow_url_fopen"></a>allow_url_fopen</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allow_url_fopen = On</span><br></pre></td></tr></table></figure>
+<p>如果启用则允许PHP的文件函数——如<code>file_get_contents()</code>、<code>include</code>语句和<code>require</code>语句——可以从远程地方（如ftp或网站）获取数据。</p>
+<h3 id="allow-url-include"><a href="#allow-url-include" class="headerlink" title="allow_url_include"></a>allow_url_include</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allow_url_include = off</span><br></pre></td></tr></table></figure>
+<p>出于安全原因，建议禁用, 不过PHP 已经将改配置默认禁用, 如果开启, 就有可能造成远程文件执行漏洞, 像下面的代码, 虽然是txt文件, 但是里面包含了php代码, 服务器还是会按照PHP文件执行.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">'http://yangzie.qiniudn.com/test.txt'</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="memory-limit"><a href="#memory-limit" class="headerlink" title="memory_limit"></a>memory_limit</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory_limit = <span class="number">128</span>M</span><br></pre></td></tr></table></figure>
+<p>即限制 PHP 进程对于内存的使用, 可以通过下面的代码对此配置进行更改, <code>memory_limit</code> 主要是为了防止程序 bug, 或者死循环占用大量的内存，导致系统宕机。在引入大量三方插件，或者代码时，进行内存限制就非常有必要了。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ini_set(<span class="string">"memory_limit"</span>, <span class="string">"128M"</span>);</span><br><span class="line">memory_get_usage(); <span class="comment">// 获取PHP脚本所用的内存大小</span></span><br><span class="line">memory_get_peak_usage(); <span class="comment">//返回当前脚本到目前位置所占用的内存峰值。</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/28/hexo的url大小写问题/" itemprop="url">
                   hexo的url大小写问题
                 </a>
@@ -678,161 +790,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/23/javascript的window对象/" itemprop="url">
-                  javascript的window对象
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-23T17:14:20+08:00" content="2018-03-23">
-              2018-03-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我最不喜欢等，因为这个期限永远都是个未知数。<br></blockquote>
-
-<h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>在浏览器中，<code>window</code>对象（注意，w为小写）指当前的浏览器窗口。它也是所有对象的顶层对象。<br>“顶层对象”指的是最高一层的对象，所有其他对象都是它的下属。JavaScript规定，浏览器环境的所有全局变量，都是<code>window</code>对象的属性。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">window</span>.a <span class="comment">// 1</span></span><br></pre></td></tr></table></figure></p>
-<p>上面代码中，变量a是一个全局变量，但是实质上它是window对象的属性。声明一个全局变量，就是为<code>window</code>对象的同名属性赋值。</p>
-<h3 id="2-window对象的属性"><a href="#2-window对象的属性" class="headerlink" title="2.window对象的属性"></a>2.window对象的属性</h3><h4 id="window-window，window-name"><a href="#window-window，window-name" class="headerlink" title="window.window，window.name"></a>window.window，window.name</h4><p>window对象的window属性指向自身。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.window === <span class="keyword">this</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>window.name属性用于设置当前浏览器窗口的名字。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.name = <span class="string">'Hello World!'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.name)</span><br><span class="line"><span class="comment">// "Hello World!"</span></span><br></pre></td></tr></table></figure></p>
-<p>各个浏览器对这个值的储存容量有所不同，但是一般来说，可以高达几MB。<br>该属性只能保存字符串，且当浏览器窗口关闭后，所保存的值就会消失。因此局限性比较大，但是与<code>&lt;iframe&gt;</code>窗口通信时，非常有用。</p>
-<h4 id="window-location"><a href="#window-location" class="headerlink" title="window.location"></a>window.location</h4><p>window.location返回一个location对象，用于获取窗口当前的URL信息。它等同于<code>document.location</code>对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.location === <span class="built_in">document</span>.location <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="3-window对象的方法"><a href="#3-window对象的方法" class="headerlink" title="3.window对象的方法"></a>3.window对象的方法</h3><h4 id="window-open-window-close"><a href="#window-open-window-close" class="headerlink" title="window.open(), window.close()"></a>window.open(), window.close()</h4><p>window.open方法用于新建另一个浏览器窗口，并且返回该窗口对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> popup = <span class="built_in">window</span>.open(<span class="string">'somefile.html'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>上面代码会让浏览器弹出一个新建窗口，网址是当前域名下的somefile.html。</p>
-<p>open方法一共可以接受四个参数。</p>
-<ul>
-<li>第一个参数：字符串，表示新窗口的网址。如果省略，默认网址就是about:blank。</li>
-<li>第二个参数：字符串，表示新窗口的名字。如果该名字的窗口已经存在，则跳到该窗口，不再新建窗口。如果省略，就默认使用_blank，表示新建一个没有名字的窗口。</li>
-<li>第三个参数：字符串，内容为逗号分隔的键值对，表示新窗口的参数，比如有没有提示栏、工具条等等。如果省略，则默认打开一个完整UI的新窗口。</li>
-<li>第四个参数：布尔值，表示第一个参数指定的网址，是否应该替换<code>history</code>对象之中的当前网址记录，默认值为<code>false</code>。显然，这个参数只有在第二个参数指向已经存在的窗口时，才有意义。</li>
-</ul>
-<h4 id="window-getSelection"><a href="#window-getSelection" class="headerlink" title="window.getSelection()"></a>window.getSelection()</h4><p>window.getSelection方法返回一个Selection对象，表示用户现在选中的文本。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> selObj = <span class="built_in">window</span>.getSelection();</span><br></pre></td></tr></table></figure></p>
-<p>使用Selction对象的toString方法可以得到选中的文本。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> selectedText = selObj.toString();</span><br></pre></td></tr></table></figure></p>
-<h3 id="4-多窗口操作"><a href="#4-多窗口操作" class="headerlink" title="4.多窗口操作"></a>4.多窗口操作</h3><h4 id="窗口的引用"><a href="#窗口的引用" class="headerlink" title="窗口的引用"></a>窗口的引用</h4><p>各个窗口之中的脚本，可以引用其他窗口。浏览器提供了一些特殊变量，用来返回其他窗口。</p>
-<ul>
-<li><code>top</code>：顶层窗口，即最上层的那个窗口</li>
-<li><code>parent</code>：父窗口</li>
-<li><code>self</code>：当前窗口，即自身</li>
-</ul>
-<p>下面代码可以判断，当前窗口是否为顶层窗口。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">top === self</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更好的写法</span></span><br><span class="line"><span class="built_in">window</span>.top === <span class="built_in">window</span>.self</span><br></pre></td></tr></table></figure></p>
-<p>下面的代码让父窗口的访问历史后退一次。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parent.history.back();</span><br></pre></td></tr></table></figure></p>
-<p>与这些变量对应，浏览器还提供一些特殊的窗口名，供<code>open</code>方法、<code>&lt;a&gt;</code>标签、<code>&lt;form&gt;</code>标签等引用。</p>
-<ul>
-<li><code>_top</code>：顶层窗口</li>
-<li><code>_parent</code>：父窗口</li>
-<li><code>_blank</code>：新窗口</li>
-</ul>
-<p>下面代码就表示在顶层窗口打开链接。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"somepage.html"</span> target=<span class="string">"_top"</span>&gt;Link&lt;<span class="regexp">/a&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="iframe标签"><a href="#iframe标签" class="headerlink" title="iframe标签"></a>iframe标签</h4><p>对于<code>iframe</code>嵌入的窗口，<code>document.getElementById</code>方法可以拿到该窗口的<code>DOM</code>节点，然后使用<code>contentWindow</code>属性获得<code>iframe</code>节点包含的<code>window</code>对象，或者使用<code>contentDocument</code>属性获得包含的<code>document</code>对象。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> frame = <span class="built_in">document</span>.getElementById(<span class="string">'theFrame'</span>);</span><br><span class="line"><span class="keyword">var</span> frameWindow = frame.contentWindow;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于 frame.contentWindow.document</span></span><br><span class="line"><span class="keyword">var</span> frameDoc = frame.contentDocument;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取子窗口的变量和属性</span></span><br><span class="line">frameWindow<span class="function">.<span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">// 获取子窗口的标题</span></span><br><span class="line"><span class="function"><span class="title">frameWindow</span>.<span class="title">title</span></span></span><br></pre></td></tr></table></figure>
-<p><code>iframe</code>元素遵守同源政策，只有当父页面与框架页面来自同一个域名，两者之间才可以用脚本通信，否则只有使用<code>window.postMessage方</code>法。</p>
-<p><code>iframe</code>窗口内部，使用<code>window.parent</code>引用父窗口。如果当前页面没有父窗口，则<code>window.parent</code>属性返回自身。因此，可以通过<code>window.parent</code>是否等于<code>window.self</code>，判断当前窗口是否为<code>iframe</code>窗口。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.parent !== <span class="built_in">window</span>.self) &#123;</span><br><span class="line">  <span class="comment">// 当前窗口是子窗口</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>iframe</code>嵌入窗口的<code>window</code>对象，有一个<code>frameElement</code>属性，返回它在父窗口中的<code>DOM</code>节点。对于那么非嵌入的窗口，该属性等于<code>null</code>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f1Element = <span class="built_in">document</span>.getElementById(<span class="string">'f1'</span>);</span><br><span class="line"><span class="keyword">var</span> fiWindow = f1Element.contentWindow;</span><br><span class="line">f1Window.frameElement === f1Element <span class="comment">// true</span></span><br><span class="line"><span class="built_in">window</span>.frameElement === <span class="literal">null</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="frames属性"><a href="#frames属性" class="headerlink" title="frames属性"></a>frames属性</h4><p>window对象的frames属性返回一个类似数组的对象，成员是所有子窗口的<code>window</code>对象。可以使用这个属性，实现窗口之间的互相引用。比如，<code>frames[0]</code>返回第一个子窗口，<code>frames[1].frames[2]</code>返回第二个子窗口内部的第三个子窗口，<code>parent.frames[1]</code>返回父窗口的第二个子窗口。</p>
-<p>需要注意的是，<code>window.frames</code>每个成员的值，是框架内的窗口（即框架的<code>window</code>对象），而不是<code>iframe</code>标签在父窗口的<code>DOM</code>节点。如果要获取每个框架内部的DOM树，需要使用<code>window.frames[0].document</code>的写法。</p>
-<p>另外，如果<code>iframe</code>元素设置了<code>name</code>或<code>id</code>属性，那么属性值会自动成为全局变量，并且可以通过<code>window.frames</code>属性引用，返回子窗口的<code>window</code>对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML代码为&lt;iframe id="myFrame"&gt;</span></span><br><span class="line">myFrame <span class="comment">// [HTMLIFrameElement]</span></span><br><span class="line">frames.myframe === myFrame <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>另外，name属性的值会自动成为子窗口的名称，可以用在<code>window.open</code>方法的第二个参数，或者<code>&lt;a&gt;</code>和<code>&lt;frame&gt;</code>标签的<code>target</code>属性。</p>
-<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><h4 id="error-事件和-onerror-属性"><a href="#error-事件和-onerror-属性" class="headerlink" title="error 事件和 onerror 属性"></a>error 事件和 onerror 属性</h4><p>浏览器脚本发生错误时，会触发window对象的error事件。我们可以通过window.onerror属性对该事件指定回调函数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onerror = <span class="function"><span class="keyword">function</span> (<span class="params">message, filename, lineno, colno, error</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"出错了！--&gt; %s"</span>, error.stack);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>由于历史原因，window的error事件的回调函数不接受错误对象作为参数，而是一共可以接受五个参数，它们的含义依次如下。</p>
-<ul>
-<li>出错信息</li>
-<li>出错脚本的网址</li>
-<li>行号</li>
-<li>列号</li>
-<li>错误对象</li>
-</ul>
-<p>老式浏览器只支持前三个参数。</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
-<p><a href="http://javascript.ruanyifeng.com/bom/window.html" target="_blank" rel="noopener">http://javascript.ruanyifeng.com/bom/window.html</a><br><a href="https://danlimerick.wordpress.com/2014/01/18/how-to-catch-javascript-errors-with-window-onerror-even-on-chrome-and-firefox/" target="_blank" rel="noopener">https://danlimerick.wordpress.com/2014/01/18/how-to-catch-javascript-errors-with-window-onerror-even-on-chrome-and-firefox/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/23/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/23/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -871,7 +833,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -881,7 +843,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

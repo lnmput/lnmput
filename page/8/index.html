@@ -265,6 +265,108 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/03/linux查找含有某字符串的所有文件/" itemprop="url">
+                  Linux查找含有某字符串的所有文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-03T13:23:42+08:00" content="2018-08-03">
+              2018-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>All is well<br></blockquote>
+
+<p>如果你想在当前目录下 查找”hello,world!”字符串,可以这样:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -rn <span class="string">"hello,world!"</span> *</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">* : 表示当前目录所有文件，也可以是某个文件名</span><br><span class="line">-r 是递归查找</span><br><span class="line">-n 是显示行号</span><br><span class="line">-R 查找所有文件包含子目录</span><br><span class="line">-i 忽略大小写</span><br></pre></td></tr></table></figure>
+<p>下面是一些有意思的命令行参数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">grep -i pattern files ：不区分大小写地搜索。默认情况区分大小写， </span><br><span class="line">grep -l pattern files ：只列出匹配的文件名， </span><br><span class="line">grep -L pattern files ：列出不匹配的文件名， </span><br><span class="line">grep -w pattern files ：只匹配整个单词，而不是字符串的一部分（如匹配‘magic’，而不是‘magical’）， </span><br><span class="line">grep -C number pattern files ：匹配的上下文分别显示[number]行， </span><br><span class="line">grep pattern1 | pattern2 files ：显示匹配 pattern1 或 pattern2 的行， </span><br><span class="line">grep pattern1 files | grep pattern2 ：显示既匹配 pattern1 又匹配 pattern2 的行。</span><br></pre></td></tr></table></figure></p>
+<p>这里还有些用于搜索的特殊符号：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\&lt; 和 \&gt; 分别标注单词的开始与结尾。</span><br><span class="line">例如： </span><br><span class="line">grep man * 会匹配 ‘Batman’、‘manic’、‘man’等， </span><br><span class="line">grep <span class="string">'\&lt;man'</span> * 匹配‘manic’和‘man’，但不是‘Batman’， </span><br><span class="line">grep <span class="string">'\&lt;man\&gt;'</span> 只匹配‘man’，而不是‘Batman’或‘manic’等其他的字符串。 </span><br><span class="line"><span class="string">'^'</span>：指匹配的字符串在行首， </span><br><span class="line"><span class="string">'$'</span>：指匹配的字符串在行尾</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://blog.51cto.com/151wqooo/1162118" target="_blank" rel="noopener">http://blog.51cto.com/151wqooo/1162118</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/08/03/laravel中的锁/" itemprop="url">
                   Laravel中的锁
                 </a>
@@ -684,116 +786,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/25/为什么要在eloquent中使用appends/" itemprop="url">
-                  为什么要在eloquent中使用appends
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-25T08:57:46+08:00" content="2018-07-25">
-              2018-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>讲真话的最大好处就是：不必记得自己讲过什么。<br></blockquote>
-
-<p>Eloquent has a convenient feature called Accessors – you can define your own custom fields on top of existing in the database table. But then there’s an Eloquent property $appends – should we use it or not? And what’s the difference?</p>
-<h3 id="First-–-how-Accessors-work"><a href="#First-–-how-Accessors-work" class="headerlink" title="First – how Accessors work"></a>First – how Accessors work</h3><p>For those who don’t know or have forgotten: for example, if you have User model and fields first_name and last_name in the DB table, then you can create a function in app\User.php:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFullNameAttribute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;first_name . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Then you have access to property full_name (in the function name it’s CamelCase, and the property name is with underscoresd, for example like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ho User::find(<span class="number">1</span>)-&gt;full_name;</span><br></pre></td></tr></table></figure></p>
-<p>But here’s the thing – if you just return User object, it won’t contain full_name:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd(User::find(<span class="number">1</span>)-&gt;toJSON());</span><br></pre></td></tr></table></figure></p>
-<p>The result would look something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"id"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"first_name"</span>:<span class="string">"Povilas"</span>,</span><br><span class="line">  <span class="string">"last_name"</span>:<span class="string">"Korop"</span>,</span><br><span class="line">  <span class="string">"email"</span>:<span class="string">"povilas@webcoderpro.com"</span>,</span><br><span class="line">  <span class="string">"created_at"</span>:<span class="string">"2015-06-19 08:16:58"</span>,</span><br><span class="line">  <span class="string">"updated_at"</span>:<span class="string">"2015-06-19 19:48:09"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Here’s-where-appends-comes-in"><a href="#Here’s-where-appends-comes-in" class="headerlink" title="Here’s where $appends comes in"></a>Here’s where $appends comes in</h3><p>Now this is the trick – in your User model you can add $appends attribute and list the fields that would automatically be appended:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">protected</span> $appends = [<span class="string">'full_name'</span>];</span><br></pre></td></tr></table></figure></p>
-<p>Now that attribute will be automatically added to the previous JSON:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"id"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"first_name"</span>:<span class="string">"Povilas"</span>,</span><br><span class="line">  <span class="string">"last_name"</span>:<span class="string">"Korop"</span>,</span><br><span class="line">  <span class="string">"email"</span>:<span class="string">"povilas@webcoderpro.com"</span>,</span><br><span class="line">  <span class="string">"created_at"</span>:<span class="string">"2015-06-19 08:16:58"</span>,</span><br><span class="line">  <span class="string">"updated_at"</span>:<span class="string">"2015-06-19 19:48:09"</span>,</span><br><span class="line">  <span class="string">"full_name"</span>:<span class="string">"Povilas Korop"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://laraveldaily.com/why-use-appends-with-accessors-in-eloquent/" target="_blank" rel="noopener">https://laraveldaily.com/why-use-appends-with-accessors-in-eloquent/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -832,7 +829,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -842,7 +839,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

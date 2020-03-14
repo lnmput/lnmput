@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2018/02/23/node开发环境报错error-code-ELIFECYCLE/" itemprop="url">
+                  node开发环境报错error-code-ELIFECYCLE
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-23T10:34:50+08:00" content="2018-02-23">
+              2018-02-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>别说东南西北，请说左右好么<br></blockquote>
+
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>项目开发环境报了错，报错信息如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! errno <span class="number">2</span></span><br><span class="line">npm ERR! @ development: <span class="string">`cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js`</span></span><br><span class="line">npm ERR! Exit status <span class="number">2</span></span><br><span class="line">npm ERR!</span><br><span class="line">npm ERR! Failed at the @ development script.</span><br><span class="line">npm ERR! This is probably not a problem <span class="keyword">with</span> npm. There is likely additional logging output above.</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log <span class="keyword">of</span> <span class="keyword">this</span> run can be found <span class="keyword">in</span>:</span><br><span class="line">npm ERR!     C:\Users\Administrator\AppData\Roaming\npm-cache\_logs\<span class="number">2018</span><span class="number">-02</span><span class="number">-23</span>T02_05_24_275Z-debug.log</span><br><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! errno <span class="number">2</span></span><br><span class="line">npm ERR! @ dev: <span class="string">`npm run development`</span></span><br><span class="line">npm ERR! Exit status <span class="number">2</span></span><br><span class="line">npm ERR!</span><br><span class="line">npm ERR! Failed at the @ dev script.</span><br><span class="line">npm ERR! This is probably not a problem <span class="keyword">with</span> npm. There is likely additional logging output above.</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log <span class="keyword">of</span> <span class="keyword">this</span> run can be found <span class="keyword">in</span>:</span><br><span class="line">npm ERR!     C:\Users\Administrator\AppData\Roaming\npm-cache\_logs\<span class="number">2018</span><span class="number">-02</span><span class="number">-23</span>T02_05_24_301Z-debug.log</span><br></pre></td></tr></table></figure></p>
+<h3 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h3><p>把 <code>node_modules</code> 目录删除<br>执行命令<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm cache clear --force  </span><br><span class="line">npm install -g npm</span><br></pre></td></tr></table></figure></p>
+<h3 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h3><p>查看 <code>node_modules</code> 目录的权限是否存在问题</p>
+<h3 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h3><p>检查是否有异常端口占用</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/02/23/新年的第一天/" itemprop="url">
                   新年的第一天
                 </a>
@@ -690,115 +789,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/30/一道javascript面试题引发的思考/" itemprop="url">
-                  一道javascript面试题引发的思考
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-30T11:39:19+08:00" content="2018-01-30">
-              2018-01-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>nothing is impossible<br></blockquote>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在 JavaScript 中 (a ==1 &amp;&amp; a== 2 &amp;&amp; a==3) 可能为 true 吗？</p>
-<h3 id="解答一"><a href="#解答一" class="headerlink" title="解答一"></a>解答一</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  i: <span class="number">1</span>,</span><br><span class="line">  toString: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a.i++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(a == <span class="number">1</span> &amp;&amp; a == <span class="number">2</span> &amp;&amp; a == <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Hello World!'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当使用 == 时，如果两个参数的类型不一样，那么 JS 会尝试将其中一个的类型转换为和另一个相同。在这里左边对象，右边数字的情况下，会首先尝试调用 valueOf（如果可以调用的话）来将对象转换为数字，如果失败，再调用 toString。</p>
-<h3 id="解答二"><a href="#解答二" class="headerlink" title="解答二"></a>解答二</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> aﾠ = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">var</span> ﾠa = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">if</span>(aﾠ==<span class="number">1</span> &amp;&amp; a== <span class="number">2</span> &amp;&amp;ﾠa==<span class="number">3</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Why hello there!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="解答三"><a href="#解答三" class="headerlink" title="解答三"></a>解答三</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span>(&#123;</span><br><span class="line">  <span class="keyword">get</span> a() &#123;</span><br><span class="line">    <span class="keyword">return</span> ++i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;) &#123;</span><br><span class="line">  <span class="keyword">if</span> (a == <span class="number">1</span> &amp;&amp; a == <span class="number">2</span> &amp;&amp; a == <span class="number">3</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"wohoo"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="解答四"><a href="#解答四" class="headerlink" title="解答四"></a>解答四</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line">a.join = a.shift;</span><br><span class="line"><span class="built_in">console</span>.log(a == <span class="number">1</span> &amp;&amp; a == <span class="number">2</span> &amp;&amp; a == <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://stackoverflow.com/questions/48270127/can-a-1-a-2-a-3-ever-evaluate-to-true" target="_blank" rel="noopener">https://stackoverflow.com/questions/48270127/can-a-1-a-2-a-3-ever-evaluate-to-true</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/25/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><span class="page-number current">26</span><a class="page-number" href="/page/27/">27</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/27/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/25/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><span class="page-number current">26</span><a class="page-number" href="/page/27/">27</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/27/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -837,7 +832,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -847,7 +842,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

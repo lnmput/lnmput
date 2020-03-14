@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2018/01/15/sublime提示插件无法安装/" itemprop="url">
+                  sublime提示插件无法安装
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-15T18:38:06+08:00" content="2018-01-15">
+              2018-01-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你不需要很厉害才能开始，但你需要开始才会很厉害。<br></blockquote>
+
+<h3 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h3><p>安装使用<code>package control</code>一直出现<code>There are no packages available for installation</code>，打开sublime text 的控制台，发现一直有以下错误:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Package Control: Error downloading channel. URL error [Errno <span class="number">65</span>] </span><br><span class="line">No route to host downloading https:<span class="comment">//packagecontrol.io/channel_v3.json.</span></span><br></pre></td></tr></table></figure></p>
+<p>应该GWF墙的就是这个文件，导致后续的安装失败，网上查了找到的方法就是改变安装<code>channel_v3.json</code>的配置文件。</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>首先打开用户自定义配置文件win7<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Preferences &gt; Package Settings &gt; Package Control &gt; Settings - User</span><br></pre></td></tr></table></figure></p>
+<p>或者win10<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Preferences &gt; Settings</span><br></pre></td></tr></table></figure></p>
+<p>然后在最下方新增以下配置<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"channels":</span><br><span class="line">    [</span><br><span class="line">        <span class="string">"http://cst.stu.126.net/u/json/cms/channel_v3.json"</span></span><br><span class="line">    ],</span><br></pre></td></tr></table></figure></p>
+<p>问题既可得到解决;</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/01/11/hexo的next主题自定义css/" itemprop="url">
                   hexo的next主题自定义css
                 </a>
@@ -695,117 +796,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/02/php中函数和方法的调用/" itemprop="url">
-                  php中函数和方法的调用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-02T11:28:52+08:00" content="2018-01-02">
-              2018-01-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>酒贱常愁客少，月明多被云妨.<br></blockquote>
-
-<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>第一种调用方式:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">echo</span> <span class="string">'test'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();</span><br></pre></td></tr></table></figure></p>
-<p>第二种调用方式:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">'test'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">call_user_func(<span class="string">'test'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>参数传递:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">($a, $b)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">echo</span> $a;</span><br><span class="line">  <span class="keyword">echo</span> $b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">call_user_func_array (<span class="string">'test'</span>, [<span class="number">1</span>, <span class="string">'ff'</span>]);</span><br></pre></td></tr></table></figure></p>
-<p>不定参数:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">oldAdd</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   $args = func_get_args();</span><br><span class="line">   dd($args);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">oldAdd(<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   $args = func_get_args();</span><br><span class="line">   dd($args);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">call_user_func_array (<span class="string">'test'</span>, [<span class="number">1</span>, <span class="string">'ff'</span>]);</span><br></pre></td></tr></table></figure></p>
-<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><p>第一种方法:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hehe</span><span class="params">()</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">      <span class="keyword">echo</span> <span class="string">'hehe'</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">(<span class="keyword">new</span> Test())-&gt;hehe();</span><br></pre></td></tr></table></figure></p>
-<p>第二种方法:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hehe</span><span class="params">()</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="keyword">echo</span> <span class="string">'hehe'</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$f = <span class="keyword">new</span> Test();</span><br><span class="line">call_user_func([ $f, <span class="string">'hehe'</span>]);</span><br></pre></td></tr></table></figure></p>
-<p>静态方法:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">hehe</span><span class="params">($a, $b)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> $a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">call_user_func_array([ <span class="string">'Test'</span>, <span class="string">'hehe'</span>], [<span class="string">'we'</span>, <span class="number">34</span>]);</span><br></pre></td></tr></table></figure></p>
-<p>普通方法传递参数:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hehe</span><span class="params">($a, $b)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> $a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$f = <span class="keyword">new</span> Test();</span><br><span class="line">call_user_func_array([ $f, <span class="string">'hehe'</span>], [<span class="string">'we'</span>, <span class="number">34</span>]);</span><br></pre></td></tr></table></figure></p>
-<p>类内部的方法调用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hehe</span><span class="params">($a, $b)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        call_user_func([<span class="keyword">$this</span>, <span class="string">'init'</span>]);</span><br><span class="line">        <span class="keyword">echo</span> $a;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'--init--'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$f = <span class="keyword">new</span> Test();</span><br><span class="line">call_user_func_array([ $f, <span class="string">'hehe'</span>], [<span class="string">'we'</span>, <span class="number">34</span>]);</span><br></pre></td></tr></table></figure></p>
-<h3 id="两种调用的区别"><a href="#两种调用的区别" class="headerlink" title="两种调用的区别"></a>两种调用的区别</h3><p>call_user_func is for calling functions whose name you don’t know ahead of time but it is much less efficient since the program has to lookup the function at runtime.</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/28/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/30/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/28/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/30/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -844,7 +839,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -854,7 +849,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

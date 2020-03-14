@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/07/使用laravel生成条形码/" itemprop="url">
+                  使用laravel生成条形码
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-07T09:06:07+08:00" content="2017-11-07">
+              2017-11-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我已经和垃圾学校的某些垃圾学生呆够了，再他妈不努力，你这辈子就只能和他们打交道了。<br></blockquote>
+
+<h3 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h3><p>项目地址<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//packagist.org/packages/codeitnowin/barcode</span></span><br></pre></td></tr></table></figure></p>
+<p>使用composer安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> codeitnowin/barcode</span><br></pre></td></tr></table></figure></p>
+<p>无需配置</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="生成二维码"><a href="#生成二维码" class="headerlink" title="生成二维码"></a>生成二维码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">QrCode</span>;</span><br><span class="line"></span><br><span class="line">$qrCode = <span class="keyword">new</span> QrCode();</span><br><span class="line">$qrCode</span><br><span class="line">    -&gt;setText(<span class="string">'QR code by codeitnow.in'</span>)</span><br><span class="line">    -&gt;setSize(<span class="number">300</span>)</span><br><span class="line">    -&gt;setPadding(<span class="number">10</span>)</span><br><span class="line">    -&gt;setErrorCorrection(<span class="string">'high'</span>)</span><br><span class="line">    -&gt;setForegroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">0</span>, <span class="string">'g'</span> =&gt; <span class="number">0</span>, <span class="string">'b'</span> =&gt; <span class="number">0</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setBackgroundColor(<span class="keyword">array</span>(<span class="string">'r'</span> =&gt; <span class="number">255</span>, <span class="string">'g'</span> =&gt; <span class="number">255</span>, <span class="string">'b'</span> =&gt; <span class="number">255</span>, <span class="string">'a'</span> =&gt; <span class="number">0</span>))</span><br><span class="line">    -&gt;setLabel(<span class="string">'Scan Qr Code'</span>)</span><br><span class="line">    -&gt;setLabelFontSize(<span class="number">16</span>)</span><br><span class="line">    -&gt;setImageType(QrCode::IMAGE_TYPE_PNG)</span><br><span class="line">;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:'</span>.$qrCode-&gt;getContentType().<span class="string">';base64,'</span>.$qrCode-&gt;generate().<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="生成条形码"><a href="#生成条形码" class="headerlink" title="生成条形码"></a>生成条形码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">CodeItNow</span>\<span class="title">BarcodeBundle</span>\<span class="title">Utils</span>\<span class="title">BarcodeGenerator</span>;</span><br><span class="line"></span><br><span class="line">$barcode = <span class="keyword">new</span> BarcodeGenerator();</span><br><span class="line">$barcode-&gt;setText(<span class="string">"0123456789"</span>);</span><br><span class="line">$barcode-&gt;setType(BarcodeGenerator::Code128);</span><br><span class="line">$barcode-&gt;setScale(<span class="number">2</span>);</span><br><span class="line">$barcode-&gt;setThickness(<span class="number">25</span>);</span><br><span class="line">$barcode-&gt;setFontSize(<span class="number">10</span>);</span><br><span class="line">$code = $barcode-&gt;generate();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;img src="data:image/png;base64,'</span>.$code.<span class="string">'" /&gt;'</span>;</span><br></pre></td></tr></table></figure>
+<p>更多参见说明文档</p>
+<blockquote>
+<p><a href="https://packagist.org/packages/codeitnowin/barcode" target="_blank" rel="noopener">https://packagist.org/packages/codeitnowin/barcode</a><br><a href="http://www.barcodebakery.com/" target="_blank" rel="noopener">http://www.barcodebakery.com/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/05/larave结合vue仿知乎项目/" itemprop="url">
                   larave结合vue仿知乎项目
                 </a>
@@ -662,116 +766,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/04/erp项目简介/" itemprop="url">
-                  erp项目简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-04T21:30:21+08:00" content="2017-11-04">
-              2017-11-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>当完成了童年理想 童年又成了理想<br></blockquote>
-
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>基于laravel5.4开发，用于所有商城的订单管理，实现了采购， 备货，发货, 仓储的完全管理， 极大的提高了员工的工作效率</p>
-<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="首页"><a href="#首页" class="headerlink" title="首页"></a>首页</h4><p><img src="/images/erp01.png" alt></p>
-<h4 id="订单列表"><a href="#订单列表" class="headerlink" title="订单列表"></a>订单列表</h4><p><img src="/images/erp02.png" alt></p>
-<h4 id="订单详情"><a href="#订单详情" class="headerlink" title="订单详情"></a>订单详情</h4><p><img src="/images/erp03.png" alt></p>
-<h4 id="未采购商品列表"><a href="#未采购商品列表" class="headerlink" title="未采购商品列表"></a>未采购商品列表</h4><p><img src="/images/erp04.png" alt></p>
-<h4 id="物流信息翻译"><a href="#物流信息翻译" class="headerlink" title="物流信息翻译"></a>物流信息翻译</h4><p><img src="/images/erp05.png" alt></p>
-<h4 id="采购信息录入"><a href="#采购信息录入" class="headerlink" title="采购信息录入"></a>采购信息录入</h4><p><img src="/images/erp06.png" alt></p>
-<h4 id="批量运费补录"><a href="#批量运费补录" class="headerlink" title="批量运费补录"></a>批量运费补录</h4><p><img src="/images/erp07.png" alt></p>
-<h4 id="备货标签打印"><a href="#备货标签打印" class="headerlink" title="备货标签打印"></a>备货标签打印</h4><p><img src="/images/erp08.png" alt></p>
-<h4 id="菜单功能演示"><a href="#菜单功能演示" class="headerlink" title="菜单功能演示"></a>菜单功能演示</h4><p><img src="/images/erp.gif" alt></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/33/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/35/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/33/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/35/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -810,7 +809,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -820,7 +819,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

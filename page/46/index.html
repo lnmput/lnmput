@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/03/mysql中的共享锁和悲观锁以及共享锁和排他锁/" itemprop="url">
+                  mysql中的共享锁和悲观锁以及共享锁和排他锁
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-03T21:25:36+08:00" content="2017-08-03">
+              2017-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>这段情，曾夏了夏天，后来却也冬了冬天<br></blockquote>
+
+<h3 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h3><p>操作前假设一切操作都可能发现并发冲突，所以采取悲观态度。通过加锁，屏蔽一切可能违反数据完整性的操作<br>比方<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">for</span> <span class="keyword">update</span>;  <span class="comment">--就是表锁</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> x = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>; <span class="comment">--就是行锁</span></span><br></pre></td></tr></table></figure></p>
+<p>当使用<code>for update</code>后，其它会话还是可以执行select操作，但无法执行<code>select xx for update</code>操作，只有当前会话<code>commit</code>后，其它for update操作才会被执行。</p>
+<p>for update仅适用于InnoDB，且必须在事务块(BEGIN/COMMIT)中才能生效<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">test</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line">SLEEP(20);</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h3><p>假定操作很少发生冲突，一般对于读多写少的情况。只在提交操作时检查是否违反数据完整性, 乐观锁不能解决脏读的问题。<br>可以通过版本号是否比上个版本号或者时间戳来实现， 也或者检查通过检查某个字段来实现；<br>对于冲突检测后的处理，需要业务逻辑去处理。</p>
+<h3 id="排它锁"><a href="#排它锁" class="headerlink" title="排它锁"></a>排它锁</h3><p>当数据对象被加上排它锁时，其他的事务不能对它读取和修改。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">test</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a>共享锁</h3><p>加了共享锁的数据对象可以被其他事务读取，但不能修改。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> city <span class="keyword">where</span> <span class="keyword">id</span> = <span class="string">"1"</span>  <span class="keyword">lock</span> <span class="keyword">in</span> <span class="keyword">share</span> <span class="keyword">mode</span>;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/03/mysql错误Duplicate-entry-4294967295-for-key-PRIMARY/" itemprop="url">
                   mysql错误Duplicate_entry_4294967295_for_key_PRIMARY
                 </a>
@@ -636,112 +737,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/28/加密签名原理/" itemprop="url">
-                  加密签名原理
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-28T15:18:36+08:00" content="2017-07-28">
-              2017-07-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>“我先起，你再睡一会儿。”<br></blockquote>
-
-<h3 id="文章核心"><a href="#文章核心" class="headerlink" title="文章核心:"></a>文章核心:</h3><p>甲先算出原文的类似于MD5的校验值(数字”指纹”,也称”信息摘要”)，接下来甲用自己的私钥K对MD5进行变形，得到变形C就是甲对合同A的签名。乙拿到源文件后也先算出MD5值，用甲的公钥K2再对签名C进行反运算，变回MD5，看是否与源文件的MD5一样，如果一样 ，则签名是真的，反之签名则为假冒的。 MD5/数字”指纹”是一种单向散列函数,它是完全不可逆的。 加密用公钥，解密是用私钥进行反运算得到原文。 签名用私钥，验证签名是用公钥进行反运算得到原指纹。 不必担心伪造MD5，因为只有用私钥才能进行签名</p>
-<p>一、加密 加密用来保护敏感信息的传输，保证信息的安全性。在一个加密系统中，信息使用加密密钥加密后，得到的密文传送给接收方，接收方使用解密密钥对密文解密得到原文。FF有两种加密体系：秘密密钥加密和公开密钥加密。</p>
-<p>1、秘密密钥加密 秘密密钥加密也称为对称密钥加密，加密和解密使用同一个密钥，即：原文经过密钥K加工（为避免歧意，本文将所有的对信息的变换均称为“加工”，而不区分加密和解密；加工前的信息称“原文”，加工后所得到的信息称为“变形”）后得到变形，而变形经过密钥K加工后又恢复为明文。因此信息的发送方和接收方必须共享一个密钥。 这种加密类型快速牢固，只要密钥足够长（目前128位被认为是“不可破解的”），密文就不可被破解。对称密钥加密的缺陷是密钥本身必须单独进行交换以便接收看能解密数据，如果密钥没有以安全方式传送，它就很可能被他人截获并用于信息解密。</p>
-<p>2、公开密钥加密 公开密钥加密也称为非对称密钥加密。公开密钥加密体系使用两个不同的密钥：一个用主人秘密保存和专用的，主要用于解密和签名，称为私钥；另一个对外公开，主要用于验证签名和加密，称为公钥（公钥体系即因此而得名）。这两个密钥是数学相关的，但仅凭借公钥，人们无法推算出其对应的私钥。原文经过公钥加工后得到变形，该变形经过私钥加工后又复原为原文；反之亦然，原文经过私钥加工后得到变形，该变形经过公钥加工后又复原为原文。下面将要讲到，“先公后私”和“先私后公”这两者看起来差不多，但应用是完全不同的。用某用户的公钥加工后所得的数据只能用该用户的私钥才能复原为原文。因而要求用户的私钥不能透露给自己不信任的任何人。 公钥加密与对称密钥加密相比，其优势在于不需要一把共享的通用密钥，私钥不发往任何地方，由主人秘密保存，而公钥是公开的，不存在管理和保密的问题。但其缺点是计算复杂，不适应于对大量的数据进行加工处理。 FF在具体的应用时，先将秘密密钥用收件人的公钥进行加工，将变形用公开通道（实际上是附加在加密文件当中）传递给收件人，收件人用其私钥对变形进行加工，恢复出秘密密钥，然后再用秘密密钥对密文进行解密。 公钥加密的另一个用处是身份验证。私钥主人用私钥加工了一条信息后，拥有公钥拷贝的任何人都能对其复原，接收者由此可以知道这条信息确实来自于拥有私钥的人，因为除了私钥的主人外，其他人没有私钥，是无法进行“原文经过私钥加工后得到变形”这一操作的，故“先私后公”的操作方式可以进行身份验证，或者称为“数字签名”、“电子签名”。 二、安全的单向散列函数 （Secure Hash） 单向散列函数（简称“H函数”或“Hash函数”）用于对要传输的数据作运算生成信息摘要，它并不是一种加密机制，但却能产生信息的数字”指纹”，它的目的是为了确保数据没有被修改或变化，保证信息的完整性不被破坏。</p>
-<h3 id="单向散列函数有三个主要特点："><a href="#单向散列函数有三个主要特点：" class="headerlink" title="单向散列函数有三个主要特点："></a>单向散列函数有三个主要特点：</h3><p>1．它能处理任意大小的信息，并将其技信息摘要（message digest）方法生成固定大小的数据块（FF是128位，即16字节），对同一个源数据反复执行Hash函数将总是得到同样的结果。<br>2．它是不可预见的。产生的数据块的大小与原始信息的大小没有任何联系，同时源数据和产生的数据块的数据看起来也没有明显关系，源信息的一个微小变化都会对数据块产生很大的影响。<br>3．它是完全不可逆的，没有办法通过生成的数据块直接恢复源数据。</p>
-<p>H函数最主要的用途是数字签名。具体过程为： 甲先用H函数对某个信息（如合同的电子文件）A进行计算，得到128位的结果B，再用私钥K对B进行变形，得到C，该变形C就是甲对合同A的签名。 他人（乙）的验证过程为：乙用H函数对A进行计算，得到结果B1，对签名C用甲的公钥K1进行加工，得到变形B2，如果B1=B2，则签名是真的，反之签名则为假冒的。 原理：只有持有私钥K的人可以完成从A到C的操作。因为 甲虽然可以指责乙捏造了合同A（任何人都可以在计算机上打出一份他想要的合同），乙也的确可以从A计算出B，但从B到C的过程要用到甲的私钥K，该过程只有甲可以完成； 甲也可以指责乙先捏造了签名C，乙也的确可以用甲的公钥从C计算出B，但乙无法从B推算出A，从A到B的H函数是单向的，无法反向计算。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/45/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><span class="page-number current">46</span><a class="page-number" href="/page/47/">47</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/47/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/45/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><span class="page-number current">46</span><a class="page-number" href="/page/47/">47</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/47/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -780,7 +780,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -790,7 +790,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

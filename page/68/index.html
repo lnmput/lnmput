@@ -265,6 +265,108 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/10/php三种工作方式-CGI模式-FastCGI模式-Apache的mod-php/" itemprop="url">
+                  php三种工作方式-CGI模式-FastCGI模式-Apache的mod_php
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-10T23:04:19+08:00" content="2016-08-10">
+              2016-08-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>“跑呀跑呀跑呀跑呀，拼命努力着追上前面那个被目光期许的自己，生怕抓不住时光，只有和你一起的时候，才觉得不如就这样老了吧，也不算太辜负。”<br></blockquote></p>
+<h3 id="CGI"><a href="#CGI" class="headerlink" title="CGI"></a>CGI</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CGI英文全程是 Command Gateway <span class="class"><span class="keyword">Interface</span>，通常翻译为公共网关接口，</span></span><br><span class="line"><span class="class">是<span class="title">HTTP</span>服务器与机器上的其他程序进行通信的一个接口。</span></span><br><span class="line"><span class="class">这个“其他程序”可以是使用任何计算机语言进行编 写，例如<span class="title">php</span>，<span class="title">python</span>，<span class="title">perl</span>等等。</span></span><br><span class="line"><span class="class">它通过<span class="title">CGI</span>这个接口从<span class="title">HTTP</span>服务器取得输入，然后把运行结果又通过<span class="title">CGI</span>这个接口交给<span class="title">HTTP</span>服务器， 而<span class="title">HTTP</span>服务器把这个结果送给浏览器。</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">CGI</span> 的出现让<span class="title">WEB</span>从静态变为动态，随着<span class="title">web</span>的越来越普及，很多的网站都需要有动态的页面，</span></span><br><span class="line"><span class="class">以便与浏览者进行交互。<span class="title">CGI</span>的缺点也越来越突出，因为<span class="title">HTTP</span> 要生成一个动态页面，</span></span><br><span class="line"><span class="class">系统就必须启动一个新的进程以运行<span class="title">CGI</span>程序，</span></span><br><span class="line"><span class="class">不断的<span class="title">fork</span>是一项很消耗时间和资源的工作。</span></span><br></pre></td></tr></table></figure>
+<h3 id="FastCGI"><a href="#FastCGI" class="headerlink" title="FastCGI"></a>FastCGI</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FastCGIFastCGI是可伸缩架构的CGI开放扩展，</span><br><span class="line">其主要行为是将CGI解释器进程保持在内存中并因此获得较高的性能。</span><br><span class="line">传统的CGI 解释器的反复加载是CGI性能低下的主要原因，</span><br><span class="line">如果CGI解释器保持在内存中并接受FastCGI进程管理器调度，</span><br><span class="line">则可以提供良好的性能、伸缩性等 。在上述情况中，你可以想象 CGI通常有多慢。</span><br><span class="line">每一个Web请求PHP都必须重新解析php.ini、重新载入全部扩展并重初始化全部数据结构。</span><br><span class="line">使用FastCGI，所有这些 都只在进程启动时发生一次。一个额外的好处是，</span><br><span class="line">持续数据库连接(Persistent database connection)可以工作。</span><br></pre></td></tr></table></figure>
+<h3 id="mod-php"><a href="#mod-php" class="headerlink" title="mod_php"></a>mod_php</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在lamp体系中，对于apache端的php的配置，我们最常用的就是mod_php，</span><br><span class="line">它把php作为apache一个内置的模块.让apache http服务器本身能够支持php语言，</span><br><span class="line">不需要每一个请求就启动php解释器来解释php.</span><br><span class="line"></span><br><span class="line">和把webserver与php绑定起来的方式不同，</span><br><span class="line">fastcgi是http服务器与你的或其它机器上的程序进行“交谈”的一种工具，</span><br><span class="line">相当于一 个程序接口。它可以接受来自web服务器的请求，解释输入信息，</span><br><span class="line">将处理后的结果返回给服务器等。mod_fastcgi就是在apache下支持 fastcgi协议的模块。</span><br><span class="line"></span><br><span class="line">在lamp体系中，mod_php是最常使用的工作方式。在这种模式下，</span><br><span class="line">php被编译为apache的一个内置模块，在启动加载的时候，</span><br><span class="line">当有一个php请求过来，直接在httpd进程里完成了php的解释运行，将结果返回。</span><br></pre></td></tr></table></figure>
+<h3 id="mod-fastcgi"><a href="#mod-fastcgi" class="headerlink" title="mod_fastcgi"></a>mod_fastcgi</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mod_fastcgi就是在apache下支持 fastcgi协议的模块。</span><br><span class="line">fastcgi实例和apache分离开来，这两者可以分开来部署。</span><br><span class="line">他们之间的通信通过tcp或者unix sock来完成。使用ext方式，</span><br><span class="line">fastcgi实例是独立运行的。</span><br></pre></td></tr></table></figure>
+<h3 id="FPM"><a href="#FPM" class="headerlink" title="FPM"></a>FPM</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FPM（FastCGI 进程管理器）用于替换 PHP FastCGI 的大部分附加功能，</span><br><span class="line">对于高负载网站是非常有用的。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://blog.shiliuvip.com/391.html" target="_blank" rel="noopener">http://blog.shiliuvip.com/391.html</a><br><a href="http://php.net/manual/zh/install.fpm.php" target="_blank" rel="noopener">http://php.net/manual/zh/install.fpm.php</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/07/PHP生成器的简单理解/" itemprop="url">
                   PHP生成器的简单理解
                 </a>
@@ -682,110 +784,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/29/mysql内存表的使用/" itemprop="url">
-                  mysql内存表的使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-29T09:56:40+08:00" content="2016-07-29">
-              2016-07-29
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>答案很长，我准备用一生的时间来回答，你准备要听了吗？<br></blockquote>
-
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MySQL的内存表，表结构创建在磁盘上，数据存放在内存中，所以当MySQL启动着的时候，</span><br><span class="line">这个表是存在的，数据也是存在的，当MySQL重启后，数据消失，表结构还存在（</span><br><span class="line">临时表表结构及数据都在内存中）。内存表最大所需内存需要通过</span><br><span class="line">max_heap_table_size=<span class="number">1024</span>M设定，临时表最大所需内存需要通过tmp_table_size = <span class="number">1024</span>M</span><br><span class="line">设定。当数据超过临时表的最大值设定时，自动转为基于磁盘的MyISAM表，</span><br><span class="line">存储在指定的tmpdir目录，此时因需要进行IO操作，性能会大大下降，</span><br><span class="line">而内存表不会，内存表满后，会提示数据满错误。</span><br></pre></td></tr></table></figure>
-<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表的表定义是存放在磁盘上的，扩展名为.frm， 重启不会丢失。</span><br><span class="line">内存表的数据是存放在内存中的，重启会丢失数据。</span><br><span class="line">MEMORY表使用一个固定的记录长度格式。</span><br><span class="line">mysql重启后，主键、自增、索引仍然存在，只是数据丢失。</span><br></pre></td></tr></table></figure>
-<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内存表使用哈希散列索引把数据保存在内存中，因此具有极快的速度。</span><br></pre></td></tr></table></figure>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表不能包含BLOB或者TEXT列。</span><br><span class="line">内存表不支持事务。</span><br><span class="line">内存表是表锁，当修改频繁时，性能可能会下降。</span><br><span class="line">内存表数据清空或删除表后占用内存不会自动释放。</span><br></pre></td></tr></table></figure>
-<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mem_table(  </span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>(<span class="number">10</span>),  </span><br><span class="line">  <span class="keyword">num</span> <span class="built_in">int</span>(<span class="number">10</span>)  </span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">MEMORY</span>;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/67/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><span class="page-number current">68</span><a class="page-number" href="/page/69/">69</a><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/69/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/67/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><span class="page-number current">68</span><a class="page-number" href="/page/69/">69</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/69/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -824,7 +827,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -834,7 +837,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,104 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/26/php的trim无法去掉空格/" itemprop="url">
+                  php的trim无法去掉空格
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-26T10:35:52+08:00" content="2017-07-26">
+              2017-07-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>多少次我们无醉不欢<br>咒骂人生太短 唏嘘相见恨晚<br></blockquote></p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>在PHP开发过程中，使用<code>trim</code>想去掉空格，不成功；<br>打印出来字符串，后面确实带有空格，在控制台又显示有<code>&amp;nbsp;</code>（此处所指的nbsp是实体，而不是nbsp四个字符）<br>后来改用<code>str_replace</code>来去掉空格，依然失败；<br>到底是什么原因，于是刚开始想到了是不是全角和半角的空格问题；试着换成全角的空格，依然失败；<br>后来又使用escape尝试输出，发现是xa0，于是就想<code>trim($converted, “xa0”)</code>，无果<br>在php手册的trim函数下评论中发现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trim($otmp, chr(<span class="number">0xc2</span>) . chr(<span class="number">0xa0</span>))</span><br></pre></td></tr></table></figure></p>
+<p>使用后，成功去掉空格；另外，str_replace也可使用：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$otmp = str_replace(chr(<span class="number">0xc2</span>) . chr(<span class="number">0xa0</span>), <span class="string">''</span>, $otmp);</span><br></pre></td></tr></table></figure></p>
+<p>效果一样，成功解决~~~<br>ps:此空格产生的原因是，我在获取到html代码之后strip_tags去掉所有标签，而产生了一些实体空格</p>
+<h3 id="html实体"><a href="#html实体" class="headerlink" title="html实体"></a>html实体</h3><p>在 HTML 中，某些字符是预留的。<br>在 HTML 中不能使用小于号（&lt;）和大于号（&gt;），这是因为浏览器会误认为它们是标签。<br>如果希望正确地显示预留字符，我们必须在 HTML 源代码中使用字符实体（character entities）。<br>字符实体类似这样：&amp;entity_name;或者&amp;#entity_number;<br>如需显示小于号，我们必须这样写： <code>&amp;lt;</code>  或  <code>&amp;#60;</code><br>提示：使用实体名而不是数字的好处是，名称易于记忆。不过坏处是，浏览器也许并不支持所有实体名称（对实体数字的支持却很好）。<br>不间断空格（non-breaking space）<br>HTML 中的常用字符实体是不间断空格( <code>&amp;nbsp;</code> )。<br>浏览器总是会截短 HTML 页面中的空格。如果您在文本中写 10 个空格，在显示该页面之前，浏览器会删除它们中的 9 个。如需在页面中增加空格的数量，您需要使用 <code>&amp;nbsp;</code> 字符实体。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/25/使用swoole异步发送邮件/" itemprop="url">
                   使用swoole异步发送邮件
                 </a>
@@ -655,110 +753,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/16/indexeddb的简单使用/" itemprop="url">
-                  indexeddb的简单使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-16T22:00:12+08:00" content="2017-07-16">
-              2017-07-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>有一天你会知道，人生没有我并不会不同<br></blockquote><br>存储在IndexedDB里的数据是永久保存，不像cookies那样只是临时的。IndexedDB里提供了查询数据的功能，在online和offline模式下都能使用。你可以用IndexedDB存储大型数据。</p>
-<h3 id="IndexedDB-具有以下特点。"><a href="#IndexedDB-具有以下特点。" class="headerlink" title="IndexedDB 具有以下特点。"></a>IndexedDB 具有以下特点。</h3><p>（1）键值对储存。 IndexedDB 内部采用对象仓库（object store）存放数据。所有类型的数据都可以直接存入，包括 JavaScript 对象。在对象仓库中，数据以“键值对”的形式保存，每一个数据都有对应的键名，键名是独一无二的，不能有重复，否则会抛出一个错误。<br>（2）异步。 IndexedDB 操作时不会锁死浏览器，用户依然可以进行其他操作，这与 LocalStorage 形成对比，后者的操作是同步的。异步设计是为了防止大量数据的读写，拖慢网页的表现。<br>（3）支持事务。 IndexedDB 支持事务（transaction），这意味着一系列操作步骤之中，只要有一步失败，整个事务就都取消，数据库回到事务发生之前的状态，不存在只改写一部分数据的情况。<br>（4）同域限制 IndexedDB 也受到同域限制，每一个数据库对应创建该数据库的域名。来自不同域名的网页，只能访问自身域名下的数据库，而不能访问其他域名下的数据库。<br>（5）储存空间大 IndexedDB 的储存空间比 LocalStorage 大得多，一般来说不少于250MB。IE的储存上限是250MB，Chrome和Opera是剩余空间的某个百分比，Firefox 则没有上限。<br>（6）支持二进制储存。 IndexedDB 不仅可以储存字符串，还可以储存二进制数据。</p>
-<h3 id="API实例"><a href="#API实例" class="headerlink" title="API实例"></a>API实例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">'indexedDB'</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> openRequest = indexedDB.open(<span class="string">"yangzie"</span>,<span class="number">5</span>);</span><br><span class="line">        <span class="keyword">let</span> db;</span><br><span class="line">        openRequest.onupgradeneeded = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据库更新..."</span>);</span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            db = e.target.result;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!db.objectStoreNames.contains(<span class="string">'firstOS'</span>))&#123;</span><br><span class="line">                db.createObjectStore(<span class="string">"firstOS"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'表已经存在'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        openRequest.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据路打开成功!"</span>);</span><br><span class="line"></span><br><span class="line">            db = e.target.result;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 事务</span></span><br><span class="line">            <span class="keyword">let</span> transaction = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> store = transaction.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> o = &#123;<span class="attr">p</span>: <span class="string">"she is a girl"</span>&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 添加数据</span></span><br><span class="line">            <span class="keyword">let</span> request = store.add(o,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">            request.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"数据添加失败！"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            request.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"数据添加成功！"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 修改数据</span></span><br><span class="line">            <span class="keyword">let</span> tr = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> storess = tr.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line">            <span class="keyword">let</span> p = &#123; <span class="attr">p</span>:<span class="number">456</span> &#125;;</span><br><span class="line">            <span class="keyword">let</span> urequest = storess.put(p, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            urequest.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"修改成功"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            urequest.onsucces = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"修改失败"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取数据</span></span><br><span class="line">            <span class="keyword">let</span> t = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readonly"</span>);</span><br><span class="line">            <span class="keyword">let</span> stores = t.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> ob = stores.get(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            ob.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"获取数据成功"</span>);</span><br><span class="line">                <span class="built_in">console</span>.log(ob);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            transaction.oncomplete = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'事务结束'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 删除记录</span></span><br><span class="line">            <span class="keyword">let</span> tt = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line">            <span class="keyword">let</span> mrequest = tt.objectStore(<span class="string">"firstOS"</span>).delete(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            mrequest.onsuccess = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'删除成功'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            mrequest.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'删除失败'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        openRequest.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据库打开错误"</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'您的浏览器不支持'</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://javascript.ruanyifeng.com/bom/indexeddb.html" target="_blank" rel="noopener">http://javascript.ruanyifeng.com/bom/indexeddb.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/47/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><span class="page-number current">48</span><a class="page-number" href="/page/49/">49</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/49/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/47/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><span class="page-number current">48</span><a class="page-number" href="/page/49/">49</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/49/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -797,7 +796,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">350</span>
+              <span class="site-state-item-count">351</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -807,7 +806,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
