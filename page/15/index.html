@@ -265,6 +265,114 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/02/browser-sync文件监听失败的解决方案/" itemprop="url">
+                  browser-sync文件监听失败的解决方案
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-02T09:44:04+08:00" content="2018-06-02">
+              2018-06-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>两岸青山相对出，孤帆一片日边来<br></blockquote>
+
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>为了方便实时预览前端开发过程中修改源码后的页面，推荐一个非常实用的工具，browser-sync。</p>
+<p>安装使用方式请自行到官网<a href="https://browsersync.io/参考文档，仓库地址在这里https://github.com/BrowserSync/browser-sync" target="_blank" rel="noopener">https://browsersync.io/参考文档，仓库地址在这里https://github.com/BrowserSync/browser-sync</a></p>
+<p>GetStart中官网给出的CLI示例命令为：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-sync start --server --files <span class="string">"css/*.css"</span></span><br></pre></td></tr></table></figure></p>
+<p>我将其写到到npm命令中，package.json 相关内容如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"dev"</span>: <span class="string">"browser-sync start --server --files 'css/*.css'"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"browser-sync"</span>: <span class="string">"^2.18.13"</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着执行 <code>npm run dev</code>，控制台输出一切正常。</p>
+<p>然而，当我修改 <code>css/style.css</code> 这个文件的时候，发现浏览器并没有刷新，这说明 <code>browser-sync</code> 并未成功监听 <code>css/*.css</code> 文件的修改。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>为此，我翻了一遍 <code>browser-sync</code> 的<code>issue</code>，发现有人遇到相同的问题，也给出了解决方案。</p>
+<p>问题出在命令行参数上，仔细对比，我们也会发现：</p>
+<p>我写的CLI命令为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-sync start --server --files <span class="string">'css/*.css'</span></span><br></pre></td></tr></table></figure></p>
+<p>而官方CLI命令为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-sync start --server --files <span class="string">"css/*.css"</span></span><br></pre></td></tr></table></figure></p>
+<p>问题就出在分号的不同上（browser-sync没能解析单引号的内容）</p>
+<p>解决<br>因此，我将 npm命令 中的 ‘ 替换为 \” 即可解决问题。更改后的 package.json 内容如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"dev"</span>: <span class="string">"browser-sync start --server --files \"css/*.css\""</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"browser-sync"</span>: <span class="string">"^2.18.13"</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://blog.csdn.net/pwc1996/article/details/76849876" target="_blank" rel="noopener">https://blog.csdn.net/pwc1996/article/details/76849876</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/01/lavavel拒绝软删除的用户邮箱再次验证/" itemprop="url">
                   Lavavel拒绝软删除的用户邮箱再次验证
                 </a>
@@ -724,114 +832,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/29/php多参数方法的重构/" itemprop="url">
-                  PHP多参数方法的重构
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-29T22:32:41+08:00" content="2018-05-29">
-              2018-05-29
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>说用心没有用的人，以为光有钱就有用了么。<br></blockquote>
-
-<p>假设我们要完成一个保存文章的功能，如果采用函数编程的方式，大概会是下面这个样子：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">saveArticle</span><span class="params">($title, $content, $categoryId)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>每个参数代表一个属性，但带来一个问题，参数列表会变得很长。此时采用对象编程的技术会是个好方法：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $title;</span><br><span class="line">    <span class="keyword">var</span> $content;</span><br><span class="line">    <span class="keyword">var</span> $categoryId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在这里，原来的方法参数都转换为以对象的属性方式存在，从而大大降低了方法的参数数量。多数时候这个方法是不错的，不过并不是所有的参数都适合以对象属性的方式存在，区分的原则是，看这些参数是属于对象的内在属性还是外在特征，如果不加区分的统统转换为对象属性，这会让对象本身失去意义。</p>
-<p>举个例子，比如说我们的Article对象还有一个名为find的方法，使用它时可能会涉及limit, offset, order等参数：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $title;</span><br><span class="line">    <span class="keyword">var</span> $content;</span><br><span class="line">    <span class="keyword">var</span> $categoryId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> $limit = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">var</span> $offset = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> $order = <span class="string">'created DESC'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">($categoryId)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如上所示，一旦我们把limit，offset，order等参数转换为对象的属性，这个对象本身就变得不伦不类了，因为虽然title，content，categoryId可以算作是对象的内在属性，而limit，offset，order却不是，顶多也只能算作是外部特征，不加区分的结果基本是噩梦的开始。所以，还是老老实实的把外在特征放到方法的参数里好些（更严格的说，find方法应该是一个static类型的方法，不过文本就是一个简单的说明，不必细究）：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $title;</span><br><span class="line">    <span class="keyword">var</span> $content;</span><br><span class="line">    <span class="keyword">var</span> $categoryId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">($categoryId, $limit = <span class="number">10</span>, $offset = <span class="number">0</span>, $order = <span class="string">'created DESC'</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可惜如此一来又出现了文章开头所说的问题，find方法的参数太多了，缺乏可读性，所以还得重构：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $title;</span><br><span class="line">    <span class="keyword">var</span> $content;</span><br><span class="line">    <span class="keyword">var</span> $categoryId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">($categoryId, $options = array<span class="params">()</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $default = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'limit'</span> =&gt; <span class="number">10</span>,</span><br><span class="line">            <span class="string">'offset'</span> =&gt; <span class="number">0</span>,</span><br><span class="line">            <span class="string">'order'</span> =&gt; <span class="string">'created DESC'</span></span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        $options = array_merge($default, (<span class="keyword">array</span>)$options);</span><br><span class="line"></span><br><span class="line">         <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>看上去还不错，调用时可以使用类似下面的方法：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$article-&gt;find(<span class="number">123</span>, <span class="keyword">array</span>(<span class="string">'limit'</span> =&gt; <span class="number">20</span>));</span><br></pre></td></tr></table></figure></p>
-<p>简单的说，就是用数组方式的参数，来模拟一种类似关键字参数的效果，采用这种方式的话，可以通过数组的键名来描述参数的作用，从而增加代码的可读性。类似这样的重构方法在CakePHP等项目里被大量使用，仔细体会，以后再写代码的时候就可以本能的写出高可读性的代码来。</p>
-<p>补充：相对array_merge来说，使用$options += $default;也是不错的选择。另外，如果options的逻辑很复杂的话，也可以不用数组的方式，转而使用一个专门的对象来封装逻辑操作。</p>
-<blockquote>
-<p><a href="https://www.awaimai.com/869.html" target="_blank" rel="noopener">https://www.awaimai.com/869.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -875,7 +875,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -885,7 +885,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

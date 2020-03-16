@@ -265,6 +265,113 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/13/laravel辅助函数tap的使用方法/" itemprop="url">
+                  laravel辅助函数tap的使用方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-13T10:47:36+08:00" content="2018-04-13">
+              2018-04-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>被门夹过的核桃还能补脑嘛<br></blockquote><br>Laravel 5.3 中增加了一个新的全局帮助函数 tap()，改进了框架的声明能力。这个微妙的语法是从 Ruby 和 Lodash 借鉴而来，允许你去 tap 成链。<br>先看看 tap() 帮助函数的代码，只有短短的几行：<br>Laravel5.3的tap<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tap</span><span class="params">($value, $callback)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $callback($value);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Laravel5.4的tap<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tap</span><span class="params">($value, $callback = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_null($callback)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HigherOrderTapProxy($value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $callback($value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>你需要传一个值和一个回调到方法中，值作为回调的参数，回调将执行，最后值被返回。</p>
+</blockquote>
+<h3 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h3><p>默认情况下会返回一bool值<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line">$res = $user-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">dd($res); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>返回user实例<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line">$res = tap($user)-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">dd($res);</span><br></pre></td></tr></table></figure></p>
+<h3 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h3><p>返回user实例<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$name = <span class="string">'樊雨薇'</span>;</span><br><span class="line"><span class="keyword">return</span> tap(\App\Models\User::query()-&gt;find(<span class="number">1</span>), <span class="function"><span class="keyword">function</span> <span class="params">($instance)</span> <span class="title">use</span> <span class="params">($name)</span></span>&#123;</span><br><span class="line">    $instance-&gt;name = $name;</span><br><span class="line">    $instance-&gt;save();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="第三种情况"><a href="#第三种情况" class="headerlink" title="第三种情况"></a>第三种情况</h3><p>让我们看看 <code>Illuminate\Cache\Repository</code> 下的 <code>pull</code> 方法，此函数将从指定键的缓存中获取值，并将其删除。<code>pull</code> 方法的实现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pull</span><span class="params">($key, $default = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $value = <span class="keyword">$this</span>-&gt;get($key, $default);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">$this</span>-&gt;forget($key) <span class="comment">// returns a boolean;</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子中，$this-&gt; forget() 返回一个布尔值，所以要使我们的函数返回原始值，需要将其储存到临时变量 $value 中。以下是 tap() 的实现，不再需要临时变量：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pull</span><span class="params">($key, $default = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">return</span> tap(<span class="keyword">$this</span>-&gt;get($key, $default), <span class="function"><span class="keyword">function</span> <span class="params">($value)</span> <span class="title">use</span> <span class="params">($key)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">$this</span>-&gt;forget($key);</span><br><span class="line">   &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="第四种情况"><a href="#第四种情况" class="headerlink" title="第四种情况"></a>第四种情况</h3><p>vendor\laravel\framework\src\Illuminate\View\Factory.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">make</span><span class="params">($view, $data = [], $mergeData = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $path = <span class="keyword">$this</span>-&gt;finder-&gt;find(</span><br><span class="line">        $view = <span class="keyword">$this</span>-&gt;normalizeName($view)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里是视图文件的绝对路径</span></span><br><span class="line">    <span class="comment">// D:\phpStudy\WWW\ccerp-v2\resources\views/home.blade.php</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Next, we will create the view instance and call the view creator for the view</span></span><br><span class="line">    <span class="comment">// which can set any data, etc. Then we will return the view instance back to</span></span><br><span class="line">    <span class="comment">// the caller for rendering or performing other view manipulations on this.</span></span><br><span class="line">    $data = array_merge($mergeData, <span class="keyword">$this</span>-&gt;parseData($data));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注意 tap 辅助函数的用法, 最后返回的是 view 实例</span></span><br><span class="line">    <span class="comment">// $this-&gt;viewInstance($view, $path, $data) 生成一个新的 view 实例, 闭包传递的$view就是这个view实例</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> tap(<span class="keyword">$this</span>-&gt;viewInstance($view, $path, $data), <span class="function"><span class="keyword">function</span> <span class="params">($view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;callCreator($view);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://derekmd.com/2017/02/laravel-tap/?utm_source=learninglaravel.net" target="_blank" rel="noopener">http://derekmd.com/2017/02/laravel-tap/?utm_source=learninglaravel.net</a><br><a href="https://pigjian.com/article/laravel-tap-the-usage" target="_blank" rel="noopener">https://pigjian.com/article/laravel-tap-the-usage</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/12/php的jsonserializable接口/" itemprop="url">
                   php的JsonSerializable接口
                 </a>
@@ -726,124 +833,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/11/php使用yield来做内存优化/" itemprop="url">
-                  PHP使用yield来做内存优化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-11T13:38:28+08:00" content="2018-04-11">
-              2018-04-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>只要想起一生中后悔的事<br>梅花便落满了南山<br></blockquote>
-
-<h3 id="什么是-“yield”"><a href="#什么是-“yield”" class="headerlink" title="什么是 “yield”"></a>什么是 “yield”</h3><p>生成器函数看上去就像一个普通函数， 除了不是返回一个值之外， 生成器会根据需求产生更多的值。</p>
-<p>来看以下的例子：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出字符串 "value"</span></span><br><span class="line"><span class="keyword">echo</span> getValues();</span><br></pre></td></tr></table></figure></p>
-<p>当然， 这不是他生效的方式， 前面的例子会给你一个致命的错误,类生成器的对象不能被转换成字符串， 让我们清楚的说明</p>
-<h3 id="“yield”-amp-“return”-的区别"><a href="#“yield”-amp-“return”-的区别" class="headerlink" title="“yield” &amp; “return” 的区别"></a>“yield” &amp; “return” 的区别</h3><p>前面的错误意味着 <code>getValues()</code> 方法不会如预期返回一个字符串，让我们检查一下他的类型：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'value'</span>;</span><br><span class="line">&#125;</span><br><span class="line">var_dump(getValues()); <span class="comment">// string(5) "value"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value'</span>;</span><br><span class="line">&#125;</span><br><span class="line">var_dump(getValues()); <span class="comment">// class Generator#1 (0) &#123;&#125;</span></span><br></pre></td></tr></table></figure></p>
-<p>生成器 类实现了 生成器 接口， 这意味着你必须遍历 getValue() 方法来取值：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (getValues() <span class="keyword">as</span> $value) &#123;</span><br><span class="line">   <span class="keyword">echo</span> $value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用变量也是好的</span></span><br><span class="line">$values = getValues();</span><br><span class="line"><span class="keyword">foreach</span> ($values <span class="keyword">as</span> $value) &#123;</span><br><span class="line">   <span class="keyword">echo</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>但这不是唯一的不同！</p>
-<p>一个生成器运行你写使用循环来迭代一维数组的代码，而不需要在内存中创建是一个数组，这可能会导致你超出内存限制。</p>
-<p>在下面的例子里我们创建一个有 800,000 元素的数字同时从 getValues() 方法中返回他，同时在此期间，我们将使用函数 memory_get_usage() 来获取分配给次脚本的内存， 我们将会每增加 200,000 个元素来获取一下内存使用量，这意味着我们将会提出四个检查点：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   $valuesArray = [];</span><br><span class="line">   <span class="comment">// 获取初始内存使用量</span></span><br><span class="line">   <span class="keyword">echo</span> round(memory_get_usage() / <span class="number">1024</span> / <span class="number">1024</span>, <span class="number">2</span>) . <span class="string">' MB'</span> . PHP_EOL;</span><br><span class="line">   <span class="keyword">for</span> ($i = <span class="number">1</span>; $i &lt; <span class="number">800000</span>; $i++) &#123;</span><br><span class="line">      $valuesArray[] = $i;</span><br><span class="line">      <span class="comment">// 为了让我们能进行分析，所以我们测量一下内存使用量</span></span><br><span class="line">      <span class="keyword">if</span> (($i % <span class="number">200000</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="comment">// 来 MB 为单位获取内存使用量</span></span><br><span class="line">         <span class="keyword">echo</span> round(memory_get_usage() / <span class="number">1024</span> / <span class="number">1024</span>, <span class="number">2</span>) . <span class="string">' MB'</span>. PHP_EOL;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> $valuesArray;</span><br><span class="line">&#125;</span><br><span class="line">$myValues = getValues(); <span class="comment">// 一旦我们调用函数将会在这里创建数组</span></span><br><span class="line"><span class="keyword">foreach</span> ($myValues <span class="keyword">as</span> $value) &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>前面例子发生的情况是这个脚本的内存消耗和输出：</p>
-<blockquote>
-<p>0.34 MB<br>8.35 MB<br>16.35 MB<br>32.35 MB</p>
-</blockquote>
-<p>这意味着我们的几行脚本消耗了超过 30 MB 的内存， 每次你你添加一个元素到 $valuesArray 数组中， 都会增加他在内存中的大小。</p>
-<p>让我们使用 yield 同样的例子:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="comment">// 获取内存使用数据</span></span><br><span class="line">   <span class="keyword">echo</span> round(memory_get_usage() / <span class="number">1024</span> / <span class="number">1024</span>, <span class="number">2</span>) . <span class="string">' MB'</span> . PHP_EOL;</span><br><span class="line">   <span class="keyword">for</span> ($i = <span class="number">1</span>; $i &lt; <span class="number">800000</span>; $i++) &#123;</span><br><span class="line">      <span class="keyword">yield</span> $i;</span><br><span class="line">      <span class="comment">// 做性能分析，因此可测量内存使用率</span></span><br><span class="line">      <span class="keyword">if</span> (($i % <span class="number">200000</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="comment">// 内存使用以 MB 为单位</span></span><br><span class="line">         <span class="keyword">echo</span> round(memory_get_usage() / <span class="number">1024</span> / <span class="number">1024</span>, <span class="number">2</span>) . <span class="string">' MB'</span>. PHP_EOL;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">$myValues = getValues(); <span class="comment">// 在循环之前都不会有动作</span></span><br><span class="line"><span class="keyword">foreach</span> ($myValues <span class="keyword">as</span> $value) &#123;&#125; <span class="comment">// 开始生成数据</span></span><br></pre></td></tr></table></figure></p>
-<p>这个脚本的输出令人惊讶:</p>
-<blockquote>
-<p>0.34 MB<br>0.34 MB<br>0.34 MB<br>0.34 MB</p>
-</blockquote>
-<p>这不意味着你从 return 表达式迁移到 yield，但如果你在应用中创建会导致服务器上内存出问题的巨大数组，则 yield 更加适合你的情况。</p>
-<blockquote>
-<p><a href="https://laravel-china.org/topics/8704/using-yield-to-do-memory-optimization-in-php?utm_source=coffeephp.com" target="_blank" rel="noopener">https://laravel-china.org/topics/8704/using-yield-to-do-memory-optimization-in-php?utm_source=coffeephp.com</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -887,7 +876,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -897,7 +886,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

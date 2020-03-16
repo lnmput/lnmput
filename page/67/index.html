@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/18/laravel-session的使用/" itemprop="url">
+                  laravel-session的使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-18T20:06:12+08:00" content="2016-08-18">
+              2016-08-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。<br></blockquote><br>Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION（php原生的session要看php.ini的位置），所以忽略php相关的session函数，例如session_start(), $_SESSION。Laravel在运行过程中会在app/storage/session/目录写入session的信息，所以这个目录需要有写权限，否者session就无法写入成功。</p>
+<p>Laravel除了使用默认的file作为session的实现，还支持cookie, Memcached, Redis 和数据库的后端驱动作为session的实现。必要的时候还需要自己实现一个session的实现方式，比如在微信公众账号和用户的交互，这中session就无法直接使用，因为每次都是微信服务器来请求，无法通过请求的来源来辨别用户。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//session的永久保存（在不过期范围内）</span></span><br><span class="line">Session::put(<span class="string">'key'</span>, <span class="string">'value'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//等同于PHP的原生session</span></span><br><span class="line">$_SESSION[<span class="string">'key'</span>] = <span class="string">'value'</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//get操作</span></span><br><span class="line">$value = Session::get(<span class="string">'key'</span>, <span class="string">'default'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//去除操作并删除，类似pop概念</span></span><br><span class="line">$value = Session::pull(<span class="string">'key'</span>, <span class="string">'default'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//检测是否存在key</span></span><br><span class="line">Session::has(<span class="string">'users'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//删除key</span></span><br><span class="line">Session::forget(<span class="string">'key'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="laravel的session中flash概念"><a href="#laravel的session中flash概念" class="headerlink" title="laravel的session中flash概念"></a>laravel的session中flash概念</h3><p>这个flash两次请求有效（本次和下次请求有效），与本次请求取操作多少次无关。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//保存key，value</span></span><br><span class="line">Session::flash(<span class="string">'key'</span>, <span class="string">'value'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//取值方法还是一样的</span></span><br><span class="line">Session::get(<span class="string">'key'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//刷新快闪数据时间，保持到下次请求</span></span><br><span class="line">Session::keep(<span class="keyword">array</span>(<span class="string">'username'</span>, <span class="string">'email'</span>))</span><br></pre></td></tr></table></figure>
+<p>这个flash的概念和上面的put的概念不太一样。</p>
+<p>put ：这个对应只要session不过期，基本上是永久保存，下次请求也是存在的。<br>flash ：保存的值，本次请求可以使用，下次http请求可以使用，再下一次就不存在了。<br>也就是说下一次的请求用完就被销毁了，不会让session的值变的越来越大，可以保存一些临时的数据。</p>
+<p>这中情况的使用场景比如有：</p>
+<p>用户请求了页面，出现错误信息，重定向到一个新的页面，需要展示之前的数据。（虽然可以通过url参数来传递，处理不好可能会有xss漏洞）。<br>用户访问了一个页面，过滤器发现没权限，保存当前页面url，重定向到登录页面，登录成功，取出值，重定向到原先的页面。（这里可能需要刷新保存的快闪数据）</p>
+<h3 id="session落地的时间"><a href="#session落地的时间" class="headerlink" title="session落地的时间"></a>session落地的时间</h3><p>我天真的以为使用了Session::put函数就能保存这个变量了。于是我的代码这样写：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Session::put(<span class="string">'key'</span>,<span class="string">'value'</span>); </span><br><span class="line">        print_r( Session::all() ); <span class="comment">//取出来看看是否put成功</span></span><br><span class="line">        <span class="keyword">exit</span>;   <span class="comment">//习惯性的调试都exit，不执行后续代码</span></span><br><span class="line">        <span class="comment">//return Redirect::to(/); 框架在return后还会有后续的代码执行的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果下次请求就是找不到本次的Session，而且看app/storage/session目录就是没有文件生成。总感觉不对劲啊。</p>
+<p>后来看到网络上有个方法Session::save()，于是我也用了下，居然发现成功的生成了session的文件。于是我感觉到，Laravel不用php原生的session，那么在controller之后应该做了一些事情，将session写入到文件中，而不是每次put操作都写操作，这样会IO操作太频繁的，影响性能的。<br>可以看见，在调用完controller之后，调用了session-&gt;save()的方法，来主动的保存session。这样session才能落地保存起来，如果在controller或者view里面写了exit;，那么session是不会被保存的，除非主动的写Session::save()才能手工的保存起来。</p>
+<blockquote>
+<p><a href="https://www.chenyudong.com/archives/laravel-session-use.html" target="_blank" rel="noopener">https://www.chenyudong.com/archives/laravel-session-use.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/18/PHP设置会话Session超时过期时间实现登录时间限制/" itemprop="url">
                   PHP设置会话Session超时过期时间实现登录时间限制
                 </a>
@@ -671,110 +780,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/ssdb一个高性能的nosql数据库/" itemprop="url">
-                  ssdb一个高性能的nosql数据库
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-11T22:26:19+08:00" content="2016-08-11">
-              2016-08-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>某天，你无端想起一个人，她曾让你对明天有所期许，但是却完全没有出现在你的明天里。<br></blockquote>
-
-<h3 id="简要说明"><a href="#简要说明" class="headerlink" title="简要说明"></a>简要说明</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.</span><br><span class="line">基于google/leveldb 开发SSDB是一个开源的高性能数据库服务器, </span><br><span class="line">使用Google 的 LevelDB作为存储引擎, 大家有可能没听过leveldb的名字，</span><br><span class="line">但是淘宝的开源nosql tair大家应该有所耳闻吧，他也是基于leveldb做的开发。</span><br><span class="line">ssdb支持T级别的数据, 同时支持类似Redis中的zset和hash等数据结构,</span><br><span class="line">在同时需求高性能和大数据的条件下, 是一个可以代替Redis的方案.</span><br><span class="line">ssdb是一个持久化存储的KV系统，和Memcached、Redis这种内存型的KV系统不同，</span><br><span class="line">ssdb不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。</span><br></pre></td></tr></table></figure>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https:<span class="comment">//github.com/ideawu/ssdb/archive/master.zip</span></span><br><span class="line">unzip master</span><br><span class="line">cd ssdb-master</span><br><span class="line">make</span><br><span class="line"><span class="comment"># optional, install ssdb in /usr/local/ssdb</span></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># start master</span></span><br><span class="line">./ssdb-server ssdb.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># or start as daemon</span></span><br><span class="line">./ssdb-server -d ssdb.conf</span><br></pre></td></tr></table></figure>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">'SSDB.php'</span>);</span><br><span class="line">$ssdb = <span class="keyword">new</span> SimpleSSDB(<span class="string">'127.0.0.1'</span>, <span class="number">8888</span>);</span><br><span class="line">$resp = $ssdb-&gt;set(<span class="string">'key'</span>, <span class="string">'123'</span>);</span><br><span class="line">$resp = $ssdb-&gt;get(<span class="string">'key'</span>);</span><br><span class="line"><span class="keyword">echo</span> $resp; <span class="comment">// output: 123</span></span><br></pre></td></tr></table></figure>
-<h3 id="关于leveldb"><a href="#关于leveldb" class="headerlink" title="关于leveldb"></a>关于leveldb</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LevelDB是google开源的一个key-value存储引擎库，类似于开源的Lucene索引库一样。</span><br><span class="line">其他的软件开发者可以利用该库做二次开发，来满足定制需求。</span><br><span class="line">LevelDB采用日志式的写方式来提高写性能，但是牺牲了部分读性能。</span><br><span class="line">为了弥补牺牲了的读性能，一些人提议使用SSD作为存储介质。</span><br></pre></td></tr></table></figure>
-<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修改ssdb.conf文件，把ip改成<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>，允许外网访问</span><br><span class="line">高级应用可以查看主从这一块儿</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://ssdb.io/zh_cn/" target="_blank" rel="noopener">http://ssdb.io/zh_cn/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -818,7 +823,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -828,7 +833,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

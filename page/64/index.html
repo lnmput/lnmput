@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/26/python的多进程和多线程/" itemprop="url">
+                  python的多进程和多线程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-26T22:52:57+08:00" content="2016-10-26">
+              2016-10-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我曾经听人说过，当你不可以再拥有的时候。你唯一可以做的，就是让自己不要忘记。<br></blockquote></p>
+<h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>很多同学都听说过，现代操作系统比如Mac OS X，UNIX，Linux，Windows等，都是支持“多任务”的操作系统。</p>
+<p>什么叫“多任务”呢？简单地说，就是操作系统可以同时运行多个任务。打个比方，你一边在用浏览器上网，一边在听MP3，一边在用Word赶作业，这就是多任务，至少同时有3个任务正在运行。还有很多任务悄悄地在后台同时运行着，只是桌面上没有显示而已。</p>
+<p>现在，多核CPU已经非常普及了，但是，即使过去的单核CPU，也可以执行多任务。由于CPU执行代码都是顺序执行的，那么，单核CPU是怎么执行多任务的呢？</p>
+<p>答案就是操作系统轮流让各个任务交替执行，任务1执行0.01秒，切换到任务2，任务2执行0.01秒，再切换到任务3，执行0.01秒……这样反复执行下去。表面上看，每个任务都是交替执行的，但是，由于CPU的执行速度实在是太快了，我们感觉就像所有任务都在同时执行一样。</p>
+<p>真正的并行执行多任务只能在多核CPU上实现，但是，由于任务数量远远多于CPU的核心数量，所以，操作系统也会自动把很多任务轮流调度到每个核心上执行。</p>
+<p>对于操作系统来说，一个任务就是一个进程（Process），比如打开一个浏览器就是启动一个浏览器进程，打开一个记事本就启动了一个记事本进程，打开两个记事本就启动了两个记事本进程，打开一个Word就启动了一个Word进程。</p>
+<p>有些进程还不止同时干一件事，比如Word，它可以同时进行打字、拼写检查、打印等事情。在一个进程内部，要同时干多件事，就需要同时运行多个“子任务”，我们把进程内的这些“子任务”称为线程（Thread）。</p>
+<p>由于每个进程至少要干一件事，所以，一个进程至少有一个线程。当然，像Word这种复杂的进程可以有多个线程，多个线程可以同时执行，多线程的执行方式和多进程是一样的，也是由操作系统在多个线程之间快速切换，让每个线程都短暂地交替运行，看起来就像同时执行一样。当然，真正地同时执行多线程需要多核CPU才可能实现。</p>
+<p>我们前面编写的所有的Python程序，都是执行单任务的进程，也就是只有一个线程。如果我们要同时执行多个任务怎么办？</p>
+<p>有两种解决方案：</p>
+<p>一种是启动多个进程，每个进程虽然只有一个线程，但多个进程可以一块执行多个任务。</p>
+<p>还有一种方法是启动一个进程，在一个进程内启动多个线程，这样，多个线程也可以一块执行多个任务。</p>
+<p>当然还有第三种方法，就是启动多个进程，每个进程再启动多个线程，这样同时执行的任务就更多了，当然这种模型更复杂，实际很少采用。</p>
+<p>总结一下就是，多任务的实现有3种方式：</p>
+<p>多进程模式；<br>多线程模式；<br>多进程+多线程模式。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/26/python大数据抓取和存储/" itemprop="url">
                   python大数据抓取和存储
                 </a>
@@ -645,111 +754,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/24/python爬虫第一周/" itemprop="url">
-                  python爬虫第一周
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-24T21:32:09+08:00" content="2016-10-24">
-              2016-10-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>身不饥寒，天未曾负我；学无长进，我何以对天<br></blockquote>
-
-<h3 id="安装lxml"><a href="#安装lxml" class="headerlink" title="安装lxml"></a>安装lxml</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 首先安装pip install wheel</span><br><span class="line"><span class="number">2.</span> 在这里下载对应的.whl文件，注意别改文件名！</span><br><span class="line">   http://www.lfd.uci.edu/~gohlke/pythonlibs/<span class="comment">#lxml</span></span><br><span class="line">   cp后面是Python的版本号，<span class="number">27</span>表示<span class="number">2.7</span>，根据你的Python版本选择下载。</span><br><span class="line"><span class="number">3.</span> pip install 带后缀的完整文件名</span><br></pre></td></tr></table></figure>
-<h3 id="例子-一"><a href="#例子-一" class="headerlink" title="例子(一)"></a>例子(一)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span>  urlopen</span><br><span class="line">resp = urlopen(<span class="string">'http://www.tooopen.com/img/87.aspx'</span>).read().decode(<span class="string">'utf-8'</span>)</span><br><span class="line">Soup = BeautifulSoup(resp,<span class="string">'lxml'</span>)</span><br><span class="line">images = Soup.select(<span class="string">'title'</span>)</span><br><span class="line"><span class="keyword">for</span> image <span class="keyword">in</span> images:</span><br><span class="line">    print(image.get_text())</span><br></pre></td></tr></table></figure>
-<h3 id="例子-二"><a href="#例子-二" class="headerlink" title="例子(二)"></a>例子(二)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span>  urlopen</span><br><span class="line">resp = urlopen(<span class="string">'http://www.tooopen.com/img/87.aspx'</span>).read().decode(<span class="string">'utf-8'</span>)</span><br><span class="line">Soup = BeautifulSoup(resp,<span class="string">'lxml'</span>)</span><br><span class="line">images = Soup.select(<span class="string">'img'</span>)</span><br><span class="line"><span class="keyword">for</span> image <span class="keyword">in</span> images:</span><br><span class="line">    print(image.get(<span class="string">'src'</span>))</span><br></pre></td></tr></table></figure>
-<h3 id="例子-三"><a href="#例子-三" class="headerlink" title="例子(三)"></a>例子(三)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">'http://zhuanzhuan.58.com/detail/789842404801118212z.shtml'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getInfo</span><span class="params">(url)</span>:</span></span><br><span class="line">    wpData = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(wpData.text,<span class="string">'lxml'</span>)</span><br><span class="line">    title = soup.title.text</span><br><span class="line">    price = soup.select(<span class="string">'.price_now &gt; i'</span>)</span><br><span class="line">    tags = soup.select(<span class="string">'.qual_label'</span>)</span><br><span class="line">    <span class="keyword">return</span> tags</span><br><span class="line"></span><br><span class="line">data = getInfo(url)</span><br><span class="line"><span class="keyword">for</span> tag <span class="keyword">in</span> data:</span><br><span class="line">    print(tag.text)</span><br></pre></td></tr></table></figure>
-<h3 id="传递http头部"><a href="#传递http头部" class="headerlink" title="传递http头部"></a>传递http头部</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span>  requests</span><br><span class="line">url = <span class="string">'http://www.tripadvisor.cn/Saves#525792'</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">'User-Agent'</span>:<span class="string">'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWeb....36'</span>,</span><br><span class="line">    <span class="string">'Cookie'</span>:<span class="string">'TASSK=eNs%2BEc2TG.....0N9BrZpKwsTH%2BAwg%3D...; NPID='</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">wpData = requests.get(url,headers = headers)</span><br><span class="line">soup = BeautifulSoup(wpData.text,<span class="string">'lxml'</span>)</span><br><span class="line">titles = soup.select(<span class="string">'div.title'</span>)</span><br><span class="line">print(soup)</span><br></pre></td></tr></table></figure>
-<h3 id="构建多页数延迟访问"><a href="#构建多页数延迟访问" class="headerlink" title="构建多页数延迟访问"></a>构建多页数延迟访问</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span>  requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">urls = [<span class="string">'http://www.tripadvisor.cn/...-oa&#123;&#125;-New_Y...rk.html#ATTRACTION_LIST'</span>.format(str(i)) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>,<span class="number">930</span>,<span class="number">30</span>)]</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> urls:</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    print(url)</span><br></pre></td></tr></table></figure>
-<h3 id="异步加载"><a href="#异步加载" class="headerlink" title="异步加载"></a>异步加载</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在 chrome 浏览器中找到有规律的，xhr请求链接</span><br></pre></td></tr></table></figure>
-<h3 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h3><ul>
-<li>一般PC端的数据如果不能直接拿到，可以尝试访问手机端从而直接达到目的</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -793,7 +797,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -803,7 +807,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

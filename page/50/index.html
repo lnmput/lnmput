@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/11/jquery的过滤选择器/" itemprop="url">
+                  jquery的过滤选择器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-11T21:06:55+08:00" content="2017-07-11">
+              2017-07-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>永远年轻，永远热泪盈眶<br></blockquote></p>
+<h3 id="基本过滤选择器-重点掌握下列八个"><a href="#基本过滤选择器-重点掌握下列八个" class="headerlink" title="基本过滤选择器(重点掌握下列八个)"></a>基本过滤选择器(重点掌握下列八个)</h3><p>:first 选取第一个元素 $(“div:first”).css(“color”,”red”);<br>:last 选取最后一个元素 $(“div:last”).css(“color”,”red”);<br>:not 除去指定的选择器外的元素 $(“div:not”).css(“color”,”red”);<br>:even 选取索引号是偶数的元素 $(“div:even”).css(“color”,”red”);<br>:odd 选取索引号是奇数的元素 $(‘div:odd’).css(“color”,”red”);<br>:eq(index) 选取第index个元素 $(‘div:eq(5)’).css(“color”,”red”);<br>:gt(index) 选取索引号大于index的元素 $(‘div:gt(8)’).css(“color”,”red”);<br>:lt(index) 选取索引号小于index的元素$(‘div:lt(3)’).css(“color”,”red”);</p>
+<h3 id="属性过滤选择器（六个必须记住）"><a href="#属性过滤选择器（六个必须记住）" class="headerlink" title="属性过滤选择器（六个必须记住）"></a>属性过滤选择器（六个必须记住）</h3><p>:[attribute] 选取拥有此属性的元素 $(‘div:[attribute]’).css(‘background-color’,’red’);<br>:[attribute=value] 选取属性值为value的元素 $(‘div:[attribute=text]’)<br>:[attribute!=value] 选取属性值不为value的元素 $(‘div:[attribute!=text]’)<br>:[attribute^=value] 选取属性值以value开始的元素 $(‘div:[attribute^=text]’)<br>:[attribute$=value] 选取属性值以value结尾的元素 $(‘div:[attribute$=text]’)<br>:[attribute<em>=value] 选取属性值包含value的元素 $(‘div:[attribute</em>=text]’)</p>
+<h3 id="内容过滤选择器（四个必须记住）"><a href="#内容过滤选择器（四个必须记住）" class="headerlink" title="内容过滤选择器（四个必须记住）"></a>内容过滤选择器（四个必须记住）</h3><p>:contains 选取包含文本的text的元素 $(‘div:contains(.mini)’).css(“color”,”red”);<br>:has(id选择器名称、Class选择器名称) 选取含有选择器所匹配的元素 $(‘div:has(.mini)’).css(“color”,”red”);<br>:empty 选取不包含子元素的元素 $(‘div:empty’).css(“color”,”red”);<br>:parent 选取包含子元素的元素 $(‘div:parent’).css(“color”,”red”);</p>
+<h3 id="子元素过滤选择器（记住八个）"><a href="#子元素过滤选择器（记住八个）" class="headerlink" title="子元素过滤选择器（记住八个）"></a>子元素过滤选择器（记住八个）</h3><p>:nth-child(index) 选取每个父节点下第index个元素、偶数元素或奇数元素。<br><code>$(&#39;div.one :nth-child(8)&#39;).css(&#39;background-color&#39;,&#39;#900&#39;);</code><br>:first-child 选取每个父元素下的第一个子元素 $(‘div.one :first-child(8)’).css(‘color’,’red’);<br>:last-child 选取每个父元素下的最后一个子元素 $(‘div.one :last-child(8)’).css(‘color’,’red’);<br>:only-child 选取只有一个子元素的元素 $(‘div.one :only-child(8)’).css(‘color’,’red’);<br>:enabled 选取所有可用的元素 $(‘#form1 input:enabled’).val(“vaotoo.com”);<br>:disabled 选取所有不可用的元素 $(‘#form1 input:disabled’).val(“vaotoo.com”);<br>:checked 选取所有被选中的元素(一般为（HTML中）RadioButton、CheckBox标记);<br><code>$(&#39;input:checked&#39;).text(&quot;vaotoo.com&quot;);</code><br>:selected 选取被选中的选项元素 select下拉列表标记中的option=select<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'select:selected'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  str += $(<span class="keyword">this</span>).text()+<span class="string">","</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="可见性过滤选择器-两个"><a href="#可见性过滤选择器-两个" class="headerlink" title="可见性过滤选择器(两个)"></a>可见性过滤选择器(两个)</h3><p>:hidden<br>:visibal</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/06/18/怎样理解阻塞非阻塞与同步异步的区别/" itemprop="url">
                   怎样理解阻塞非阻塞与同步异步的区别
                 </a>
@@ -652,103 +751,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/11/PHP-MySQL持久连接-mysql-pconnect/" itemprop="url">
-                  PHP-MySQL持久连接-mysql_pconnect
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-11T11:12:05+08:00" content="2017-06-11">
-              2017-06-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>别人说你变了，是因为你没有按照他的想法活罢了。。。<br></blockquote><br>先来一段 PHP 连接 MySQL 的经典代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$con = mysql_connect(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Could not connect: "</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// some code</span></span><br><span class="line">mysql_close($con);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="mysql-pconnect"><a href="#mysql-pconnect" class="headerlink" title="mysql_pconnect"></a>mysql_pconnect</h3><p>首先，当连接的时候本函数将先尝试寻找一个在同一个主机上用同样的用户名和密码已经打开的（持久）连接，如果找到，则返回此连接标识而不打开新连接。</p>
-<p>其次，当脚本执行完毕后到 SQL 服务器的连接不会被关闭，此连接将保持打开以备以后使用（mysql_close() 不会关闭由 mysql_pconnect() 建立的连接）。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// pconnect.php</span></span><br><span class="line">$con = mysql_pconnect(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="comment">// connect.php</span></span><br><span class="line"><span class="comment">// $con = mysql_connect("localhost","root","123456");</span></span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">  <span class="keyword">die</span>(<span class="string">'Could not connect: '</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line">sleep(<span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
-<p>注意，此种连接仅能用于模块版本的 PHP。(我用的是 Nginx+PHP-FPM 模式，而非 Apache+php_module 模式。 )</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -792,7 +794,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -802,7 +804,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

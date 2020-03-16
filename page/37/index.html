@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2017/10/12/使用laravel抓取laracasts的视频地址/" itemprop="url">
+                  使用laravel抓取laracasts的视频地址
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-10-12T11:49:58+08:00" content="2017-10-12">
+              2017-10-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br> 后来我终于知道 ， 它并不是我的花 ，我只是恰好途径了它的盛放。<br></blockquote></p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>项目开始前, 我们需要安装一些必要的依赖包<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> guzzlehttp/guzzle</span><br><span class="line">composer <span class="keyword">require</span> fabpot/goutte</span><br><span class="line">composer <span class="keyword">require</span> symfony/dom-crawler</span><br></pre></td></tr></table></figure></p>
+<p>并创建一个命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:command Spider</span><br></pre></td></tr></table></figure></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Console</span>\<span class="title">Commands</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Goutte</span>\<span class="title">Client</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Console</span>\<span class="title">Command</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">DomCrawler</span>\<span class="title">Crawler</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spider</span> <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">protected</span> $signature = <span class="string">'run:dev'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $description = <span class="string">'Command description'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $startUrl = <span class="string">'https://laracasts.com/series/learn-vue-2-step-by-step'</span>;</span><br><span class="line">    <span class="keyword">protected</span> $client;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">parent</span>::__construct();</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = <span class="keyword">new</span> Client();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $crawler = <span class="keyword">$this</span>-&gt;client-&gt;request(<span class="string">'GET'</span>, <span class="keyword">$this</span>-&gt;startUrl);</span><br><span class="line">        <span class="comment">//file_put_contents(storage_path('haha.html'), $crawler-&gt;html());</span></span><br><span class="line">        $crawler-&gt;filter(<span class="string">'.episode-list-title &gt; a'</span>)-&gt;each(<span class="function"><span class="keyword">function</span> <span class="params">($node)</span> <span class="title">use</span> <span class="params">($crawler)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//$this-&gt;line(trim($node-&gt;text()));</span></span><br><span class="line">            $hrefText = trim($node-&gt;text());</span><br><span class="line">            $link = $crawler-&gt;selectLink($hrefText)-&gt;link();</span><br><span class="line">            $craw = <span class="keyword">$this</span>-&gt;client-&gt;click($link);</span><br><span class="line">            <span class="comment">//file_put_contents(storage_path($hrefText.'.html'), $craw-&gt;html());</span></span><br><span class="line">            $domElement = <span class="keyword">new</span> Crawler($craw-&gt;html());</span><br><span class="line">            $videoSrc = $domElement-&gt;filter(<span class="string">'video &gt; source'</span>)-&gt;first()-&gt;attr(<span class="string">'src'</span>);</span><br><span class="line">            <span class="keyword">$this</span>-&gt;line($videoSrc);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;line(<span class="string">'success'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://laracasts.com/series/learn-vue-2-step-by-step" target="_blank" rel="noopener">https://laracasts.com/series/learn-vue-2-step-by-step</a><br><a href="https://symfony.com/doc/current/components/dom_crawler.html" target="_blank" rel="noopener">https://symfony.com/doc/current/components/dom_crawler.html</a><br><a href="https://packagist.org/packages/fabpot/goutte" target="_blank" rel="noopener">https://packagist.org/packages/fabpot/goutte</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/10/09/再谈csrf攻击/" itemprop="url">
                   再谈csrf攻击
                 </a>
@@ -688,111 +788,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/28/Predis和Phpredis的区别/" itemprop="url">
-                  Predis和Phpredis的区别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-28T10:46:54+08:00" content="2017-09-28">
-              2017-09-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你要知道，有一句话，普天之下莫非王土。但还有一句话，天高皇帝远。<br></blockquote><br>Redis 是一个开源的内存数据库服务器，得益于内建的数据类型，Redis 不仅仅只能做简单的 key/value 存储。</p>
-<h3 id="Predis"><a href="#Predis" class="headerlink" title="Predis"></a>Predis</h3><p>predis，是PHP版本写的redis client,</p>
-<h3 id="Phpredis"><a href="#Phpredis" class="headerlink" title="Phpredis"></a>Phpredis</h3><p>php extension redis是PHP原生扩展，C写的,对于大量使用 Redis 的应用程序来说会产生更好的性能。</p>
-<h3 id="长连接-vs-短连接"><a href="#长连接-vs-短连接" class="headerlink" title="长连接 vs 短连接"></a>长连接 vs 短连接</h3><ul>
-<li><p>当使用pconnect时，连接会被重用，连接的生命周期是fpm进程的生命周期，而非一次php的执行。</p>
-</li>
-<li><p>如果代码中使用pconnect， close的作用仅是使当前php不能再进行redis请求，但无法真正关闭redis长连接，连接在后续请求中仍然会被重用，直至fpm进程生命周期结束。</p>
-</li>
-</ul>
-<blockquote>
-<p><a href="https://github.com/phpredis/phpredis" target="_blank" rel="noopener">https://github.com/phpredis/phpredis</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -836,7 +831,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -846,7 +841,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

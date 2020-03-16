@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/09/python投票和ip地址的伪造/" itemprop="url">
+                  python投票和ip地址的伪造
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-09T10:30:46+08:00" content="2016-12-09">
+              2016-12-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>全怪我们太穷了，又不认识人。<br></blockquote></p>
+<h3 id="项目说明"><a href="#项目说明" class="headerlink" title="项目说明"></a>项目说明</h3><ul>
+<li>投票地址：<a href="http://kepudasai.cdstm.cn/index.php?kepu-postvote" target="_blank" rel="noopener">http://kepudasai.cdstm.cn/index.php?kepu-postvote</a></li>
+<li>投票限制：IP，每个ip每天10票</li>
+<li>提交方式：post</li>
+<li>提交参数：{‘group’: ‘gaozhongzu’,’key’ : 10}</li>
+</ul>
+<h3 id="php获取IP问题"><a href="#php获取IP问题" class="headerlink" title="php获取IP问题"></a>php获取IP问题</h3><p>一般我们写的获取ip的方式：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetIP</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>];</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>];</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"REMOTE_ADDR"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"REMOTE_ADDR"</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $cip = <span class="string">"0.0.0.0"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $cip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实这是有问题的，通过header我们可以轻易改变ip：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$curl = curl_init();    <span class="comment">//初始化一个curl对象  </span></span><br><span class="line">curl_setopt($curl, CURLOPT_URL, <span class="string">"127.0.0.1/server.php"</span>); </span><br><span class="line">$header = <span class="keyword">array</span>(        <span class="comment">//构造头部</span></span><br><span class="line">    <span class="string">'CLIENT-IP:58.68.44.61'</span>, </span><br><span class="line">    <span class="string">'X-FORWARDED-FOR:58.68.44.61'</span>, </span><br><span class="line">); </span><br><span class="line"></span><br><span class="line">curl_setopt($curl, CURLOPT_HTTPHEADER, $header); </span><br><span class="line">curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>); </span><br><span class="line"></span><br><span class="line">$str = curl_exec($curl);    <span class="comment">//执行请求  </span></span><br><span class="line">curl_close($curl);    <span class="comment">//关闭c</span></span><br><span class="line"><span class="keyword">echo</span> $str;    <span class="comment">//输出抓取的结果</span></span><br></pre></td></tr></table></figure></p>
+<p>解决方法：<br>在判断的时候以$_SERVER[“REMOTE_ADDR”]优先。</p>
+<h3 id="python脚本"><a href="#python脚本" class="headerlink" title="python脚本"></a>python脚本</h3><p>初学，不喜勿喷<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">'http://kepudasai.cdstm.cn/index.php?kepu-postvote'</span></span><br><span class="line"></span><br><span class="line">data = &#123;<span class="string">'group'</span>: <span class="string">'gaozhongzu'</span>,<span class="string">'key'</span> : <span class="number">10</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createHeader</span><span class="params">()</span>:</span></span><br><span class="line">    ip = socket.inet_ntoa(struct.pack(<span class="string">'&gt;I'</span>, random.randint(<span class="number">1</span>, <span class="number">0xffffffff</span>)))</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0'</span>,</span><br><span class="line">        <span class="string">'CLIENT-IP'</span>: ip,</span><br><span class="line">        <span class="string">'X-FORWARDED-FOR'</span>: ip</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> headers</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">toupiao</span><span class="params">()</span>:</span></span><br><span class="line">    index = <span class="number">0</span></span><br><span class="line">    headers = createHeader();</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        html = requests.post(url, data=data, headers=headers)</span><br><span class="line">        result = json.loads(html.text)</span><br><span class="line">        <span class="keyword">if</span>(result[<span class="string">'error'</span>] == <span class="number">1</span>):</span><br><span class="line">            time.sleep(random.randint(<span class="number">1</span>, <span class="number">3</span>))</span><br><span class="line">            headers = createHeader();</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span>(index == <span class="number">10000</span>):</span><br><span class="line">            <span class="keyword">print</span> index</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">toupiao()</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/08/关于http的一些知识/" itemprop="url">
                   关于http的一些知识
                 </a>
@@ -703,105 +807,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/02/flex布局方式之子元素/" itemprop="url">
-                  flex布局方式之子元素
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-02T14:44:04+08:00" content="2016-12-02">
-              2016-12-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>　你必须很努力，才能看上去毫不费力<br></blockquote><br>最近学习了微信小程序，才接触到了这一布局方式，大概试了一下，记录之</p>
-<h3 id="1-布局html"><a href="#1-布局html" class="headerlink" title="1. 布局html"></a>1. 布局html</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item1"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item2"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item3"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item4"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item5"</span>&gt;</span>5<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item6"</span>&gt;</span>6<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item7"</span>&gt;</span>7<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item8"</span>&gt;</span>8<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item item9"</span>&gt;</span>9<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-order-属性"><a href="#2-order-属性" class="headerlink" title="2.order 属性"></a>2.order 属性</h3><p>order属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.item1</span>&#123;</span><br><span class="line">	<span class="attribute">order</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item2</span>&#123;</span><br><span class="line">	<span class="attribute">order</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="3-flex-grow属性"><a href="#3-flex-grow属性" class="headerlink" title="3. flex-grow属性"></a>3. flex-grow属性</h3><p>即如果子元素在父容器的横向上还没有撑满，左或者右都存在空间<br>flex-grow属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.item1</span>&#123;</span><br><span class="line">	<span class="attribute">order</span>: <span class="number">2</span>;</span><br><span class="line">	<span class="attribute">flex-grow</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果三个元素都设置这样的属性，则由这三个元素一起撑满剩余的部分<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.item1</span>&#123;</span><br><span class="line">	<span class="attribute">flex-grow</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item2</span>&#123;</span><br><span class="line">	<span class="attribute">order</span>: <span class="number">1</span>;</span><br><span class="line">	<span class="attribute">flex-grow</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item3</span>&#123;</span><br><span class="line">	<span class="attribute">flex-grow</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="4-flex-shrink属性"><a href="#4-flex-shrink属性" class="headerlink" title="4. flex-shrink属性"></a>4. flex-shrink属性</h3><p>如果所有的子元素的宽度已经超过了父容器的宽度，而且设置了不能换行，这时候如果某个元素设置了这样的属性，<br>flex-shrink属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.item2</span>&#123;</span><br><span class="line">	<span class="attribute">flex-shrink</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item3</span>&#123;</span><br><span class="line">	<span class="attribute">flex-shrink</span>: <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -845,7 +850,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">351</span>
+              <span class="site-state-item-count">352</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -855,7 +860,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
