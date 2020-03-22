@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION（php原生的session要看php.ini的位置），所以忽略php相关的session函数，例如session_start(), $_SESSION。Laravel">
+<meta name="description" content="幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。  Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION,php原生的session要看php.ini的位置，所以忽略php相关的session函数，例如session_start(), $_SESSION。Larave">
 <meta name="keywords" content="Laravel">
 <meta property="og:type" content="article">
 <meta property="og:title" content="laravel-session的使用">
 <meta property="og:url" content="https://swoole.app/2016/08/18/laravel-session的使用/index.html">
 <meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
-<meta property="og:description" content="幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION（php原生的session要看php.ini的位置），所以忽略php相关的session函数，例如session_start(), $_SESSION。Laravel">
+<meta property="og:description" content="幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。  Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION,php原生的session要看php.ini的位置，所以忽略php相关的session函数，例如session_start(), $_SESSION。Larave">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-27T13:15:20.000Z">
+<meta property="og:updated_time" content="2020-03-22T15:23:26.357Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="laravel-session的使用">
-<meta name="twitter:description" content="幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION（php原生的session要看php.ini的位置），所以忽略php相关的session函数，例如session_start(), $_SESSION。Laravel">
+<meta name="twitter:description" content="幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。  Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION,php原生的session要看php.ini的位置，所以忽略php相关的session函数，例如session_start(), $_SESSION。Larave">
 
 
 
@@ -304,7 +304,9 @@
       
 
       
-        <p><blockquote class="blockquote-center"><br>幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。<br></blockquote><br>Laravel 默认使用 file 的方式来实现 session的。她并不用php原生的$_SESSION（php原生的session要看php.ini的位置），所以忽略php相关的session函数，例如session_start(), $_SESSION。Laravel在运行过程中会在app/storage/session/目录写入session的信息，所以这个目录需要有写权限，否者session就无法写入成功。</p>
+        <blockquote class="blockquote-center"><br>幸福，不是长生不老，不是大鱼大肉，不是权倾朝野。幸福是每一个微小的生活愿望达成。当你想吃的时候有得吃，想被爱的时候有人来爱你。<br></blockquote>
+
+<p><code>Laravel</code> 默认使用 <code>file</code> 的方式来实现 <code>session</code>的。她并不用php原生的<code>$_SESSION</code>,php原生的<code>session</code>要看<code>php.ini</code>的位置，所以忽略<code>php</code>相关的<code>session</code>函数，例如<code>session_start()</code>, <code>$_SESSION</code>。Laravel在运行过程中会在<code>app/storage/session/</code>目录写入session的信息，所以这个目录需要有写权限，否者session就无法写入成功。</p>
 <p>Laravel除了使用默认的file作为session的实现，还支持cookie, Memcached, Redis 和数据库的后端驱动作为session的实现。必要的时候还需要自己实现一个session的实现方式，比如在微信公众账号和用户的交互，这中session就无法直接使用，因为每次都是微信服务器来请求，无法通过请求的来源来辨别用户。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//session的永久保存（在不过期范围内）</span></span><br><span class="line">Session::put(<span class="string">'key'</span>, <span class="string">'value'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//等同于PHP的原生session</span></span><br><span class="line">$_SESSION[<span class="string">'key'</span>] = <span class="string">'value'</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//get操作</span></span><br><span class="line">$value = Session::get(<span class="string">'key'</span>, <span class="string">'default'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//去除操作并删除，类似pop概念</span></span><br><span class="line">$value = Session::pull(<span class="string">'key'</span>, <span class="string">'default'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//检测是否存在key</span></span><br><span class="line">Session::has(<span class="string">'users'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//删除key</span></span><br><span class="line">Session::forget(<span class="string">'key'</span>);</span><br></pre></td></tr></table></figure>
 <h3 id="laravel的session中flash概念"><a href="#laravel的session中flash概念" class="headerlink" title="laravel的session中flash概念"></a>laravel的session中flash概念</h3><p>这个flash两次请求有效（本次和下次请求有效），与本次请求取操作多少次无关。</p>
@@ -447,7 +449,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">352</span>
+              <span class="site-state-item-count">354</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

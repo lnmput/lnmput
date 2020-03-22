@@ -265,6 +265,223 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/08/Laravel使用markdown详细/" itemprop="url">
+                  Laravel使用markdown详细
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-08T16:40:30+08:00" content="2018-03-08">
+              2018-03-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>可我咋觉得你躺在这<br>我李云龙的半条命<br>也埋在这儿了……<br></blockquote>
+
+<h3 id="使用SimpleMDE编辑器"><a href="#使用SimpleMDE编辑器" class="headerlink" title="使用SimpleMDE编辑器"></a>使用SimpleMDE编辑器</h3><h4 id="页面上引入css和js文件"><a href="#页面上引入css和js文件" class="headerlink" title="页面上引入css和js文件"></a>页面上引入css和js文件</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">name</span>=<span class="string">"profile"</span> <span class="attr">placeholder</span>=<span class="string">"这里请介绍你的专栏内容, 写作计划, 更新进度, 答疑情况等内容"</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> simplemde = <span class="keyword">new</span> SimpleMDE(&#123;</span><br><span class="line">    spellChecker: <span class="literal">false</span>,</span><br><span class="line">    autosave: &#123;</span><br><span class="line">        enabled: <span class="literal">true</span>,</span><br><span class="line">        delay: <span class="number">5000</span>,</span><br><span class="line">        unique_id: <span class="string">"article_content"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    forceSync: <span class="literal">true</span>,</span><br><span class="line">    toolbar: [</span><br><span class="line">        <span class="string">"bold"</span>, <span class="string">"italic"</span>, <span class="string">"heading"</span>, <span class="string">"|"</span>, <span class="string">"quote"</span>, <span class="string">"code"</span>, <span class="string">"table"</span>,</span><br><span class="line">        <span class="string">"horizontal-rule"</span>, <span class="string">"unordered-list"</span>, <span class="string">"ordered-list"</span>, <span class="string">"|"</span>,</span><br><span class="line">        <span class="string">"link"</span>, <span class="string">"image"</span>, <span class="string">"|"</span>, <span class="string">"side-by-side"</span>, <span class="string">'fullscreen'</span>, <span class="string">"|"</span>,</span><br><span class="line">        &#123;</span><br><span class="line">            name: <span class="string">"guide"</span>,</span><br><span class="line">            action: <span class="function"><span class="keyword">function</span> <span class="title">customFunction</span>(<span class="params">editor</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">'https://github.com/riku/Markdown-Syntax-CN/blob/master/syntax.md'</span>, <span class="string">'_blank'</span>);</span><br><span class="line">                <span class="keyword">if</span> (win) &#123;</span><br><span class="line">                    <span class="comment">//Browser has allowed it to be opened</span></span><br><span class="line">                    win.focus();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">//Browser has blocked it</span></span><br><span class="line">                    alert(<span class="string">'Please allow popups for this website'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            className: <span class="string">"fa fa-info-circle"</span>,</span><br><span class="line">            title: <span class="string">"Markdown 语法！"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            name: <span class="string">"publish"</span>,</span><br><span class="line">            action: <span class="function"><span class="keyword">function</span> <span class="title">customFunction</span>(<span class="params">editor</span>) </span>&#123;</span><br><span class="line">                $(<span class="string">'.submit-btn'</span>).click();</span><br><span class="line">            &#125;,</span><br><span class="line">            className: <span class="string">"fa fa-paper-plane"</span>,</span><br><span class="line">            title: <span class="string">"发布文章"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="页面输出解析markdown"><a href="#页面输出解析markdown" class="headerlink" title="页面输出解析markdown"></a>页面输出解析markdown</h3><h4 id="安装扩展包"><a href="#安装扩展包" class="headerlink" title="安装扩展包"></a>安装扩展包</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> erusev/parsedown</span><br></pre></td></tr></table></figure>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$Parsedown = <span class="keyword">new</span> Parsedown();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $Parsedown-&gt;text(<span class="string">'Hello _Parsedown_!'</span>); <span class="comment"># prints: &lt;p&gt;Hello &lt;em&gt;Parsedown&lt;/em&gt;!&lt;/p&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://simplemde.com/" target="_blank" rel="noopener">https://simplemde.com/</a><br><a href="https://packagist.org/packages/erusev/parsedown" target="_blank" rel="noopener">https://packagist.org/packages/erusev/parsedown</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/08/统一订单管理erp2/" itemprop="url">
+                  统一订单管理erp2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-08T11:27:04+08:00" content="2018-03-08">
+              2018-03-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>技术是生产力<br></blockquote>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>由于后期公司业务调整以及业务量增大, 第一版的订单管理系统已经不能很好的满足采购,客服, 仓储,发货等相关人员的需求,于是积极筹备开发第二版.<br>基于laravel5.5开发，用于所有商城的订单管理，实现了采购，供货，发货, 仓储的完全管理;</p>
+<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="菜单导航"><a href="#菜单导航" class="headerlink" title="菜单导航"></a>菜单导航</h4><p><img src="/images/erp2-18.gif" alt></p>
+<h4 id="订单列表"><a href="#订单列表" class="headerlink" title="订单列表"></a>订单列表</h4><p><img src="/images/erp2-01.png" alt></p>
+<h4 id="订单详情"><a href="#订单详情" class="headerlink" title="订单详情"></a>订单详情</h4><p><img src="/images/erp2-02.png" alt></p>
+<h4 id="产品单采"><a href="#产品单采" class="headerlink" title="产品单采"></a>产品单采</h4><p><img src="/images/erp2-03.png" alt></p>
+<h4 id="待发货订单"><a href="#待发货订单" class="headerlink" title="待发货订单"></a>待发货订单</h4><p><img src="/images/erp2-04.png" alt></p>
+<h4 id="物流停滞核实"><a href="#物流停滞核实" class="headerlink" title="物流停滞核实"></a>物流停滞核实</h4><p><img src="/images/erp2-05.png" alt></p>
+<h4 id="退款已申请"><a href="#退款已申请" class="headerlink" title="退款已申请"></a>退款已申请</h4><p><img src="/images/erp2-06.png" alt></p>
+<h4 id="立即退款"><a href="#立即退款" class="headerlink" title="立即退款"></a>立即退款</h4><p><img src="/images/erp2-07.png" alt></p>
+<h4 id="产品换购"><a href="#产品换购" class="headerlink" title="产品换购"></a>产品换购</h4><p><img src="/images/erp2-08.png" alt></p>
+<h4 id="采购供货"><a href="#采购供货" class="headerlink" title="采购供货"></a>采购供货</h4><p><img src="/images/erp2-09.png" alt></p>
+<h4 id="运单号抓取"><a href="#运单号抓取" class="headerlink" title="运单号抓取"></a>运单号抓取</h4><p><img src="/images/erp2-10.png" alt></p>
+<h4 id="用户信息报错"><a href="#用户信息报错" class="headerlink" title="用户信息报错"></a>用户信息报错</h4><p><img src="/images/erp2-11.png" alt></p>
+<h4 id="用户投诉处理"><a href="#用户投诉处理" class="headerlink" title="用户投诉处理"></a>用户投诉处理</h4><p><img src="/images/erp2-18.png" alt></p>
+<h4 id="店铺批量采购列表"><a href="#店铺批量采购列表" class="headerlink" title="店铺批量采购列表"></a>店铺批量采购列表</h4><p><img src="/images/erp2-12.png" alt></p>
+<h4 id="店铺批量采购"><a href="#店铺批量采购" class="headerlink" title="店铺批量采购"></a>店铺批量采购</h4><p><img src="/images/erp2-13.png" alt></p>
+<h4 id="导入采购信息"><a href="#导入采购信息" class="headerlink" title="导入采购信息"></a>导入采购信息</h4><p><img src="/images/erp2-14.png" alt></p>
+<h4 id="数据导出中心"><a href="#数据导出中心" class="headerlink" title="数据导出中心"></a>数据导出中心</h4><p><img src="/images/erp2-15.png" alt></p>
+<h4 id="站点创建"><a href="#站点创建" class="headerlink" title="站点创建"></a>站点创建</h4><p><img src="/images/erp2-16.png" alt></p>
+<h4 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h4><p><img src="/images/erp2-17.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/03/PHP静态属性的继承问题/" itemprop="url">
                   PHP静态属性的继承问题
                 </a>
@@ -568,223 +785,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/01/在PHP下理解和应用多态/" itemprop="url">
-                  在PHP下理解和应用多态
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-01T11:18:28+08:00" content="2018-03-01">
-              2018-03-01
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br> 后来我终于知道 ， 它并不是我的花 ，我只是恰好途径了它的盛放。<br></blockquote>
-
-<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>封装是类的构建过程，php具有；php也具有继承的特性。唯独这个多态，php体现的十分模糊。原因是php是弱类型语言。<br>java的多态体现的十分清晰，大体分两类：父类引用指向子类对象；接口引用指向实现接口的类对象。java声明变量时都要给变量设定类型，所以存在什么父类引用和接口引用。而php则没有这点体现，php声明变量不需要给变量设定类型，一个变量可以指向不同的数据类型。所以，php不具有像java一样的多态。</p>
-<p>多态，作为面向对象编程中的一种设计模式，指的是通过遵循同一个interface，类可以有不同的功能实现（相当于说，有多种形态）。<br>在编程世界里，多态形式可以让我们的程序更加地模块化，易于扩展，而不是到处都是基于不同状态的条件判断，比如动不动就switch，动不动就层层嵌套if判断，这种情况下，十有八九是你的代码“有问题”了。</p>
-<h3 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h3><p>interface里可以定义方法名及相应参数，任何实现这个interface的类必须具体实现interface里定义的所有抽象方法，一个class可以实现多个interface<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThis</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正确的做法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $name;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThis</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// code that does this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// code that does that</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 无效的做法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 缺少 doThis()方法!</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这个方法必须也是public!</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 缺少 name 参数!</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Abstract Class可以说是介于interface和普通class之间，它既可以通过abstract method的形式定义统一的接口，又可以定义具体的功能实现。一个扩展了该Abstract Class的普通class，必须得具体实现该Abstract Class的所有抽象方法。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAbstract</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThis</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doThat</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setName</span><span class="params">($name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h3><p>假设你有一个articleclass：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $title;</span><br><span class="line">    <span class="keyword">public</span> $author;</span><br><span class="line">    <span class="keyword">public</span> $date;</span><br><span class="line">    <span class="keyword">public</span> $category;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span>  <span class="title">__construct</span><span class="params">($title, $author, $date, $category = <span class="number">0</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;title = $title;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;author = $author;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;date = $date;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;category = $category;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>现在呢，你想添加一个方法，来以不同的形式输出article相关的信息，比如说XML格式，或者说JSON格式。<br>可能你一开始会想着这么来处理：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">($type)</span> </span>&#123;</span><br><span class="line">        $ret = <span class="string">''</span>;</span><br><span class="line">        <span class="keyword">switch</span>($type) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'XML'</span>:</span><br><span class="line">                $ret = <span class="string">'&lt;article&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;title&gt;'</span> . $obj-&gt;title . <span class="string">'&lt;/title&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;author&gt;'</span> . $obj-&gt;author . <span class="string">'&lt;/author&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;date&gt;'</span> . $obj-&gt;date . <span class="string">'&lt;/date&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;category&gt;'</span> . $obj-&gt;category . <span class="string">'&lt;/category&gt;'</span>;</span><br><span class="line">                $ret .= <span class="string">'&lt;/article&gt;'</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'JSON'</span>:</span><br><span class="line">                $array = <span class="keyword">array</span>(<span class="string">'article'</span> =&gt; $obj);</span><br><span class="line">                $ret = json_encode($array);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>虽然功能上能实现效果，但是看上去很糟糕，不是吗？假设，将来你又想加上其他的格式，那该怎么办？再加几个case判断，这代码得多臃肿呢？</p>
-<p>关于面向对象，有一个很重要的原则就是，一个class应该只做份内之事。每当你遇到大块的条件判断的时候，你就应该有所警醒，因为很可能这个时候你已经在同一个class或method下，硬要去做太多的事情了。那么这个时候，也就是该尝试多态实现了。</p>
-<h3 id="尝试解决"><a href="#尝试解决" class="headerlink" title="尝试解决"></a>尝试解决</h3><p>定义 Interface<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Writer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Article $obj)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>具体实现 Interface</p>
-<p>XMLWriter可以这样来实现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">XMLWriter</span> <span class="keyword">implements</span> <span class="title">Writer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Article $obj)</span> </span>&#123;</span><br><span class="line">        $ret = <span class="string">'&lt;article&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;title&gt;'</span> . $obj-&gt;title . <span class="string">'&lt;/title&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;author&gt;'</span> . $obj-&gt;author . <span class="string">'&lt;/author&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;date&gt;'</span> . $obj-&gt;date . <span class="string">'&lt;/date&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;category&gt;'</span> . $obj-&gt;category . <span class="string">'&lt;/category&gt;'</span>;</span><br><span class="line">        $ret .= <span class="string">'&lt;/article&gt;'</span>;</span><br><span class="line">        <span class="keyword">return</span> $ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>JSONWriter：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JSONWriter</span> <span class="keyword">implements</span> <span class="title">Writer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Article $obj)</span> </span>&#123;</span><br><span class="line">        $array = <span class="keyword">array</span>(<span class="string">'article'</span> =&gt; $obj);</span><br><span class="line">        <span class="keyword">return</span> json_encode($array);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样每一种个的class只负责各自的那一件事。</p>
-<p>具体调用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(Writer $writer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $writer-&gt;write(<span class="keyword">$this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样article的write方法接收的是一个实现了Writer这个interface的具体类，article不再需要关注具体该用什么样的格式，那已经不是它要负责的了，交给背后具体的Writer去处理就好了。</p>
-<blockquote>
-<p><a href="http://pilishen.com/posts/Understanding-and-Applying-Polymorphism-in-PHP" target="_blank" rel="noopener">http://pilishen.com/posts/Understanding-and-Applying-Polymorphism-in-PHP</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/01/你的身材就是你的阶层/" itemprop="url">
-                  你的身材就是你的阶层
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-01T09:39:26+08:00" content="2018-03-01">
-              2018-03-01
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>人与人拼到最后，拼的就是身体。身材好，就是一种实力。<br></blockquote><br>这是个以貌取人的时代，没人有义务透过你臃肿的身材，去发现你优秀的内心。<br>你的身材，就是你的名片。<br>它能折射出你内在的品质、性格、习惯……千万别因身材让人看低了你的层次。</p>
-<h3 id="这是一个看身材的时代"><a href="#这是一个看身材的时代" class="headerlink" title="这是一个看身材的时代"></a>这是一个看身材的时代</h3><p>去年曾有一条新闻：上海某著名小学招新生，面试家长，看家长身材，肥胖的不要。<br>这条新闻一出，顿时家长们炸了锅。有赞同此举的家长留言：<br>“我觉得非常好，肥胖的人自我管理能力差，还怪小孩不听话。”<br>“我觉得太赞了。自我管理能力低下的家长肯定无力配合超一流的教育啊。老外的私立学校也很严格，有钱都能进的你愿意往里挤吗？”<br>“我觉得看家长身材肥胖可以反映出一些问题的，首先肥胖不是短时间形成的，应该是长期不注意饮食和运动造成的。<br>家长连自己都没管好，你相信他们会管好孩子吗？自己都没有信心去坚持的东西，还会指望他们鼓励孩子去坚持？”<br>“教育孩子最好的方法是让自己变得优秀，给孩子做榜样。如果想让你的孩子成为你想象中的那个人，那么，你先成为那个人吧。”……<br>这个社会对胖子太残忍了—-找对象时被嫌弃，找工作时受歧视，好不容易找到对象结婚生子了吧，以为生活总算上了正轨，结果，没想到身材还能影响下一代的教育。<br>果然，这是个看身材的时代。<br>别以为你年长，就不用看身材了，没想到，作为家长，还要看身材。<br>如果你是胖子，孩子都要被你拖累。</p>
-<h3 id="身材好，也是一种实力"><a href="#身材好，也是一种实力" class="headerlink" title="身材好，也是一种实力"></a>身材好，也是一种实力</h3><p>一个人的身材，25岁前，是爹妈给的；25岁之后，是自己修的。<br>能管好自己身材的人，往往能管理好自己的生活和工作。反之，臃肿的身材背后，可能是一团乱糟糟的生活。<br>我们公司副总裁，来自法国的欧总，就是个身材超好的高富帅，不过，是个50多岁的老帅哥。<br>他每天5:30起床，然后去操场跑步。有一段时间要参加“汉马”—-武汉马拉松赛，所以他更是加大了训练量。<br>欧总管理着公司最重要也是最忙碌的制造领域，每天提前半小时上班，还经常出差，别看他一把年纪了，可每天精力旺盛得像个小伙子。<br>的确，当领导要讲资历、论能力，但更要拼体力。经常的出差，坐飞机、坐火车，不规律的作息，没有良好的体质是吃不消的。<br>我的同事老张，就是因为胖，工作一直没有得到升迁。肥胖真的会影响一个人的职业生涯。<br>有一次，领导召开一个内容枯燥的会议。胖人精力不好，特别容易打瞌睡，老张听着听着竟然睡着了，脑袋还时不时“小鸡啄米”。<br>圆桌会议室里，他正好坐领导对面，领导重重地咳嗽了两声，老张从睡梦中惊醒，继续听讲。结果没一会儿，他又犯起困来，领导一一收在眼底。<br>肥胖，给工作带来影响，生活质量也大打折扣，还谈什么奋斗拼搏呢？<br>人与人拼到最后，拼的就是身体。身材好，就是一种实力。</p>
-<h3 id="你的身材，就是你的阶层"><a href="#你的身材，就是你的阶层" class="headerlink" title="你的身材，就是你的阶层"></a>你的身材，就是你的阶层</h3><p>判断一个人的阶层，最简单的办法，就是看TA的身材。<br>正如保罗·福塞尔在《格调》一书中所说：<br>“你的体重就是你社会等级的宣言。一百年前，肥胖是成功的标志。但那样的日子已经一去不复返了。今天，肥胖是中下阶层的标志。与中上层阶级和中产阶级相比，中下阶层的肥胖者是前者的四倍。”<br>CCL领导力调研也表明：《财富》500强公司的首席执行官中找不到一个体重超标的人。<br>想想也是。那些受过良好教育、有强烈进取心、努力奋斗、事业有成的人，象普京、奥巴马、马云、李彦宏、俞敏洪……大多都是身材匀称、温文尔雅的人。<br>而那些家境贫困、庸庸碌碌、不思进取的人群，我们更容易看到大腹便便、体态臃肿、举止粗鲁的人。<br>英国纪录片《人生7年》也印证了这一事实。该片选择了14个不同阶层的孩子进行跟踪拍摄，每七年记录一次：从7岁开始、14岁、21岁……一直到56岁。<br>这是完全的真人秀，记录了普通英国人的人生。<br>片中的一对精英阶级夫妇 56岁时依然保持着好身材；由原中产阶级晋升为精英阶级的教授夫妻和公务员夫妻，体型也不错<br>而那些底层阶级长大的男人们，虽然有几个年轻时也英俊帅气，但最终他们几乎全都成了胖子或秃子，尤其是他们的妻子，身材变形得更厉害。<br>外国如此，中国也趋于这样。<br>索福瑞集团的调研显示，在中国，中低收入群体已占肥胖人口中的绝大多数比例。<br>为什么这个社会穷人越胖，富人越瘦？</p>
-<h3 id="瘦很昂贵，你胖，因为你穷"><a href="#瘦很昂贵，你胖，因为你穷" class="headerlink" title="瘦很昂贵，你胖，因为你穷"></a>瘦很昂贵，你胖，因为你穷</h3><p>造成肥胖的原因，除遗传的影响外，主要就是不合理的饮食及运动量太少。<br>油炸食物、快餐等垃圾食品都让人容易变胖。而吃进去这么多热量，不运动，就会产生肥胖。<br>很多穷人没有生活，只有生存。<br>他们经常加班、熬夜、缺少睡眠、暴饮暴食或饮食不规律；生存的压力山大，哪有时间和精力去锻炼身体、控制饮食？<br>况且他们受教育程度普遍不高，也难有身材管理的意识和知识。所以，穷人的“过劳肥”越来越多。<br>而富人正相反。越来越多的富人意识到，拥有健康的身体是一笔无价的财富。<br>他们有时间有金钱对身体进行投资，他们愿意选择绿色、有机、低热量的食物，舍得在健身上花时间，也承担得起上健身房、请私人教练的大把银子。<br>国内曾有一项关于财富和运动关系的报告，数据显示：那些拥有财富更多的人倾向于更多的运动。大数据显示，每日行走8000步以上的人群平均收入高于8000步以下人群6.4%。<br>果然，好身材就像奢侈品，多属于富人阶层。<br>瘦很昂贵，穷人消费不起。你胖，是因为你穷。</p>
-<h3 id="你的身材里藏着自律"><a href="#你的身材里藏着自律" class="headerlink" title="你的身材里藏着自律"></a>你的身材里藏着自律</h3><p>身材和时间金钱有关，没错，但关系更大的是，自律和意志力。<br>正如网上对《人生7年》的评价：<br>人人都只看到了精英阶层与生俱来优越的家庭条件和社会地位，羡慕他们有私家健身房，有私教，认为他们能有健康体魄、匀称的身材是理所当然的，可是又有谁看到他们在饮食控制、健身等方面的自律？<br>这种自律，远远强于底层阶级。<br>要知道那些有六块腹肌的男人和永远保持好身材的女人，他们拥有你想象不到的自律和意志力。<br>钟汉良曾晒过他的早餐，只有一片面包，几个蘑菇。<br>郭富城，坚持健身二十余年，每天最少跑步半小时。即使到外地，也会要求入住24小时开放健身房的酒店，要是酒店没有健身房的话，他会自备绳子在房间跳绳。<br>刘德华，为了拥有六块腹肌与紧实的胸肌线条，把家里变成了健身房。开演唱会前他会坚持长跑练气，拍戏时他会利用空挡举哑铃，每天再忙也要运动。<br>严歌苓，不仅在写作上自律，还会在繁忙的工作中，坚持锻炼身体，游泳和跑步。她在餐厅等朋友时，还不忘趴地上做平板支撑。<br>她说：“形象是女人的纪律”。<br>正是几十年如一日，钢铁般的意志自律着，所以她60多岁了，仍保持着纤细的身材和优雅的状态……<br>人人都知道“管住嘴，迈开腿”的道理，可又有几人能像他们这样做到呢？ </p>
-<blockquote>
-<p>转载自公众号:少女兔</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -828,7 +828,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">352</span>
+              <span class="site-state-item-count">354</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

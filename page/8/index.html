@@ -265,6 +265,228 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/07/websocket常见问题/" itemprop="url">
+                  websocket常见问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-07T22:31:49+08:00" content="2018-08-07">
+              2018-08-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我不辛苦，我命苦！<br></blockquote><br>针对websocket中常见的几个问题做一个详细的总结说明，具体要说的重点大概有下面3个:</p>
+<ul>
+<li>心跳检测的必要性</li>
+<li>校验客户端连接的有效性</li>
+<li>客户端的重连机制</li>
+</ul>
+<h3 id="心跳检测"><a href="#心跳检测" class="headerlink" title="心跳检测"></a>心跳检测</h3><p>swoole内置了心跳检测机制,我们只需要做如下简单的配置即可<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$serv-&gt;set([</span><br><span class="line">    <span class="string">'heartbeat_check_interval'</span> =&gt; N,</span><br><span class="line">    <span class="string">'heartbeat_idle_time'</span> =&gt; M,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
+<p>如上，分别配置heartbeat_check_interval和heartbeat_idle_time参数，二者配合使用，其含义就是N秒检查一次，看看哪些连接M内没有活动的，就认为这个连接是无效的，server就会主动关闭这个无效的连接。<br>是不是说N秒server会主动向客户端发一个心跳包，没有收到客户端响应的才认为这个连接是死连接呢？那还要heartbeat_idle_time做什么，对吧？<br>swoole的实现原理是这样的：server每次收到客户端的数据包都会记录一个时间戳，N秒内循环检测下所有的连接，如果M秒内该连接还没有活动，才断开这个连接。</p>
+<h3 id="校验客户端连接的有效性"><a href="#校验客户端连接的有效性" class="headerlink" title="校验客户端连接的有效性"></a>校验客户端连接的有效性</h3><p>实际项目上线后，如果你的websocket server是对外开放的，就需要把ip修改为服务器外网的ip地址或者修改为0.0.0.0。<br>如此，也便带来了新的问题：任意客户端都可以连接到我们的server了，这个“任意”可不止我们自己认为有效的客户端，还包括你的我的所有的非有效或者恶意的连接，这可不是我们想要的。</p>
+<p>如何避免这一问题呢？方法有很多种，比如我们可以在连接的时候认为只有get传递的参数valid=1才允许连接；或者我们只允许登录用户才可以连接server；再或者我们可以校验客户端每次send所携带的token，server对该值校验通过后才认为当前是有效连接等等。与此同时，server开启心跳检测，对于恶意无效的连接，直接干掉！</p>
+<p>server的代码实现如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebSocketServerValid</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_serv;</span><br><span class="line">    <span class="keyword">public</span> $key = <span class="string">'^manks.top&amp;swoole$'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv = <span class="keyword">new</span> swoole_websocket_server(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">            <span class="string">'heartbeat_check_interval'</span> =&gt; <span class="number">30</span>,</span><br><span class="line">            <span class="string">'heartbeat_idle_time'</span> =&gt; <span class="number">62</span>,</span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'open'</span>, [<span class="keyword">$this</span>, <span class="string">'onOpen'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'message'</span>, [<span class="keyword">$this</span>, <span class="string">'onMessage'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'close'</span>, [<span class="keyword">$this</span>, <span class="string">'onClose'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $serv</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $request</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onOpen</span><span class="params">($serv, $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;checkAccess($serv, $request);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $serv</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $frame</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onMessage</span><span class="params">($serv, $frame)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;push($frame-&gt;fd, <span class="string">'Server: '</span> . $frame-&gt;data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onClose</span><span class="params">($serv, $fd)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"client &#123;$fd&#125; closed.\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 校验客户端连接的合法性,无效的连接不允许连接</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $serv</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">checkAccess</span><span class="params">($serv, $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// get不存在或者uid和token有一项不存在，关闭当前连接</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">isset</span>($request-&gt;get) || !<span class="keyword">isset</span>($request-&gt;get[<span class="string">'uid'</span>]) || !<span class="keyword">isset</span>($request-&gt;get[<span class="string">'token'</span>])) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;_serv-&gt;close($request-&gt;fd);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $uid = $request-&gt;get[<span class="string">'uid'</span>];</span><br><span class="line">        $token = $request-&gt;get[<span class="string">'token'</span>];</span><br><span class="line">        <span class="comment">// 校验token是否正确,无效关闭连接</span></span><br><span class="line">        <span class="keyword">if</span> (md5(md5($uid) . <span class="keyword">$this</span>-&gt;key) != $token) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;_serv-&gt;close($request-&gt;fd);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">start</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$server = <span class="keyword">new</span> WebSocketServerValid;</span><br><span class="line">$server-&gt;start();</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，checkAccess是授权方法，我们在onOpen回调内对uid以及token进行了校验，无效则关闭连接。</p>
+<h3 id="客户端重连机制"><a href="#客户端重连机制" class="headerlink" title="客户端重连机制"></a>客户端重连机制</h3><p>客户端重连机制又可以理解为一种保活机制，你也可以跟服务端的心跳检测在一起理解为双向心跳。即我们有一种需求是，如何能保证客户端和服务端的连接一直是有效的，不断开的。</p>
+<p>其实很简单，对客户端而言，只要触发error或者close再或者连接失败，就主动重连server，这便是我们的目的。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> ws;<span class="comment">//websocket实例</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> lockReconnect = <span class="literal">false</span>;<span class="comment">//避免重复连接</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> wsUrl = <span class="string">'ws://127.0.0.1:9501'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">createWebSocket</span>(<span class="params">url</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">try</span> &#123;</span></span><br><span class="line"><span class="javascript">        ws = <span class="keyword">new</span> WebSocket(url);</span></span><br><span class="line">        initEventHandle();</span><br><span class="line"><span class="javascript">    &#125; <span class="keyword">catch</span> (e) &#123;</span></span><br><span class="line">        reconnect(url);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">initEventHandle</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line">        reconnect(wsUrl);</span><br><span class="line">    &#125;;</span><br><span class="line"><span class="javascript">    ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line">        reconnect(wsUrl);</span><br><span class="line">    &#125;;</span><br><span class="line"><span class="javascript">    ws.onopen = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//心跳检测重置</span></span></span><br><span class="line">        heartCheck.reset().start();</span><br><span class="line">    &#125;;</span><br><span class="line"><span class="javascript">    ws.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//如果获取到消息，心跳检测重置</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">//拿到任何消息都说明当前连接是正常的</span></span></span><br><span class="line">        heartCheck.reset().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">reconnect</span>(<span class="params">url</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">if</span>(lockReconnect) <span class="keyword">return</span>;</span></span><br><span class="line"><span class="javascript">    lockReconnect = <span class="literal">true</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//没连接上会一直重连，设置延迟避免请求过多</span></span></span><br><span class="line"><span class="javascript">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line">        createWebSocket(url);</span><br><span class="line"><span class="javascript">        lockReconnect = <span class="literal">false</span>;</span></span><br><span class="line">    &#125;, 2000);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="comment">//心跳检测</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> heartCheck = &#123;</span></span><br><span class="line"><span class="javascript">    timeout: <span class="number">60000</span>,<span class="comment">//60秒</span></span></span><br><span class="line"><span class="javascript">    timeoutObj: <span class="literal">null</span>,</span></span><br><span class="line"><span class="javascript">    serverTimeoutObj: <span class="literal">null</span>,</span></span><br><span class="line"><span class="javascript">    reset: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        clearTimeout(<span class="keyword">this</span>.timeoutObj);</span></span><br><span class="line"><span class="javascript">        clearTimeout(<span class="keyword">this</span>.serverTimeoutObj);</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="keyword">this</span>;</span></span><br><span class="line">    &#125;,</span><br><span class="line"><span class="javascript">    start: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> self = <span class="keyword">this</span>;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">this</span>.timeoutObj = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//这里发送一个心跳，后端收到后，返回一个心跳消息，</span></span></span><br><span class="line"><span class="javascript">            <span class="comment">//onmessage拿到返回的心跳就说明连接正常</span></span></span><br><span class="line"><span class="javascript">            ws.send(<span class="string">""</span>);</span></span><br><span class="line"><span class="javascript">            self.serverTimeoutObj = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">//如果超过一定时间还没重置，说明后端主动断开了</span></span></span><br><span class="line"><span class="javascript">                ws.close();<span class="comment">//如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次</span></span></span><br><span class="line">            &#125;, self.timeout);</span><br><span class="line"><span class="javascript">        &#125;, <span class="keyword">this</span>.timeout);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">createWebSocket(wsUrl);</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/08/07/api的防重放机制/" itemprop="url">
+                  API的防重放机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-07T20:47:39+08:00" content="2018-08-07">
+              2018-08-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>从不说硬话； 从不做软事<br></blockquote>
+
+<p>我们在设计接口的时候，最怕一个接口被用户截取用于重放攻击。重放攻击是什么呢？就是把你的请求原封不动地再发送一次，两次…n次，一般正常的请求都会通过验证进入到正常逻辑中，如果这个正常逻辑是插入数据库操作，那么一旦插入数据库的语句写的不好，就有可能出现多条重复的数据。一旦是比较慢的查询操作，就可能导致数据库堵住等情况。</p>
+<h3 id="timestamp-nonce"><a href="#timestamp-nonce" class="headerlink" title="timestamp+nonce"></a>timestamp+nonce</h3><p>我们常用的防止重放的机制是使用<code>timestamp</code>和<code>nonce</code>来做的重放机制。</p>
+<p>timestamp用来表示请求的当前时间戳，这个时间戳当然要和服务器时间戳进行校正过的。我们预期正常请求带的<code>timestamp</code>参数会是不同的（预期是正常的人每秒至多只会做一个操作）。每个请求带的时间戳不能和当前时间超过一定规定的时间。比如60s。这样，这个请求即使被截取了，你也只能在60s内进行重放攻击。过期失效。</p>
+<p>但是这样也是不够的，还有给攻击者60s的时间。所以我们就需要使用一个<code>nonce</code>，随机数。</p>
+<p>nonce是由客户端根据足够随机的情况生成的，比如 md5(timestamp+rand(0, 1000)); 它就有一个要求，正常情况下，在短时间内（比如60s）连续生成两个相同nonce的情况几乎为0。</p>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><p>服务端第一次在接收到这个<code>nonce</code>的时候做下面行为：</p>
+<ul>
+<li>去redis中查找是否有<code>key</code>为<code>nonce:{nonce}</code>的string</li>
+<li>如果没有，则创建这个<code>key</code>，把这个<code>key</code>失效的时间和验证<code>timestamp</code>失效的时间一致，比如是60s。</li>
+<li>如果有，说明这个key在60s内已经被使用了，那么这个请求就可以判断为重放请求。</li>
+</ul>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>那么比如，下面这个请求：<br><code>http://a.com?uid=123&amp;timestamp=1480556543&amp;nonce=43f34f33&amp;sign=80b886d71449cb33355d017893720666</code><br>这个请求中国的uid是我们真正需要传递的有意义的参数<br><code>timestamp</code>，<code>nonce</code>，<code>sign</code>都是为了签名和防重放使用。<br><code>timestamp</code>是发送接口的时间，<code>nonce</code>是随机串，<code>sign</code>是对uid，timestamp,nonce(对于一些rest风格的api，我建议也把url放入sign签名)。签名的方法可以是md5({秘要}key1=val1&amp;key2=val2&amp;key3=val3…)<br>服务端接到这个请求：</p>
+<ul>
+<li>先验证sign签名是否合理，证明请求参数没有被中途篡改</li>
+<li>再验证timestamp是否过期，证明请求是在最近60s被发出的</li>
+<li>最后验证nonce是否已经有了，证明这个请求不是60s内的重放请求</li>
+</ul>
+<blockquote>
+<p><a href="https://www.cnblogs.com/yjf512/p/6590890.html" target="_blank" rel="noopener">https://www.cnblogs.com/yjf512/p/6590890.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/08/03/laravel中env函数的坑/" itemprop="url">
                   Laravel中env函数的坑
                 </a>
@@ -563,226 +785,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/30/解决redis内存不够的问题/" itemprop="url">
-                  解决redis内存不够的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-30T10:19:11+08:00" content="2018-07-30">
-              2018-07-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>为天地立心，为生民立命，为前圣继绝学，为万世开太平。<br></blockquote><br>今天遇到了一个问题<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Predis \ Response \ ServerException</span><br><span class="line">ERR Error running script (call to f_a08c9c69b7c07ae2485190873b90d128a23e502d): @user_script:<span class="number">1</span>: @user_script: <span class="number">1</span>: -OOM command not allowed when used memory &gt; <span class="string">'maxmemory'</span>.</span><br></pre></td></tr></table></figure></p>
-<p>谷歌了一下， 发现是Redis内存不够导致的， 遂开始我的修复之旅</p>
-<ul>
-<li><p>连接上redis</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/redis/bin/redis-cli</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看内存信息</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info memory</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">used_memory:<span class="number">461709952</span></span><br><span class="line">used_memory_human:<span class="number">440.32</span>M</span><br><span class="line">used_memory_rss:<span class="number">521863168</span></span><br><span class="line">used_memory_rss_human:<span class="number">497.69</span>M</span><br><span class="line">used_memory_peak:<span class="number">461915512</span></span><br><span class="line">used_memory_peak_human:<span class="number">440.52</span>M</span><br><span class="line">used_memory_peak_perc:<span class="number">99.96</span>%</span><br><span class="line">used_memory_overhead:<span class="number">2811662</span></span><br><span class="line">used_memory_startup:<span class="number">786656</span></span><br><span class="line">used_memory_dataset:<span class="number">458898290</span></span><br><span class="line">used_memory_dataset_perc:<span class="number">99.56</span>%</span><br><span class="line">total_system_memory:<span class="number">3722543104</span></span><br><span class="line">total_system_memory_human:<span class="number">3.47</span>G</span><br><span class="line">used_memory_lua:<span class="number">47104</span></span><br><span class="line">used_memory_lua_human:<span class="number">46.00</span>K</span><br><span class="line">maxmemory:<span class="number">843000000</span></span><br><span class="line">maxmemory_human:<span class="number">803.95</span>M</span><br><span class="line">maxmemory_policy:noeviction</span><br><span class="line">mem_fragmentation_ratio:<span class="number">1.13</span></span><br><span class="line">mem_allocator:jemalloc<span class="number">-4.0</span><span class="number">.3</span></span><br><span class="line">active_defrag_running:<span class="number">0</span></span><br><span class="line">lazyfree_pending_objects:<span class="number">0</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编辑配置文件</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/redis/etc/redis.conf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>根据你机器的配置适当的修改</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxmemory <span class="number">2</span>gb</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改redis存储策略<br>默认的redis设置是非常保守的，即内存超限后就不在存储，可以把策略修改为LRU算法（最近最少使用算法）——新存储的信息会替换掉旧的信息，从而不会是内存越线，修改redis.conf。这个必须结合业务场景，如果没有自动加载数据到redis的缓存机制，会造成数据缺少。我觉得可以往这方面靠，能最大利用资源。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxmemory-policy volatile-lru</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启redis</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p <span class="number">6379</span> shutdown</span><br><span class="line"></span><br><span class="line"><span class="comment">#加上`&amp;`号使redis以后台程序方式运行  </span></span><br><span class="line">./redis-server &amp;  </span><br><span class="line"></span><br><span class="line"><span class="comment">#启动时指定配置文件</span></span><br><span class="line">redis-server ./redis.conf</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/27/websocket的自动重连实现/" itemprop="url">
-                  websocket的自动重连实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-27T13:59:54+08:00" content="2018-07-27">
-              2018-07-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>小巷 又弯又长 没有门 没有窗 我拿把旧钥匙 敲着厚厚的墙 —— 顾城《小巷》<br></blockquote><br>在websocket实例化的时候，我们会绑定一些事件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(url);</span><br><span class="line">ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">ws.onopen = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">ws.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">   <span class="comment">//something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果希望websocket连接一直保持，我们会在close或者error上绑定重新连接方法。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    reconnect();</span><br><span class="line">&#125;;</span><br><span class="line">ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    reconnect();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>这样一般正常情况下失去连接时，触发onclose方法，我们就能执行重连了。</p>
-<h3 id="stackoverflow上的一种做法"><a href="#stackoverflow上的一种做法" class="headerlink" title="stackoverflow上的一种做法"></a>stackoverflow上的一种做法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">'ws://localhost:8080'</span>);</span><br><span class="line">  ws.onopen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// subscribe to some channels</span></span><br><span class="line">    ws.send(<span class="built_in">JSON</span>.stringify(&#123;</span><br><span class="line">        <span class="comment">//.... some message the I must send when I connect ....</span></span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Message:'</span>, e.data);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onclose = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Socket is closed. Reconnect will be attempted in 1 second.'</span>, e.reason);</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      connect();</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'Socket encountered error: '</span>, err.message, <span class="string">'Closing socket'</span>);</span><br><span class="line">    ws.close();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">connect();</span><br></pre></td></tr></table></figure>
-<h3 id="使用第三方包-reconnecting-websocket"><a href="#使用第三方包-reconnecting-websocket" class="headerlink" title="使用第三方包 reconnecting-websocket"></a>使用第三方包 reconnecting-websocket</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> ReconnectingWebSocket(<span class="string">'ws://....'</span>);</span><br></pre></td></tr></table></figure>
-<p>一些选项<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(url, <span class="literal">null</span>, &#123;<span class="attr">debug</span>: <span class="literal">true</span>, <span class="attr">reconnectInterval</span>: <span class="number">3000</span>&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(url);</span><br><span class="line">socket.debug = <span class="literal">true</span>;</span><br><span class="line">socket.timeoutInterval = <span class="number">5400</span>;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://stackoverflow.com/questions/22431751/websocket-how-to-automatically-reconnect-after-it-dies" target="_blank" rel="noopener">https://stackoverflow.com/questions/22431751/websocket-how-to-automatically-reconnect-after-it-dies</a><br><a href="https://www.jianshu.com/p/dfde99d46ef4" target="_blank" rel="noopener">https://www.jianshu.com/p/dfde99d46ef4</a><br><a href="https://github.com/joewalnes/reconnecting-websocket" target="_blank" rel="noopener">https://github.com/joewalnes/reconnecting-websocket</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -826,7 +828,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">352</span>
+              <span class="site-state-item-count">354</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

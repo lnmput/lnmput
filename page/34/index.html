@@ -265,6 +265,217 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/13/phpstudy升级php7-1/" itemprop="url">
+                  phpstudy升级php7.1
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-13T17:39:16+08:00" content="2017-11-13">
+              2017-11-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我上学那会暗恋你 哈哈哈  我也是<br></blockquote>
+
+<h3 id="下载win版php"><a href="#下载win版php" class="headerlink" title="下载win版php"></a>下载win版php</h3><p><a href="http://windows.php.net/download/" target="_blank" rel="noopener">http://windows.php.net/download/</a><br>注意不要下载源码包，下载指zip压缩包<br>下载对应的windows位数， 32或是64</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>解压后目录重命名，保留版本号及nts<br>复制到phpStudy安装目录的php文件夹即可</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>目录一定要保留版本号及nts 信息。没有nts的php只有apache支持。有nts的版本apache、nginx都支持</p>
+<blockquote>
+<p><a href="http://www.phpstudy.net/a.php/209.html" target="_blank" rel="noopener">http://www.phpstudy.net/a.php/209.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/11/12/PHPStorm中使用php-cs-fixer进行自动代码格式化/" itemprop="url">
+                  PHPStorm中使用php-cs-fixer进行自动代码格式化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-12T21:39:25+08:00" content="2017-11-12">
+              2017-11-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我有钱了，我头发也白了，爹娘也没了。<br></blockquote>
+
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><ul>
+<li>windows 10</li>
+<li>phpstorm 2017.2</li>
+<li>composer</li>
+</ul>
+<h3 id="开始配置"><a href="#开始配置" class="headerlink" title="开始配置"></a>开始配置</h3><h4 id="全局安装"><a href="#全局安装" class="headerlink" title="全局安装"></a>全局安装</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">global</span> <span class="keyword">require</span> fabpot/php-cs-fixer</span><br></pre></td></tr></table></figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>在phpstorm的<code>File &gt; Settings &gt; Tools &gt; External Tools</code>菜单内进行php-cs-fixer的配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> name和description可自行填写</span><br><span class="line"><span class="number">2.</span> program需要填写php-cs-fixer的可执行文件地址，Windows上是用户目录\Roaming\Composer\composer\vendor\bin\php-cs-fixer.bat，linux和mac上是~/.composer/vendor/bin/php-cs-fixer</span><br><span class="line"><span class="number">3.</span>parameters填--rules=@Symfony --verbose fix <span class="string">"$FileDir$/$FileName$"</span>，其中 rules 字段具体可以查看 php-cs-fixer 的官方文档，但是由于 Windows 的 cmd 有诸多限制，所以只能传入一些简单的规则，如果需要配置复杂规则建议使用配置文件来完成。</span><br><span class="line"><span class="number">4.</span>working directory填$ProjectFileDir$</span><br></pre></td></tr></table></figure></p>
+<p>插件配置好后，到 File &gt; Settings &gt; Keymap 设置快捷键，快捷键设置好后就可以找个文件试一试了。我设置了快捷键<code>crrl+shift+;</code></p>
+<h4 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h4><p>由于 Windows 的 cmd 有诸多限制，所以只能传入一些简单的规则，如果需要配置复杂规则建议使用配置文件来完成</p>
+<p>将我们的配置文件<code>.php_cs.dist</code>放在某一目录下， 我选择放在<code>D:\phpStudy\php\.php_cs.dist</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">return</span> PhpCsFixer\Config::create()</span><br><span class="line">    -&gt;setRiskyAllowed(<span class="keyword">true</span>)</span><br><span class="line">    -&gt;setRules([</span><br><span class="line">        <span class="string">'align_multiline_comment'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'no_trailing_whitespace'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'no_short_echo_tag'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'no_unused_imports'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'array_syntax'</span> =&gt; [<span class="string">'syntax'</span> =&gt; <span class="string">'short'</span>],</span><br><span class="line">        <span class="string">'ordered_imports'</span> =&gt; [<span class="string">'sortAlgorithm'</span> =&gt; <span class="string">'length'</span>]</span><br><span class="line">    ])</span><br><span class="line">    -&gt;setFinder(</span><br><span class="line">        PhpCsFixer\Finder::create()</span><br><span class="line">            -&gt;exclude(<span class="string">'tests/'</span>)</span><br><span class="line">            -&gt;in(<span class="keyword">__DIR__</span>)</span><br><span class="line">    )</span><br><span class="line">;</span><br></pre></td></tr></table></figure></p>
+<p>重新配置<code>External Tools</code><br>parameters填<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">......</span><br></pre></td></tr></table></figure></p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>在我们配置<code>External Tools</code>时可以选择是否<code>open console</code></p>
+<blockquote>
+<p><a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer" target="_blank" rel="noopener">https://github.com/FriendsOfPHP/PHP-CS-Fixer</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/08/无法在服务器使用curl命令访问https域名的问题/" itemprop="url">
                   无法在服务器使用curl命令访问https域名的问题
                 </a>
@@ -552,208 +763,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/04/淘宝采集插件简介/" itemprop="url">
-                  淘宝采集插件简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-04T21:36:09+08:00" content="2017-11-04">
-              2017-11-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>中国现在处于并将长期处于社会主义初级阶段。<br></blockquote>
-
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>一个基于chrome开发的商品采集插件， 传统的外贸网站完全使用编辑手工去淘宝等国内电商平台选品，然后商品信息复制到自己商城的后台，费时费力，我们使用chrome插件， 配合商城站提供的相关的API接口，可以实现商品的一键采集到商城站的后台。</p>
-<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p><img src="/images/ch01.png" alt></p>
-<h4 id="配置初始化"><a href="#配置初始化" class="headerlink" title="配置初始化"></a>配置初始化</h4><p><img src="/images/ch02.png" alt></p>
-<h4 id="产品抓取页面"><a href="#产品抓取页面" class="headerlink" title="产品抓取页面"></a>产品抓取页面</h4><p><img src="/images/ch03.png" alt></p>
-<h4 id="裁图页面"><a href="#裁图页面" class="headerlink" title="裁图页面"></a>裁图页面</h4><p><img src="/images/ch04.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/04/邮件发送系统简介/" itemprop="url">
-                  邮件发送系统简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-04T21:31:23+08:00" content="2017-11-04">
-              2017-11-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>所遇无故物，焉得不速老<br></blockquote>
-
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>基于laravel5.3开发， 用于公司日常营销邮件的发送， 通过laravel的队列机制，linux的计划任务， 来定时监控数万个站点的邮件发送情况，并实各类现数据的统计导出；</p>
-<h3 id="功能点"><a href="#功能点" class="headerlink" title="功能点"></a>功能点</h3><h4 id="任务列表"><a href="#任务列表" class="headerlink" title="任务列表"></a>任务列表</h4><p><img src="/images/em01.png" alt></p>
-<h4 id="创建任务"><a href="#创建任务" class="headerlink" title="创建任务"></a>创建任务</h4><p><img src="/images/em02.png" alt></p>
-<h4 id="任务详细"><a href="#任务详细" class="headerlink" title="任务详细"></a>任务详细</h4><p><img src="/images/em03.png" alt></p>
-<h4 id="shell列表"><a href="#shell列表" class="headerlink" title="shell列表"></a>shell列表</h4><p><img src="/images/em04.png" alt></p>
-<h4 id="邮件模板"><a href="#邮件模板" class="headerlink" title="邮件模板"></a>邮件模板</h4><p><img src="/images/em05.png" alt></p>
-<h4 id="邮箱列表"><a href="#邮箱列表" class="headerlink" title="邮箱列表"></a>邮箱列表</h4><p><img src="/images/em06.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -797,7 +806,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">352</span>
+              <span class="site-state-item-count">354</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,218 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/08/面向对象的微信小程序/" itemprop="url">
+                  面向对象的微信小程序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-08T10:54:06+08:00" content="2018-04-08">
+              2018-04-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>若是眼睛不喜欢，心也会拒绝。<br></blockquote>
+
+<p>现在我们就以我们的home页面为例, 说一下使用面向对象的方式如何开发微信小程序;</p>
+<h3 id="文件目录结构"><a href="#文件目录结构" class="headerlink" title="文件目录结构"></a>文件目录结构</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- pages</span><br><span class="line">-- home</span><br><span class="line">--- home-model.js</span><br><span class="line">--- home.js</span><br><span class="line">--- home.wxml</span><br><span class="line">--- home.wxss</span><br><span class="line">--- home.json</span><br></pre></td></tr></table></figure>
+<p>我们新建一个model类, 用来处理一些复杂的逻辑， 以使我们的代码变得整洁;</p>
+<h3 id="home-model-js"><a href="#home-model-js" class="headerlink" title="home-model.js"></a>home-model.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Home</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="comment">// 构造函数</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 根据banner获取id</span></span><br><span class="line">  getBannerData(id)&#123;</span><br><span class="line">    wx.request(&#123;</span><br><span class="line">      url: <span class="string">'http://tp5.me/api/v1/banner/'</span>+id,</span><br><span class="line">      method: <span class="string">'GET'</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Home&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="home-js"><a href="#home-js" class="headerlink" title="home.js"></a>home.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Home &#125; <span class="keyword">from</span> <span class="string">'home-model.js'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> home = <span class="keyword">new</span> Home();</span><br><span class="line"></span><br><span class="line"><span class="comment">// pages/home.js</span></span><br><span class="line">Page(&#123;</span><br><span class="line"></span><br><span class="line">  data: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  onLoad: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'home on load'</span>);</span><br><span class="line">    <span class="keyword">this</span>._loadData();</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定义一个私有方法</span></span><br><span class="line">  _loadData: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> id = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">var</span> data = home.getBannerData(id)</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="接收异步返回值"><a href="#接收异步返回值" class="headerlink" title="接收异步返回值"></a>接收异步返回值</h3><p>因为API返回的数据是异步的， 所以我们无法通过调用直接拿到返回值， 但是我们可以通过设置一个回调函数拿到他的返回值<br>home.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个私有方法</span></span><br><span class="line">_loadData: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> id = <span class="number">1</span>;</span><br><span class="line">  home.getBannerData(id, <span class="keyword">this</span>.callback);</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">callback: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'回调返回'</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>home-model.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">getBannerData(id, callback)&#123;</span><br><span class="line">    wx.request(&#123;</span><br><span class="line">      url: <span class="string">'http://tp5.me/api/v1/banner/'</span>+id,</span><br><span class="line">      method: <span class="string">'GET'</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">        callback(res);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="构造基类"><a href="#构造基类" class="headerlink" title="构造基类"></a>构造基类</h3><p>目录结构<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- pages</span><br><span class="line">- utils</span><br><span class="line">-- base.js</span><br><span class="line">-- util.js</span><br><span class="line">-- config.js</span><br><span class="line">- app.js</span><br><span class="line">- app.json</span><br><span class="line">- app.wxss</span><br></pre></td></tr></table></figure></p>
+<h4 id="构造配置类"><a href="#构造配置类" class="headerlink" title="构造配置类"></a>构造配置类</h4><p>config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Config.restUrl = <span class="string">'http://tp5.me/api/v1/'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Config&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="构造基类-1"><a href="#构造基类-1" class="headerlink" title="构造基类"></a>构造基类</h4><p>base.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Config &#125; <span class="keyword">from</span> <span class="string">'../utils/config.js'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="keyword">this</span>.baseRequestUrl = Config.restUrl;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  request(params)&#123;</span><br><span class="line">    <span class="keyword">var</span> url = <span class="keyword">this</span>.baseRequestUrl + params.url;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!params.type) &#123;</span><br><span class="line">      params.type = <span class="string">'GET'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    wx.request(&#123;</span><br><span class="line">      url: url,</span><br><span class="line">      data: params.type,</span><br><span class="line">      header: &#123;</span><br><span class="line">        <span class="string">'content-type'</span>: <span class="string">'application/json'</span>,</span><br><span class="line">        <span class="string">'token'</span>: wx.getStorageInfoSync(<span class="string">'token'</span>)</span><br><span class="line">      &#125;,</span><br><span class="line">      method: params.type,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        params.callback &amp;&amp; params.callback(res.data);</span><br><span class="line">      &#125;,</span><br><span class="line">      fail: <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(error);</span><br><span class="line">      &#125;,</span><br><span class="line">      complete: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        </span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Base&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h4><p>home-model.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Base &#125; <span class="keyword">from</span> <span class="string">'../../utils/base.js'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Home</span> <span class="keyword">extends</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="comment">// 如果继承了某个类， 则必须要调用 super</span></span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getBannerData(id, callback)&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> params = &#123;</span><br><span class="line">      url: <span class="string">'banner/'</span>+id,</span><br><span class="line">      callback:<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">        callback &amp;&amp; callback(res.items)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>.request(params);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Home&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/03/金融系统的小数点处理/" itemprop="url">
+                  金融系统的小数点处理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-03T17:15:16+08:00" content="2018-04-03">
+              2018-04-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>月黑见渔灯，孤光一点萤。<br>微微风簇浪，散作满河星。<br></blockquote>
+
+<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><ul>
+<li><p>余额提现、转出等<br>一般会向下取数，比如10.1234;那实际可提现金额为10.12。</p>
+</li>
+<li><p>分期相关<br>如银行额度总共为1000元，然后刚好买了一样东西，全花了，在操作分期。分3期；<br>按正常思维是1000/3=333.3333333;在四舍五入一下就成了333.33;等你三期都还完了，发现只还了999.99。这就坑了<br>一般做法是：前2期按四舍五入计算。最后一期，按减法算：1000-333.33-333.33=333.34；</p>
+</li>
+<li><p>其他说明<br>根据不同业务，保留位数和取舍都不一样。如基金的净值。小数点的长度影响的资金量还是很大的。这块是越精准越好。具体需求跟产品沟通吧！</p>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://segmentfault.com/q/1010000007519197" target="_blank" rel="noopener">https://segmentfault.com/q/1010000007519197</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/02/微信小程序商城应用/" itemprop="url">
                   微信小程序商城应用
                 </a>
@@ -623,234 +835,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/30/进程和线程的理解/" itemprop="url">
-                  进程和线程的理解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-30T10:18:16+08:00" content="2018-03-30">
-              2018-03-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>倚楼听风雨，淡看江湖路<br></blockquote>
-
-<p>什么叫“多任务”呢？简单地说，就是操作系统可以同时运行多个任务。打个比方，你一边在用浏览器上网，一边在听MP3，一边在用Word赶作业，这就是多任务，至少同时有3个任务正在运行。还有很多任务悄悄地在后台同时运行着，只是桌面上没有显示而已。</p>
-<p>现在，多核CPU已经非常普及了，但是，即使过去的单核CPU，也可以执行多任务。由于CPU执行代码都是顺序执行的，那么，单核CPU是怎么执行多任务的呢？</p>
-<p>答案就是操作系统轮流让各个任务交替执行，任务1执行0.01秒，切换到任务2，任务2执行0.01秒，再切换到任务3，执行0.01秒……这样反复执行下去。表面上看，每个任务都是交替执行的，但是，由于CPU的执行速度实在是太快了，我们感觉就像所有任务都在同时执行一样。</p>
-<p>真正的并行执行多任务只能在多核CPU上实现，但是，由于任务数量远远多于CPU的核心数量，所以，操作系统也会自动把很多任务轮流调度到每个核心上执行。</p>
-<p>对于操作系统来说，一个任务就是一个进程（<code>Process</code>），比如打开一个浏览器就是启动一个浏览器进程，打开一个记事本就启动了一个记事本进程，打开两个记事本就启动了两个记事本进程，打开一个Word就启动了一个Word进程。</p>
-<p>有些进程还不止同时干一件事，比如Word，它可以同时进行打字、拼写检查、打印等事情。在一个进程内部，要同时干多件事，就需要同时运行多个“子任务”，我们把进程内的这些“子任务”称为线程（<code>Thread</code>）。</p>
-<p>由于每个进程至少要干一件事，所以，一个进程至少有一个线程。当然，像Word这种复杂的进程可以有多个线程，多个线程可以同时执行，多线程的执行方式和多进程是一样的，也是由操作系统在多个线程之间快速切换，让每个线程都短暂地交替运行，看起来就像同时执行一样。当然，真正地同时执行多线程需要多核CPU才可能实现。</p>
-<blockquote>
-<p><a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014319272686365ec7ceaeca33428c914edf8f70cca383000" target="_blank" rel="noopener">https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014319272686365ec7ceaeca33428c914edf8f70cca383000</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/29/理解哈希/" itemprop="url">
-                  理解哈希
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-29T15:36:43+08:00" content="2018-03-29">
-              2018-03-29
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>药炉烟里，支枕听河流。<br></blockquote>
-
-<h3 id="哈希函数"><a href="#哈希函数" class="headerlink" title="哈希函数"></a>哈希函数</h3><ul>
-<li><p>第一种解释<br>哈希函数就是能将任意长度的数据映射为固定长度的数据的函数。哈希函数返回的值被叫做哈希值、哈希码、散列，或者直接叫做哈希。一个使用场景就是哈希表，哈希表被广泛用于快速搜索数据。</p>
-</li>
-<li><p>另一种解释<br>在记录的关键字与记录的存储地址之间建立的一种对应关系叫哈希函数。哈希函数就是一种映射，是从关键字到存储地址的映射。<br>通常，包含哈希函数的算法的算法复杂度都假设为O(1)，这就是为什么在哈希表中搜索数据的时间复杂度会被认为是”平均为O(1)的复杂度”.</p>
-</li>
-</ul>
-<h3 id="常用的加密哈希算法"><a href="#常用的加密哈希算法" class="headerlink" title="常用的加密哈希算法"></a>常用的加密哈希算法</h3><ul>
-<li>MD5</li>
-<li>SHA-1</li>
-<li>SHA-2</li>
-<li>RIPEMD-160</li>
-</ul>
-<h3 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h3><p>哈希表是一种通过哈希函数，将特定的键映射到特定值的一种数据结构，它维护键和值之间一一对应关系。</p>
-<h3 id="辅助理解"><a href="#辅助理解" class="headerlink" title="辅助理解"></a>辅助理解</h3><h4 id="解释一"><a href="#解释一" class="headerlink" title="解释一"></a>解释一</h4><p>比如这里有一万首歌，给你一首新的歌X，要求你确认这首歌是否在那一万首歌之内。无疑，将一万首歌一个一个比对非常慢。但如果存在一种方式，能将一万首歌的每首数据浓缩到一个数字（称为哈希码）中，于是得到一万个数字，那么用同样的算法计算新的歌X的编码，看看歌X的编码是否在之前那一万个数字中，就能知道歌X是否在那一万首歌中。作为例子，如果要你组织那一万首歌，一个简单的哈希算法就是让歌曲所占硬盘的字节数作为哈希码。这样的话，你可以让一万首歌“按照大小排序”，然后遇到一首新的歌，只要看看新的歌的字节数是否和已有的一万首歌中的某一首的字节数相同，就知道新的歌是否在那一万首歌之内了。当然这个简单的哈希算法很容易出现两者同样大小的歌曲，这就是发送了碰撞。而好的哈希算法发生碰撞的几率非常小。</p>
-<h4 id="解释二"><a href="#解释二" class="headerlink" title="解释二"></a>解释二</h4><p>HASH算法是密码学的基础，比较常用的有MD5和SHA，最重要的两条性质，就是不可逆和无冲突。</p>
-<ul>
-<li>不可逆，就是当你知道x的HASH值，无法求出x；</li>
-<li>无冲突，就是当你知道x，无法求出一个y， 使x与y的HASH值相同。</li>
-</ul>
-<p>这两条性质在数学上都是不成立的。因为一个函数必然可逆，且由于HASH函数的值域有限，理论上会有无穷多个不同的原始值，它们的hash值都相同。MD5和SHA做到的，是求逆和求冲突在计算上不可能，也就是正向计算很容易，而反向计算即使穷尽人类所有的计算资源都做不到。</p>
-<h3 id="PHP中的hash"><a href="#PHP中的hash" class="headerlink" title="PHP中的hash"></a>PHP中的hash</h3><p>Hash Table是PHP的核心,这话一点都不过分.PHP的数组,关联数组,对象属性,函数表,符号表,等等都是用HashTable来做为容器的.PHP的HashTable采用的拉链法来解决冲突,</p>
-<p>插入65536个经过构造的键值的元素到PHP数组, 会需要耗时30秒以上? 而一般的这个过程仅仅需要0.1秒..</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$size = pow(<span class="number">2</span>, <span class="number">16</span>); </span><br><span class="line"> </span><br><span class="line">$startTime = microtime(<span class="keyword">true</span>);</span><br><span class="line">$array = <span class="keyword">array</span>();</span><br><span class="line"><span class="keyword">for</span> ($key = <span class="number">0</span>, $maxKey = ($size - <span class="number">1</span>) * $size; $key &lt;= $maxKey; $key += $size) &#123;</span><br><span class="line">    $array[$key] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">$endTime = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'插入 '</span>, $size, <span class="string">' 个恶意的元素需要 '</span>, $endTime - $startTime, <span class="string">' 秒'</span>, <span class="string">"\n"</span>;</span><br><span class="line"> </span><br><span class="line">$startTime = microtime(<span class="keyword">true</span>);</span><br><span class="line">$array = <span class="keyword">array</span>();</span><br><span class="line"><span class="keyword">for</span> ($key = <span class="number">0</span>, $maxKey = $size - <span class="number">1</span>; $key &lt;= $maxKey; ++$key) &#123;</span><br><span class="line">    $array[$key] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">$endTime = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'插入 '</span>, $size, <span class="string">' 个普通元素需要 '</span>, $endTime - $startTime, <span class="string">' 秒'</span>, <span class="string">"\n"</span>;</span><br></pre></td></tr></table></figure>
-<p>在我的机器上<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">插入 <span class="number">65536</span> 个恶意的元素需要 <span class="number">10.187582969666</span> 秒 </span><br><span class="line">插入 <span class="number">65536</span> 个普通元素需要 <span class="number">0.003000020980835</span> 秒</span><br></pre></td></tr></table></figure></p>
-<p>经过特殊构造的键值, 使得PHP每一次插入都会造成Hash冲突, 从而使得PHP中array的底层Hash表退化成链表</p>
-<blockquote>
-<p><a href="https://www.zhihu.com/question/20820286" target="_blank" rel="noopener">https://www.zhihu.com/question/20820286</a><br><a href="http://www.laruence.com/2009/07/23/994.html" target="_blank" rel="noopener">http://www.laruence.com/2009/07/23/994.html</a><br><a href="http://www.laruence.com/2011/12/30/2435.html" target="_blank" rel="noopener">http://www.laruence.com/2011/12/30/2435.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -894,7 +878,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">352</span>
+              <span class="site-state-item-count">354</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

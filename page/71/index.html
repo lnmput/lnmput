@@ -265,6 +265,214 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/23/mysql5-7相关操作/" itemprop="url">
+                  mysql5.7相关操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-23T17:15:14+08:00" content="2016-07-23">
+              2016-07-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我知这世界，本如露水般短暂。<br>然而，<br>然而。<br></blockquote>
+
+<h3 id="基本命令功能"><a href="#基本命令功能" class="headerlink" title="基本命令功能"></a>基本命令功能</h3><ul>
+<li>找到默认的root密码</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo grep <span class="string">'temporary password'</span> /<span class="keyword">var</span>/log/mysqld.log</span><br></pre></td></tr></table></figure>
+<ul>
+<li>登录后修改密码</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">'root'</span>@<span class="string">'localhost'</span> identified by <span class="string">'123'</span>;</span><br><span class="line">flush privileges;</span><br><span class="line">quit;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看所有用户</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">mysql</span>;</span><br><span class="line">select distinct(User) from user;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过远程访问</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//查看用户权限情况</span></span><br><span class="line">select host,user from user; </span><br><span class="line"><span class="comment">//root是用户名，%代表任意主机，'123456'指定的登录密码（这个和本地的root密码可以设置不同的，互不影响）</span></span><br><span class="line">grant all privileges on *.* to <span class="string">'root'</span>@<span class="string">'%'</span> identified by<span class="string">'123456'</span>with grant option; </span><br><span class="line">flush privileges;</span><br><span class="line">quit;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/23/hexo博客添加标签功能/" itemprop="url">
+                  hexo博客添加标签功能
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-23T16:26:25+08:00" content="2016-07-23">
+              2016-07-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>别人稍一注意你，你就敞开心扉，你觉得这是坦率，其实这是孤独。<br></blockquote></p>
+<h3 id="给所有的文章增加tag"><a href="#给所有的文章增加tag" class="headerlink" title="给所有的文章增加tag"></a>给所有的文章增加tag</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">date: <span class="number">2016</span><span class="number">-07</span><span class="number">-23</span> <span class="number">16</span>:<span class="number">13</span>:<span class="number">44</span></span><br><span class="line">tags:</span><br><span class="line">  - laravel</span><br><span class="line">  - php7</span><br><span class="line">  - linux</span><br></pre></td></tr></table></figure>
+<h3 id="新建tag页面"><a href="#新建tag页面" class="headerlink" title="新建tag页面"></a>新建tag页面</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ hexo <span class="keyword">new</span> page <span class="string">"tags"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//以下是页面内容</span></span><br><span class="line">title: Tagcloud</span><br><span class="line">date: <span class="number">2014</span><span class="number">-12</span><span class="number">-22</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">04</span></span><br><span class="line">type: <span class="string">"tags"</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>完成；</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/23/centos下搭建laravel运行环境/" itemprop="url">
                   centos下搭建laravel运行环境
                 </a>
@@ -519,7 +727,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">352</span>
+              <span class="site-state-item-count">354</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
