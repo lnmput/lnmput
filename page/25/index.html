@@ -265,6 +265,316 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/20/微信小程序登录实现/" itemprop="url">
+                  微信小程序登录实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-20T10:14:46+08:00" content="2018-03-20">
+              2018-03-20
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>嗯，对，你说得对。<br></blockquote>
+
+<h3 id="调用wx-login"><a href="#调用wx-login" class="headerlink" title="调用wx.login"></a>调用wx.login</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//app.js</span></span><br><span class="line">App(&#123;</span><br><span class="line">  onLaunch: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    wx.login(&#123;</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (res.code) &#123;</span><br><span class="line">          <span class="comment">//发起网络请求</span></span><br><span class="line">          wx.request(&#123;</span><br><span class="line">            url: <span class="string">'https://test.com/onLogin'</span>,</span><br><span class="line">            data: &#123;</span><br><span class="line">              code: res.code</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'登录失败！'</span> + res.errMsg)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="onLogin接口-php实现"><a href="#onLogin接口-php实现" class="headerlink" title="onLogin接口,php实现"></a>onLogin接口,php实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$APPID = <span class="string">'wxf007410...'</span>;</span><br><span class="line">$SECRET = <span class="string">'1bb26d74f33910588ee....'</span>;</span><br><span class="line">$request = request();</span><br><span class="line">$code = $request-&gt;code;</span><br><span class="line">$url = <span class="string">'https://api.weixin.qq.com/sns/jscode2session?appid='</span>.$APPID.<span class="string">'&amp;secret='</span>.$SECRET.<span class="string">'&amp;js_code='</span>.$code.<span class="string">'&amp;grant_type=authorization_code'</span>;</span><br><span class="line">$client = <span class="keyword">new</span> \GuzzleHttp\Client();</span><br><span class="line">$response = $client-&gt;get($url)-&gt;getBody()-&gt;getContents();</span><br></pre></td></tr></table></figure>
+<p>返回数据<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"session_key"</span>:<span class="string">"VUNQTngHJYeceYRrQpj0cQ=="</span>,<span class="string">"openid"</span>:<span class="string">"o3CTb4kuzH674QgeFsKhyoipfPi4"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="登录成功后调用获取用户接口"><a href="#登录成功后调用获取用户接口" class="headerlink" title="登录成功后调用获取用户接口"></a>登录成功后调用获取用户接口</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">	  <span class="comment">// 登录成功</span></span><br><span class="line">	  <span class="built_in">console</span>.log(res.data)</span><br><span class="line">	  wx.getUserInfo(&#123;</span><br><span class="line">	    success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">	      <span class="keyword">var</span> userInfo = res.userInfo</span><br><span class="line">	      <span class="keyword">var</span> nickName = userInfo.nickName</span><br><span class="line">	      <span class="keyword">var</span> avatarUrl = userInfo.avatarUrl</span><br><span class="line">	      <span class="keyword">var</span> gender = userInfo.gender <span class="comment">//性别 0：未知、1：男、2：女</span></span><br><span class="line">	      <span class="keyword">var</span> province = userInfo.province</span><br><span class="line">	      <span class="keyword">var</span> city = userInfo.city</span><br><span class="line">	      <span class="keyword">var</span> country = userInfo.country</span><br><span class="line"></span><br><span class="line">	      <span class="built_in">console</span>.log(<span class="string">'获取用户信息返回'</span>)</span><br><span class="line">	      <span class="built_in">console</span>.log(res);</span><br><span class="line">	    &#125;</span><br><span class="line">	  &#125;)</span><br></pre></td></tr></table></figure>
+<p>在登录状态下返回的信息包含敏感数据，将这些敏感数据提交到服务器进行解密<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'获取用户信息返回'</span>);</span><br><span class="line">	  <span class="built_in">console</span>.log(res);</span><br><span class="line">	  wx.request(&#123;</span><br><span class="line">	    method: <span class="string">'POST'</span>,</span><br><span class="line">	    url: <span class="string">'https://vxndy.com/user'</span>, <span class="comment">//仅为示例，并非真实的接口地址</span></span><br><span class="line">	    data: &#123;</span><br><span class="line">	      rawData: res.rawData,</span><br><span class="line">	      signature: res.signature,</span><br><span class="line">	      encryptedData : res.encryptedData,</span><br><span class="line">	      iv : res.iv</span><br><span class="line">	    &#125;,</span><br><span class="line">	    header: &#123;</span><br><span class="line">	      <span class="string">'content-type'</span>: <span class="string">'application/json'</span> <span class="comment">// 默认值</span></span><br><span class="line">	    &#125;,</span><br><span class="line">	    success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">	      <span class="built_in">console</span>.log(<span class="string">'调用解密接口返回'</span>)</span><br><span class="line">	      <span class="built_in">console</span>.log(res)</span><br><span class="line">	    &#125;</span><br><span class="line">	  &#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="user接口实现"><a href="#user接口实现" class="headerlink" title="user接口实现"></a>user接口实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$APPID = <span class="string">'wxf0074104e....'</span>;</span><br><span class="line">$request = request();</span><br><span class="line">$rawData = $request-&gt;rawData;</span><br><span class="line">$signature = $request-&gt;signature;</span><br><span class="line">$encryptedData = $request-&gt;encryptedData;</span><br><span class="line">$iv = $request-&gt;iv;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  解密数据</span></span><br><span class="line">$path = storage_path(<span class="string">'session_key'</span>);</span><br><span class="line">info(<span class="string">'从文件中获取session_key'</span>);</span><br><span class="line">$session_key = file_get_contents($path);</span><br><span class="line"></span><br><span class="line">$pc = <span class="keyword">new</span> \App\Wx\WXBizDataCrypt($APPID, $session_key);</span><br><span class="line">$errCode = $pc-&gt;decryptData($encryptedData, $iv, $data );</span><br><span class="line"><span class="keyword">if</span> ($errCode == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> response()-&gt;json($data);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    info(<span class="string">'错误'</span>);</span><br><span class="line">    info($errCode);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> response()-&gt;json([<span class="string">'status'</span> =&gt; <span class="number">200</span>]);</span><br></pre></td></tr></table></figure>
+<p>返回的数据包括 openId 和 用户其他信息</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>每次发起登录请求的时候应该先检测是否需要登录<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wx.checkSession(&#123;</span><br><span class="line">  success: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//session 未过期，并且在本生命周期一直有效</span></span><br><span class="line">  &#125;,</span><br><span class="line">  fail: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//登录态过期</span></span><br><span class="line">    wx.login() <span class="comment">//重新登录</span></span><br><span class="line">    ....</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/16/mysql的with-rollup的用法/" itemprop="url">
+                  mysql的with-rollup的用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-16T09:44:52+08:00" content="2018-03-16">
+              2018-03-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>世人谓我恋长安，其实只恋长安某。<br></blockquote><br>今天在做按照商品的SPU批量采购的时候, 遇到了一个问题, 就是安装SPU<code>groupBy</code>后计算的<code>sum</code>值仅仅只是每个SPU下的产品数量之和, 这可以满足在每个列表中的正常显示,但是现在需要在页面的顶部显示一个全部的SPU下的产品数量, 因为数据是分页的, 就很难计算了.起初我的代码是这样的:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$query = WaitingForPurchase::query()</span><br><span class="line">        -&gt;selectRaw(<span class="string">'id, site_id, ps_type_id, ps_shop_id, ps_product_id, order_product_id, shop_product_id, sum(qty) as qty'</span>)</span><br><span class="line">        -&gt;where([<span class="string">'ps_type_id'</span> =&gt; $type_id, <span class="string">'ps_shop_id'</span> =&gt; $shop_id])</span><br><span class="line">        -&gt;groupBy(<span class="string">'shop_product_id'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在GOOGLE了一番以后, 才知道<code>mysql</code>竟然还有这样的用法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$query = WaitingForPurchase::query()</span><br><span class="line">        -&gt;selectRaw(<span class="string">'id, site_id, ps_type_id, ps_shop_id, ps_product_id, order_product_id, shop_product_id, sum(qty) as qty'</span>)</span><br><span class="line">        -&gt;where([<span class="string">'ps_type_id'</span> =&gt; $type_id, <span class="string">'ps_shop_id'</span> =&gt; $shop_id])</span><br><span class="line">        -&gt;groupBy(DB::raw(<span class="string">'shop_product_id WITH ROLLUP'</span>));</span><br></pre></td></tr></table></figure></p>
+<p>这样得到的结果就是在我们的查询结果中会多出一条数据,用来显示额外的统计信息.<br>在使用Laravel框架的情况下, 我们还可以这样统计:</p>
+<pre><code class="php">$query = WaitingForPurchase::query()
+        -&gt;selectRaw(<span class="string">'id, site_id, ps_type_id, ps_shop_id, ps_product_id, order_product_id, shop_product_id, sum(qty) as qty'</span>)
+        -&gt;where([<span class="string">'ps_type_id'</span> =&gt; $type_id, <span class="string">'ps_shop_id'</span> =&gt; $shop_id]);
+
+    WaitingForPurchase::setFilters($query, $conditions);
+
+    $sum = $query-&gt;sum(<span class="string">'qty'</span>);
+
+    $query-&gt;groupBy(<span class="string">'shop_product_id'</span>)
+        -&gt;orderByDesc(<span class="string">'qty'</span>);
+
+    $items = $query-&gt;paginate(<span class="number">20</span>);
+</code></pre>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/08/Laravel的路由命名空间/" itemprop="url">
+                  Laravel的路由命名空间
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-08T17:29:07+08:00" content="2018-03-08">
+              2018-03-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>…<br></blockquote>
+
+<h3 id="一般用法"><a href="#一般用法" class="headerlink" title="一般用法"></a>一般用法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Route::namespace(<span class="string">'Admin'</span>)-&gt;group(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在 "App\Http\Controllers\Admin" 命名空间下的控制器</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h3><p>如果我们的类不在<code>App\Http\Controllers</code>下, 要使用<code>namespace</code>, 就要修改一些东西<br>修改文件<code>App\Providers\RouteServiceProvider</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RouteServiceProvider</span> <span class="keyword">extends</span> <span class="title">ServiceProvider</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * This namespace is applied to your controller routes.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * In addition, it is set as the URL generator's root namespace.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> $namespace = <span class="string">'App\Http\Controllers'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $apiNamespace = <span class="string">'App\Http'</span>;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">mapApiRoutes</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Route::prefix(<span class="string">'api'</span>)</span><br><span class="line">             -&gt;middleware(<span class="string">'api'</span>)</span><br><span class="line">             -&gt;namespace(<span class="keyword">$this</span>-&gt;apiNamespace)</span><br><span class="line">             -&gt;group(base_path(<span class="string">'routes/api.php'</span>));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Route::namespace(<span class="string">'Api'</span>)-&gt;group(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">    Route::post(<span class="string">'/order/update'</span>, <span class="string">'Order@receive'</span>)-&gt;name(<span class="string">'api.order.receive'</span>);</span><br><span class="line">    Route::post(<span class="string">'/order/delete'</span>, <span class="string">'Order@delete'</span>)-&gt;name(<span class="string">'api.order.delete'</span>);</span><br><span class="line"></span><br><span class="line">    Route::get(<span class="string">'/fetch-waybill'</span>, <span class="string">'FetchWaybill@getNotFetchTask'</span>)-&gt;name(<span class="string">'api.fetch-waybill.get'</span>);</span><br><span class="line">    Route::post(<span class="string">'fetch-waybill/callback'</span>, <span class="string">'FetchWaybill@callback'</span>)-&gt;name(<span class="string">'api.fetch-waybill.callback'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/08/Laravel使用markdown详细/" itemprop="url">
                   Laravel使用markdown详细
                 </a>
@@ -461,335 +771,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/03/PHP静态属性的继承问题/" itemprop="url">
-                  PHP静态属性的继承问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-03T10:38:17+08:00" content="2018-03-03">
-              2018-03-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>和你们这些少爷不同，我们光是活着就竭尽全力了。<br></blockquote>
-
-<h3 id="非静态属性"><a href="#非静态属性" class="headerlink" title="非静态属性"></a>非静态属性</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $instance = <span class="string">'Null'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setInstance</span><span class="params">($ins)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;instance = $ins;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> <span class="keyword">extends</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Baz</span> <span class="keyword">extends</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$bar = <span class="keyword">new</span> Bar;</span><br><span class="line">$bar-&gt;setInstance(<span class="string">'baidu.com'</span>);</span><br><span class="line"><span class="keyword">echo</span> $bar-&gt;getInstance();  <span class="comment">//  baidu.com</span></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Foo)-&gt;getInstance();  <span class="comment">//  NULL</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\n"</span>;</span><br><span class="line"></span><br><span class="line">$baz = <span class="keyword">new</span> Baz;</span><br><span class="line">$baz-&gt;setInstance(<span class="string">'laravel'</span>);</span><br><span class="line"><span class="keyword">echo</span> $baz-&gt;getInstance(); <span class="comment">// laravel</span></span><br><span class="line"><span class="keyword">echo</span> $bar-&gt;getInstance();  <span class="comment">// baidu.com</span></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Foo)-&gt;getInstance();  <span class="comment">// NULL</span></span><br></pre></td></tr></table></figure>
-<p>说明：<br>非静态属性的继承关系子类会继承父类的属性和方法，子类中的修改并不会影响到父类中属性的改变</p>
-<h3 id="静态属性"><a href="#静态属性" class="headerlink" title="静态属性"></a>静态属性</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">setInstance</span><span class="params">($ins)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::$instance = $ins;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">static</span>::$instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> <span class="keyword">extends</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Bar::setInstance(<span class="string">'baidu.com'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> Bar::getInstance();  <span class="comment">// baidu.com</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> Foo::getInstance();  <span class="comment">// baidu.com</span></span><br></pre></td></tr></table></figure>
-<p>说明：<br>子类对属性的修改已经影响到了父类， 当然，这是在子类没有设置相同属性的情况下， 此时如果子类设置了相同的静态属性， 则如果对子类中这个属性的修改， 并不会影响到父类<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">setInstance</span><span class="params">($ins)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::$instance = $ins;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">static</span>::$instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> <span class="keyword">extends</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Bar::setInstance(<span class="string">'baidu.com'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> Bar::getInstance();  <span class="comment">// baidu.com</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> Foo::getInstance();</span><br></pre></td></tr></table></figure></p>
-<p>再看一个子类之间相互影响的例子<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">setInstance</span><span class="params">($ins)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::$instance = $ins;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">static</span>::$instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> <span class="keyword">extends</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Baz</span> <span class="keyword">extends</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Bar::setInstance(<span class="string">'baidu.com'</span>);</span><br><span class="line"><span class="keyword">echo</span> Bar::getInstance();  <span class="comment">// baidu.com</span></span><br><span class="line"><span class="keyword">echo</span> Foo::getInstance();  <span class="comment">// baidu.com</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\n"</span>;</span><br><span class="line"></span><br><span class="line">Baz::setInstance(<span class="string">'laravel'</span>);</span><br><span class="line"><span class="keyword">echo</span> Baz::getInstance();  <span class="comment">// laravel</span></span><br><span class="line"><span class="keyword">echo</span> Bar::getInstance();  <span class="comment">// laravel</span></span><br><span class="line"><span class="keyword">echo</span> Foo::getInstance();  <span class="comment">// laravel</span></span><br></pre></td></tr></table></figure></p>
-<p>修改其中一个子类， 父类以及该父类的其他子类都会受到影响</p>
-<h3 id="laravel-源码分析"><a href="#laravel-源码分析" class="headerlink" title="laravel 源码分析"></a>laravel 源码分析</h3><p>在Laravel 中的 <code>app()</code>这个辅助函数可以获得 一个 <code>Application</code> 对象实例<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">app</span><span class="params">($abstract = null, array $parameters = [])</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_null($abstract)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Container::getInstance();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Container::getInstance()-&gt;make($abstract, $parameters);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>进入这个<code>Container</code>类, 发现仅仅是一个静态属性。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Container</span> <span class="keyword">implements</span> <span class="title">ArrayAccess</span>, <span class="title">ContainerContract</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The current globally available container (if any).</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> static</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $instance;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_null(<span class="keyword">static</span>::$instance)) &#123;</span><br><span class="line">            <span class="keyword">static</span>::$instance = <span class="keyword">new</span> <span class="keyword">static</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">static</span>::$instance;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>然后我们从入口文件看起<br>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$app = <span class="keyword">require_once</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/app.php'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>app.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$app = <span class="keyword">new</span> Illuminate\Foundation\Application(</span><br><span class="line">    realpath(<span class="keyword">__DIR__</span>.<span class="string">'/../'</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
-<p><code>Application</code>这个类， 继承了 <code>Container</code> 类， 而<code>Container</code>这个类中有一个静态属性<code>$instance</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Container</span> <span class="keyword">implements</span> <span class="title">ApplicationContract</span>, <span class="title">HttpKernelInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	</span><br><span class="line"> ......</span><br><span class="line"></span><br><span class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($basePath = null)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($basePath) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;setBasePath($basePath);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;registerBaseBindings();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;registerBaseServiceProviders();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;registerCoreContainerAliases();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">registerBaseBindings</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::setInstance(<span class="keyword">$this</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;instance(<span class="string">'app'</span>, <span class="keyword">$this</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;instance(Container::class, <span class="keyword">$this</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;instance(PackageManifest::class, <span class="keyword">new</span> PackageManifest(</span><br><span class="line">            <span class="keyword">new</span> Filesystem, <span class="keyword">$this</span>-&gt;basePath(), <span class="keyword">$this</span>-&gt;getCachedPackagesPath()</span><br><span class="line">        ));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>正是是用了静态属性继承这一特性；</p>
-<blockquote>
-<p><a href="http://pilishen.com/posts/Inheritance-with-the-static-elements-in-php-especially-during-late-static-binding" target="_blank" rel="noopener">http://pilishen.com/posts/Inheritance-with-the-static-elements-in-php-especially-during-late-static-binding</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/02/PHP的后期静态绑定/" itemprop="url">
-                  PHP的后期静态绑定
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-02T14:39:02+08:00" content="2018-03-02">
-              2018-03-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>….<br></blockquote>
-
-<p>自 PHP 5.3.0 起，PHP 增加了一个叫做后期静态绑定的功能，用于在继承范围内引用静态调用的类。<br>当进行静态方法调用时，该类名即为明确指定的那个（通常在 <code>::</code> 运算符左侧部分）；当进行非静态方法调用时，即为该对象所属的类。<br>“后期绑定”的意思是说，static:: 不再被解析为定义当前方法所在的类，而是在实际运行时计算的。也可以称之为“静态绑定”，因为它可以用于（但不限于）静态方法的调用。</p>
-<h3 id="解释说明"><a href="#解释说明" class="headerlink" title="解释说明"></a>解释说明</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">self</span>::who();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">B::test();</span><br></pre></td></tr></table></figure>
-<p>以上例程会输出：A, 因为 self 关键词只能取到定义当前方法所在的类, 或者说它只能取到自己所在的那个类, 最终引用的类是A, 而不是B<br>好吧, 但是如果我们想要运行时最终运行的是B该如何呢?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::who(); <span class="comment">// 后期静态绑定从这里开始</span></span><br><span class="line">    以上例程会输出：B&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">who</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__CLASS__</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">B::test();</span><br></pre></td></tr></table></figure></p>
-<p>以上例程会输出：B</p>
-<h3 id="实际用法"><a href="#实际用法" class="headerlink" title="实际用法"></a>实际用法</h3><p>在Laravel框架中<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(array $attributes = [])</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $model = <span class="keyword">new</span> <span class="keyword">static</span>($attributes);</span><br><span class="line"></span><br><span class="line">        $model-&gt;save();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $model;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Task::create([</span><br><span class="line">	<span class="string">'title'</span>=&gt;<span class="string">'学习laravel'</span>,</span><br><span class="line">	<span class="string">'author'</span>=&gt;<span class="string">'pilishen'</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
-<p>当执行Task::create()的时候，因为extends了Model，所以就到了Model里的create方法，由于$model = new static($attributes);使用了static关键词，所以此时也就相当于是执行了new Task();，也就是借助static静态绑定，我们在laravel里的自己创建的各个model，就可以共用一系列提前定义好的方法，同时在实际调用的时候，又将结果或过程只作用于自己，从而实现了一个典型的active record design pattern。</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getSelf</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">self</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getStatic</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">static</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Son::getSelf());  <span class="comment">// Father</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Son::getStatic()); <span class="comment">// Son</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Father::getSelf()); <span class="comment">// Father</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> get_class(Father::getStatic()); <span class="comment">// Father</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://pilishen.com/posts/php-late-static-bindings-in-laravel" target="_blank" rel="noopener">http://pilishen.com/posts/php-late-static-bindings-in-laravel</a><br><a href="http://php.net/manual/zh/language.oop5.late-static-bindings.php" target="_blank" rel="noopener">http://php.net/manual/zh/language.oop5.late-static-bindings.php</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/01/php命名空间和自动载入理解/" itemprop="url">
-                  php命名空间和自动载入理解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-01T16:06:57+08:00" content="2018-03-01">
-              2018-03-01
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br> 每个人的心里都有一片属于自己的森林，迷失的人迷失了，相遇的人会再相遇<br></blockquote><br>今天写一个demo，遇到一个问题，平时框架用多了，下意识的就以为use就能引入类，导致一直跑不成功，后来才意识到use与引用类并不是一回事。use只是指定了要使用哪个命名空间下的类，但是并不会引入类，类的引用还是需要使用include或require。</p>
-<h3 id="不使用命名空间"><a href="#不使用命名空间" class="headerlink" title="不使用命名空间"></a>不使用命名空间</h3><p>我们的所有的php文件都没有申明使用命名空间, 所有相关文件的引入使用include或require, 并需要指明文件的具体路径<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> Dog());</span><br></pre></td></tr></table></figure></p>
-<p>注意:使用 <code>include_once</code> 可以防止文件重复引入定义</p>
-<p>如果不使用命名空间, 那么我们的同一个文件夹就不能重复定义相同的类名, 如果需要解决这个重名的冲突, 就需要放在不同的文件夹下面, 或者申明不同的命名空间;</p>
-<h3 id="使用命名空间"><a href="#使用命名空间" class="headerlink" title="使用命名空间"></a>使用命名空间</h3><p>申明使用命名空间<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>申明以后所有需要引入这个文件都必须使用<code>use</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span>  <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'dog run'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果引用的文件是在同一个命名空间下, 则无需使用<code>use</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果被引入的文件没有申明命名空间,则默认全局命名空间<code>\</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Index</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Dog());</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span>  <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'dog run'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="自动载入"><a href="#自动载入" class="headerlink" title="自动载入"></a>自动载入</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Index</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line">spl_autoload_register(<span class="function"><span class="keyword">function</span> <span class="params">($filename)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($filename) &#123;</span><br><span class="line">        <span class="keyword">if</span> (file_exists($filename.<span class="string">'.php'</span>)) &#123;</span><br><span class="line">            <span class="keyword">include_once</span> $filename.<span class="string">'.php'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//include_once 'AnimalInterface.php';</span></span><br><span class="line"><span class="comment">//include_once 'Cat.php';</span></span><br><span class="line"><span class="comment">//include_once 'Dog.php';</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Dog());</span><br></pre></td></tr></table></figure>
-<p>所有文件的自动载入需要在<code>spl_autoload_register</code>这个函数中通过<code>include_once</code>实现;</p>
-<h3 id="PSR"><a href="#PSR" class="headerlink" title="PSR"></a>PSR</h3><p>命名空间跟文件加载并无直接关系，只是有些语言，将命名空间结构和文件结构对应起来了。 以php为例，一般的命名空间结构，跟php文件结构是存在映射关系的，通过命名空间名称，就能算出该类的实际存储位置， 然后实例化的时候，会触发用设置的spl自动加载函数将文件引入。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -828,7 +814,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

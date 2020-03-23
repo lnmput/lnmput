@@ -265,6 +265,334 @@
             
               
                 
+                <a class="post-title-link" href="/2019/03/08/centos安装shadowsocks客户端实现联网/" itemprop="url">
+                  CentOS安装Shadowsocks客户端实现联网
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-03-08T21:57:25+08:00" content="2019-03-08">
+              2019-03-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你爱上小溪 是因为没有见过大海 我已见过银河 但我只爱一颗星<br></blockquote>
+
+<h3 id="安装-pip"><a href="#安装-pip" class="headerlink" title="安装 pip"></a>安装 pip</h3><p>Pip 是 Python 的包管理工具，这里我们用 pip 安装 shadowsocks。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置-shadowsocks"><a href="#配置-shadowsocks" class="headerlink" title="配置 shadowsocks"></a>配置 shadowsocks</h3><p>新建配置文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure></p>
+<p>填写以下内容:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "server":"your_server_ip",      #ss服务器IP</span><br><span class="line">    "server_port":your_server_port, #端口</span><br><span class="line">    "local_address": "127.0.0.1",   #本地ip</span><br><span class="line">    "local_port":1080,              #本地端口</span><br><span class="line">    "password":"your_server_passwd",#连接ss密码</span><br><span class="line">    "timeout":300,                  #等待超时</span><br><span class="line">    "method":"rc4-md5",             #加密方式</span><br><span class="line">    "fast_open": false,             # true 或 false。如果你的服务器 Linux 内核在3.7+，可以开启 fast_open 以降低延迟。开启方法： echo 3 &gt; /proc/sys/net/ipv4/tcp_fastopen 开启之后，将 fast_open 的配置设置为 true 即可</span><br><span class="line">    "workers": 1                    # 工作线程数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动shadowsocks服务"><a href="#启动shadowsocks服务" class="headerlink" title="启动shadowsocks服务"></a>启动shadowsocks服务</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line">nohup sslocal -c /etc/shadowsocks.json &amp;&gt;&gt; /<span class="keyword">var</span>/log/sslocal.log &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="设置shadowsocks开机自启"><a href="#设置shadowsocks开机自启" class="headerlink" title="设置shadowsocks开机自启"></a>设置shadowsocks开机自启</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure>
+<p>填写如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Client Service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
+<p>配置生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>运行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --socks5 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1080</span> http:<span class="comment">//httpbin.org/ip</span></span><br></pre></td></tr></table></figure></p>
+<p>如果返回你的 ss 服务器 ip 则测试成功：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"origin"</span>: <span class="string">"23.105.222.129"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装-Privoxy"><a href="#安装-Privoxy" class="headerlink" title="安装 Privoxy"></a>安装 Privoxy</h3><p>Shadowsocks 是一个 socket5 服务，因此我们需要使用 Privoxy 把流量转到 http/https 上。直接使用yum安装即可：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install privoxy</span><br></pre></td></tr></table></figure></p>
+<p>安装好后，修改一下配置：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/privoxy/config</span><br></pre></td></tr></table></figure></p>
+<p>搜索<code>forward-socks5t</code>将<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">forward-socks5t / <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9050</span> .</span><br></pre></td></tr></table></figure></p>
+<p>取消注释并修改为：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">forward-socks5t / <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1080</span> .</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动-privoxy"><a href="#启动-privoxy" class="headerlink" title="启动 privoxy"></a>启动 privoxy</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privoxy /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+<p>或以指定用户如www运行privoxy：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privoxy --user www /etc/privoxy/config</span><br></pre></td></tr></table></figure></p>
+<h3 id="设置privoxy开机自启"><a href="#设置privoxy开机自启" class="headerlink" title="设置privoxy开机自启"></a>设置privoxy开机自启</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /lib/systemd/system/privoxy.service</span><br></pre></td></tr></table></figure>
+<p>填写如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Privoxy Web Proxy With Advanced Filtering Capabilities</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">PIDFile=/run/privoxy.pid</span><br><span class="line">ExecStart=/usr/sbin/privoxy --pidfile /run/privoxy.pid /etc/privoxy/config</span><br></pre></td></tr></table></figure></p>
+<p>配置生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable /lib/systemd/system/privoxy.service</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置-etc-profile"><a href="#配置-etc-profile" class="headerlink" title="配置/etc/profile"></a>配置/etc/profile</h3><p>执行vim /etc/profile,添加如下代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy=http:<span class="comment">//127.0.0.1:8118</span></span><br><span class="line">export https_proxy=http:<span class="comment">//127.0.0.1:8118</span></span><br></pre></td></tr></table></figure></p>
+<p>修改后使配置生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure></p>
+<p>测试生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl www.google.com</span><br></pre></td></tr></table></figure></p>
+<p>返回一大堆 HTML 则说明 shadowsocks 正常工作了。</p>
+<h3 id="简化使用"><a href="#简化使用" class="headerlink" title="简化使用"></a>简化使用</h3><p>进过上面的步骤我们的确代理成功了。。但是每次都要输入这么多命令太麻烦,这时我们可以利用 命令别名 来简化我们的操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias ssinit=<span class="string">'nohup sslocal -c /etc/shadowsocks.json &amp;&gt;&gt; /var/log/sslocal.log &amp;'</span></span><br><span class="line">alias sson=<span class="string">'export http_proxy=http://127.0.0.1:8118 &amp;&amp; export https_proxy=http://127.0.0.1:8118 &amp;&amp; systemctl start privoxy'</span></span><br><span class="line">alias ssoff=<span class="string">'unset http_proxy &amp;&amp; unset https_proxy &amp;&amp; systemctl stop privoxy &amp;&amp; pkill sslocal'</span></span><br></pre></td></tr></table></figure></p>
+<p>使用方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 开启ss代理</span></span><br><span class="line">ssinit</span><br><span class="line">sson</span><br><span class="line"><span class="comment">## 关闭ss代理</span></span><br><span class="line">ssoff</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://i.jakeyu.top/2017/03/16/centos%E4%BD%BF%E7%94%A8SS%E7%BF%BB%E5%A2%99/" target="_blank" rel="noopener">https://i.jakeyu.top/2017/03/16/centos%E4%BD%BF%E7%94%A8SS%E7%BF%BB%E5%A2%99/</a><br><a href="https://xeylon.com/server/140.html" target="_blank" rel="noopener">https://xeylon.com/server/140.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/01/17/git将当前分支上修改的东西转移到新建分支/" itemprop="url">
+                  git将当前分支上修改的东西转移到新建分支
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-01-17T21:26:21+08:00" content="2019-01-17">
+              2019-01-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>为大概率坚持，为小概率备份。<br></blockquote>
+
+<p>比如我在A分支做了一些修改，现在由于某种原因(如A分支已经合并到master)不能把A分支上修改的东西保留下来但是需要把A分支上修改的东西继续在新分支继续修改。那么现在我们可以有两种简单的做法完成这一需求。</p>
+<h3 id="第一种方法"><a href="#第一种方法" class="headerlink" title="第一种方法"></a>第一种方法</h3><p>我们不需要在A分支做commit,只需要在A分支新建B分支，然后切换过去。这个时候你会发现修改的东西在A，B分支都有。这个时候在B分支commit，那么这些修改保留在B分支上，再切换到A分支上会发现修改都没有保留下来。</p>
+<h3 id="第二种方法"><a href="#第二种方法" class="headerlink" title="第二种方法"></a>第二种方法</h3><p>使用Git stash 将A分支暂存起来，然后在某一个分支（如master分支）新建一个分支B，然后在B分支上使用git stash pop 将修改弹出到B分支上，然后这些修改就在B分支上了。然后我们又可以愉快的玩耍了～</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/11/16/composer-install的一个错误/" itemprop="url">
+                  composer-install的一个错误
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-11-16T21:25:57+08:00" content="2018-11-16">
+              2018-11-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>若教眼底无离恨，不信人间有白头。<br></blockquote>
+
+<h3 id="composer-insatall-が失敗す"><a href="#composer-insatall-が失敗す" class="headerlink" title="composer insatall が失敗す"></a>composer insatall が失敗す</h3><p>PHP のライブラリの依存関係を管理する composer ですが、composer install でインストールをしようとすると killed で失敗してしまうのでその原因を調べました。<br>ちなみに Laravel の環境を作っている最中でした。</p>
+<h3 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ composer install</span><br><span class="line">Loading composer repositories with package information</span><br><span class="line">Updating dependencies (including <span class="keyword">require</span>-dev)</span><br><span class="line">Killed</span><br></pre></td></tr></table></figure>
+<p>パッケージをインストールしようとすると上記のような感じで killed で中途半端に終わります。composer install -vvv で詳細な進捗が表示されるので実行して見てみると、順調に進んでいる途中でプチっと途切れてしまいます.</p>
+<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>原因はメモリ不足です。</p>
+<p>どうも killed で終わるのは Linux がメモリ不足でシステム停止する恐れがあるときに、メモリを多く消費しているプロセスを強制的に殺しているかららしいです。OOM Killer という機能です。</p>
+<p>composer install を実行すると、依存関係をいろいろと調整したりするためにデータを読み込んだりするのですが、それが大きくなるとメモリの消費量が大きくなりすぎます。そして限界がきて OS からプロセスが殺されます。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>原因がメモリ不足なのでメモリの割り当てを増やすことで解決できます。</p>
+<p>メモリを増やすのが難しければ、スワップ領域を増やしてやればよいです。私はスワップ領域に1GB分割り当てて解決しました。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dd if=/dev/zero of=/var/swap bs=1M count=1024</span></span><br><span class="line"><span class="comment"># mkswap /var/swap</span></span><br><span class="line"><span class="comment"># swapon /var/swap</span></span><br></pre></td></tr></table></figure></p>
+<p>/var/swap ファイルに 1024MB(1GB)分のファイルを作って割り当てています。これで再実行すれば正常に完了するはずです。</p>
+<p>以上。</p>
+<blockquote>
+<p><a href="https://webbibouroku.com/Blog/Article/composer-killed" target="_blank" rel="noopener">https://webbibouroku.com/Blog/Article/composer-killed</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/11/10/git恢复被删除的文件/" itemprop="url">
                   git恢复被删除的文件
                 </a>
@@ -458,347 +786,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/09/08/laravel中eloquent事件中的updated和saved原來不一樣/" itemprop="url">
-                  Laravel中Eloquent事件中的Updated和Saved原來不一樣
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-08T14:44:20+08:00" content="2018-09-08">
-              2018-09-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>受任于败军之际，奉命于危难之间，尔来二十有一年矣。<br></blockquote>
-
-<p>當一個新模型初次被儲存，將會觸發 creating 以及 created 事件。如果一個模型已經存在於資料庫而且呼叫了 save 方法，將會觸發 updating 和 updated 事件。然而，在這兩個狀況下，都將會觸發 saving 和 saved 事件。</p>
-<p>Laravel 在資料更新的時候會觸發兩個事件：updated 和 saved。單從官方文件的說明，saved 看起來像是一個方便開發者統一管理新增/更新動作的事件，讓重複的程式碼可以不用被寫在兩個地方（created 和 updated），但是其實 saved 和 updated 的觸發時機是不一樣的。</p>
-<p>接來看一下 Laravel eloquent 的原始碼。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 495 行</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">(array $options = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;exists) &#123;</span><br><span class="line">        $saved = <span class="keyword">$this</span>-&gt;isDirty() ?</span><br><span class="line">                    <span class="keyword">$this</span>-&gt;performUpdate($query) : <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> ($saved) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;finishSave($options);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $saved;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 552 行</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">finishSave</span><span class="params">(array $options)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;fireModelEvent(<span class="string">'saved'</span>, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;syncOriginal();</span><br><span class="line">    <span class="keyword">if</span> (Arr::get($options, <span class="string">'touch'</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;touchOwners();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 569 行</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">performUpdate</span><span class="params">(Builder $query)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    $dirty = <span class="keyword">$this</span>-&gt;getDirty();</span><br><span class="line">    <span class="keyword">if</span> (count($dirty) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;setKeysForSaveQuery($query)-&gt;update($dirty);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;fireModelEvent(<span class="string">'updated'</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>應該盡量使用 updated 而不是 saved 來判斷資料是否更新<br>可以看到在觸發 updated 之前會先做一次 getDirty() 的檢查，其實就是在檢查這次更新的資料是不是真的有改動資料的值；相反的，saved 不管值有沒有改動都會觸發。如果沒注意到這個差別的話，這在實務上其實會造成一些問題。</p>
-<p>例如，我們通常會把資料的結果快取起來，以減少對資料庫的查詢次數。因此當資料有變動的時候，就會需要把對應的快取刪除。為了避免有漏刪的部分，會把刪除快取的動作綁定在 eloquent 事件中。認清 updated 和 saved 之後，就會知道這個動作應該是要綁在 updated；若是綁在 saved 上，就會造成多餘的快取動作，增加機器的成本。當快取數量一多，又有用到類似 redis scan 這種較耗時的功能來找出需要刪除的快取時，對於機器的效能影響更大。</p>
-<p>使用 updated 也仍會可能有漏網之魚</p>
-<p>但是，要注意的是，即使使用了 updated 也不能說完全避免這件事的發生。這時候又要再看一次 Larvel eloquent 的原始碼了。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3093 行</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDirty</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $dirty = [];</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;attributes <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! array_key_exists($key, <span class="keyword">$this</span>-&gt;original)) &#123;</span><br><span class="line">            $dirty[$key] = $value;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> ($value !== <span class="keyword">$this</span>-&gt;original[$key] &amp;&amp;</span><br><span class="line">                             ! <span class="keyword">$this</span>-&gt;originalIsNumericallyEquivalent($key)) &#123;</span><br><span class="line">            $dirty[$key] = $value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $dirty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以發現 Laravel 判斷值有沒有改動的比較依據來自於，我們一開始 select 出來的欄位，跟這次要變動的欄位。意思就是，如果我們只 select 了 A 欄位出來，但是更新的是 B 欄位時，即使更動後 B 欄位的值跟更動之前一模一樣，Laravel 仍會把此視為資料的值有所改動。</p>
-<p>不過這仍在可以接受的範圍之內。畢竟每個更新之前，若要為了拿到所有欄位而又再多查詢一次資料庫，可能會是一件更浪費資源的事情。</p>
-<blockquote>
-<p><a href="https://medium.com/@lynnlin827/laravel-eloquent-%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-updated-%E5%92%8C-saved-%E5%8E%9F%E4%BE%86%E4%B8%8D%E4%B8%80%E6%A8%A3-caa8ef0ddbc" target="_blank" rel="noopener">https://medium.com/@lynnlin827/laravel-eloquent-%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-updated-%E5%92%8C-saved-%E5%8E%9F%E4%BE%86%E4%B8%8D%E4%B8%80%E6%A8%A3-caa8ef0ddbc</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/09/05/laravel使用ajax上传图片/" itemprop="url">
-                  Laravel使用Ajax上传图片
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-05T09:12:17+08:00" content="2018-09-05">
-              2018-09-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>You know some birds are not meant to be caged, their feathers are just too bright.<br></blockquote>
-
-<p>File uploads is one of the most important functions on the internet, and we have bigger files nowadays, which means it’s not enough to have simple input fields – we need AJAX and processing file upload “in the background”. Here I will show you a simple example of that in Laravel 5.</p>
-<p>Let’s say, we have a simple form to upload the product and many photos for it.</p>
-<p>And we want to upload photos and see upload progress immediately, only then submitting the form. For that we will use a jQuery-File-Upload library.</p>
-<h3 id="Step-1-Database-structure"><a href="#Step-1-Database-structure" class="headerlink" title="Step 1. Database structure"></a>Step 1. Database structure</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Schema::create(<span class="string">'products'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">    $table-&gt;string(<span class="string">'name'</span>);</span><br><span class="line">    $table-&gt;timestamps();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Schema::create(<span class="string">'product_photos'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">    $table-&gt;integer(<span class="string">'product_id'</span>)-&gt;unsigned()-&gt;nullable();</span><br><span class="line">    $table-&gt;foreign(<span class="string">'product_id'</span>)-&gt;references(<span class="string">'id'</span>)-&gt;on(<span class="string">'products'</span>);</span><br><span class="line">    $table-&gt;string(<span class="string">'filename'</span>);</span><br><span class="line">    $table-&gt;timestamps();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>And then we have two simple models – app/Product.php and app/ProductPhoto.php.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Product</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'name'</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductPhoto</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'product_id'</span>, <span class="string">'filename'</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">product</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Product'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>As you can see, field <code>product_photos.product_id</code> is nullable – which means we can upload photos without saving product with them yet. We’ll show later why.</p>
-<h3 id="Step-2-Routes-and-MVC"><a href="#Step-2-Routes-and-MVC" class="headerlink" title="Step 2. Routes and MVC"></a>Step 2. Routes and MVC</h3><p>First, let’s decide our URLs. In routes/web.php we will have this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Route::get(<span class="string">'/'</span>, <span class="string">'UploadController@uploadForm'</span>);</span><br><span class="line">Route::post(<span class="string">'/upload'</span>, <span class="string">'UploadController@uploadSubmit'</span>);</span><br><span class="line">Route::post(<span class="string">'/product'</span>, <span class="string">'UploadController@postProduct'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>Basically, homepage for the form, then /upload for AJAX file submit, and /product for submitting the whole product with photos.</p>
-<p>Then we have app/Http/Controllers/UploadController.php with these methods:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadForm</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'upload_form'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadSubmit</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// This method will cover file upload</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postProduct</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// This method will cover whole product submit</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Step-3-Building-the-form"><a href="#Step-3-Building-the-form" class="headerlink" title="Step 3. Building the form"></a>Step 3. Building the form</h3><p>Our resources/views/upload_form.blade.php will look like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/product"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    &#123;&#123; csrf_field() &#125;&#125;</span><br><span class="line">    Product name:</span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    Product photos (can add more than one):</span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">id</span>=<span class="string">"fileupload"</span> <span class="attr">name</span>=<span class="string">"photos[]"</span> <span class="attr">data-url</span>=<span class="string">"/upload"</span> <span class="attr">multiple</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"files_list"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"loading"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"file_ids"</span> <span class="attr">id</span>=<span class="string">"file_ids"</span> <span class="attr">value</span>=<span class="string">""</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"Upload"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="Step-4-Processing-the-upload-and-submit"><a href="#Step-4-Processing-the-upload-and-submit" class="headerlink" title="Step 4. Processing the upload and submit"></a>Step 4. Processing the upload and submit</h3><p>Now, let’s download jQuery-File-Upload library and put its /js contents into our /public/js. And then we can use it like this – in the end of our upload_form.blade.php:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/vendor/jquery.ui.widget.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/jquery.iframe-transport.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/jquery.fileupload.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    $(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        $(<span class="string">'#fileupload'</span>).fileupload(&#123;</span><br><span class="line">            dataType: <span class="string">'json'</span>,</span><br><span class="line">            add: <span class="function"><span class="keyword">function</span> <span class="params">(e, data)</span> </span>&#123;</span><br><span class="line">                $(<span class="string">'#loading'</span>).text(<span class="string">'Uploading...'</span>);</span><br><span class="line">                data.submit();</span><br><span class="line">            &#125;,</span><br><span class="line">            done: <span class="function"><span class="keyword">function</span> <span class="params">(e, data)</span> </span>&#123;</span><br><span class="line">                $.each(data.result.files, <span class="function"><span class="keyword">function</span> <span class="params">(index, file)</span> </span>&#123;</span><br><span class="line">                    $(<span class="string">'&lt;p/&gt;'</span>).html(file.name + <span class="string">' ('</span> + file.size + <span class="string">' KB)'</span>).appendTo($(<span class="string">'#files_list'</span>));</span><br><span class="line">                    <span class="keyword">if</span> ($(<span class="string">'#file_ids'</span>).val() != <span class="string">''</span>) &#123;</span><br><span class="line">                        $(<span class="string">'#file_ids'</span>).val($(<span class="string">'#file_ids'</span>).val() + <span class="string">','</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    $(<span class="string">'#file_ids'</span>).val($(<span class="string">'#file_ids'</span>).val() + file.fileID);</span><br><span class="line">                &#125;);</span><br><span class="line">                $(<span class="string">'#loading'</span>).text(<span class="string">''</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>To be honest, I’m not a strong front-ender, so the syntax was written according to jQuery-File-Upload library examples. But basically, it works like this:</p>
-<ul>
-<li>fileupload() method is attached to input field and takes two important parameters – name=”photos[]” data-url=”/upload”;</li>
-<li>Those parameters are passed via AJAX request to /upload URL – meaning UploadController and method uploadSubmit();</li>
-<li>uploadSubmit() physically uploads the file, stores information in the database but doesn’t store product_photos.product_id because we don’t have ID yet. After upload it returns JSON with array of file results;</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadSubmit</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $photos = [];</span><br><span class="line">    <span class="keyword">foreach</span> ($request-&gt;photos <span class="keyword">as</span> $photo) &#123;</span><br><span class="line">        $filename = $photo-&gt;store(<span class="string">'photos'</span>);</span><br><span class="line">        $product_photo = ProductPhoto::create([</span><br><span class="line">            <span class="string">'filename'</span> =&gt; $filename</span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        $photo_object = <span class="keyword">new</span> \stdClass();</span><br><span class="line">        $photo_object-&gt;name = str_replace(<span class="string">'photos/'</span>, <span class="string">''</span>,$photo-&gt;getClientOriginalName());</span><br><span class="line">        $photo_object-&gt;size = round(Storage::size($filename) / <span class="number">1024</span>, <span class="number">2</span>);</span><br><span class="line">        $photo_object-&gt;fileID = $product_photo-&gt;id;</span><br><span class="line">        $photos[] = $photo_object;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> response()-&gt;json(<span class="keyword">array</span>(<span class="string">'files'</span> =&gt; $photos), <span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Those results are shown to the user in the file list (filename and size) and also in the hidden field file_ids which stores values from product_photos.id column;</li>
-</ul>
-<p>We can upload more files like this, and our files list will grow bigger and bigger. As soon as we hit the main submit – the data will be posted and UploadController method postProduct() will save the data into products DB table, and also assign new product ID to product_photos entries:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postProduct</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $product = Product::create($request-&gt;all());</span><br><span class="line">    ProductPhoto::whereIn(<span class="string">'id'</span>, explode(<span class="string">","</span>, $request-&gt;file_ids))</span><br><span class="line">        -&gt;update([<span class="string">'product_id'</span> =&gt; $product-&gt;id]);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Product saved successfully'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://laraveldaily.com/laravel-ajax-file-upload-blueimp-jquery-library/" target="_blank" rel="noopener">https://laraveldaily.com/laravel-ajax-file-upload-blueimp-jquery-library/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/09/05/laravel集合中的when方法/" itemprop="url">
-                  Laravel集合中的when方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-05T08:55:51+08:00" content="2018-09-05">
-              2018-09-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>Hope is a good thing and maybe the best of things. And no good thing ever dies.<br></blockquote>
-
-<p>Starting at v5.4.12, Laravel Collections now includes a when method that allows you to perform conditional actions on the items without breaking the chain.</p>
-<p>Like all the other Laravel Collection methods this one can have a lot of use cases but one example that comes to mind is being able to filter based on a query string parameter.</p>
-<p>To demonstrate that example, let’s pretend we have a list of hosts from the Laravel News Podcast:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$hosts = [</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Eric Barnes'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">0</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Jack Fruh'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">0</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Jacob Bennett'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">1</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Michael Dyrynda'</span>, <span class="string">'location'</span> =&gt; <span class="string">'AU'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">1</span>],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-<p>Previously to filter based on a query string you might do something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$inUsa = collect($hosts)-&gt;where(<span class="string">'location'</span>, <span class="string">'USA'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (request(<span class="string">'retired'</span>)) &#123;</span><br><span class="line">    $inUsa = $inUsa-&gt;filter(<span class="function"><span class="keyword">function</span><span class="params">($employee)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ! $employee[<span class="string">'is_active'</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>With the new when method you can now do this all in one Collection chain:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$inUsa = collect($hosts)</span><br><span class="line">    -&gt;where(<span class="string">'location'</span>, <span class="string">'USA'</span>)</span><br><span class="line">    -&gt;when(request(<span class="string">'retired'</span>), <span class="function"><span class="keyword">function</span><span class="params">($collection)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $collection-&gt;reject(<span class="function"><span class="keyword">function</span><span class="params">($employee)</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $employee[<span class="string">'is_active'</span>];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://laravel-news.com/laravel-collections-when-method" target="_blank" rel="noopener">https://laravel-news.com/laravel-collections-when-method</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -837,7 +829,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

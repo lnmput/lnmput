@@ -265,6 +265,331 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/28/Predis和Phpredis的区别/" itemprop="url">
+                  Predis和Phpredis的区别
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-28T10:46:54+08:00" content="2017-09-28">
+              2017-09-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>你要知道，有一句话，普天之下莫非王土。但还有一句话，天高皇帝远。<br></blockquote><br>Redis 是一个开源的内存数据库服务器，得益于内建的数据类型，Redis 不仅仅只能做简单的 key/value 存储。</p>
+<h3 id="Predis"><a href="#Predis" class="headerlink" title="Predis"></a>Predis</h3><p>predis，是PHP版本写的redis client,</p>
+<h3 id="Phpredis"><a href="#Phpredis" class="headerlink" title="Phpredis"></a>Phpredis</h3><p>php extension redis是PHP原生扩展，C写的,对于大量使用 Redis 的应用程序来说会产生更好的性能。</p>
+<h3 id="长连接-vs-短连接"><a href="#长连接-vs-短连接" class="headerlink" title="长连接 vs 短连接"></a>长连接 vs 短连接</h3><ul>
+<li><p>当使用pconnect时，连接会被重用，连接的生命周期是fpm进程的生命周期，而非一次php的执行。</p>
+</li>
+<li><p>如果代码中使用pconnect， close的作用仅是使当前php不能再进行redis请求，但无法真正关闭redis长连接，连接在后续请求中仍然会被重用，直至fpm进程生命周期结束。</p>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://github.com/phpredis/phpredis" target="_blank" rel="noopener">https://github.com/phpredis/phpredis</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/28/强大的下拉框插件Select2/" itemprop="url">
+                  强大的下拉框插件Select2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-28T09:25:20+08:00" content="2017-09-28">
+              2017-09-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>每个人都是他人生的主角，<br>可是一旦沦为配角，就是他最伤心的时候。<br></blockquote><br>select2是一个可以给你定制支持搜索、标签、远程数据集，无限滚动，以及其他常用功能的一个下拉框美化插件。总之，功能很强大。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">$(<span class="string">'select'</span>).select2();</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="单选框"><a href="#单选框" class="headerlink" title="单选框"></a>单选框</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">$(<span class="string">".js-example-basic-single"</span>).select2();</span><br><span class="line">&#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;select class="js-example-basic-single"&gt;</span></span><br><span class="line"><span class="regexp">&lt;option value="AL"&gt;Alabama&lt;/</span>option&gt;</span><br><span class="line"> ...</span><br><span class="line">&lt;option value=<span class="string">"WY"</span>&gt;Wyoming&lt;<span class="regexp">/option&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>select&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="多选框"><a href="#多选框" class="headerlink" title="多选框"></a>多选框</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">$(<span class="string">".js-example-basic-multiple"</span>).select2();</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;select class="js-example-basic-multiple" multiple="multiple"&gt;</span></span><br><span class="line"><span class="regexp">&lt;option value="AL"&gt;Alabama&lt;/</span>option&gt;</span><br><span class="line">...</span><br><span class="line">&lt;option value=<span class="string">"WY"</span>&gt;Wyoming&lt;<span class="regexp">/option&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>select&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="提示信息"><a href="#提示信息" class="headerlink" title="提示信息"></a>提示信息</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-placeholder-single"</span>).select2(&#123;</span><br><span class="line">placeholder: <span class="string">"Select a state"</span>,</span><br><span class="line">allowClear: <span class="literal">true</span> <span class="comment">//可以删除</span></span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">".js-example-placeholder-multiple"</span>).select2(&#123;</span><br><span class="line">placeholder: <span class="string">"Select a state"</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="加载数组"><a href="#加载数组" class="headerlink" title="加载数组"></a>加载数组</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line"><span class="keyword">var</span> data = [</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">text</span>: <span class="string">'enhancement'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">text</span>: <span class="string">'bug'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">text</span>: <span class="string">'duplicate'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">text</span>: <span class="string">'invalid'</span> &#125;,</span><br><span class="line">&#123; <span class="attr">id</span>: <span class="number">4</span>, <span class="attr">text</span>: <span class="string">'wontfix'</span> &#125;];</span><br><span class="line">$(<span class="string">".js-example-data-array"</span>).select2(&#123;</span><br><span class="line">data: data</span><br><span class="line">&#125;)</span><br><span class="line">$(<span class="string">".js-example-data-array-selected"</span>).select2(&#123;</span><br><span class="line">data: data</span><br><span class="line">&#125;)</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;select class="js-example-data-array"&gt;&lt;/</span>select&gt;</span><br><span class="line">&lt;select <span class="class"><span class="keyword">class</span></span>=<span class="string">"js-example-data-array-selected"</span>&gt;</span><br><span class="line">&lt;option value=<span class="string">"2"</span> selected=<span class="string">"selected"</span>&gt;duplicate&lt;<span class="regexp">/option&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>select&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="加载远程数据"><a href="#加载远程数据" class="headerlink" title="加载远程数据"></a>加载远程数据</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-data-example-ajax"</span>).select2(&#123;</span><br><span class="line">ajax: &#123;</span><br><span class="line"> url: <span class="string">"https://api.github.com/search/repositories"</span>,</span><br><span class="line"> dataType: <span class="string">'json'</span>,</span><br><span class="line"> delay: <span class="number">250</span>,</span><br><span class="line"> data: <span class="function"><span class="keyword">function</span> (<span class="params">params</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> &#123;</span><br><span class="line"> q: params.term, <span class="comment">// search term</span></span><br><span class="line"> page: params.page</span><br><span class="line"> &#125;;</span><br><span class="line"> &#125;,</span><br><span class="line"> processResults: <span class="function"><span class="keyword">function</span> (<span class="params">data, params</span>) </span>&#123;</span><br><span class="line"> <span class="comment">// parse the results into the format expected by Select2</span></span><br><span class="line"> <span class="comment">// since we are using custom formatting functions we do not need to</span></span><br><span class="line"> <span class="comment">// alter the remote JSON data, except to indicate that infinite</span></span><br><span class="line"> <span class="comment">// scrolling can be used</span></span><br><span class="line"> params.page = params.page || <span class="number">1</span>;</span><br><span class="line"> <span class="keyword">return</span> &#123;</span><br><span class="line"> results: data.items,</span><br><span class="line"> pagination: &#123;</span><br><span class="line"> more: (params.page * <span class="number">30</span>) &lt; data.total_count</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;;</span><br><span class="line"> &#125;,</span><br><span class="line"> cache: <span class="literal">true</span></span><br><span class="line">&#125;,</span><br><span class="line">escapeMarkup: <span class="function"><span class="keyword">function</span> (<span class="params">markup</span>) </span>&#123; <span class="keyword">return</span> markup; &#125;, <span class="comment">// let our custom formatter work</span></span><br><span class="line">minimumInputLength: <span class="number">1</span>,</span><br><span class="line">templateResult: formatRepo, <span class="comment">// omitted for brevity, see the source of this page</span></span><br><span class="line">templateSelection: formatRepoSelection <span class="comment">// omitted for brevity, see the source of this page</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="禁用模式"><a href="#禁用模式" class="headerlink" title="禁用模式"></a>禁用模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-programmatic-enable"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $(<span class="string">".js-example-disabled"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">false</span>);</span><br><span class="line"> $(<span class="string">".js-example-disabled-multi"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">false</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-disable"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $(<span class="string">".js-example-disabled"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">true</span>);</span><br><span class="line"> $(<span class="string">".js-example-disabled-multi"</span>).prop(<span class="string">"disabled"</span>, <span class="literal">true</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="禁用结果"><a href="#禁用结果" class="headerlink" title="禁用结果"></a>禁用结果</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">class</span>=<span class="string">"js-example-disabled-results"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"one"</span>&gt;</span>First<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"two"</span> <span class="attr">disabled</span>=<span class="string">"disabled"</span>&gt;</span>Second (disabled)<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"three"</span>&gt;</span>Third<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="限制个数"><a href="#限制个数" class="headerlink" title="限制个数"></a>限制个数</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-basic-multiple-limit"</span>).select2(&#123;</span><br><span class="line"> maximumSelectionLength: <span class="number">2</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="隐藏搜索框"><a href="#隐藏搜索框" class="headerlink" title="隐藏搜索框"></a>隐藏搜索框</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-basic-hide-search"</span>).select2(&#123;</span><br><span class="line">minimumResultsForSearch: <span class="literal">Infinity</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="DOM事件"><a href="#DOM事件" class="headerlink" title="DOM事件"></a>DOM事件</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">change //选中或删除触发</span><br><span class="line">select2:open //下拉框打开触发</span><br><span class="line">select2:opening //下拉框打开之前</span><br><span class="line">select2:close //下拉框关闭</span><br><span class="line">select2:closing //下拉框关闭之前</span><br><span class="line">select2:select //选中结果触发</span><br><span class="line">select2:selecting //选中之前</span><br><span class="line">select2:unselect //结果未选中</span><br><span class="line">select2:unselecting //结果未选中之前</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $eventLog = $(<span class="string">".js-event-log"</span>);</span><br><span class="line"><span class="keyword">var</span> $eventSelect = $(<span class="string">".js-example-events"</span>);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:open"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:open"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:close"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:close"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:select"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:select"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"select2:unselect"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"select2:unselect"</span>, e); &#125;);</span><br><span class="line">$eventSelect.on(<span class="string">"change"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123; log(<span class="string">"change"</span>); &#125;);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span> (<span class="params">name, evt</span>) </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (!evt) &#123;</span><br><span class="line"> <span class="keyword">var</span> args = <span class="string">"&#123;&#125;"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"> <span class="keyword">var</span> args = <span class="built_in">JSON</span>.stringify(evt.params, <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">if</span> (value &amp;&amp; value.nodeName) <span class="keyword">return</span> <span class="string">"[DOM node]"</span>;</span><br><span class="line"> <span class="keyword">if</span> (value <span class="keyword">instanceof</span> $.Event) <span class="keyword">return</span> <span class="string">"[$.Event]"</span>;</span><br><span class="line"> <span class="keyword">return</span> value;</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> $e = $(<span class="string">"&lt;li&gt;"</span> + name + <span class="string">" -&gt; "</span> + args + <span class="string">"&lt;/li&gt;"</span>);</span><br><span class="line">$eventLog.append($e);</span><br><span class="line">$e.animate(&#123; <span class="attr">opacity</span>: <span class="number">1</span> &#125;, <span class="number">10000</span>, <span class="string">'linear'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $e.animate(&#123; <span class="attr">opacity</span>: <span class="number">0</span> &#125;, <span class="number">2000</span>, <span class="string">'linear'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> $e.remove();</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自定义控制"><a href="#自定义控制" class="headerlink" title="自定义控制"></a>自定义控制</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $example = $(<span class="string">".js-example-programmatic"</span>).select2();</span><br><span class="line"><span class="keyword">var</span> $exampleMulti = $(<span class="string">".js-example-programmatic-multi"</span>).select2();</span><br><span class="line">$(<span class="string">".js-programmatic-set-val"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.val(<span class="string">"CA"</span>).trigger(<span class="string">"change"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-open"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(<span class="string">"open"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-close"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(<span class="string">"close"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-init"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-destroy"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $example.select2(<span class="string">"destroy"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-multi-set-val"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $exampleMulti.val([<span class="string">"CA"</span>, <span class="string">"AL"</span>]).trigger(<span class="string">"change"</span>); &#125;);</span><br><span class="line">$(<span class="string">".js-programmatic-multi-clear"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; $exampleMulti.val(<span class="literal">null</span>).trigger(<span class="string">"change"</span>); &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="标签支持"><a href="#标签支持" class="headerlink" title="标签支持"></a>标签支持</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-tags"</span>).select2(&#123;</span><br><span class="line"> tags: <span class="literal">true</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="自动标记"><a href="#自动标记" class="headerlink" title="自动标记"></a>自动标记</h3><p>当我们输入值匹配成功后 键入空格就会自动标签化<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".js-example-tokenizer"</span>).select2(&#123;</span><br><span class="line"> tags: <span class="literal">true</span>,</span><br><span class="line"> tokenSeparators: [<span class="string">','</span>, <span class="string">' '</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义查找匹配"><a href="#自定义查找匹配" class="headerlink" title="自定义查找匹配"></a>自定义查找匹配</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">matchStart</span> (<span class="params">term, text</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">if</span> (text.toUpperCase().indexOf(term.toUpperCase()) == <span class="number">0</span>) &#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">$.fn.select2.amd.require([<span class="string">'select2/compat/matcher'</span>],</span><br><span class="line"> <span class="function"><span class="keyword">function</span> (<span class="params">oldMatcher</span>) </span>&#123;</span><br><span class="line"> $(<span class="string">".js-example-matcher-start"</span>).select2(&#123;</span><br><span class="line"> matcher: oldMatcher(matchStart)</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>关于select2的CDN资源整理：<a href="http://www.bootcdn.cn/select2/" target="_blank" rel="noopener">http://www.bootcdn.cn/select2/</a><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://libs.baidu.com/jquery/2.0.0/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://cdn.bootcss.com/select2/4.0.2/js/select2.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"http://cdn.bootcss.com/select2/4.0.2/css/select2.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>示例:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"sel_menu2"</span> <span class="attr">multiple</span>=<span class="string">"multiple"</span> <span class="attr">name</span>=<span class="string">"tags"</span> <span class="attr">class</span>=<span class="string">"form-control"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">optgroup</span> <span class="attr">label</span>=<span class="string">"选择标签"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"1"</span>&gt;</span>用户管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"2"</span>&gt;</span>角色管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"3"</span>&gt;</span>部门管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"4"</span>&gt;</span>菜单管理<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">optgroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//多选</span></span></span><br><span class="line"><span class="javascript">    $(<span class="string">"#sel_menu2"</span>).select2(&#123;</span></span><br><span class="line"><span class="javascript">        tags: <span class="literal">true</span>,</span></span><br><span class="line"><span class="javascript">        maximumSelectionLength: <span class="number">5</span>  <span class="comment">//最多能够选择的个数</span></span></span><br><span class="line">    &#125;);</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://www.bandari.net/blog/14" target="_blank" rel="noopener">https://www.bandari.net/blog/14</a><br><a href="https://stackoverflow.com/questions/14577014/select2-dropdown-but-allow-new-values-by-user" target="_blank" rel="noopener">https://stackoverflow.com/questions/14577014/select2-dropdown-but-allow-new-values-by-user</a><br><a href="https://my.oschina.net/corwien/blog/672858" target="_blank" rel="noopener">https://my.oschina.net/corwien/blog/672858</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/25/PHPstudy升级mysql5-7方法/" itemprop="url">
+                  PHPstudy升级mysql5.7方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-25T11:35:46+08:00" content="2017-09-25">
+              2017-09-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>当我站在瀑布前，觉得非常的难过，我总觉得，应该是两个人站在这里<br></blockquote></p>
+<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>1.在mysql官网下载压缩包，我选取的是最新版的5.7.17连接：<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/mysql/</a><br>2.趁着下载的时间可以把之前的数据库数据备份下，我把 phpStudy 中 MySQL 文件夹可以重命名下，备用<br>3.把下载的 MySQL 压缩文件解压至 phpStudy 下的 MySQL目录，复制my-default.ini ，重命名为 my.ini。<br>4.打开 my.ini，找到 #basedir 处编辑：（我的安装在了C盘，路径根据phpstudy的安装路径选择）<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">basedir = C:\phpStudy7\MySQL</span><br><span class="line">datadir = C:\phpStudy7\MySQL\data</span><br></pre></td></tr></table></figure></p>
+<p>5.在cmd下进入MySQL的bin目录（我的是 C:\phpStudy7\MySQL\bin），(初始化数据库：<code>mysqld --initialize</code>)</p>
+<h3 id="错误解决"><a href="#错误解决" class="headerlink" title="错误解决"></a>错误解决</h3><h4 id="错误一"><a href="#错误一" class="headerlink" title="错误一"></a>错误一</h4><p>如果是timestamp的错误，在<code>my.ini</code>中添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">explicit_defaults_for_timestamp=<span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="错误二"><a href="#错误二" class="headerlink" title="错误二"></a>错误二</h4><p>如果有[ERROR]mysqld:Error while setting value<br>‘’ONLY_FULL_GROUP_BY,NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,’to ‘sql_mode’<br>在my.ini中添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">sql_mode=<span class="string">'NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,PIPES_AS_CONCAT,ANSI_QUOTES'</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="错误三"><a href="#错误三" class="headerlink" title="错误三"></a>错误三</h4><p>如果是错误：initialize specified but the data directory has files in it.aborting<br>管理员身份运行cmd,然后cd至mysql下的bin，运行mysql install，然后就成功了<br>或者mysql中的data目录已经有数据了, 清空重新执行<br>执行完后，重启phpstudy</p>
+<h4 id="错误四"><a href="#错误四" class="headerlink" title="错误四"></a>错误四</h4><p>此时登入 MySQL 报错：#1045 无法登录 MySQL 服务器，<br>打开 my.ini，找到 [mysqld]，在下面添加：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">skip-grant-tables <span class="comment">#(此参数用于忘记mysql密码)并保存</span></span><br></pre></td></tr></table></figure></p>
+<p>此时使用 root 账号，密码处按回车即可登录。<br>如果想增加密码，在无密码的情况下进去mysql命令行，找到mysql数据库的user表：修改密码：<br>update user set authentication_string=’新密码’ where user=’root’ ;<br>此时仍然用root密码仍登录不进去的话，在phpstudy修改密码，原来的密码为空</p>
+<blockquote>
+<p><a href="http://www.jianshu.com/p/b238da2f9134" target="_blank" rel="noopener">http://www.jianshu.com/p/b238da2f9134</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/22/php实现跳转的一个坑/" itemprop="url">
                   php实现跳转的一个坑
                 </a>
@@ -445,309 +770,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/21/swoole结合thinkphp5实现毫秒级定时器/" itemprop="url">
-                  swoole结合thinkphp5实现毫秒级定时器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-21T12:46:20+08:00" content="2017-09-21">
-              2017-09-21
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我有一把折断的剑，一条荆棘的路，一个看不清的未来和一场回不去的梦。<br></blockquote></p>
-<h3 id="创建命令行类"><a href="#创建命令行类" class="headerlink" title="创建命令行类"></a>创建命令行类</h3><p>创建application/console/Timer.php文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">Console</span>;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Command</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Input</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Output</span>;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Timer</span> <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $server;</span><br><span class="line">    <span class="comment">// 命令行配置函数</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">configure</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// setName 设置命令行名称</span></span><br><span class="line">        <span class="comment">// setDescription 设置命令行描述</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;setName(<span class="string">'timer:start'</span>)-&gt;setDescription(<span class="string">'Start TCP(Timer) Server!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置命令返回信息</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">(Input $input, Output $output)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server = <span class="keyword">new</span> \swoole_server(<span class="string">'0.0.0.0'</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">4</span>,</span><br><span class="line">            <span class="string">'daemonize'</span>  =&gt; <span class="keyword">false</span>,</span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Start'</span>, [<span class="keyword">$this</span>, <span class="string">'onStart'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'WorkerStart'</span>, [<span class="keyword">$this</span>, <span class="string">'onWorkerStart'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Connect'</span>, [<span class="keyword">$this</span>, <span class="string">'onConnect'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Close'</span>, [<span class="keyword">$this</span>, <span class="string">'onClose'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;start();</span><br><span class="line">        <span class="comment">// $output-&gt;writeln("TCP: Start.\n");</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 主进程启动时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onStart</span><span class="params">(\swoole_server $server)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Start"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Worker 进程启动时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onWorkerStart</span><span class="params">(\swoole_server $server, $worker_id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 仅在第一个 Worker 进程启动时启动 Timer 定时器</span></span><br><span class="line">        <span class="keyword">if</span> ($worker_id == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 启动 Timer，每 1000 毫秒回调一次 onTick 函数，</span></span><br><span class="line">            swoole_timer_tick(<span class="number">1000</span>, [<span class="keyword">$this</span>, <span class="string">'onTick'</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 定时任务函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onTick</span><span class="params">($timer_id, $params = null)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'Hello'</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 建立连接时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onConnect</span><span class="params">(\swoole_server $server, $fd, $from_id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Connect"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 收到信息时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">(\swoole_server $server, $fd, $from_id, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"message: &#123;$data&#125; form Client: &#123;$fd&#125;"</span> . PHP_EOL;</span><br><span class="line">        <span class="comment">// 将受到的客户端消息再返回给客户端</span></span><br><span class="line">        $server-&gt;send($fd, <span class="string">"Message form Server: "</span>.$data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 关闭连时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onClose</span><span class="params">(\swoole_server $server, $fd, $from_id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Close"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="注册命令"><a href="#注册命令" class="headerlink" title="注册命令"></a>注册命令</h3><p>文件所在 application/command.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">'app\console\Timer'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
-<p>接下来就可以通过命令行来启动毫秒定时器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think timer:start</span><br></pre></td></tr></table></figure></p>
-<h3 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ2ze20vl8jnphmrpet8txZ tp5]<span class="comment"># php think timer:start</span></span><br><span class="line">Start</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://www.iswoole.com/article/2067" target="_blank" rel="noopener">http://www.iswoole.com/article/2067</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/20/javascript获取系统当前时间/" itemprop="url">
-                  javascript获取系统当前时间
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-20T17:33:00+08:00" content="2017-09-20">
-              2017-09-20
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我对蝉说:他日再见,要待来年. 蝉对我说:他日重逢,要等来生<br></blockquote>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">HTML</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>当前系统时间<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"style.css"</span>  /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">language</span>=<span class="string">"javascript"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line">    showTime();</span><br><span class="line">  &#125;</span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">checkTime</span>(<span class="params">i</span>)</span>&#123;  <span class="comment">//补位处理</span></span></span><br><span class="line">    if(i&lt;10)  &#123;</span><br><span class="line"><span class="javascript">        i=<span class="string">'0'</span>+i;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> i;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">showTime</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> now=<span class="keyword">new</span> <span class="built_in">Date</span>();</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> year= now.getFullYear()  ;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> month=  now.getMonth()+<span class="number">1</span> ;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> day=  now.getDate()  ;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> h=  now.getHours()  ;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> m=  now.getMinutes()  ;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> s=  now.getSeconds()  ;</span></span><br><span class="line">    m=checkTime(m)</span><br><span class="line">    s=checkTime(s)</span><br><span class="line"></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> weekday=<span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">7</span>)</span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">0</span>]=<span class="string">"星期日"</span></span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">1</span>]=<span class="string">"星期一"</span></span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">2</span>]=<span class="string">"星期二"</span></span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">3</span>]=<span class="string">"星期三"</span></span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">4</span>]=<span class="string">"星期四"</span></span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">5</span>]=<span class="string">"星期五"</span></span></span><br><span class="line"><span class="javascript">    weekday[<span class="number">6</span>]=<span class="string">"星期六"</span></span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"show"</span>).innerHTML=<span class="string">""</span>+year+<span class="string">"年"</span>+month+<span class="string">"月"</span>+day+<span class="string">"日 "</span>+  weekday[now.getDay()] +h+<span class="string">":"</span>+m+<span class="string">":"</span>+s;</span></span><br><span class="line"><span class="javascript">    t=setTimeout(<span class="string">'showTime()'</span>,<span class="number">500</span>)</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content1"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"show"</span>&gt;</span>显示时间的位置<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/18/php编译参数详解/" itemprop="url">
-                  php编译参数详解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-18T14:26:46+08:00" content="2017-09-18">
-              2017-09-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你从未珍惜眼前，你活该失去所有。<br></blockquote>
-
-<h3 id="php各参数配置详解"><a href="#php各参数配置详解" class="headerlink" title="php各参数配置详解"></a>php各参数配置详解</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">--prefix=/usr/local/php                      <span class="comment">//指定 php 安装目录 </span></span><br><span class="line">--with-apxs2=/usr/local/apache/bin/apxs      <span class="comment">//整合apache，</span></span><br><span class="line">                        <span class="comment">//apxs功能是使用mod_so中的LoadModule指令，</span></span><br><span class="line">                       <span class="comment">//加载指定模块到 apache，要求 apache 要打开SO模块</span></span><br><span class="line">--with-config-file-path=/usr/local/php/etc    <span class="comment">//指定php.ini位置</span></span><br><span class="line">--with-MySQL=/usr/local/mysql                 <span class="comment">//mysql安装目录，对mysql的支持</span></span><br><span class="line">--with-mysqli=/usr/local/mysql/bin/mysql_config</span><br><span class="line">                      <span class="comment">//mysqli扩展技术不仅可以调用MySQL的存储过程、处理MySQL事务，</span></span><br><span class="line">                      <span class="comment">//而且还可以使访问数据库工作变得更加稳定。</span></span><br><span class="line">--enable-safe-mode    <span class="comment">//打开安全模式 </span></span><br><span class="line">--enable-ftp          <span class="comment">//打开ftp的支持 </span></span><br><span class="line">--enable-zip          <span class="comment">//打开对zip的支持 </span></span><br><span class="line"></span><br><span class="line">--with-bz2            <span class="comment">//打开对bz2文件的支持 </span></span><br><span class="line">--with-jpeg-dir       <span class="comment">//打开对jpeg图片的支持 </span></span><br><span class="line">--with-png-dir        <span class="comment">//打开对png图片的支持 </span></span><br><span class="line">--with-freetype-dir   <span class="comment">//打开对freetype字体库的支持 </span></span><br><span class="line">--without-iconv       <span class="comment">//关闭iconv函数，各种字符集间的转换 </span></span><br><span class="line">--with-libXML-dir     <span class="comment">//打开libxml2库的支持 </span></span><br><span class="line">--with-XMLrpc         <span class="comment">//打开xml-rpc的c语言 </span></span><br><span class="line">--with-zlib-dir       <span class="comment">//打开zlib库的支持 </span></span><br><span class="line">--with-gd             <span class="comment">//打开gd库的支持 </span></span><br><span class="line">--enable-gd-native-ttf <span class="comment">//支持TrueType字符串函数库 </span></span><br><span class="line">--with-curl            <span class="comment">//打开curl浏览工具的支持 </span></span><br><span class="line">--with-curlwrappers    <span class="comment">//运用curl工具打开url流 </span></span><br><span class="line">--with-ttf             <span class="comment">//打开freetype1.*的支持，可以不加了 </span></span><br><span class="line">--with-xsl             <span class="comment">//打开XSLT 文件支持，扩展了libXML2库 ，需要libxslt软件 </span></span><br><span class="line">--with-gettext         <span class="comment">//打开gnu 的gettext 支持，编码库用到 </span></span><br><span class="line">--with-pear            <span class="comment">//打开pear命令的支持，PHP扩展用的 </span></span><br><span class="line">--enable-calendar      <span class="comment">//打开日历扩展功能 </span></span><br><span class="line">--enable-mbstring      <span class="comment">//多字节，字符串的支持 </span></span><br><span class="line">--enable-bcmath        <span class="comment">//打开图片大小调整,用到zabbix监控的时候用到了这个模块</span></span><br><span class="line">--enable-sockets       <span class="comment">//打开 sockets 支持</span></span><br><span class="line">--enable-exif          <span class="comment">//图片的元数据支持 </span></span><br><span class="line">--enable-magic-quotes  <span class="comment">//魔术引用的支持 </span></span><br><span class="line">--disable-rpath        <span class="comment">//关闭额外的运行库文件 </span></span><br><span class="line">--disable-debug        <span class="comment">//关闭调试模式 </span></span><br><span class="line">--with-mime-magic=/usr/share/file/magic.mime  <span class="comment">//魔术头文件位置</span></span><br></pre></td></tr></table></figure>
-<h3 id="CGI方式安装才用的参数"><a href="#CGI方式安装才用的参数" class="headerlink" title="CGI方式安装才用的参数"></a>CGI方式安装才用的参数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">--enable-fpm                 <span class="comment">//打上PHP-fpm 补丁后才有这个参数，CGI方式安装的启动程序</span></span><br><span class="line">--enable-fastCGI             <span class="comment">//支持fastcgi方式启动PHP</span></span><br><span class="line">--enable-force-CGI-redirect  <span class="comment">//重定向方式启动PHP</span></span><br><span class="line">--with-ncurses         <span class="comment">//支持ncurses 屏幕绘制以及基于文本终端的图形互动功能的动态库</span></span><br><span class="line">--enable-pcntl         <span class="comment">//freeTDS需要用到的，可能是链接mssql 才用到</span></span><br><span class="line">--with-mcrypt          <span class="comment">//mcrypt算法的扩展</span></span><br><span class="line">--with-mhash           <span class="comment">//mhash算法的扩展</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//以上函数库需要安装</span></span><br><span class="line"></span><br><span class="line">--with-gmp                     <span class="comment">//应该是支持一种规范</span></span><br><span class="line">--enable-inline-optimization   <span class="comment">//优化线程</span></span><br><span class="line">--with-openssl                 <span class="comment">//openssl的支持，加密传输时用到的</span></span><br><span class="line">--enable-dbase                 <span class="comment">//建立DBA 作为共享模块</span></span><br><span class="line">--with-pcre-dir=/usr/local/bin/pcre-config       <span class="comment">//perl的正则库案安装位置</span></span><br><span class="line">--disable-dmalloc</span><br><span class="line">--with-gdbm            <span class="comment">//dba的gdbm支持</span></span><br><span class="line">--enable-sigchild</span><br><span class="line">--enable-sysvsem</span><br><span class="line">--enable-sysvshm</span><br><span class="line">--enable-zend-multibyte  <span class="comment">//支持zend的多字节</span></span><br><span class="line">--enable-mbregex</span><br><span class="line">--enable-wddx</span><br><span class="line">--enable-shmop</span><br><span class="line">--enable-soap</span><br></pre></td></tr></table></figure>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>指定了–with-apxs2=/usr/local/apache/bin/apxs以后，就不要再激活–enable-fpm和–enable-fastCGI，apxs是以php module的模式加载PHP的。</p>
-<blockquote>
-<p><a href="http://www.jianshu.com/p/0a79847c8151" target="_blank" rel="noopener">http://www.jianshu.com/p/0a79847c8151</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/38/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/40/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/38/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/40/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -786,7 +813,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

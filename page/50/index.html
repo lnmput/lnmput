@@ -265,6 +265,299 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/17/使用php按行导入txt文件的一个坑/" itemprop="url">
+                  使用php按行导入txt文件的一个坑
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-17T10:12:35+08:00" content="2017-07-17">
+              2017-07-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>岁月你别催，该来的我不推。<br>岁月你别催，走远的我不追。<br></blockquote><br>问题产品原因: windows 和  linux 换行符不一致; 所以必须存入数据库之前对一些不可见的符号过滤;<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$file = $request-&gt;file(<span class="string">'femails'</span>);</span><br><span class="line">$emails = file_get_contents($file-&gt;getRealPath());</span><br><span class="line">$emails = explode(PHP_EOL, $emails);</span><br><span class="line">$ids = [];</span><br><span class="line"><span class="keyword">foreach</span> ($emails <span class="keyword">as</span> $email) &#123;</span><br><span class="line">    $result = preg_replace(<span class="string">'/[\x00-\x1F\x80-\xFF]/'</span>, <span class="string">''</span>, $email);</span><br><span class="line">    $recipient = Recipient::firstOrCreate(</span><br><span class="line">        [</span><br><span class="line">            <span class="string">'email'</span> =&gt; trim($result)</span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="string">'is_use'</span> =&gt; <span class="number">1</span></span><br><span class="line">        ]</span><br><span class="line">    );</span><br><span class="line">    array_push($ids, $recipient-&gt;id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/16/indexeddb的简单使用/" itemprop="url">
+                  indexeddb的简单使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-16T22:00:12+08:00" content="2017-07-16">
+              2017-07-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>有一天你会知道，人生没有我并不会不同<br></blockquote><br>存储在IndexedDB里的数据是永久保存，不像cookies那样只是临时的。IndexedDB里提供了查询数据的功能，在online和offline模式下都能使用。你可以用IndexedDB存储大型数据。</p>
+<h3 id="IndexedDB-具有以下特点。"><a href="#IndexedDB-具有以下特点。" class="headerlink" title="IndexedDB 具有以下特点。"></a>IndexedDB 具有以下特点。</h3><p>（1）键值对储存。 IndexedDB 内部采用对象仓库（object store）存放数据。所有类型的数据都可以直接存入，包括 JavaScript 对象。在对象仓库中，数据以“键值对”的形式保存，每一个数据都有对应的键名，键名是独一无二的，不能有重复，否则会抛出一个错误。<br>（2）异步。 IndexedDB 操作时不会锁死浏览器，用户依然可以进行其他操作，这与 LocalStorage 形成对比，后者的操作是同步的。异步设计是为了防止大量数据的读写，拖慢网页的表现。<br>（3）支持事务。 IndexedDB 支持事务（transaction），这意味着一系列操作步骤之中，只要有一步失败，整个事务就都取消，数据库回到事务发生之前的状态，不存在只改写一部分数据的情况。<br>（4）同域限制 IndexedDB 也受到同域限制，每一个数据库对应创建该数据库的域名。来自不同域名的网页，只能访问自身域名下的数据库，而不能访问其他域名下的数据库。<br>（5）储存空间大 IndexedDB 的储存空间比 LocalStorage 大得多，一般来说不少于250MB。IE的储存上限是250MB，Chrome和Opera是剩余空间的某个百分比，Firefox 则没有上限。<br>（6）支持二进制储存。 IndexedDB 不仅可以储存字符串，还可以储存二进制数据。</p>
+<h3 id="API实例"><a href="#API实例" class="headerlink" title="API实例"></a>API实例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">'indexedDB'</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> openRequest = indexedDB.open(<span class="string">"yangzie"</span>,<span class="number">5</span>);</span><br><span class="line">        <span class="keyword">let</span> db;</span><br><span class="line">        openRequest.onupgradeneeded = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据库更新..."</span>);</span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            db = e.target.result;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!db.objectStoreNames.contains(<span class="string">'firstOS'</span>))&#123;</span><br><span class="line">                db.createObjectStore(<span class="string">"firstOS"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'表已经存在'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        openRequest.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据路打开成功!"</span>);</span><br><span class="line"></span><br><span class="line">            db = e.target.result;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 事务</span></span><br><span class="line">            <span class="keyword">let</span> transaction = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> store = transaction.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> o = &#123;<span class="attr">p</span>: <span class="string">"she is a girl"</span>&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 添加数据</span></span><br><span class="line">            <span class="keyword">let</span> request = store.add(o,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">            request.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"数据添加失败！"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            request.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"数据添加成功！"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 修改数据</span></span><br><span class="line">            <span class="keyword">let</span> tr = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> storess = tr.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line">            <span class="keyword">let</span> p = &#123; <span class="attr">p</span>:<span class="number">456</span> &#125;;</span><br><span class="line">            <span class="keyword">let</span> urequest = storess.put(p, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            urequest.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"修改成功"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            urequest.onsucces = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"修改失败"</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取数据</span></span><br><span class="line">            <span class="keyword">let</span> t = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readonly"</span>);</span><br><span class="line">            <span class="keyword">let</span> stores = t.objectStore(<span class="string">"firstOS"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">let</span> ob = stores.get(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            ob.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"获取数据成功"</span>);</span><br><span class="line">                <span class="built_in">console</span>.log(ob);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            transaction.oncomplete = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'事务结束'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 删除记录</span></span><br><span class="line">            <span class="keyword">let</span> tt = db.transaction([<span class="string">"firstOS"</span>], <span class="string">"readwrite"</span>);</span><br><span class="line">            <span class="keyword">let</span> mrequest = tt.objectStore(<span class="string">"firstOS"</span>).delete(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            mrequest.onsuccess = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'删除成功'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            mrequest.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'删除失败'</span>);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        openRequest.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"数据库打开错误"</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'您的浏览器不支持'</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://javascript.ruanyifeng.com/bom/indexeddb.html" target="_blank" rel="noopener">http://javascript.ruanyifeng.com/bom/indexeddb.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/16/Emoj简介/" itemprop="url">
+                  Emoj简介
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-16T10:36:11+08:00" content="2017-07-16">
+              2017-07-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我对你仍有爱意，我对自己无能为力。<br></blockquote><br>早期的 Emoji 是将一些特定的符号组合替换成图片。这种方法很难标准化，能够表达的范围也有限。<br>2010年，Unicode 开始为 Emoji 分配码点。也就是说，现在的 Emoji 符号就是一个文字，它会被渲染为图形。</p>
+<p>Unicode 只是规定了 Emoji 的码点和含义，并没有规定它的样式。举例来说，码点U+1F600表示一张微笑的脸，但是这张脸长什么样，则由各个系统自己实现。<br>因此，当我们输入这个 Emoji 的时候，并不能保证所有用户看到的都是同一张脸。如果用户的系统没有实现这个 Emoji 符号，用户就会看到一个没有内容的方框，因为系统无法渲染这个码点。</p>
+<p>Emoji 虽然是文字，但是无法书写，必须使用其他方法插入文档。</p>
+<p><img src="/images/emoji.png" alt></p>
+<blockquote>
+<p><a href="http://www.ruanyifeng.com/blog/2017/04/emoji.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2017/04/emoji.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/16/mysql中的字符和字节/" itemprop="url">
                   mysql中的字符和字节
                 </a>
@@ -477,315 +770,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/11/jquery的过滤选择器/" itemprop="url">
-                  jquery的过滤选择器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-11T21:06:55+08:00" content="2017-07-11">
-              2017-07-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>永远年轻，永远热泪盈眶<br></blockquote></p>
-<h3 id="基本过滤选择器-重点掌握下列八个"><a href="#基本过滤选择器-重点掌握下列八个" class="headerlink" title="基本过滤选择器(重点掌握下列八个)"></a>基本过滤选择器(重点掌握下列八个)</h3><p>:first 选取第一个元素 $(“div:first”).css(“color”,”red”);<br>:last 选取最后一个元素 $(“div:last”).css(“color”,”red”);<br>:not 除去指定的选择器外的元素 $(“div:not”).css(“color”,”red”);<br>:even 选取索引号是偶数的元素 $(“div:even”).css(“color”,”red”);<br>:odd 选取索引号是奇数的元素 $(‘div:odd’).css(“color”,”red”);<br>:eq(index) 选取第index个元素 $(‘div:eq(5)’).css(“color”,”red”);<br>:gt(index) 选取索引号大于index的元素 $(‘div:gt(8)’).css(“color”,”red”);<br>:lt(index) 选取索引号小于index的元素$(‘div:lt(3)’).css(“color”,”red”);</p>
-<h3 id="属性过滤选择器（六个必须记住）"><a href="#属性过滤选择器（六个必须记住）" class="headerlink" title="属性过滤选择器（六个必须记住）"></a>属性过滤选择器（六个必须记住）</h3><p>:[attribute] 选取拥有此属性的元素 $(‘div:[attribute]’).css(‘background-color’,’red’);<br>:[attribute=value] 选取属性值为value的元素 $(‘div:[attribute=text]’)<br>:[attribute!=value] 选取属性值不为value的元素 $(‘div:[attribute!=text]’)<br>:[attribute^=value] 选取属性值以value开始的元素 $(‘div:[attribute^=text]’)<br>:[attribute$=value] 选取属性值以value结尾的元素 $(‘div:[attribute$=text]’)<br>:[attribute<em>=value] 选取属性值包含value的元素 $(‘div:[attribute</em>=text]’)</p>
-<h3 id="内容过滤选择器（四个必须记住）"><a href="#内容过滤选择器（四个必须记住）" class="headerlink" title="内容过滤选择器（四个必须记住）"></a>内容过滤选择器（四个必须记住）</h3><p>:contains 选取包含文本的text的元素 $(‘div:contains(.mini)’).css(“color”,”red”);<br>:has(id选择器名称、Class选择器名称) 选取含有选择器所匹配的元素 $(‘div:has(.mini)’).css(“color”,”red”);<br>:empty 选取不包含子元素的元素 $(‘div:empty’).css(“color”,”red”);<br>:parent 选取包含子元素的元素 $(‘div:parent’).css(“color”,”red”);</p>
-<h3 id="子元素过滤选择器（记住八个）"><a href="#子元素过滤选择器（记住八个）" class="headerlink" title="子元素过滤选择器（记住八个）"></a>子元素过滤选择器（记住八个）</h3><p>:nth-child(index) 选取每个父节点下第index个元素、偶数元素或奇数元素。<br><code>$(&#39;div.one :nth-child(8)&#39;).css(&#39;background-color&#39;,&#39;#900&#39;);</code><br>:first-child 选取每个父元素下的第一个子元素 $(‘div.one :first-child(8)’).css(‘color’,’red’);<br>:last-child 选取每个父元素下的最后一个子元素 $(‘div.one :last-child(8)’).css(‘color’,’red’);<br>:only-child 选取只有一个子元素的元素 $(‘div.one :only-child(8)’).css(‘color’,’red’);<br>:enabled 选取所有可用的元素 $(‘#form1 input:enabled’).val(“vaotoo.com”);<br>:disabled 选取所有不可用的元素 $(‘#form1 input:disabled’).val(“vaotoo.com”);<br>:checked 选取所有被选中的元素(一般为（HTML中）RadioButton、CheckBox标记);<br><code>$(&#39;input:checked&#39;).text(&quot;vaotoo.com&quot;);</code><br>:selected 选取被选中的选项元素 select下拉列表标记中的option=select<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'select:selected'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  str += $(<span class="keyword">this</span>).text()+<span class="string">","</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="可见性过滤选择器-两个"><a href="#可见性过滤选择器-两个" class="headerlink" title="可见性过滤选择器(两个)"></a>可见性过滤选择器(两个)</h3><p>:hidden<br>:visibal</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/18/怎样理解阻塞非阻塞与同步异步的区别/" itemprop="url">
-                  怎样理解阻塞非阻塞与同步异步的区别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-18T10:47:12+08:00" content="2017-06-18">
-              2017-06-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>千万不要让你本来努力就能获得的东西因为懈怠而失去了机会。<br></blockquote><br>“阻塞”与”非阻塞”与”同步”与“异步”不能简单的从字面理解，提供一个从分布式系统角度的回答。</p>
-<h3 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h3><p>同步与异步同步和异步关注的是消息通信机制 (synchronous communication/ asynchronous communication)所谓同步，就是在发出一个<em>调用</em>时，在没有得到结果之前，该<em>调用</em>就不返回。但是一旦调用返回，就得到返回值了。换句话说，就是由<em>调用者</em>主动等待这个<em>调用</em>的结果。而异步则是相反，<em>调用</em>在发出之后，这个调用就直接返回了，所以没有返回结果。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在<em>调用</em>发出后，<em>被调用者</em>通过状态、通知来通知调用者，或通过回调函数处理这个调用。典型的异步编程模型比如Node.js举个通俗的例子：你打电话问书店老板有没有《分布式系统》这本书，如果是同步通信机制，书店老板会说，你稍等，”我查一下”，然后开始查啊查，等查好了（可能是5秒，也可能是一天）告诉你结果（返回结果）。而异步通信机制，书店老板直接告诉你我查一下啊，查好了打电话给你，然后直接挂电话了（不返回结果）。然后查好了，他会主动打电话给你。在这里老板通过“回电”这种方式来回调。</p>
-<h3 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h3><p>阻塞与非阻塞阻塞和非阻塞关注的是程序在等待调用结果（消息，返回值）时的状态.阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。还是上面的例子，你打电话问书店老板有没有《分布式系统》这本书，你如果是阻塞式调用，你会一直把自己“挂起”，直到得到这本书有没有的结果，如果是非阻塞式调用，你不管老板有没有告诉你，你自己先一边去玩了， 当然你也要偶尔过几分钟check一下老板有没有返回结果。在这里阻塞与非阻塞与是否同步异步无关。跟老板通过什么方式回答你结果无关。</p>
-<blockquote>
-<p><a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank" rel="noopener">https://www.zhihu.com/question/19732473/answer/20851256</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/16/PHP扩展和包的管理PEAR-PECL-Composer/" itemprop="url">
-                  PHP扩展和包的管理PEAR-PECL-Composer
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-16T10:24:18+08:00" content="2017-06-16">
-              2017-06-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>其实要说梦想的话, 我的梦想就是多赚点儿钱…<br></blockquote><br>扩展（Extension）一般偏底层，包（Application，Package）一般偏应用。不建议做过分的区分，在使用中能够理解和区分即可。<br>对于他们的管理目前有PEAR、PECL、Composer。</p>
-<h3 id="PEAR"><a href="#PEAR" class="headerlink" title="PEAR"></a>PEAR</h3><p>PEAR是PHP扩展与应用库(the PHP Extension and Application Repository)的缩写。<a href="http://pear.php.net/" target="_blank" rel="noopener">http://pear.php.net/</a><br>Bakken在1999年创立了PEAR项目，目标是试图定义一种标准，帮助开发者编写可移植、可重用的代码，避免重复发明“车轮”。代码均是PHP编写的。<br>涵盖了页面呈现、数据库访问、文件操作、数据结构、缓存操作、网络协议、WebService 等许多方面，用户可以通过下载这些类库，并适当的作一些定制以实现自己需要的功能。<br>但是随着Git、github等发展，其逐渐被Composer包管理替代。</p>
-<h3 id="PECL"><a href="#PECL" class="headerlink" title="PECL"></a>PECL</h3><p>“PHP Extension Community Library”的缩写，即PHP 扩展库。<a href="https://pecl.php.net/" target="_blank" rel="noopener">https://pecl.php.net/</a><br>PECL是使用C语言开发的，通常用于补充一些用PHP难以完成的底层功能，往往需要重新编译或者在配置文件中设置后才能在用户自己的代码中使用。<br>2种使用方式：<br>命令模式，和pear的命令一致，通过man pecl显示此命令的用法<br>编译模式，即phpize</p>
-<h3 id="Composer"><a href="#Composer" class="headerlink" title="Composer"></a>Composer</h3><p>PHP包管理工具，在“帮助开发者编写可移植、可重用的代码，避免重复发明“车轮””上和PEAR有相同的目标和思想，但是composer的包一般放在github、bitbucket等上，通过packagist 可以浏览上传等</p>
-<h3 id="以Yaml安装使用为例"><a href="#以Yaml安装使用为例" class="headerlink" title="以Yaml安装使用为例"></a>以Yaml安装使用为例</h3><h4 id="pecl安装"><a href="#pecl安装" class="headerlink" title="pecl安装"></a>pecl安装</h4><p><a href="http://php.net/manual/zh/install.pecl.pear.php" target="_blank" rel="noopener">http://php.net/manual/zh/install.pecl.pear.php</a></p>
-<p>pecl install yaml<br>这将下载 yaml 的源代码，编译之，并将 yaml.so 安装到扩展库目录 extension_dir 中。然后 yaml.so就可以通过 php.ini 加载了。</p>
-<h4 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h4><p><a href="http://php.net/manual/zh/install.pecl.phpize.php" target="_blank" rel="noopener">http://php.net/manual/zh/install.pecl.phpize.php</a><br>有时候不能用 pecl 安装命令。这可能是因为在防火墙后面，或者是因为想要安装的扩展库还没有 PECL 兼容的包，例如 SVN 中尚未发布的扩展库。<br>如果要编译这种扩展库，可以用更底层的编译工具来手工进行编译。phpize 命令是用来准备 PHP 扩展库的编译环境的。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ wget https:<span class="comment">//pecl.php.net/get/yaml-1.3.0.tgz</span></span><br><span class="line">$ tar -xzvf yaml<span class="number">-1.3</span><span class="number">.0</span>.tgz</span><br><span class="line">$ cd yaml<span class="number">-1.3</span><span class="number">.0</span></span><br><span class="line">$ phpize</span><br><span class="line">$ ./configure</span><br><span class="line">$ make</span><br><span class="line">$ make install</span><br></pre></td></tr></table></figure></p>
-<p>成功的安装将创建 yaml.so 并放置于 PHP 的扩展库目录 extension_dir 中。需要调整 php.ini 加入 extension=yaml.so 这一行之后才能使用此扩展库。<br>使用 phpize –help 命令可以显示此命令用法。</p>
-<h4 id="composer"><a href="#composer" class="headerlink" title="composer"></a>composer</h4><p>可以参看文档 <a href="http://www.jianshu.com/p/f0b9a319711f" target="_blank" rel="noopener">http://www.jianshu.com/p/f0b9a319711f</a></p>
-<p>composer require mustangostang/spyc<br>目前主流的方式，对于偏底层的扩展通过编译方式安装，对于偏应用的通过composer方式。</p>
-<blockquote>
-<p><a href="http://www.jianshu.com/p/d8b75dbc852a" target="_blank" rel="noopener">http://www.jianshu.com/p/d8b75dbc852a</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/49/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><span class="page-number current">50</span><a class="page-number" href="/page/51/">51</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/51/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/49/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><span class="page-number current">50</span><a class="page-number" href="/page/51/">51</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/51/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -824,7 +813,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,344 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/25/crontab计划任务指定执行用户/" itemprop="url">
+                  crontab计划任务指定执行用户
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-25T12:10:10+08:00" content="2018-07-25">
+              2018-07-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>就算终有一散，也别辜负相遇。好好相遇，好好告别。<br></blockquote>
+
+<p>linux下可以通过配置crontab来定时执行任务，执行体可以是一条系统命令或自己写的一个脚本，同时可以指派用户来执行。配置crontab有两种方法。</p>
+<h3 id="使用crontab命令，例如添加一个新的或编辑已有的，使用："><a href="#使用crontab命令，例如添加一个新的或编辑已有的，使用：" class="headerlink" title="使用crontab命令，例如添加一个新的或编辑已有的，使用："></a>使用crontab命令，例如添加一个新的或编辑已有的，使用：</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+<p>就可以进入配置文件。此时配置crontab的执行者是当前登入用户，如果当前用户是root，需要为其他用户配置，可以使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">crontab -e -u 用户名</span><br><span class="line"></span><br><span class="line">或</span><br><span class="line">su 用户名</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure></p>
+<p>这种方法有一个缺点，就是当前系统中配置的crontab不在一个配置文件中，让管理员不方便查询系统到底有多少个crontab。</p>
+<h3 id="直接在-etc-crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息"><a href="#直接在-etc-crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息" class="headerlink" title="直接在/etc/crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息"></a>直接在/etc/crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=/</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name command to be executed</span></span><br></pre></td></tr></table></figure>
+<p>要添加新的crontab，只需要在文件最后增加即可。注意这里面需要指定用户名；而方法1中则不需要，如果指定了，它会认为是命令的一部分，从而可能导致crontab执行失败。</p>
+<p>如果服务器都是有root来管理，建议添加crontab使用方法2，这样系统中的所有计划任务都在一起，一目了然。</p>
+<h3 id="注意问题"><a href="#注意问题" class="headerlink" title="注意问题"></a>注意问题</h3><p>我在配置Laravel的计划任务的时候有这样一条配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/crontab</span><br><span class="line"></span><br><span class="line"> * * * * www /bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>正常保存以后发现计划任务并没有顺利执行， 随想这去查看日志<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail <span class="number">-10</span> /<span class="keyword">var</span>/log/cron</span><br></pre></td></tr></table></figure></p>
+<p>发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">35</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24729</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">35</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24729</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">36</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24782</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">36</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24782</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">37</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24834</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">37</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24834</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">38</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24887</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">38</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24887</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24940</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24940</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">40</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24995</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>意思就是指定某一个执行计划任务的时候需要这个用户必须有家目录， 那么进行以下操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /home</span><br><span class="line">mkdir www</span><br><span class="line">chown -R www:www www</span><br></pre></td></tr></table></figure></p>
+<p>经过以上的一番操作， 正常运行</p>
+<h3 id="ubuntu没有计划任务日志解决办法"><a href="#ubuntu没有计划任务日志解决办法" class="headerlink" title="ubuntu没有计划任务日志解决办法"></a>ubuntu没有计划任务日志解决办法</h3><p>修改rsyslog<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rsyslog.d/<span class="number">50</span>-<span class="keyword">default</span>.conf</span><br></pre></td></tr></table></figure></p>
+<p>搜索cron 把如下行之前的注释”#”去掉<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#cron.*   /var/log/cron.log</span></span><br></pre></td></tr></table></figure></p>
+<p>重启rsyslog<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo  service rsyslog  restart</span><br></pre></td></tr></table></figure></p>
+<p> 现在看看定时任务的日志<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f /<span class="keyword">var</span>/log/cron.log</span><br></pre></td></tr></table></figure></p>
+<h3 id="Debian系统"><a href="#Debian系统" class="headerlink" title="Debian系统"></a>Debian系统</h3><p>重启<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://www.netingcn.com/crontab-designate.html" target="_blank" rel="noopener">http://www.netingcn.com/crontab-designate.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/25/为什么要在eloquent中使用appends/" itemprop="url">
+                  为什么要在eloquent中使用appends
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-25T08:57:46+08:00" content="2018-07-25">
+              2018-07-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>讲真话的最大好处就是：不必记得自己讲过什么。<br></blockquote>
+
+<p>Eloquent has a convenient feature called Accessors – you can define your own custom fields on top of existing in the database table. But then there’s an Eloquent property $appends – should we use it or not? And what’s the difference?</p>
+<h3 id="First-–-how-Accessors-work"><a href="#First-–-how-Accessors-work" class="headerlink" title="First – how Accessors work"></a>First – how Accessors work</h3><p>For those who don’t know or have forgotten: for example, if you have User model and fields first_name and last_name in the DB table, then you can create a function in app\User.php:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFullNameAttribute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;first_name . <span class="string">' '</span> . <span class="keyword">$this</span>-&gt;last_name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Then you have access to property full_name (in the function name it’s CamelCase, and the property name is with underscoresd, for example like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ho User::find(<span class="number">1</span>)-&gt;full_name;</span><br></pre></td></tr></table></figure></p>
+<p>But here’s the thing – if you just return User object, it won’t contain full_name:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd(User::find(<span class="number">1</span>)-&gt;toJSON());</span><br></pre></td></tr></table></figure></p>
+<p>The result would look something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"id"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"first_name"</span>:<span class="string">"Povilas"</span>,</span><br><span class="line">  <span class="string">"last_name"</span>:<span class="string">"Korop"</span>,</span><br><span class="line">  <span class="string">"email"</span>:<span class="string">"povilas@webcoderpro.com"</span>,</span><br><span class="line">  <span class="string">"created_at"</span>:<span class="string">"2015-06-19 08:16:58"</span>,</span><br><span class="line">  <span class="string">"updated_at"</span>:<span class="string">"2015-06-19 19:48:09"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Here’s-where-appends-comes-in"><a href="#Here’s-where-appends-comes-in" class="headerlink" title="Here’s where $appends comes in"></a>Here’s where $appends comes in</h3><p>Now this is the trick – in your User model you can add $appends attribute and list the fields that would automatically be appended:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">protected</span> $appends = [<span class="string">'full_name'</span>];</span><br></pre></td></tr></table></figure></p>
+<p>Now that attribute will be automatically added to the previous JSON:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"id"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"first_name"</span>:<span class="string">"Povilas"</span>,</span><br><span class="line">  <span class="string">"last_name"</span>:<span class="string">"Korop"</span>,</span><br><span class="line">  <span class="string">"email"</span>:<span class="string">"povilas@webcoderpro.com"</span>,</span><br><span class="line">  <span class="string">"created_at"</span>:<span class="string">"2015-06-19 08:16:58"</span>,</span><br><span class="line">  <span class="string">"updated_at"</span>:<span class="string">"2015-06-19 19:48:09"</span>,</span><br><span class="line">  <span class="string">"full_name"</span>:<span class="string">"Povilas Korop"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://laraveldaily.com/why-use-appends-with-accessors-in-eloquent/" target="_blank" rel="noopener">https://laraveldaily.com/why-use-appends-with-accessors-in-eloquent/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/25/教你如何快速构建api查询/" itemprop="url">
+                  教你如何快速构建API查询
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-25T08:35:47+08:00" content="2018-07-25">
+              2018-07-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>很多东西如果不是怕别人捡去，我们一定会扔掉。<br></blockquote>
+
+<p>Laravel Query Builder is a package by Alex Vanderbist and the folks at Spatie, to quickly build Eloquent queries from API requests. This package makes creating complex API queries with Laravel incredibly simple. While you may have already heard of this package (or used it), I wanted to make sure everyone is aware of this one!</p>
+<p>I highly recommend you take Query Builder for a spin and read through the README to learn what it’s capable of doing. It makes creating API filters and other query-related tasks so easy, you might feel like you’re cheating.</p>
+<p>A few basic examples of what you can do include filtering an API request, including related models, incorporating it with existing queries, sorting an API request.</p>
+<h3 id="Basic-usage"><a href="#Basic-usage" class="headerlink" title="Basic usage"></a>Basic usage</h3><ul>
+<li><p>Filtering an API request: /users?filter[name]=John:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Spatie</span>\<span class="title">QueryBuilder</span>\<span class="title">QueryBuilder</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">$users = QueryBuilder::for(User::class)</span><br><span class="line">    -&gt;allowedFilters(<span class="string">'name'</span>)</span><br><span class="line">    -&gt;get();</span><br><span class="line"><span class="comment">// all `User`s that contain the string "John" in their name</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Requesting relations from an API request: /users?include=posts:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$users = QueryBuilder::for(User::class)</span><br><span class="line">    -&gt;allowedIncludes(<span class="string">'posts'</span>)</span><br><span class="line">    -&gt;get();</span><br><span class="line"><span class="comment">// all `User`s with their `posts` loaded</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Works together nicely with existing queries:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$query = User::where(<span class="string">'active'</span>, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">$user = QueryBuilder::for($query)</span><br><span class="line">    -&gt;allowedIncludes(<span class="string">'posts'</span>, <span class="string">'permissions'</span>)</span><br><span class="line">    -&gt;where(<span class="string">'score'</span>, <span class="string">'&gt;'</span>, <span class="number">42</span>) <span class="comment">// chain on any of Laravel's query builder methods</span></span><br><span class="line">    -&gt;first();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Sorting an API request: /users?sort=name:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$users = QueryBuilder::for(User::class)-&gt;get();</span><br><span class="line"><span class="comment">// all `User`s sorted by name</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>You can install the package via composer:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> spatie/laravel-query-builder</span><br></pre></td></tr></table></figure></p>
+<p>You can optionally publish the config file with:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish --provider=<span class="string">"Spatie\QueryBuilder\QueryBuilderServiceProvider"</span> --tag=<span class="string">"config"</span></span><br></pre></td></tr></table></figure></p>
+<p>This is the contents of the published config file:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * By default the package will use the `include`, `filter`, `sort` and `fields` query parameters.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Here you can customize those names.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="string">'parameters'</span> =&gt; [</span><br><span class="line">        <span class="string">'include'</span> =&gt; <span class="string">'include'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'filter'</span> =&gt; <span class="string">'filter'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'sort'</span> =&gt; <span class="string">'sort'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'fields'</span> =&gt; <span class="string">'fields'</span>,</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://laravel-news.com/laravel-query-builder" target="_blank" rel="noopener">https://laravel-news.com/laravel-query-builder</a><br><a href="https://packagist.org/packages/spatie/laravel-query-builder" target="_blank" rel="noopener">https://packagist.org/packages/spatie/laravel-query-builder</a><br><a href="https://github.com/spatie/laravel-query-builder" target="_blank" rel="noopener">https://github.com/spatie/laravel-query-builder</a><br><a href="https://spatie.be/en/opensource/laravel" target="_blank" rel="noopener">https://spatie.be/en/opensource/laravel</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/23/nginx代理ssl转发https和wss请求/" itemprop="url">
                   Nginx代理ssl转发https和wss请求
                 </a>
@@ -461,350 +799,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/10/在unix-shell中生成一个随机文件名/" itemprop="url">
-                  在unix-shell中生成一个随机文件名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-10T14:02:57+08:00" content="2018-07-10">
-              2018-07-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你们一直抱怨这个地方，但是你们却没有勇气走出这里<br></blockquote>
-
-<h3 id="使用系统的-RANDOM-变量"><a href="#使用系统的-RANDOM-变量" class="headerlink" title="使用系统的 $RANDOM 变量"></a>使用系统的 $RANDOM 变量</h3><p><code>$RANDOM</code> 的范围是 [0, 32767]<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> $RANDOM</span><br></pre></td></tr></table></figure></p>
-<h3 id="自建函数"><a href="#自建函数" class="headerlink" title="自建函数"></a>自建函数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rand</span><span class="params">()</span></span>&#123;</span><br><span class="line">    min=$<span class="number">1</span></span><br><span class="line">    max=$(($<span class="number">2</span>-$min+<span class="number">1</span>))</span><br><span class="line">    num=$(($RANDOM+<span class="number">1000000000</span>)) <span class="comment">#增加一个10位的数再求余</span></span><br><span class="line">    <span class="keyword">echo</span> $(($num%$max+$min))</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">rnd=$(rand <span class="number">400000</span> <span class="number">500000</span>)</span><br><span class="line"><span class="keyword">echo</span> $rnd</span><br></pre></td></tr></table></figure>
-<h3 id="使用date-s-N"><a href="#使用date-s-N" class="headerlink" title="使用date +%s%N"></a>使用date +%s%N</h3><p>生成1-50的随机数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rand</span><span class="params">()</span></span>&#123;</span><br><span class="line">    min=$<span class="number">1</span></span><br><span class="line">    max=$(($<span class="number">2</span>-$min+<span class="number">1</span>))</span><br><span class="line">    num=$(date +%s%N)</span><br><span class="line">    <span class="keyword">echo</span> $(($num%$max+$min))</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">rnd=$(rand <span class="number">1</span> <span class="number">50</span>)</span><br><span class="line"><span class="keyword">echo</span> $rnd</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用-dev-random-和-dev-urandom"><a href="#使用-dev-random-和-dev-urandom" class="headerlink" title="使用/dev/random 和 /dev/urandom"></a>使用/dev/random 和 /dev/urandom</h3><p>假设你在一个linux，以下应该工作：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /dev/urandom | tr -cd <span class="string">'a-f0-9'</span> | head -c <span class="number">32</span></span><br></pre></td></tr></table></figure></p>
-<p>这只是伪随机的，如果你的系统运行低熵，但(在linux)保证终止。如果你需要真正随机的数据，cat / dev / random代替/ dev / urandom。这个更改将使你的代码块，直到足够的熵可用来产生真正的随机输出，所以它可能会减慢你的代码。对于大多数用途，/ dev / urandom的输出是充分随机的。</p>
-<p>如果在OS X或其他BSD上，您需要将其修改为以下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /dev/urandom | env LC_CTYPE=C tr -cd <span class="string">'a-f0-9'</span> | head -c <span class="number">32</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="使用linux-uuid"><a href="#使用linux-uuid" class="headerlink" title="使用linux uuid"></a>使用linux uuid</h3><p>uuid 全称是通用唯一识别码，格式包含32个16进制数字，以’-‘连接号分为5段。形式为8-4-4-4-12 的32个字符。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/kernel/random/uuid</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://codeday.me/bug/20170816/53801.html" target="_blank" rel="noopener">https://codeday.me/bug/20170816/53801.html</a><br><a href="https://blog.csdn.net/fdipzone/article/details/24329523" target="_blank" rel="noopener">https://blog.csdn.net/fdipzone/article/details/24329523</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/10/shell输出颜色和闪烁控制/" itemprop="url">
-                  shell输出颜色和闪烁控制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-10T09:20:17+08:00" content="2018-07-10">
-              2018-07-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>平平淡淡是懒惰，是害怕，是贪图安逸，是一条不敢见世面的土狗<br></blockquote>
-
-<p>在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，在使用的时候直接调用函数会方便很多</p>
-<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> -e <span class="string">"\033[字背景颜色;字体颜色m字符串\033[控制码"</span></span><br></pre></td></tr></table></figure>
-<h3 id="定制颜色函数"><a href="#定制颜色函数" class="headerlink" title="定制颜色函数"></a>定制颜色函数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span># blue to echo </span><br><span class="line">function blue()&#123;</span><br><span class="line">    echo -e "\033[34m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># green to echo </span><br><span class="line">function green()&#123;</span><br><span class="line">    echo -e "\033[32m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># warning</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以把这些函数写入到一个公共的SHELL脚本中，每次在编写其他脚本的时候用如下方式调用，即可</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /root/bin/common</span><br></pre></td></tr></table></figure>
-<p>或者可以把上述代码直接粘贴到当前编写的脚本中去。<br>当然可以推荐第一种方式。不用每次都复制粘贴。 直接 source 调用 即可</p>
-<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># blue to echo </span><br><span class="line">function blue()&#123;</span><br><span class="line">    echo -e "\033[35m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># green to echo </span><br><span class="line">function green()&#123;</span><br><span class="line">    echo -e "\033[32m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error</span><br><span class="line">function red()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># warning</span><br><span class="line">function yellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line">Dev-web-solr [/opt/hexo2] 2016-11-28 17:52:03</span><br><span class="line">root@pts/4 $ cat /root/bin/test.sh </span><br><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">source /root/bin/common</span><br><span class="line"></span><br><span class="line">green "hello world with green color"</span><br><span class="line">blue "hello world with blue color"</span><br><span class="line"></span><br><span class="line">bred "error info with blink"</span><br><span class="line">byellow "warning info with blink"</span><br></pre></td></tr></table></figure>
-<h3 id="字体背景颜色"><a href="#字体背景颜色" class="headerlink" title="字体背景颜色"></a>字体背景颜色</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">40:黑 </span><br><span class="line">41:深红 </span><br><span class="line">42:绿 </span><br><span class="line">43:黄色 </span><br><span class="line">44:蓝色 </span><br><span class="line">45:紫色 </span><br><span class="line">46:深绿 </span><br><span class="line">47:白色</span><br></pre></td></tr></table></figure>
-<h3 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">30:黑 </span><br><span class="line">31:红 </span><br><span class="line">32:绿 </span><br><span class="line">33:黄 </span><br><span class="line">34:蓝色 </span><br><span class="line">35:紫色 </span><br><span class="line">36:深绿 </span><br><span class="line">37:白色</span><br></pre></td></tr></table></figure>
-<h3 id="控制码"><a href="#控制码" class="headerlink" title="控制码"></a>控制码</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">\33[0m 关闭所有属性 </span><br><span class="line">\33[01m 设置高亮度 </span><br><span class="line">\33[04m 下划线 </span><br><span class="line">\33[05m 闪烁 </span><br><span class="line">\33[07m 反显 </span><br><span class="line">\33[08m 消隐 </span><br><span class="line">\33[30m -- \33[37m 设置前景色 </span><br><span class="line">\33[40m -- \33[47m 设置背景色 </span><br><span class="line">\33[nA 光标上移n行 </span><br><span class="line">\33[nB 光标下移n行 </span><br><span class="line">\33[nC 光标右移n行 </span><br><span class="line">\33[nD 光标左移n行 </span><br><span class="line">\33[y;xH设置光标位置 </span><br><span class="line">\33[2J 清屏 </span><br><span class="line">\33[K 清除从光标到行尾的内容 </span><br><span class="line">\33[s 保存光标位置 </span><br><span class="line">\33[u 恢复光标位置 </span><br><span class="line">\33[?25l 隐藏光标 </span><br><span class="line">\33[?25h 显示光标</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://www.jianshu.com/p/ba1b8aded634" target="_blank" rel="noopener">https://www.jianshu.com/p/ba1b8aded634</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/09/持续集成是什么/" itemprop="url">
-                  持续集成是什么
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-09T11:16:41+08:00" content="2018-07-09">
-              2018-07-09
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>生活本来就不容易， 如果有一天你觉得容易了， 那一定是有人分担了你的不容易<br></blockquote>
-
-<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>持续集成指的是，频繁地（一天多次）将代码集成到主干。</p>
-<p>它的好处主要有两个:</p>
-<ul>
-<li>快速发现错误。每完成一点更新，就集成到主干，可以快速发现错误，定位错误也比较容易。</li>
-<li>防止分支大幅偏离主干。如果不是经常集成，主干又在不断更新，会导致以后集成的难度变大，甚至难以集成。</li>
-</ul>
-<p>持续集成的目的，就是让产品可以快速迭代，同时还能保持高质量。它的核心措施是，代码集成到主干之前，必须通过自动化测试。只要有一个测试用例失败，就不能集成。<br>Martin Fowler说过，”持续集成并不能消除Bug，而是让它们非常容易发现和改正。”<br>与持续集成相关的，还有两个概念，分别是持续交付和持续部署。</p>
-<h3 id="持续交付"><a href="#持续交付" class="headerlink" title="持续交付"></a>持续交付</h3><p>持续交付（Continuous delivery）指的是，频繁地将软件的新版本，交付给质量团队或者用户，以供评审。如果评审通过，代码就进入生产阶段。<br>持续交付可以看作持续集成的下一步。它强调的是，不管怎么更新，软件是随时随地可以交付的。</p>
-<h3 id="持续部署"><a href="#持续部署" class="headerlink" title="持续部署"></a>持续部署</h3><p>持续部署（continuous deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境。<br>持续部署的目标是，代码在任何时刻都是可部署的，可以进入生产阶段。<br>持续部署的前提是能自动化完成测试、构建、部署等步骤。</p>
-<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>根据持续集成的设计，代码从提交到生产，整个过程有以下几步</p>
-<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>流程的第一步，是开发者向代码仓库提交代码。所有后面的步骤都始于本地代码的一次提交（commit）。</p>
-<h4 id="测试（第一轮）"><a href="#测试（第一轮）" class="headerlink" title="测试（第一轮）"></a>测试（第一轮）</h4><p>代码仓库对commit操作配置了钩子（hook），只要提交代码或者合并进主干，就会跑自动化测试。<br>测试有好几种</p>
-<ul>
-<li>单元测试：针对函数或模块的测试</li>
-<li>集成测试：针对整体产品的某个功能的测试，又称功能测试</li>
-<li>端对端测试：从用户界面直达数据库的全链路测试</li>
-</ul>
-<p>第一轮至少要跑单元测试。</p>
-<h4 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h4><p>通过第一轮测试，代码就可以合并进主干，就算可以交付了。<br>交付后，就先进行构建（build），再进入第二轮测试。所谓构建，指的是将源码转换为可以运行的实际代码，比如安装依赖，配置各种资源（样式表、JS脚本、图片）等等。<br>常用的构建工具如下</p>
-<ul>
-<li>Jenkins</li>
-<li>Travis</li>
-<li>Codeship</li>
-<li>Strider</li>
-</ul>
-<h4 id="测试（第二轮）"><a href="#测试（第二轮）" class="headerlink" title="测试（第二轮）"></a>测试（第二轮）</h4><p>建完成，就要进行第二轮测试。如果第一轮已经涵盖了所有测试内容，第二轮可以省略，当然，这时构建步骤也要移到第一轮测试前面。<br>第二轮是全面测试，单元测试和集成测试都会跑，有条件的话，也要做端对端测试。所有测试以自动化为主，少数无法自动化的测试用例，就要人工跑。<br>需要强调的是，新版本的每一个更新点都必须测试到。如果测试的覆盖率不高，进入后面的部署阶段后，很可能会出现严重的问题。</p>
-<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>通过了第二轮测试，当前代码就是一个可以直接部署的版本（artifact）。将这个版本的所有文件打包（ tar filename.tar * ）存档，发到生产服务器。<br>生产服务器将打包文件，解包成本地的一个目录，再将运行路径的符号链接（symlink）指向这个目录，然后重新启动应用。这方面的部署工具有Ansible，Chef，Puppet等。</p>
-<h4 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h4><p>一旦当前版本发生问题，就要回滚到上一个版本的构建结果。最简单的做法就是修改一下符号链接，指向上一个版本的目录。</p>
-<blockquote>
-<p><a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -843,7 +842,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

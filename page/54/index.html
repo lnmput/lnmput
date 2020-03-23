@@ -265,6 +265,301 @@
             
               
                 
+                <a class="post-title-link" href="/2017/05/04/mysql中FIND-IN-SET的使用方法/" itemprop="url">
+                  mysql中FIND_IN_SET的使用方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-04T16:41:47+08:00" content="2017-05-04">
+              2017-05-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我想用余生为你暖一盏茶，晚风微扬时勿忘归家。<br></blockquote>
+
+<h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>在mysql中，有时我们在做数据库查询时，需要得到某字段中包含某个值的记录，但是它也不是用like能解决的，使用like可能查到我们不想要的记录，它比like更精准，这时候mysql的<code>FIND_IN_SET</code>函数就派上用场了.</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>str 要查询的字符串</p>
+<p>area 字段名 参数以”,”分隔 如 (1,2,6,8)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> <span class="keyword">test</span> <span class="keyword">where</span> FIND_IN_SET(<span class="string">'1'</span>,area)</span><br></pre></td></tr></table></figure>
+<h3 id="FIND-IN-SET和like的区别"><a href="#FIND-IN-SET和like的区别" class="headerlink" title="FIND_IN_SET和like的区别"></a>FIND_IN_SET和like的区别</h3><p>like是广泛的模糊匹配，字符串中没有分隔符，Find_IN_SET 是精确匹配，字段值以英文”,”分隔，Find_IN_SET查询的结果要小于like查询的结果。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/mysql去除重复数据/" itemprop="url">
+                  mysql去除重复数据
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-27T18:55:44+08:00" content="2017-04-27">
+              2017-04-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>悟已往之不谏，知来者之可追。实迷途其未远，觉今是而昨非。<br></blockquote></p>
+<h3 id="保留ID最小的"><a href="#保留ID最小的" class="headerlink" title="保留ID最小的"></a>保留ID最小的</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">NAMES</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> <span class="keyword">NOT</span> <span class="keyword">IN</span>( <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> <span class="keyword">MIN</span>(n.id)<span class="keyword">FROM</span> <span class="keyword">NAMES</span> n GROUPBY n.name) x)</span><br></pre></td></tr></table></figure>
+<h3 id="保留ID最大的"><a href="#保留ID最大的" class="headerlink" title="保留ID最大的"></a>保留ID最大的</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">NAMES</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> <span class="keyword">NOT</span> <span class="keyword">IN</span>( <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(n.id)<span class="keyword">FROM</span> <span class="keyword">NAMES</span> n GROUPBY n.name) x)</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/scrapy爬去西刺ip列表/" itemprop="url">
+                  scrapy爬去西刺ip列表
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-27T18:48:20+08:00" content="2017-04-27">
+              2017-04-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>零落成泥碾作尘，只有香如故。<br></blockquote></p>
+<h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><p>执行命令:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy startproject xici</span><br></pre></td></tr></table></figure></p>
+<h3 id="新建爬虫"><a href="#新建爬虫" class="headerlink" title="新建爬虫"></a>新建爬虫</h3><p>进入到xici目录执行命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy genspider aixici www.xicidaili.com</span><br></pre></td></tr></table></figure></p>
+<h3 id="编写items"><a href="#编写items" class="headerlink" title="编写items"></a>编写items</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">XiciItem</span><span class="params">(scrapy.Item)</span>:</span></span><br><span class="line"><span class="comment"># define the fields for your item here like:</span></span><br><span class="line"><span class="comment"># name = scrapy.Field()</span></span><br><span class="line">ip         = scrapy.Field()</span><br><span class="line">port       = scrapy.Field()</span><br><span class="line">possion    = scrapy.Field()</span><br><span class="line">type       = scrapy.Field()</span><br><span class="line">speed      = scrapy.Field()</span><br><span class="line">last_time  = scrapy.Field()</span><br></pre></td></tr></table></figure>
+<h3 id="编写爬虫"><a href="#编写爬虫" class="headerlink" title="编写爬虫"></a>编写爬虫</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="keyword">from</span> xici.items <span class="keyword">import</span>  XiciItem</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AixiciSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">name = <span class="string">"aixici"</span></span><br><span class="line">allowed_domains = [<span class="string">"www.xicidaili.com"</span>]</span><br><span class="line">start_urls = [<span class="string">'http://www.xicidaili.com/'</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></span><br><span class="line">reqs = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">10</span>):</span><br><span class="line">req = scrapy.Request(<span class="string">'http://www.xicidaili.com/nn/%s'</span>%i)</span><br><span class="line">reqs.append(req)</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> reqs</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">ip_list = response.xpath(<span class="string">'//*[@id="ip_list"]'</span>)</span><br><span class="line">trs = ip_list[<span class="number">0</span>].xpath(<span class="string">'tr'</span>)</span><br><span class="line">items = []</span><br><span class="line"><span class="keyword">for</span> ip <span class="keyword">in</span> trs[<span class="number">1</span>:]:</span><br><span class="line">pre_item = XiciItem()</span><br><span class="line">pre_item[<span class="string">'ip'</span>] = ip.xpath(<span class="string">'td[2]/text()'</span>)[<span class="number">0</span>].extract()</span><br><span class="line">pre_item[<span class="string">'port'</span>] = ip.xpath(<span class="string">'td[3]/text()'</span>)[<span class="number">0</span>].extract()</span><br><span class="line">pre_item[<span class="string">'possion'</span>] = ip.xpath(<span class="string">'td[4]'</span>)[<span class="number">0</span>].extract().strip()</span><br><span class="line">pre_item[<span class="string">'type'</span>] = ip.xpath(<span class="string">'td[6]/text()'</span>)[<span class="number">0</span>].extract()</span><br><span class="line">pre_item[<span class="string">'speed'</span>] = ip.xpath(<span class="string">'td[7]/div[@class="bar"]/@title'</span>).re(<span class="string">'\d&#123;0,2&#125;\.\d&#123;0,&#125;'</span>)[<span class="number">0</span>]</span><br><span class="line">pre_item[<span class="string">'last_time'</span>] = ip.xpath(<span class="string">'td[10]/text()'</span>)[<span class="number">0</span>].extract()</span><br><span class="line">items.append(pre_item)</span><br><span class="line"><span class="keyword">return</span> items</span><br></pre></td></tr></table></figure>
+<h3 id="运行爬虫"><a href="#运行爬虫" class="headerlink" title="运行爬虫"></a>运行爬虫</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl aixici -o item.json</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/13/php中如何使用引用/" itemprop="url">
                   php中如何使用引用
                 </a>
@@ -450,349 +745,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/10/mysql的sql-mode合理设置/" itemprop="url">
-                  mysql的sql_mode合理设置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-10T10:03:42+08:00" content="2017-04-10">
-              2017-04-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>以大部分人努力程度之低，根本轮不到去拼天赋<br></blockquote><br>MySQL的sql_mode合理设置<br>sql_mode是个很容易被忽视的变量，默认值是空值，在这种设置下是可以允许一些非法操作的，比如允许一些非法数据的插入。在生产环境必须将这个值设置为严格模式，所以开发、测试环境的数据库也必须要设置，这样在开发测试阶段就可以发现问题 </p>
-<p>sql_mode常用值如下：<br>ONLY_FULL_GROUP_BY：<br>对于GROUP BY聚合操作，如果在SELECT中的列，没有在GROUP BY中出现，那么这个SQL是不合法的，因为列不在GROUP BY从句中</p>
-<p>NO_AUTO_VALUE_ON_ZERO：<br>该值影响自增长列的插入。默认设置下，插入0或NULL代表生成下一个自增长值。如果用户 希望插入的值为0，而该列又是自增长的，那么这个选项就有用了。</p>
-<p>STRICT_TRANS_TABLES：<br>在该模式下，如果一个值不能插入到一个事务表中，则中断当前的操作，对非事务表不做限制<br>NO_ZERO_IN_DATE：<br>在严格模式下，不允许日期和月份为零</p>
-<p>NO_ZERO_DATE：<br>设置该值，mysql数据库不允许插入零日期，插入零日期会抛出错误而不是警告。</p>
-<p>ERROR_FOR_DIVISION_BY_ZERO：<br>在INSERT或UPDATE过程中，如果数据被零除，则产生错误而非警告。如 果未给出该模式，那么数据被零除时MySQL返回NULL</p>
-<p>NO_AUTO_CREATE_USER：<br>禁止GRANT创建密码为空的用户</p>
-<p>NO_ENGINE_SUBSTITUTION：<br>如果需要的存储引擎被禁用或未编译，那么抛出错误。不设置此值时，用默认的存储引擎替代，并抛出一个异常</p>
-<p>PIPES_AS_CONCAT：<br>将”||”视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样的，也和字符串的拼接函数Concat相类似</p>
-<p>ANSI_QUOTES：<br>启用ANSI_QUOTES后，不能用双引号来引用字符串，因为它被解释为识别符</p>
-<p>ORACLE的sql_mode设置等同：PIPES_AS_CONCAT, ANSI_QUOTES, IGNORE_SPACE, NO_KEY_OPTIONS, NO_TABLE_OPTIONS, NO_FIELD_OPTIONS, NO_AUTO_CREATE_USER.</p>
-<blockquote>
-<p><a href="http://blog.csdn.net/wyzxg/article/details/8787878" target="_blank" rel="noopener">http://blog.csdn.net/wyzxg/article/details/8787878</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/10/mysql的严格模式/" itemprop="url">
-                  mysql的严格模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-10T09:15:08+08:00" content="2017-04-10">
-              2017-04-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>虎豹只会独处，牛羊才会成群。<br></blockquote><br>在使用MySQL 5.7版本时，因为SQL_MODE的改变而导致的问题，究其原因都是因为MySQL 5.7控制的更加严格了，所以在MySQL 5.6或MySQL 5.5有些SQL语句就无法在MySQL 5.7执行。</p>
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>查询当前SQL_MODE<br>v 5.5.3<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> @@sql_mode;</span><br><span class="line">// NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span><br></pre></td></tr></table></figure></p>
-<p>v 5.7.21<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> @@sql_mode;</span><br><span class="line">// ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span><br></pre></td></tr></table></figure></p>
-<h3 id="参数意思"><a href="#参数意思" class="headerlink" title="参数意思"></a>参数意思</h3><ul>
-<li><p>ONLY_FULL_GROUP_BY<br>在严格模式下，不要让GROUP BY部分中的查询指向未选择的列，否则报错。</p>
-</li>
-<li><p>NO_ZERO_DATE<br>在严格模式，不要将’0000-00-00’做为合法日期。你仍然可以用IGNORE选项插入零日期。在非严格模式，可以接受该日期，但会生成警告。</p>
-</li>
-<li><p>NO_ZERO_IN_DATE<br>在严格模式，不接受月或日部分为0的日期，对年不限制。如果使用IGNORE选项，我们为类似的日期插入’0000-00-00’。在非严格模式，可以接受该日期，但会生成警告。</p>
-</li>
-<li><p>ERROR_FOR_DIVISION_BY_ZERO<br>在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误(否则为警告)。如果未给出该模式，被零除时MySQL返回NULL。如果用到INSERT IGNORE或UPDATE IGNORE中，MySQL生成被零除警告，但操作结果为NULL。</p>
-</li>
-<li><p>NO_AUTO_CREATE_USER<br>在严格模式下，防止GRANT自动创建新用户，除非还指定了密码。</p>
-</li>
-<li><p>NO_ENGINE_SUBSTITUTION<br>如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎。</p>
-</li>
-<li><p>STRICT_TRANS_TABLES<br>为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式，非法数据值被拒绝，下面有详细说明。<br>严格模式控制MySQL如何处理非法或丢失的输入值。有几种原因可以使一个值为非法。例如，数据类型错误，不适合列，或超出范围。当新插入的行不包含某列的没有显示定义DEFAULT子句的值，则该值被丢失。<br>对于事务表，当启用STRICT_ALL_TABLES或STRICT_TRANS_TABLES模式时，如果语句中有非法或丢失值，则会出现错误。语句被放弃并滚动。<br>对于非事务表，如果插入或更新的第1行出现坏值，两种模式的行为相同。语句被放弃，表保持不变。如果语句插入或修改多行，并且坏值出现在第2或后面的行，结果取决于启用了哪个严格选项：<br>对于STRICT_ALL_TABLES，MySQL返回错误并忽视剩余的行。但是，在这种情况下，前面的行已经被插入或更新。这说明你可以部分更新，这可能不是你想要的。要避免这点，最好使用单行语句，因为这样可以不更改表即可以放弃。<br>对于STRICT_TRANS_TABLES，MySQL将非法值转换为最接近该列的合法值并插入调整后的值。如果值丢失，MySQL在列中插入隐式 默认值。在任何情况下，MySQL都会生成警告而不是给出错误并继续执行语句。<br>严格模式不允许非法日期，例如’2004-04-31’。它不允许禁止日期使用“零”部分，例如’2004-04-00’或”零”日期。要想禁止，应在严格模式基础上，启用NO_ZERO_IN_DATE和NO_ZERO_DATE SQL模式。<br>如果你不使用严格模式(即不启用STRICT_TRANS_TABLES或STRICT_ALL_TABLES模式)，对于非法或丢失的值，MySQL将插入调整后的值并给出警告。在严格模式，你可以通过INSERT IGNORE或UPDATE IGNORE来实现。</p>
-</li>
-</ul>
-<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><h4 id="某些GROUP-BY的SQL语句无法执行了"><a href="#某些GROUP-BY的SQL语句无法执行了" class="headerlink" title="某些GROUP BY的SQL语句无法执行了"></a>某些GROUP BY的SQL语句无法执行了</h4><p>这是因为MySQL 5.7默认加入了ONLY_FULL_GROUP_BY参数。在MySQL的sql_mode是非ONLY_FULL_GROUP_BY语义时。一条select语句，MySQL允许target list中输出的表达式是除聚集函数或group by column以外的表达式，这个表达式的值可能在经过group by操作后变成undefined，例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> tt <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>;</span><br></pre></td></tr></table></figure></p>
-<p>而对于语义限制都比较严谨的多家数据库，如SQLServer、Oracle、PostgreSql都不支持select target list中出现语义不明确的列，这样的语句在这些数据库中是会被报错的，所以从MySQL 5.7版本开始修正了这个语义，就是我们所说的ONLY_FULL_GROUP_BY语义。而正确的写法如下：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> tt <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">max</span>(age) <span class="keyword">from</span> tt <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>;</span><br></pre></td></tr></table></figure></p>
-<p>所以ONLY_FULL_GROUP_BY的语义就是确定select target list中的所有列的值都是明确语义，简单的说来，在ONLY_FULL_GROUP_BY模式下，target list中的值要么是来自于聚集函数的结果，要么是来自于group by list中的表达式的值。</p>
-<h4 id="创建表时使用日期数据类型指定的默认值为0000-00-00时报错"><a href="#创建表时使用日期数据类型指定的默认值为0000-00-00时报错" class="headerlink" title="创建表时使用日期数据类型指定的默认值为0000-00-00时报错"></a>创建表时使用日期数据类型指定的默认值为0000-00-00时报错</h4><p>这是因为MySQL 5.7默认加入了NO_ZERO_DATE和NO_ZERO_IN_DATE参数。通过上面的介绍，这两个参数还是有些区别的，NO_ZERO_DATE是完全匹配默认值为0000-00-00时才限制，而NO_ZERO_IN_DATE是在匹配到月或日任意为00时限制（对年不限制）。</p>
-<p>当数据类型为date或datetime时，并且使用了NO_ZERO_IN_DATE限制，那么会有如下几种情况：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不合法默认值;</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (<span class="string">`time`</span> datetime <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'1111-00-01 00:00:00'</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合法默认值;</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (<span class="string">`time`</span> datetime <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'1111-01-01 00:00:00'</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合法默认值;</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (<span class="string">`time`</span> datetime <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'0000-01-01 00:00:00'</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure></p>
-<p>timestamp类型取值范围：1970-01-01 00:00:00到2037-12-31 23:59:59。也就是说默认值最少需要调整为1970-01-02 00:00:00。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">  <span class="string">`mid`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`create_time`</span> <span class="built_in">timestamp</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>,</span><br><span class="line">  <span class="string">`start_time`</span> <span class="built_in">timestamp</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'1970-01-02 00:00:00'</span>,</span><br><span class="line">  <span class="string">`end_time`</span> <span class="built_in">timestamp</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'2037-12-31 23:59:59'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`mid`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
-<p>最大值或最小值在timestamp合法范围内才行。网上大概看了看，部分人碰到这个问题都是数据库升级的时候，老的表结构无法在MySQL 5.7应用了。如果想调整SQL模式，直接在配置文件写入sql_mode参数跟上对应的模式参数即可。</p>
-<h4 id="修改字段类型小于小于最长字段时报错"><a href="#修改字段类型小于小于最长字段时报错" class="headerlink" title="修改字段类型小于小于最长字段时报错"></a>修改字段类型小于小于最长字段时报错</h4><p>当启用严格模式时”STRICT_TRANS_TABLES或STRICT_ALL_TABLES”时，控制MySQL如何处理非法或丢失的输入值。有几种原因可以使一个值为非法。例如，数据类型错误，不适合列，或超出范围。当新插入的行不包含某列的没有显示定义DEFAULT子句的值，则该值被丢失。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from dd;</span><br><span class="line">+<span class="comment">--------------------------------+</span></span><br><span class="line">| log                            |</span><br><span class="line">+<span class="comment">--------------------------------+</span></span><br><span class="line">| 一二三四五六七八九十              |</span><br><span class="line">+<span class="comment">--------------------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set sql_mode='STRICT_TRANS_TABLES';</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; alter table dd change column log log varchar(9);         </span><br><span class="line">ERROR 1265 (01000): Data truncated for column 'log' at row 1</span><br><span class="line">                                 </span><br><span class="line">mysql&gt; set sql_mode='';                                </span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; alter table dd change column log log varchar(9);</span><br><span class="line">Query OK, 1 row affected, 1 warning (0.02 sec)     </span><br><span class="line">Records: 1  Duplicates: 0  Warnings: 1</span><br></pre></td></tr></table></figure>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [dkey]&gt; select * from dd;                               </span><br><span class="line">+<span class="comment">-----------------------------+</span></span><br><span class="line">| log                         |</span><br><span class="line">+<span class="comment">-----------------------------+</span></span><br><span class="line">| 一二三四五六七八九             |</span><br><span class="line">+<span class="comment">-----------------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
-<p>可以看到非严格模式，默认把多余数据给截断了。</p>
-<blockquote>
-<p><a href="http://www.ywnds.com/?p=8865" target="_blank" rel="noopener">http://www.ywnds.com/?p=8865</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/06/php数学扩展bcmath/" itemprop="url">
-                  php数学扩展bcmath
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-06T17:14:54+08:00" content="2017-04-06">
-              2017-04-06
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我在这里准备了一百口棺材，九十九口留给贪官，一口留给自己。<br></blockquote>
-
-<h3 id="问题引出"><a href="#问题引出" class="headerlink" title="问题引出"></a>问题引出</h3><p>看下面这个代码片段的结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$res1 = <span class="number">0.07</span> * <span class="number">100</span> == <span class="number">7</span>;</span><br><span class="line">dump($res1); <span class="comment">// false</span></span><br></pre></td></tr></table></figure></p>
-<p>结果竟然是 <code>false</code><br>这个和电脑中存储小数的原理有关。大家都知道计算机只能存储0和1，我们日常生活习惯使用的是10进制的数据，像0.07这个小数在计算机中存储时会有精度损失.</p>
-<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$res2 = bcmul(<span class="number">0.07</span>, <span class="number">100</span>) == <span class="number">7</span>;</span><br><span class="line">dump($res2);  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<p>BC 数学 函数<br>  ● bcadd — 2个任意精度数字的加法计算<br>  ● bccomp — 比较两个任意精度的数字<br>  ● bcdiv — 2个任意精度的数字除法计算<br>  ● bcmod — 对一个任意精度数字取模<br>  ● bcmul — 2个任意精度数字乘法计算<br>  ● bcpow — 任意精度数字的乘方<br>  ● bcpowmod — Raise an arbitrary precision number to another, reduced by a specified modulus<br>  ● bcscale — 设置所有bc数学函数的默认小数点保留位数<br>  ● bcsqrt — 任意精度数字的二次方根<br>  ● bcsub — 2个任意精度数字的减法</p>
-<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$re = intval(<span class="number">18.99</span>*<span class="number">100</span>)/<span class="number">100</span>;</span><br><span class="line"><span class="keyword">echo</span> $re;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">$gg = bcdiv(bcmul(<span class="string">'18.99'</span>,<span class="string">'100'</span>), <span class="string">'100'</span>,<span class="number">2</span>);</span><br><span class="line"><span class="keyword">echo</span> $gg;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://php.net/manual/zh/book.bc.php" target="_blank" rel="noopener">http://php.net/manual/zh/book.bc.php</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/53/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/53/">53</a><span class="page-number current">54</span><a class="page-number" href="/page/55/">55</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/55/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/53/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/53/">53</a><span class="page-number current">54</span><a class="page-number" href="/page/55/">55</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/55/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -831,7 +788,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,329 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/29/缓存穿透与缓存雪崩/" itemprop="url">
+                  缓存穿透与缓存雪崩
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-29T09:52:12+08:00" content="2018-03-29">
+              2018-03-29
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>柔情似水，佳期如梦，忍顾鹊桥归路!<br>两情若是久长时，又岂在、朝朝暮暮!<br></blockquote>
+
+<h3 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h3><h4 id="出现场景"><a href="#出现场景" class="headerlink" title="出现场景"></a>出现场景</h4><p>查询一个一定不存在的数据，由于缓存是不命中时被动写的，并且出于容错考虑，如果从存储层查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义。当在流量较大时，出现这样的情况，一直请求DB，很容易导致服务挂掉。 </p>
+<h4 id="处理方法"><a href="#处理方法" class="headerlink" title="处理方法"></a>处理方法</h4><ul>
+<li>在封装的缓存SET和GET部分增加个步骤，如果查询一个KEY不存在，就已这个KEY为前缀设定一个标识KEY；以后再查询该KEY的时候，先查询标识KEY，如果标识KEY存在，就返回一个协定好的非false或者NULL值，然后APP做相应的处理，这样缓存层就不会被穿透。当然这个验证KEY的失效时间不能太长。</li>
+<li>如果一个查询返回的数据为空（不管是数据不存在，还是系统故障），我们仍然把这个空结果进行缓存，但它的过期时间会很短，一般只有几分钟。</li>
+<li>采用布隆过滤器，将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被这个bitmap拦截掉，从而避免了对底层存储系统的查询压力。</li>
+</ul>
+<h3 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h3><h4 id="出现场景-1"><a href="#出现场景-1" class="headerlink" title="出现场景"></a>出现场景</h4><p>引起这个原因的主要因素是高并发下，我们一般设定一个缓存的过期时间时，可能有一些会设置5分钟啊，10分钟这些；并发很高时可能会出在某一个时间同时生成了很多的缓存，并且过期时间在同一时刻，这个时候就可能引发——当过期时间到后，这些缓存同时失效，请求全部转发到DB，DB可能会压力过重。 </p>
+<h4 id="处理方法-1"><a href="#处理方法-1" class="headerlink" title="处理方法"></a>处理方法</h4><p>一个简单方案就是将缓存失效时间分散开，不要所以缓存时间长度都设置成5分钟或者10分钟；比如我们可以在原有的失效时间基础上增加一个随机值，比如1-5分钟随机，这样每一个缓存的过期时间的重复率就会降低，就很难引发集体失效的事件。 缓存失效时产生的雪崩效应，将所有请求全部放在数据库上，这样很容易就达到数据库的瓶颈，导致服务无法正常提供。尽量避免这种场景的发生。 </p>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/35060009?group_id=962606647398658048" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/35060009?group_id=962606647398658048</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/28/php的配置文件相关参数解读/" itemprop="url">
+                  php的配置文件相关参数解读
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-28T16:11:39+08:00" content="2018-03-28">
+              2018-03-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>何时杖尔看南雪, 我与梅花两白头<br></blockquote>
+
+<h3 id="max-execution-time"><a href="#max-execution-time" class="headerlink" title="max_execution_time"></a>max_execution_time</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max_execution_time = <span class="number">30</span></span><br></pre></td></tr></table></figure>
+<p>影响脚本本身执行的时间, 默认值是30S, 在CLI命令行被硬编码为0, 即没有执行时间的限制, 函数<code>set_time_limit()</code>,在相关脚本执行之前执行该函数可以改变这个系统设置, 如果被设置成<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_time_limit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<p>则表示脚本不受执行时间的限制</p>
+<h3 id="sql-safe-mode"><a href="#sql-safe-mode" class="headerlink" title="sql.safe_mode"></a>sql.safe_mode</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sql.safe_mode = Off</span><br></pre></td></tr></table></figure>
+<p>如果打开，指定默认值的数据库连接函数将使用这些值代替提供的参数。也就是说像<code>mysql_connect()</code>和<code>mysql_pconnect()</code>就忽视传送给它们的任何变量,第三方开源应用程序（如WordPress）及其他应用程序可能根本运行不了。</p>
+<h3 id="post-max-size"><a href="#post-max-size" class="headerlink" title="post_max_size"></a>post_max_size</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">post_max_size=<span class="number">10240</span>K</span><br></pre></td></tr></table></figure>
+<p>限制PHP将处理的POST请求的最大大小</p>
+<h3 id="upload-max-filesize"><a href="#upload-max-filesize" class="headerlink" title="upload_max_filesize"></a>upload_max_filesize</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upload_max_filesize=<span class="number">1</span>M</span><br></pre></td></tr></table></figure>
+<p>该设置限制了PHP允许通过上传的文件的最大值</p>
+<h3 id="max-input-vars"><a href="#max-input-vars" class="headerlink" title="max_input_vars"></a>max_input_vars</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max_input_vars = <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<p>提交表单字段数量的最大值</p>
+<h3 id="allow-url-fopen"><a href="#allow-url-fopen" class="headerlink" title="allow_url_fopen"></a>allow_url_fopen</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allow_url_fopen = On</span><br></pre></td></tr></table></figure>
+<p>如果启用则允许PHP的文件函数——如<code>file_get_contents()</code>、<code>include</code>语句和<code>require</code>语句——可以从远程地方（如ftp或网站）获取数据。</p>
+<h3 id="allow-url-include"><a href="#allow-url-include" class="headerlink" title="allow_url_include"></a>allow_url_include</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allow_url_include = off</span><br></pre></td></tr></table></figure>
+<p>出于安全原因，建议禁用, 不过PHP 已经将改配置默认禁用, 如果开启, 就有可能造成远程文件执行漏洞, 像下面的代码, 虽然是txt文件, 但是里面包含了php代码, 服务器还是会按照PHP文件执行.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">'http://yangzie.qiniudn.com/test.txt'</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="memory-limit"><a href="#memory-limit" class="headerlink" title="memory_limit"></a>memory_limit</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory_limit = <span class="number">128</span>M</span><br></pre></td></tr></table></figure>
+<p>即限制 PHP 进程对于内存的使用, 可以通过下面的代码对此配置进行更改, <code>memory_limit</code> 主要是为了防止程序 bug, 或者死循环占用大量的内存，导致系统宕机。在引入大量三方插件，或者代码时，进行内存限制就非常有必要了。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ini_set(<span class="string">"memory_limit"</span>, <span class="string">"128M"</span>);</span><br><span class="line">memory_get_usage(); <span class="comment">// 获取PHP脚本所用的内存大小</span></span><br><span class="line">memory_get_peak_usage(); <span class="comment">//返回当前脚本到目前位置所占用的内存峰值。</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/28/hexo的url大小写问题/" itemprop="url">
+                  hexo的url大小写问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-28T09:42:32+08:00" content="2018-03-28">
+              2018-03-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我自己说不出口的，总希望别人能问一问。<br></blockquote>
+
+<h3 id="相关配置"><a href="#相关配置" class="headerlink" title="相关配置"></a>相关配置</h3><ul>
+<li><p>根配置文件_config.yml</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename_case: 1  # url case</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git配置文件<br>进入到博客项目中 .deploy_git文件夹 .git 下的 config 文件</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ignorecase=false</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h3><p>删除博客项目中 .deploy_git 文件夹下的所有文件，并 push 到 Github 上, 这一步是清空你的 github.io 项目中所有文件。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm -rf *</span><br><span class="line">git commit -m <span class="string">'clean all file'</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure></p>
+<p>使用 Hexo 再次生成及部署<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">hexo clean</span><br><span class="line">hexo deploy -generate</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/26/ThinkPHP微信登录Token验证/" itemprop="url">
                   ThinkPHP微信登录Token验证
                 </a>
@@ -473,396 +796,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/25/ThinkPHP的数据验证设计/" itemprop="url">
-                  ThinkPHP的数据验证设计
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-25T20:46:07+08:00" content="2018-03-25">
-              2018-03-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>人活在世上，无非是面对两大世界，身外的大千世界和自己的内心世界。<br></blockquote>
-
-<h3 id="一般的验证方式"><a href="#一般的验证方式" class="headerlink" title="一般的验证方式"></a>一般的验证方式</h3><p>新建验证文件<br>tp5\application\api\validate\TestValidate.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestValidate</span> <span class="keyword">extends</span> <span class="title">Validate</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $rule = [</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'require|max:10'</span>,</span><br><span class="line">        <span class="string">'email'</span> =&gt; <span class="string">'email'</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>控制器中调用验证<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getBanner</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = [</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>,</span><br><span class="line">        <span class="string">'email'</span> =&gt; <span class="string">'yangzie@@.com'</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    $validate = <span class="keyword">new</span> TestValidate();</span><br><span class="line"></span><br><span class="line">    $result = $validate-&gt;batch()-&gt;check($data);  <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">    var_dump($validate-&gt;getError());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="控制器调用"><a href="#控制器调用" class="headerlink" title="控制器调用"></a>控制器调用</h3><p>这里需要验证传入的ID必须是一个正整数；<br>tp5\application\api\controller\v1\Products.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>\<span class="title">IDMustBePositiveInt</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getAllInCategory</span><span class="params">($id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    (<span class="keyword">new</span> IDMustBePositiveInt())-&gt;goCheck();</span><br><span class="line"></span><br><span class="line">    $res = Product::getProductsByCategoryID($id);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($res-&gt;isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ProductException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="验证基类"><a href="#验证基类" class="headerlink" title="验证基类"></a>验证基类</h3><p>这里包含了所有验证类需要调用的一些公共方法<br>tp5\application\api\validate\BaseValidate.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">lib</span>\<span class="title">exception</span>\<span class="title">ParameterException</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaseValidate</span> <span class="keyword">extends</span> <span class="title">Validate</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">goCheck</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $request = Request::instance();</span><br><span class="line">        $params = $request-&gt;param();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;batch()-&gt;check($params)) &#123;</span><br><span class="line"></span><br><span class="line">            $e = <span class="keyword">new</span> ParameterException([</span><br><span class="line">                <span class="string">'msg'</span> =&gt; is_array(<span class="keyword">$this</span>-&gt;error) ? implode(<span class="string">';'</span>, <span class="keyword">$this</span>-&gt;error) : <span class="keyword">$this</span>-&gt;error,</span><br><span class="line">            ]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">throw</span> $e;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">isPositiveInteger</span><span class="params">($value, $rule=<span class="string">''</span>, $data=<span class="string">''</span>, $field=<span class="string">''</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_numeric($value) &amp;&amp; is_int($value + <span class="number">0</span>) &amp;&amp; ($value + <span class="number">0</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">isNotEmpty</span><span class="params">($value, $rule=<span class="string">''</span>, $data=<span class="string">''</span>, $field=<span class="string">''</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>($value)) &#123;</span><br><span class="line">            <span class="keyword">return</span> $field . <span class="string">'不允许为空'</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDataByRule</span><span class="params">($arrays)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (array_key_exists(<span class="string">'user_id'</span>, $arrays) | array_key_exists(<span class="string">'uid'</span>, $arrays)) &#123;</span><br><span class="line">            <span class="comment">// 不允许包含user_id或者uid，防止恶意覆盖user_id外键</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ParameterException([</span><br><span class="line">                <span class="string">'msg'</span> =&gt; <span class="string">'参数中包含有非法的参数名user_id或者uid'</span></span><br><span class="line">            ]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $newArray = [];</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;rule <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">            $newArray[$key] = $arrays[$key];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $newArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">isMobile</span><span class="params">($value)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $rule = <span class="string">'^1(3|4|5|7|8)[0-9]\d&#123;8&#125;$^'</span>;</span><br><span class="line">        $result = preg_match($rule, $value);</span><br><span class="line">        <span class="keyword">if</span> ($result) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="ID-验证类"><a href="#ID-验证类" class="headerlink" title="ID 验证类"></a>ID 验证类</h3><p>tp5\application\api\validate\IDMustBePositiveInt.php</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IDMustBePositiveInt</span> <span class="keyword">extends</span> <span class="title">BaseValidate</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $rule = [</span><br><span class="line">        <span class="string">'id'</span> =&gt; <span class="string">'require|isPositiveInteger'</span>,</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $message = [</span><br><span class="line">        <span class="string">'id'</span> =&gt; <span class="string">'ID必须是正整数'</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/23/javascript的window对象/" itemprop="url">
-                  javascript的window对象
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-23T17:14:20+08:00" content="2018-03-23">
-              2018-03-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我最不喜欢等，因为这个期限永远都是个未知数。<br></blockquote>
-
-<h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>在浏览器中，<code>window</code>对象（注意，w为小写）指当前的浏览器窗口。它也是所有对象的顶层对象。<br>“顶层对象”指的是最高一层的对象，所有其他对象都是它的下属。JavaScript规定，浏览器环境的所有全局变量，都是<code>window</code>对象的属性。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">window</span>.a <span class="comment">// 1</span></span><br></pre></td></tr></table></figure></p>
-<p>上面代码中，变量a是一个全局变量，但是实质上它是window对象的属性。声明一个全局变量，就是为<code>window</code>对象的同名属性赋值。</p>
-<h3 id="2-window对象的属性"><a href="#2-window对象的属性" class="headerlink" title="2.window对象的属性"></a>2.window对象的属性</h3><h4 id="window-window，window-name"><a href="#window-window，window-name" class="headerlink" title="window.window，window.name"></a>window.window，window.name</h4><p>window对象的window属性指向自身。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.window === <span class="keyword">this</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>window.name属性用于设置当前浏览器窗口的名字。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.name = <span class="string">'Hello World!'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.name)</span><br><span class="line"><span class="comment">// "Hello World!"</span></span><br></pre></td></tr></table></figure></p>
-<p>各个浏览器对这个值的储存容量有所不同，但是一般来说，可以高达几MB。<br>该属性只能保存字符串，且当浏览器窗口关闭后，所保存的值就会消失。因此局限性比较大，但是与<code>&lt;iframe&gt;</code>窗口通信时，非常有用。</p>
-<h4 id="window-location"><a href="#window-location" class="headerlink" title="window.location"></a>window.location</h4><p>window.location返回一个location对象，用于获取窗口当前的URL信息。它等同于<code>document.location</code>对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.location === <span class="built_in">document</span>.location <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="3-window对象的方法"><a href="#3-window对象的方法" class="headerlink" title="3.window对象的方法"></a>3.window对象的方法</h3><h4 id="window-open-window-close"><a href="#window-open-window-close" class="headerlink" title="window.open(), window.close()"></a>window.open(), window.close()</h4><p>window.open方法用于新建另一个浏览器窗口，并且返回该窗口对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> popup = <span class="built_in">window</span>.open(<span class="string">'somefile.html'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>上面代码会让浏览器弹出一个新建窗口，网址是当前域名下的somefile.html。</p>
-<p>open方法一共可以接受四个参数。</p>
-<ul>
-<li>第一个参数：字符串，表示新窗口的网址。如果省略，默认网址就是about:blank。</li>
-<li>第二个参数：字符串，表示新窗口的名字。如果该名字的窗口已经存在，则跳到该窗口，不再新建窗口。如果省略，就默认使用_blank，表示新建一个没有名字的窗口。</li>
-<li>第三个参数：字符串，内容为逗号分隔的键值对，表示新窗口的参数，比如有没有提示栏、工具条等等。如果省略，则默认打开一个完整UI的新窗口。</li>
-<li>第四个参数：布尔值，表示第一个参数指定的网址，是否应该替换<code>history</code>对象之中的当前网址记录，默认值为<code>false</code>。显然，这个参数只有在第二个参数指向已经存在的窗口时，才有意义。</li>
-</ul>
-<h4 id="window-getSelection"><a href="#window-getSelection" class="headerlink" title="window.getSelection()"></a>window.getSelection()</h4><p>window.getSelection方法返回一个Selection对象，表示用户现在选中的文本。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> selObj = <span class="built_in">window</span>.getSelection();</span><br></pre></td></tr></table></figure></p>
-<p>使用Selction对象的toString方法可以得到选中的文本。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> selectedText = selObj.toString();</span><br></pre></td></tr></table></figure></p>
-<h3 id="4-多窗口操作"><a href="#4-多窗口操作" class="headerlink" title="4.多窗口操作"></a>4.多窗口操作</h3><h4 id="窗口的引用"><a href="#窗口的引用" class="headerlink" title="窗口的引用"></a>窗口的引用</h4><p>各个窗口之中的脚本，可以引用其他窗口。浏览器提供了一些特殊变量，用来返回其他窗口。</p>
-<ul>
-<li><code>top</code>：顶层窗口，即最上层的那个窗口</li>
-<li><code>parent</code>：父窗口</li>
-<li><code>self</code>：当前窗口，即自身</li>
-</ul>
-<p>下面代码可以判断，当前窗口是否为顶层窗口。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">top === self</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更好的写法</span></span><br><span class="line"><span class="built_in">window</span>.top === <span class="built_in">window</span>.self</span><br></pre></td></tr></table></figure></p>
-<p>下面的代码让父窗口的访问历史后退一次。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parent.history.back();</span><br></pre></td></tr></table></figure></p>
-<p>与这些变量对应，浏览器还提供一些特殊的窗口名，供<code>open</code>方法、<code>&lt;a&gt;</code>标签、<code>&lt;form&gt;</code>标签等引用。</p>
-<ul>
-<li><code>_top</code>：顶层窗口</li>
-<li><code>_parent</code>：父窗口</li>
-<li><code>_blank</code>：新窗口</li>
-</ul>
-<p>下面代码就表示在顶层窗口打开链接。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"somepage.html"</span> target=<span class="string">"_top"</span>&gt;Link&lt;<span class="regexp">/a&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="iframe标签"><a href="#iframe标签" class="headerlink" title="iframe标签"></a>iframe标签</h4><p>对于<code>iframe</code>嵌入的窗口，<code>document.getElementById</code>方法可以拿到该窗口的<code>DOM</code>节点，然后使用<code>contentWindow</code>属性获得<code>iframe</code>节点包含的<code>window</code>对象，或者使用<code>contentDocument</code>属性获得包含的<code>document</code>对象。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> frame = <span class="built_in">document</span>.getElementById(<span class="string">'theFrame'</span>);</span><br><span class="line"><span class="keyword">var</span> frameWindow = frame.contentWindow;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于 frame.contentWindow.document</span></span><br><span class="line"><span class="keyword">var</span> frameDoc = frame.contentDocument;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取子窗口的变量和属性</span></span><br><span class="line">frameWindow<span class="function">.<span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">// 获取子窗口的标题</span></span><br><span class="line"><span class="function"><span class="title">frameWindow</span>.<span class="title">title</span></span></span><br></pre></td></tr></table></figure>
-<p><code>iframe</code>元素遵守同源政策，只有当父页面与框架页面来自同一个域名，两者之间才可以用脚本通信，否则只有使用<code>window.postMessage方</code>法。</p>
-<p><code>iframe</code>窗口内部，使用<code>window.parent</code>引用父窗口。如果当前页面没有父窗口，则<code>window.parent</code>属性返回自身。因此，可以通过<code>window.parent</code>是否等于<code>window.self</code>，判断当前窗口是否为<code>iframe</code>窗口。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.parent !== <span class="built_in">window</span>.self) &#123;</span><br><span class="line">  <span class="comment">// 当前窗口是子窗口</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>iframe</code>嵌入窗口的<code>window</code>对象，有一个<code>frameElement</code>属性，返回它在父窗口中的<code>DOM</code>节点。对于那么非嵌入的窗口，该属性等于<code>null</code>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f1Element = <span class="built_in">document</span>.getElementById(<span class="string">'f1'</span>);</span><br><span class="line"><span class="keyword">var</span> fiWindow = f1Element.contentWindow;</span><br><span class="line">f1Window.frameElement === f1Element <span class="comment">// true</span></span><br><span class="line"><span class="built_in">window</span>.frameElement === <span class="literal">null</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="frames属性"><a href="#frames属性" class="headerlink" title="frames属性"></a>frames属性</h4><p>window对象的frames属性返回一个类似数组的对象，成员是所有子窗口的<code>window</code>对象。可以使用这个属性，实现窗口之间的互相引用。比如，<code>frames[0]</code>返回第一个子窗口，<code>frames[1].frames[2]</code>返回第二个子窗口内部的第三个子窗口，<code>parent.frames[1]</code>返回父窗口的第二个子窗口。</p>
-<p>需要注意的是，<code>window.frames</code>每个成员的值，是框架内的窗口（即框架的<code>window</code>对象），而不是<code>iframe</code>标签在父窗口的<code>DOM</code>节点。如果要获取每个框架内部的DOM树，需要使用<code>window.frames[0].document</code>的写法。</p>
-<p>另外，如果<code>iframe</code>元素设置了<code>name</code>或<code>id</code>属性，那么属性值会自动成为全局变量，并且可以通过<code>window.frames</code>属性引用，返回子窗口的<code>window</code>对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML代码为&lt;iframe id="myFrame"&gt;</span></span><br><span class="line">myFrame <span class="comment">// [HTMLIFrameElement]</span></span><br><span class="line">frames.myframe === myFrame <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>另外，name属性的值会自动成为子窗口的名称，可以用在<code>window.open</code>方法的第二个参数，或者<code>&lt;a&gt;</code>和<code>&lt;frame&gt;</code>标签的<code>target</code>属性。</p>
-<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><h4 id="error-事件和-onerror-属性"><a href="#error-事件和-onerror-属性" class="headerlink" title="error 事件和 onerror 属性"></a>error 事件和 onerror 属性</h4><p>浏览器脚本发生错误时，会触发window对象的error事件。我们可以通过window.onerror属性对该事件指定回调函数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onerror = <span class="function"><span class="keyword">function</span> (<span class="params">message, filename, lineno, colno, error</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"出错了！--&gt; %s"</span>, error.stack);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>由于历史原因，window的error事件的回调函数不接受错误对象作为参数，而是一共可以接受五个参数，它们的含义依次如下。</p>
-<ul>
-<li>出错信息</li>
-<li>出错脚本的网址</li>
-<li>行号</li>
-<li>列号</li>
-<li>错误对象</li>
-</ul>
-<p>老式浏览器只支持前三个参数。</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
-<p><a href="http://javascript.ruanyifeng.com/bom/window.html" target="_blank" rel="noopener">http://javascript.ruanyifeng.com/bom/window.html</a><br><a href="https://danlimerick.wordpress.com/2014/01/18/how-to-catch-javascript-errors-with-window-onerror-even-on-chrome-and-firefox/" target="_blank" rel="noopener">https://danlimerick.wordpress.com/2014/01/18/how-to-catch-javascript-errors-with-window-onerror-even-on-chrome-and-firefox/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/22/setTimeout函数之循环和闭包/" itemprop="url">
-                  setTimeout函数之循环和闭包
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-22T17:46:47+08:00" content="2018-03-22">
-              2018-03-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>所有的时光都是被辜负被浪费后，才能从记忆里将某一段拎出来，拍拍上面沉积的灰尘，感叹它是最好的时光。<br></blockquote>
-
-<h3 id="代码片段一"><a href="#代码片段一" class="headerlink" title="代码片段一"></a>代码片段一</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下, 一秒后输出5个5, 没有时间间隔;</p>
-</blockquote>
-<p>分析:</p>
-<blockquote>
-<p>setTimeout的执行异步的, for 循环的执行是很快的, 当setTimeout开始执行的时候,for循环已经执行完毕, 此时的i变为5(for循环使用var申明的变量是全局的), 因为所有的都是延迟1S执行, 所以最后一起输出;</p>
-</blockquote>
-<h3 id="代码片段二"><a href="#代码片段二" class="headerlink" title="代码片段二"></a>代码片段二</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;, i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下, 每隔一秒输出一个5;</p>
-</blockquote>
-<p>分析:</p>
-<blockquote>
-<p>为什么是5, 上一个代码片段已经分析, 每一秒输出一个的原因就是for循环过程中调用setTimeout的时候,调用5次时间非常短可忽略不计, 调用依次给的延迟秒数是0s,1s,2s,3s,4s.所以我们再最后看到他执行的时候, 是每隔一秒出现一个;</p>
-</blockquote>
-<h3 id="代码片段三"><a href="#代码片段三" class="headerlink" title="代码片段三"></a>代码片段三</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(i);</span><br><span class="line">        &#125;, i*<span class="number">1000</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下, 每隔一秒输出一个5, 和代码片段二的结果一样;</p>
-</blockquote>
-<p>分析:<br>虽然加了闭包, 但是并没有影响结果</p>
-<h3 id="代码片段四"><a href="#代码片段四" class="headerlink" title="代码片段四"></a>代码片段四</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">	(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</span><br><span class="line">	    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	        <span class="built_in">console</span>.log(i);</span><br><span class="line">	    &#125;, i*<span class="number">1000</span>);</span><br><span class="line">	&#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下,每隔一秒依次输出0,1,2,3,4;</p>
-</blockquote>
-<p>分析:<br>此时setTimeout里面的参数是通过闭包传递的, 并没有受到全局i的影响</p>
-<h3 id="代码片段五"><a href="#代码片段五" class="headerlink" title="代码片段五"></a>代码片段五</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(i);</span><br><span class="line">        &#125;, i*<span class="number">1000</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下,每隔一秒依次输出0,1,2,3,4;</p>
-</blockquote>
-<p>分析:</p>
-<blockquote>
-<p>使用let申明的变量是块级作用域, 当前的i只在本轮循环有效，所以每一次循环的i其实都是一个新的变量;</p>
-</blockquote>
-<p>更多关于let var 的区别, 请参考我的另外一篇文字: <a href="2017/08/08/var-let-const的区别/">var,let,const的区别</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/22/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/24/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/22/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/24/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -901,7 +839,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">354</span>
+              <span class="site-state-item-count">357</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
