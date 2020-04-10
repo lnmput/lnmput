@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/11/laravel使用自定义异常类/" itemprop="url">
+                  Laravel使用自定义异常类
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-11T16:14:31+08:00" content="2018-04-11">
+              2018-04-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>今夜月明人尽望，不知秋思落谁家<br></blockquote>
+
+<h3 id="自定义异常类"><a href="#自定义异常类" class="headerlink" title="自定义异常类"></a>自定义异常类</h3><p>app\Exceptions\ExportException.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Exceptions</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Throwable</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExportException</span> <span class="keyword">extends</span> \<span class="title">Exception</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $message;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(string $message = <span class="string">""</span>, int $code = <span class="number">0</span>, Throwable $previous = null)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">parent</span>::__construct($message, $code, $previous);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;message = $message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">report</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 这里自定义发生异常发生时要额外做的事情</span></span><br><span class="line">        <span class="comment">// 比如发邮件通知管理员</span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 这里需要给浏览器或者API返回必要的通知信息</span></span><br><span class="line">        <span class="comment">// 可以是json 结构, 一般是针对API调用的</span></span><br><span class="line">        <span class="comment">// 也可以渲染一个网页, 一般是针对浏览器访问的页面</span></span><br><span class="line">        <span class="comment">// 也可以直接重定向到其他网页</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> response()-&gt;json([<span class="string">'status'</span> =&gt; <span class="number">200</span>, <span class="string">'message'</span> =&gt; <span class="keyword">$this</span>-&gt;message], <span class="number">503</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>说明:<br>如果在文件 app\Exceptions\Handler.php 中申明了以下代码, 针对该异常类的<code>report</code>方法将不会在被执行;<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span> <span class="keyword">extends</span> <span class="title">ExceptionHandler</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * A list of the exception types that are not reported.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> $dontReport = [</span><br><span class="line">        </span><br><span class="line">         ExportException::class</span><br><span class="line">    ];</span><br></pre></td></tr></table></figure></p>
+<h3 id="抛出并捕获异常"><a href="#抛出并捕获异常" class="headerlink" title="抛出并捕获异常"></a>抛出并捕获异常</h3><p>首先尝试抛出异常:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">   $res = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (\App\Exceptions\ExportException $e) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> \App\Exceptions\ExportException($e-&gt;getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面这段代码并不会在我们自定义的<code>ExportException</code>中捕获, 而会在全局异常中捕获,原因我们打印出这个异常类型看看<br>app\Exceptions\Handler.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">($request, Exception $exception)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   dd(get_class($exception));  <span class="comment">// ErrorException</span></span><br><span class="line">        </span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">parent</span>::render($request, $exception);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该异常类型属于<code>ErrorException</code>, 并不是我们自定的<code>ExportException</code>, 所以并不会被我们捕获;<br>我们可以这样, 既然我们已经知道这个异常类似是<code>ErrorException</code>, 那么<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    $res = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> ( ErrorException $e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> \App\Exceptions\ExportException($e-&gt;getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然也可以直接这样<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">   $res = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> ( <span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> \App\Exceptions\ExportException($e-&gt;getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以用我们自定义的异常类来捕捉从而进一步处理了<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"status"</span>: <span class="number">200</span>,</span><br><span class="line">   <span class="attr">"message"</span>: <span class="string">"Division by zero"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="关于异常的理解"><a href="#关于异常的理解" class="headerlink" title="关于异常的理解"></a>关于异常的理解</h3><ul>
+<li>由程序员设计不足所导致的错误，需要用异常来捕捉和处理</li>
+<li>程序在运行过程中, 有可能会发生一些不可预知的错误, 无法用if…else这样的语句来处理的时候.</li>
+<li>函数无法满足调用方的期望的时候使用异常, 比如用户要请求一个API获得最新的商品信息, 但是查询结果为空的时候</li>
+</ul>
+<p>所以我们自定义的异常可以是在不符合实现给定的情况下抛出的, 而不是真正程序在运行过程中发生了错误, 在Laravel的源码中我们可以找到很多一样的例子<br>vendor\laravel\framework\src\Illuminate\Foundation\Auth\AuthenticatesUsers.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">sendFailedLoginResponse</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> ValidationException::withMessages([</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username() =&gt; [trans(<span class="string">'auth.failed'</span>)],</span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>vendor\guzzlehttp\psr7\src\functions.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">str</span><span class="params">(MessageInterface $message)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($message <span class="keyword">instanceof</span> RequestInterface) &#123;</span><br><span class="line">        $msg = trim($message-&gt;getMethod() . <span class="string">' '</span></span><br><span class="line">                . $message-&gt;getRequestTarget())</span><br><span class="line">            . <span class="string">' HTTP/'</span> . $message-&gt;getProtocolVersion();</span><br><span class="line">        <span class="keyword">if</span> (!$message-&gt;hasHeader(<span class="string">'host'</span>)) &#123;</span><br><span class="line">            $msg .= <span class="string">"\r\nHost: "</span> . $message-&gt;getUri()-&gt;getHost();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">elseif</span> ($message <span class="keyword">instanceof</span> ResponseInterface) &#123;</span><br><span class="line">        $msg = <span class="string">'HTTP/'</span> . $message-&gt;getProtocolVersion() . <span class="string">' '</span></span><br><span class="line">            . $message-&gt;getStatusCode() . <span class="string">' '</span></span><br><span class="line">            . $message-&gt;getReasonPhrase();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> \InvalidArgumentException(<span class="string">'Unknown message type'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> ($message-&gt;getHeaders() <span class="keyword">as</span> $name =&gt; $values) &#123;</span><br><span class="line">        $msg .= <span class="string">"\r\n&#123;$name&#125;: "</span> . implode(<span class="string">', '</span>, $values);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"&#123;$msg&#125;\r\n\r\n"</span> . $message-&gt;getBody();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/11/php使用yield来做内存优化/" itemprop="url">
                   PHP使用yield来做内存优化
                 </a>
@@ -686,112 +795,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/03/金融系统的小数点处理/" itemprop="url">
-                  金融系统的小数点处理
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-03T17:15:16+08:00" content="2018-04-03">
-              2018-04-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>月黑见渔灯，孤光一点萤。<br>微微风簇浪，散作满河星。<br></blockquote>
-
-<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><ul>
-<li><p>余额提现、转出等<br>一般会向下取数，比如10.1234;那实际可提现金额为10.12。</p>
-</li>
-<li><p>分期相关<br>如银行额度总共为1000元，然后刚好买了一样东西，全花了，在操作分期。分3期；<br>按正常思维是1000/3=333.3333333;在四舍五入一下就成了333.33;等你三期都还完了，发现只还了999.99。这就坑了<br>一般做法是：前2期按四舍五入计算。最后一期，按减法算：1000-333.33-333.33=333.34；</p>
-</li>
-<li><p>其他说明<br>根据不同业务，保留位数和取舍都不一样。如基金的净值。小数点的长度影响的资金量还是很大的。这块是越精准越好。具体需求跟产品沟通吧！</p>
-</li>
-</ul>
-<blockquote>
-<p><a href="https://segmentfault.com/q/1010000007519197" target="_blank" rel="noopener">https://segmentfault.com/q/1010000007519197</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -835,7 +838,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -845,7 +848,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

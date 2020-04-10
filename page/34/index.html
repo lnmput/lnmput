@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/22/laravel5-5中新的路由方法/" itemprop="url">
+                  laravel5.5中新的路由方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-22T09:03:38+08:00" content="2017-11-22">
+              2017-11-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>躲得过对酒当歌的夜躲不过四下无人的街<br></blockquote><br>laravel5.5为他的路由类提供了一系列方便的捷径, 可以消除当你仅仅需要返回一个视图或者做一个跳转时必须要创建一个闭包或者控制器来完成,如果你没能在我们的发行说明里看到他们, 让我们现在简要的介绍一下他们,他们确实可以简化你的代码, 必要时可以删除一些冗余的文件</p>
+<h3 id="Route-view"><a href="#Route-view" class="headerlink" title="Route::view"></a>Route::view</h3><p><code>Route::view</code>, 当你的路由仅仅需要返回一个视图, 这个方法可以消除你使用的控制器或者闭包, 你可以像这样定义你的URI, 顺带提供一个路由文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// resources/views/pages/about.blade.php</span></span><br><span class="line">Route::view(<span class="string">'/about'</span>, <span class="string">'pages.about'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>当然, 你也可以传递一系列的参数到视图中<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::view(<span class="string">'/about'</span>, <span class="string">'pages.about'</span>, [<span class="string">'year'</span> =&gt; date(<span class="string">'Y'</span>)]);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Route-redirect"><a href="#Route-redirect" class="headerlink" title="Route::redirect"></a>Route::redirect</h3><p><code>Route::redirect</code>, 当你使用路由仅仅做一次跳转的时候, 这个路由方法可以避免您使用控制器或者一个闭包<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::redirect(<span class="string">'/old-about'</span>, <span class="string">'/about'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这个路由方法第三个默认的参数是301, 如果你没有传递的话, 当然,你可以传递一个不用的参数, 例如, 如果你想要创建一个307的临时跳转, 你可以这样做:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::redirect(<span class="string">'/old-about'</span>, <span class="string">'/about'</span>, <span class="number">307</span>)</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://laravel-news.com/laravel-5-5-router-view-and-redirect" target="_blank" rel="noopener">https://laravel-news.com/laravel-5-5-router-view-and-redirect</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/21/在Laravel中使用数据库事务/" itemprop="url">
                   在Laravel中使用数据库事务
                 </a>
@@ -644,116 +745,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/12/PHPStorm中使用php-cs-fixer进行自动代码格式化/" itemprop="url">
-                  PHPStorm中使用php-cs-fixer进行自动代码格式化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-12T21:39:25+08:00" content="2017-11-12">
-              2017-11-12
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我有钱了，我头发也白了，爹娘也没了。<br></blockquote>
-
-<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><ul>
-<li>windows 10</li>
-<li>phpstorm 2017.2</li>
-<li>composer</li>
-</ul>
-<h3 id="开始配置"><a href="#开始配置" class="headerlink" title="开始配置"></a>开始配置</h3><h4 id="全局安装"><a href="#全局安装" class="headerlink" title="全局安装"></a>全局安装</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">global</span> <span class="keyword">require</span> fabpot/php-cs-fixer</span><br></pre></td></tr></table></figure>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>在phpstorm的<code>File &gt; Settings &gt; Tools &gt; External Tools</code>菜单内进行php-cs-fixer的配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> name和description可自行填写</span><br><span class="line"><span class="number">2.</span> program需要填写php-cs-fixer的可执行文件地址，Windows上是用户目录\Roaming\Composer\composer\vendor\bin\php-cs-fixer.bat，linux和mac上是~/.composer/vendor/bin/php-cs-fixer</span><br><span class="line"><span class="number">3.</span>parameters填--rules=@Symfony --verbose fix <span class="string">"$FileDir$/$FileName$"</span>，其中 rules 字段具体可以查看 php-cs-fixer 的官方文档，但是由于 Windows 的 cmd 有诸多限制，所以只能传入一些简单的规则，如果需要配置复杂规则建议使用配置文件来完成。</span><br><span class="line"><span class="number">4.</span>working directory填$ProjectFileDir$</span><br></pre></td></tr></table></figure></p>
-<p>插件配置好后，到 File &gt; Settings &gt; Keymap 设置快捷键，快捷键设置好后就可以找个文件试一试了。我设置了快捷键<code>crrl+shift+;</code></p>
-<h4 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h4><p>由于 Windows 的 cmd 有诸多限制，所以只能传入一些简单的规则，如果需要配置复杂规则建议使用配置文件来完成</p>
-<p>将我们的配置文件<code>.php_cs.dist</code>放在某一目录下， 我选择放在<code>D:\phpStudy\php\.php_cs.dist</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">return</span> PhpCsFixer\Config::create()</span><br><span class="line">    -&gt;setRiskyAllowed(<span class="keyword">true</span>)</span><br><span class="line">    -&gt;setRules([</span><br><span class="line">        <span class="string">'align_multiline_comment'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'no_trailing_whitespace'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'no_short_echo_tag'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'no_unused_imports'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'array_syntax'</span> =&gt; [<span class="string">'syntax'</span> =&gt; <span class="string">'short'</span>],</span><br><span class="line">        <span class="string">'ordered_imports'</span> =&gt; [<span class="string">'sortAlgorithm'</span> =&gt; <span class="string">'length'</span>]</span><br><span class="line">    ])</span><br><span class="line">    -&gt;setFinder(</span><br><span class="line">        PhpCsFixer\Finder::create()</span><br><span class="line">            -&gt;exclude(<span class="string">'tests/'</span>)</span><br><span class="line">            -&gt;in(<span class="keyword">__DIR__</span>)</span><br><span class="line">    )</span><br><span class="line">;</span><br></pre></td></tr></table></figure></p>
-<p>重新配置<code>External Tools</code><br>parameters填<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">......</span><br></pre></td></tr></table></figure></p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>在我们配置<code>External Tools</code>时可以选择是否<code>open console</code></p>
-<blockquote>
-<p><a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer" target="_blank" rel="noopener">https://github.com/FriendsOfPHP/PHP-CS-Fixer</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -797,7 +788,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -807,7 +798,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

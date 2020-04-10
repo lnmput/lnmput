@@ -265,6 +265,117 @@
             
               
                 
+                <a class="post-title-link" href="/2019/10/05/go语言中什么时候使用指针/" itemprop="url">
+                  Go语言中什么时候使用指针
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-10-05T22:47:42+08:00" content="2019-10-05">
+              2019-10-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>当快乐到来时，我就不再思考人生<br>当寂寞来临时，我就低头努力读书<br></blockquote>
+
+<p>什么是指针：即一个指针变量指向一个值的内存地址。</p>
+<h3 id="使用值类型和指针类型的区别"><a href="#使用值类型和指针类型的区别" class="headerlink" title="使用值类型和指针类型的区别"></a>使用值类型和指针类型的区别</h3><p>首先，我们来看一个计算面积的代码，如下所示。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Rect <span class="keyword">struct</span> &#123;                               <span class="comment">//定义一个结构体</span></span><br><span class="line">    width  <span class="keyword">float64</span></span><br><span class="line">    length <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rect Rect)</span> <span class="title">area</span><span class="params">()</span> <span class="title">float64</span></span> &#123;               <span class="comment">//定义一个方法，按值传递</span></span><br><span class="line">	<span class="keyword">return</span> rect.width * rect.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rect *Rect)</span> <span class="title">area1</span><span class="params">()</span> <span class="title">float64</span></span> &#123;            <span class="comment">//定义一个方法，按指针传递</span></span><br><span class="line">    rect.width *= <span class="number">2</span></span><br><span class="line">    rect.length *= <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> rect.width * rect.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> rect = <span class="built_in">new</span>(Rect)     <span class="comment">//使用new函数创建一个结构体指针rect，也就是说rect的类型是*Rect</span></span><br><span class="line">    rect.width = <span class="number">100</span></span><br><span class="line">    rect.length = <span class="number">200</span></span><br><span class="line">    fmt.Println(<span class="string">"Width:"</span>, rect.width, <span class="string">"Length:"</span>, rect.length,<span class="string">"Area:"</span>, rect.area())  <span class="comment">//通过结构体指针类型的变量调用area()方法</span></span><br><span class="line">    fmt.Println(<span class="string">"Width:"</span>, rect.width, <span class="string">"Length:"</span>, rect.length,<span class="string">"Area:"</span>, rect.area1())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Go语言中，默认是按值传递。当一个变量当作参数传递的时候，会创建一个变量的副本，然后传递给函数或者方法，你可以看到这个副本的地址和变量的地址是不一样的。当变量当做指针被传递的时候，一个新的指针被创建，它指向变量同样的内存地址，所以你可以将这个指针看成原始变量指针的副本。</p>
+<p>故此</p>
+<ul>
+<li>1.是否使用结构体指针，取决于是否要在函数内部改变传递进来的参数的值。如果你的struct足够大，使用指针可以加快效率。如果不使用指针，在函数内部则无法修改struct中的值。</li>
+<li>2.结构体赋值默认是按值传递，你要改变原来的那个值，要使用指针（即如果你要修改对象本身，那就要传指针，否则修改的是副本）。</li>
+</ul>
+<h3 id="go什么情况下使用指针"><a href="#go什么情况下使用指针" class="headerlink" title="go什么情况下使用指针"></a>go什么情况下使用指针</h3><ul>
+<li>推荐在方法上使用指针（前提是这个类型不是 map、slice 等引用类型）</li>
+<li>当结构体较大的时候使用指针会更高效，可以避免内存拷贝，“结构较大” 到底多大才算大可能需要自己或团队衡量，如超过 5 个字段或者根据结构体内存占用来计算</li>
+<li>如果要修改结构体内部的数据或状态必须使用指针</li>
+<li>如果方法的receiver是map、slice 、channel等引用类型不要使用指针</li>
+<li>小数据类型如 bool、int 等没必要使用指针传递</li>
+<li>如果该函数会修改receiver或变量等，使用指针</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/09/05/safari手机浏览器点击事件失效/" itemprop="url">
                   safari手机浏览器点击事件失效
                 </a>
@@ -701,104 +812,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/05/30/mysql模糊查询unicode汉字/" itemprop="url">
-                  MySQL模糊查询unicode汉字
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-05-30T19:48:37+08:00" content="2019-05-30">
-              2019-05-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>最难相处的女生是那种很爱文艺但又没什么文化的<br></blockquote>
-
-<p>一般的查询：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">	* </span><br><span class="line">FROM</span><br><span class="line">	`rainlab_translate_messages` </span><br><span class="line">WHERE</span><br><span class="line">	( ( lower( message_data ) LIKE &apos;%&quot;\u4ef7\u683c&quot;%&apos; ) ) </span><br><span class="line">	AND `domain_id` = 1 </span><br><span class="line">ORDER BY</span><br><span class="line">	`message_data` ASC </span><br><span class="line">	LIMIT 500 OFFSET 0</span><br></pre></td></tr></table></figure></p>
-<p>这样的查询是查不到结果的，应该改成这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">	* </span><br><span class="line">FROM</span><br><span class="line">	`rainlab_translate_messages` </span><br><span class="line">WHERE</span><br><span class="line">	( ( lower( message_data ) LIKE &apos;%&quot;_u4ef7_u683c&quot;%&apos; ) ) </span><br><span class="line">	AND `domain_id` = 1 </span><br><span class="line">ORDER BY</span><br><span class="line">	`message_data` ASC </span><br><span class="line">	LIMIT 500 OFFSET 0</span><br></pre></td></tr></table></figure></p>
-<p>针对PHP里的，我们直接输入汉字， 可以这样进行操作：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$query = $query-&gt;searchWhere(str_replace(<span class="string">"\\"</span>,<span class="string">"_"</span>,json_encode($search)), [<span class="string">'message_data'</span>]);</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -842,7 +855,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -852,7 +865,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

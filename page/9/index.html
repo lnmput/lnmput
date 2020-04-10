@@ -265,6 +265,121 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/07/api的防重放机制/" itemprop="url">
+                  API的防重放机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-07T20:47:39+08:00" content="2018-08-07">
+              2018-08-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>从不说硬话； 从不做软事<br></blockquote>
+
+<p>我们在设计接口的时候，最怕一个接口被用户截取用于重放攻击。重放攻击是什么呢？就是把你的请求原封不动地再发送一次，两次…n次，一般正常的请求都会通过验证进入到正常逻辑中，如果这个正常逻辑是插入数据库操作，那么一旦插入数据库的语句写的不好，就有可能出现多条重复的数据。一旦是比较慢的查询操作，就可能导致数据库堵住等情况。</p>
+<h3 id="timestamp-nonce"><a href="#timestamp-nonce" class="headerlink" title="timestamp+nonce"></a>timestamp+nonce</h3><p>我们常用的防止重放的机制是使用<code>timestamp</code>和<code>nonce</code>来做的重放机制。</p>
+<p>timestamp用来表示请求的当前时间戳，这个时间戳当然要和服务器时间戳进行校正过的。我们预期正常请求带的<code>timestamp</code>参数会是不同的（预期是正常的人每秒至多只会做一个操作）。每个请求带的时间戳不能和当前时间超过一定规定的时间。比如60s。这样，这个请求即使被截取了，你也只能在60s内进行重放攻击。过期失效。</p>
+<p>但是这样也是不够的，还有给攻击者60s的时间。所以我们就需要使用一个<code>nonce</code>，随机数。</p>
+<p>nonce是由客户端根据足够随机的情况生成的，比如 md5(timestamp+rand(0, 1000)); 它就有一个要求，正常情况下，在短时间内（比如60s）连续生成两个相同nonce的情况几乎为0。</p>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><p>服务端第一次在接收到这个<code>nonce</code>的时候做下面行为：</p>
+<ul>
+<li>去redis中查找是否有<code>key</code>为<code>nonce:{nonce}</code>的string</li>
+<li>如果没有，则创建这个<code>key</code>，把这个<code>key</code>失效的时间和验证<code>timestamp</code>失效的时间一致，比如是60s。</li>
+<li>如果有，说明这个key在60s内已经被使用了，那么这个请求就可以判断为重放请求。</li>
+</ul>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>那么比如，下面这个请求：<br><code>http://a.com?uid=123&amp;timestamp=1480556543&amp;nonce=43f34f33&amp;sign=80b886d71449cb33355d017893720666</code><br>这个请求中国的uid是我们真正需要传递的有意义的参数<br><code>timestamp</code>，<code>nonce</code>，<code>sign</code>都是为了签名和防重放使用。<br><code>timestamp</code>是发送接口的时间，<code>nonce</code>是随机串，<code>sign</code>是对uid，timestamp,nonce(对于一些rest风格的api，我建议也把url放入sign签名)。签名的方法可以是md5({秘要}key1=val1&amp;key2=val2&amp;key3=val3…)<br>服务端接到这个请求：</p>
+<ul>
+<li>先验证sign签名是否合理，证明请求参数没有被中途篡改</li>
+<li>再验证timestamp是否过期，证明请求是在最近60s被发出的</li>
+<li>最后验证nonce是否已经有了，证明这个请求不是60s内的重放请求</li>
+</ul>
+<blockquote>
+<p><a href="https://www.cnblogs.com/yjf512/p/6590890.html" target="_blank" rel="noopener">https://www.cnblogs.com/yjf512/p/6590890.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/08/03/laravel中env函数的坑/" itemprop="url">
                   Laravel中env函数的坑
                 </a>
@@ -680,109 +795,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/27/websocket的自动重连实现/" itemprop="url">
-                  websocket的自动重连实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-27T13:59:54+08:00" content="2018-07-27">
-              2018-07-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>小巷 又弯又长 没有门 没有窗 我拿把旧钥匙 敲着厚厚的墙 —— 顾城《小巷》<br></blockquote><br>在websocket实例化的时候，我们会绑定一些事件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(url);</span><br><span class="line">ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">ws.onopen = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">ws.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">   <span class="comment">//something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果希望websocket连接一直保持，我们会在close或者error上绑定重新连接方法。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    reconnect();</span><br><span class="line">&#125;;</span><br><span class="line">ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    reconnect();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>这样一般正常情况下失去连接时，触发onclose方法，我们就能执行重连了。</p>
-<h3 id="stackoverflow上的一种做法"><a href="#stackoverflow上的一种做法" class="headerlink" title="stackoverflow上的一种做法"></a>stackoverflow上的一种做法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">'ws://localhost:8080'</span>);</span><br><span class="line">  ws.onopen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// subscribe to some channels</span></span><br><span class="line">    ws.send(<span class="built_in">JSON</span>.stringify(&#123;</span><br><span class="line">        <span class="comment">//.... some message the I must send when I connect ....</span></span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Message:'</span>, e.data);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onclose = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Socket is closed. Reconnect will be attempted in 1 second.'</span>, e.reason);</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      connect();</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'Socket encountered error: '</span>, err.message, <span class="string">'Closing socket'</span>);</span><br><span class="line">    ws.close();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">connect();</span><br></pre></td></tr></table></figure>
-<h3 id="使用第三方包-reconnecting-websocket"><a href="#使用第三方包-reconnecting-websocket" class="headerlink" title="使用第三方包 reconnecting-websocket"></a>使用第三方包 reconnecting-websocket</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> ReconnectingWebSocket(<span class="string">'ws://....'</span>);</span><br></pre></td></tr></table></figure>
-<p>一些选项<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(url, <span class="literal">null</span>, &#123;<span class="attr">debug</span>: <span class="literal">true</span>, <span class="attr">reconnectInterval</span>: <span class="number">3000</span>&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(url);</span><br><span class="line">socket.debug = <span class="literal">true</span>;</span><br><span class="line">socket.timeoutInterval = <span class="number">5400</span>;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://stackoverflow.com/questions/22431751/websocket-how-to-automatically-reconnect-after-it-dies" target="_blank" rel="noopener">https://stackoverflow.com/questions/22431751/websocket-how-to-automatically-reconnect-after-it-dies</a><br><a href="https://www.jianshu.com/p/dfde99d46ef4" target="_blank" rel="noopener">https://www.jianshu.com/p/dfde99d46ef4</a><br><a href="https://github.com/joewalnes/reconnecting-websocket" target="_blank" rel="noopener">https://github.com/joewalnes/reconnecting-websocket</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -826,7 +838,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -836,7 +848,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

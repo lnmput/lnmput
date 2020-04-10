@@ -265,6 +265,114 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/03/如何利用macro方法来扩展laravel的基础类的功能/" itemprop="url">
+                  如何利用macro方法来扩展Laravel的基础类的功能
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-03T15:17:45+08:00" content="2018-05-03">
+              2018-05-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你只见到这么多人说他不好时，却看到他有出来说別人一句吗？<br></blockquote>
+
+<p>Laravel 5.2 provides some nice additions to the framework. One handy feature that I don’t see listed in the release notes is that Collection now is macroable.  Using it’s macro function you can easily extend Illuminate\Support\Collection with your own custom functions.</p>
+<p>Take a look at this piece of code to uppercase every string in a collection.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$uppercaseWords = collect([<span class="string">'code'</span>, <span class="string">'ferengi'</span>])-&gt;map(<span class="function"><span class="keyword">function</span><span class="params">($word)</span>  </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> strtoupper($word);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>That’s good code, but image you need to uppercase a lot of collections. Typing the same closure will get very tiresome. Let’s improve this with a macro.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Collection</span>;</span><br><span class="line"></span><br><span class="line">Collection::macro(<span class="string">'uppercase'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> collect(<span class="keyword">$this</span>-&gt;items)-&gt;map(<span class="function"><span class="keyword">function</span><span class="params">($word)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> strtoupper($word);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>You could create a service provider to load up these macro’s. Now that the macro is defined let’s uppercase collections like there’s no tomorrow:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$uppercaseWords = collect([<span class="string">'code'</span>, <span class="string">'ferengi'</span>])-&gt;uppercase();</span><br><span class="line">$moreUppercaseWords = collect([<span class="string">'love'</span>, <span class="string">'the'</span>, <span class="string">'facade'</span>])-&gt;uppercase();</span><br><span class="line">$evenMoreUppercaseWords = collect([<span class="string">'activerecord'</span>, <span class="string">'forever'</span>])-&gt;uppercase();</span><br></pre></td></tr></table></figure>
+<p>You could be thinking “Why should I use a macro? I can easily to this with a regular function.”. Consider this piece of code.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">uppercase</span><span class="params">($collection)</span> </span>&#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$uppercaseWords = uppercase(collect([<span class="string">'halo'</span>,<span class="string">'five'</span>]));</span><br></pre></td></tr></table></figure></p>
+<p>It works, but you have to encapsulate the collection with your function. The last executed function is put first, which is confusing. With macro’s you can still chain functions and greatly improve readability.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//lots of functions</span></span><br><span class="line">function4(function3(function2(function1(collect([<span class="string">'jack'</span>,<span class="string">'cheats'</span>])))));</span><br><span class="line"></span><br><span class="line"><span class="comment">//lots of macros</span></span><br><span class="line">collect([<span class="string">'i'</span>, <span class="string">'want'</span>, <span class="string">'to'</span>, <span class="string">'live'</span>, <span class="string">'in'</span>, <span class="string">'a'</span>, <span class="string">'desert'</span>])</span><br><span class="line">  -&gt;function1()</span><br><span class="line">  -&gt;function2()</span><br><span class="line">  -&gt;function3()</span><br><span class="line">  -&gt;function4();</span><br></pre></td></tr></table></figure></p>
+<p>Sure, the examples use in this post were a bit contrived, but I hope you see that collection macro’s can be very handy.</p>
+<blockquote>
+<p><a href="https://murze.be/using-collection-macros-in-laravel" target="_blank" rel="noopener">https://murze.be/using-collection-macros-in-laravel</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/02/mysql事务隔离和锁的深入分析/" itemprop="url">
                   mysql事务隔离和锁的深入分析
                 </a>
@@ -743,114 +851,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/24/laravel在eloquent中管理对应的url/" itemprop="url">
-                  laravel在eloquent中管理对应的url
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-24T16:17:02+08:00" content="2018-04-24">
-              2018-04-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>No pain, no gain.<br></blockquote>
-
-<p>It’s not uncommon to have tens, if not hundreds of views in a Laravel application. Something that soon gets out of hand is the various references to routes. Think about how many times you’ve done something like this in your blade views:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"&#123;&#123; route('users.show', $user) &#125;&#125;"</span>&gt;&#123;&#123; $user-&gt;name &#125;&#125;&lt;/a&gt;</span><br></pre></td></tr></table></figure></p>
-<p>If for whatever reason we have to make a change to either the route alias or default query string values you’ll soon find yourself doing mass string replacements across your entire application which brings the risk of breakage within many files.</p>
-<p>What can we do to possibly better handle this? There are a couple of different approaches.</p>
-<h3 id="Eloquent-Only"><a href="#Eloquent-Only" class="headerlink" title="Eloquent Only"></a>Eloquent Only</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> $appends = [</span><br><span class="line">    <span class="string">'url'</span></span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getUrlAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> route(<span class="string">'users.show'</span>, <span class="keyword">$this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Then in your views it would look like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; $user-&gt;url &#125;&#125;"</span>&gt;</span>&#123;&#123; $user-&gt;name &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>Super clean, right? For you advanced developers you’ll probably want to go with this next approach.</p>
-<h3 id="Eloquent-with-URL-Presenter"><a href="#Eloquent-with-URL-Presenter" class="headerlink" title="Eloquent with URL Presenter"></a>Eloquent with URL Presenter</h3><p>At first glance, you’ll see some similarities, but the key difference is that our accessor will return an instance of the presenter.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Presenters</span>\<span class="title">User</span>\<span class="title">UrlPresenter</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> $appends = [</span><br><span class="line">    <span class="string">'url'</span></span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getUrlAttribute</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> UrlPresenter(<span class="keyword">$this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Presenters</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlPresenter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $user;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(User $user)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;user = $user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(method_exists(<span class="keyword">$this</span>, $key))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;$key();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;$key;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.delete'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">edit</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.edit'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.show'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> route(<span class="string">'users.update'</span>, <span class="keyword">$this</span>-&gt;user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Then you would use it like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; $user-&gt;url-&gt;show &#125;&#125;"</span>&gt;</span>&#123;&#123; $user-&gt;name &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>As you can see with either approach, the view now doesn’t care about how we determine the URL, just that a URL is returned. The beauty to this is should you have to adjust any routes you only have to edit two files, not hundreds.</p>
-<blockquote>
-<p><a href="https://laravel-news.com/leverage-eloquent-to-prepare-your-urls" target="_blank" rel="noopener">https://laravel-news.com/leverage-eloquent-to-prepare-your-urls</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -894,7 +894,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -904,7 +904,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

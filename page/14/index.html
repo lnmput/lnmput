@@ -265,6 +265,144 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/20/在mysql中使用json数据类型/" itemprop="url">
+                  在mysql中使用json数据类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-20T10:25:23+08:00" content="2018-06-20">
+              2018-06-20
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>You are my today and all of my tomorrows.<br></blockquote>
+
+<p>In my article SQL vs NoSQL: The Differences, I mentioned the line between SQL and NoSQL databases has become increasingly blurred with each camp adopting features from the other. MySQL 5.7 InnoDB and PostgreSQL 9.4 databases both directly support JSON document types in a single field. In this article, we’ll examine MySQL’s JSON implementation in more detail.</p>
+<p>(PostgreSQL supported JSON before version 9.4 and any database will accept JSON documents as a single string blob. However, MySQL and PostgreSQL now directly support validated JSON data in real key/value pairs rather than a basic string.)</p>
+<h3 id="Just-Because-You-Can-Store-JSON-…"><a href="#Just-Because-You-Can-Store-JSON-…" class="headerlink" title="Just Because You Can Store JSON …"></a>Just Because You Can Store JSON …</h3><p>… it doesn’t follow you should.</p>
+<p>Normalization is a technique used to optimize the database structure. The First Normal Form (1NF) rule governs that every column should hold a single value — which is broken by storing multi-value JSON documents.</p>
+<p>If you have clear relational data requirements, use appropriate single-value fields. JSON should be used sparingly as a last resort. JSON value fields cannot be indexed, so avoid using it on columns which are updated or searched regularly. In addition, fewer client applications support JSON, and the technology is newer and possibly less stable than other types.</p>
+<p>That said, there are good JSON use-cases for sparsely-populated data or custom attributes.</p>
+<h3 id="Create-a-Table-with-a-JSON-Field"><a href="#Create-a-Table-with-a-JSON-Field" class="headerlink" title="Create a Table with a JSON Field"></a>Create a Table with a JSON Field</h3><p>Consider a shop selling books. A book table will have an ID, ISBN, title, publisher, number of pages and other relational data which applies to all books. Presume we want to add any number of category tags to any book. We could achieve this in SQL using:</p>
+<ul>
+<li>a tag table which stored each tag name against a unique ID, and</li>
+<li>a tagmap table with many-to-many records mapping book IDs to tag IDs</li>
+</ul>
+<p>It’ll work, but it’s cumbersome and considerable effort for a minor feature. Therefore, we’ll define a tags JSON field in our MySQL database’s book table:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`book`</span> (</span><br><span class="line">  <span class="string">`id`</span> mediumint(<span class="number">8</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`title`</span> <span class="built_in">varchar</span>(<span class="number">200</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`tags`</span> <span class="keyword">json</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span>;</span><br></pre></td></tr></table></figure>
+<p>Note that JSON columns cannot have a default value, be used as a primary key, be referenced as a foreign key or have an index. You can create secondary indexes on generated virtual columns, but it’s possibly easier to retain an indexed value in a separate field.</p>
+<h3 id="Adding-JSON-Data"><a href="#Adding-JSON-Data" class="headerlink" title="Adding JSON Data"></a>Adding JSON Data</h3><p>Whole JSON documents can be passed in INSERT or UPDATE statements. For example, our book tags can be passed as an array:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`book`</span> (<span class="string">`title`</span>, <span class="string">`tags`</span>)</span><br><span class="line"><span class="keyword">VALUES</span> (</span><br><span class="line">  <span class="string">'ECMAScript 2015: A SitePoint Anthology'</span>,</span><br><span class="line">  <span class="string">'["JavaScript", "ES2015", "JSON"]'</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>JSON can also be created with the:</p>
+<ul>
+<li><p>JSON_ARRAY() function which creates arrays, e.g.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns [1, 2, "abc"]:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_ARRAY(<span class="number">1</span>, <span class="number">2</span>, <span class="string">'abc'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>JSON_OBJECT() function which creates objects, e.g.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns &#123;"a": 1, "b": 2&#125;:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_OBJECT(<span class="string">'a'</span>, <span class="number">1</span>, <span class="string">'b'</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>JSON_MERGE() function to merge documents, e.g.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns ["a", 1, &#123;"key": "value"&#125;]:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_MERGE(<span class="string">'["a", 1]'</span>, <span class="string">'&#123;"key": "value"&#125;'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>or you can (CAST anyValue AS JSON).</p>
+</li>
+</ul>
+<p>The JSON_TYPE() function allows you to check JSON value types. It should return OBJECT, ARRAY or an error, e.g.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns ARRAY:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'[1, 2, "abc"]'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns OBJECT:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2&#125;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns an error:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2'</span>);</span><br></pre></td></tr></table></figure>
+<p>Similarly, the JSON_VALID() function returns 1 when the JSON is valid:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns 1:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'[1, 2, "abc"]'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns 1:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2&#125;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns 0:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2'</span>);</span><br></pre></td></tr></table></figure>
+<p>Attempting to insert an invalid JSON document will raise an error, and the whole record will not be inserted/updated.</p>
+<h3 id="Searching-JSON-Data"><a href="#Searching-JSON-Data" class="headerlink" title="Searching JSON Data"></a>Searching JSON Data</h3><p>The JSON_CONTAINS() function accepts the JSON document being searched and another to compare against. It returns 1 when a match is found, e.g.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- all books with the 'JavaScript' tag:</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`book`</span> </span><br><span class="line"><span class="keyword">WHERE</span> JSON_CONTAINS(tags, <span class="string">'["JavaScript"]'</span>);</span><br></pre></td></tr></table></figure>
+<p>The similar JSON_SEARCH() function returns the path to the given match or NULL when there’s no match. It is passed the JSON document being searched, ‘one’ to find the first match or ‘all’ to find all matches, and a search string, e.g.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- all books with tags starting 'Java':</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`book`</span> </span><br><span class="line"><span class="keyword">WHERE</span> JSON_SEARCH(tags, <span class="string">'one'</span>, <span class="string">'Java%'</span>) <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="JSON-Paths"><a href="#JSON-Paths" class="headerlink" title="JSON Paths"></a>JSON Paths</h3><p>A JSON path targets values and can be used to extract or modify parts of a document. The JSON_EXTRACT() function demonstrates this by extracting one or more values:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns "SitePoint":</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_EXTRACT(</span><br><span class="line">  <span class="string">'&#123;"id": 1, "website": "SitePoint"&#125;'</span>, </span><br><span class="line">  <span class="string">'$.website'</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://www.sitepoint.com/use-json-data-fields-mysql-databases/" target="_blank" rel="noopener">https://www.sitepoint.com/use-json-data-fields-mysql-databases/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/14/nginx的配置虚拟主机负载均衡和反向代理三/" itemprop="url">
                   nginx的配置虚拟主机负载均衡和反向代理三
                 </a>
@@ -801,146 +939,6 @@ if (!-f $request_filename) {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/14/laravel中使用redis基本命令/" itemprop="url">
-                  laravel中使用redis基本命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-14T14:37:25+08:00" content="2018-06-14">
-              2018-06-14
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>The wealth of the mind is the only wealth.<br></blockquote>
-
-<p>Let’s store our product sales in a key:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'product:1:sales'</span>, <span class="number">1000</span>)</span><br><span class="line">Redis::set(<span class="string">'product:1:count'</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
-<p>Now to read it we use:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::get(<span class="string">'product:1:sales'</span>)</span><br></pre></td></tr></table></figure></p>
-<h3 id="Incrementing-and-Decrementing-counters"><a href="#Incrementing-and-Decrementing-counters" class="headerlink" title="Incrementing and Decrementing counters"></a>Incrementing and Decrementing counters</h3><p>A new purchase was made, let’s increment the sales:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Redis::incrby(<span class="string">'product:1:sales'</span>, <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">Redis::incr(<span class="string">'product:1:count'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>Here we increment the sales key by 100, and increment the count key by 1.</p>
-<p>We can also decrement in the same way:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Redis::decrby(<span class="string">'product:1:sales'</span>, <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">Redis::decr(<span class="string">'product:1:count'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>But when it comes to dealing with floating point numbers we need to use a special command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Redis::incrbyfloat(<span class="string">'product:1:sales'</span>, <span class="number">15.5</span>)</span><br><span class="line"></span><br><span class="line">Redis::incrbyfloat(<span class="string">'product:1:sales'</span>, - <span class="number">30.2</span>)</span><br></pre></td></tr></table></figure></p>
-<p>There’s no decrbyfloat command, but we can pass a negative value to the incrbyfloat command to have the same effect.</p>
-<blockquote>
-<p>The incrby, incr, decrby, decr, and incrbyfloat return the value after the operation as a response</p>
-</blockquote>
-<h3 id="Retrieve-and-update"><a href="#Retrieve-and-update" class="headerlink" title="Retrieve and update"></a>Retrieve and update</h3><p>Now we want to read the latest sales number and reset the counters to zero, maybe we do that at the end of each day:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$value = Redis::getset(<span class="string">'product:1:sales'</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>Here $value will hold the 1000 value, if we read the value of that key after this operation it’ll be 0.</p>
-<h3 id="Keys-Expiration"><a href="#Keys-Expiration" class="headerlink" title="Keys Expiration"></a>Keys Expiration</h3><p>Let’s say we want to send a notification to the owner when inventory is low, but we only want to send that notification once every 1 hour instead of sending it every time a new purchase is made, so maybe we set a flag once and only send the notification when that flag doesn’t exist:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'user:1:notified'</span>, <span class="number">1</span>, <span class="string">'EX'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
-<p>Now this key will expire after 3600 seconds (1 hour), we can check if the key exists before attempting to set it and send the notification:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(Redis::get(<span class="string">'user:1:notified'</span>))&#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Redis::set(<span class="string">'user:1:notified'</span>, <span class="number">1</span>, <span class="string">'EX'</span>, <span class="number">3600</span>);</span><br><span class="line"></span><br><span class="line">Notifications::send();</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>Notice: There’s no guarantee that the value of user:1:notified won’t change between the get and set operations, we’ll discuss atomic command groups later, but this example is enough for you to understand how every individual command works.</p>
-</blockquote>
-<p>We can set the expiration of a key in milliseconds as well using:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'user:1:notified'</span>, <span class="number">1</span>, <span class="string">'PX'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
-<p>And you may also use the expire command and provide the timeout in seconds:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::expire(<span class="string">'user:1:notified'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
-<p>Or in milliseconds:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::pexpire(<span class="string">'user:1:notified'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
-<p>And if you want the keys to expire at a specific time you can use expireat and provide a Unix timestamp:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::expireat(<span class="string">'user:1:notified'</span>, <span class="string">'1495469730'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>Is there a way I can check when a key should expire?<br>You can use the ttl command (Time To Live), which will return the number of seconds remaining until the key expires.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::ttl(<span class="string">'user:1:notified'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>That command may return -2 if the key doesn’t exist, or -1 if the key has no expiration set.</p>
-<p>You can also use the pttl command to get the TTL in milliseconds.</p>
-<p>What if I want to cancel expiration?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::persist(<span class="string">'user:1:notified'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>This will remove the expiration from your key, it’ll return 1 if OK or 0 if key doesn’t exist or originally had no expiration set.</p>
-<h3 id="Keys-Existence"><a href="#Keys-Existence" class="headerlink" title="Keys Existence"></a>Keys Existence</h3><p>Let’s say there’s only 1 laracon ticket available and we need to close purchasing once that ticket is sold, we can do:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'ticket:sold'</span>, $user-&gt;id, <span class="string">'NX'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>This will only set the key if it doesn’t exist, the next script that tries to set the key wll receive null as a response from Redis which means that the key wasn’t set.</p>
-<p>You can also instruct Redis to set the key only if it exists:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'ticket:sold'</span>, $user-&gt;id, <span class="string">'XX'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>If you want to simply check if a key exists, you can use the exists command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::exists(<span class="string">'ticket:sold'</span>)</span><br></pre></td></tr></table></figure></p>
-<h3 id="Reading-multiple-keys-in-one-go"><a href="#Reading-multiple-keys-in-one-go" class="headerlink" title="Reading multiple keys in one go"></a>Reading multiple keys in one go</h3><p>Sometimes you might need to read multiple keys in one go, you can do this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::mget(<span class="string">'product:1:sales'</span>, <span class="string">'product:2:sales'</span>, <span class="string">'non_existing_key'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>The response of this command is an array with the same size of the given keys, if a key doesn’t exist its value is going to be null.</p>
-<p>As we discussed before, Redis executes individual command atomically, that means nothing can change the value of any in the keys once the operation started, so it’s guaranteed that the values returned are not altered in between reading the value of the first key and the last key.</p>
-<blockquote>
-<p>Using mget is better that firing multiple get commands to reduce the RTT (round trip time), which is the time each individual command takes to travel from client to the server and then carry the response back to the client. More on that later.</p>
-</blockquote>
-<h3 id="Deleting-Keys"><a href="#Deleting-Keys" class="headerlink" title="Deleting Keys"></a>Deleting Keys</h3><p>You can also delete multiple keys at once using the del command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::del(<span class="string">'previous:sales'</span>, <span class="string">'previous:return'</span>);</span><br></pre></td></tr></table></figure></p>
-<h3 id="Renaming-Keys"><a href="#Renaming-Keys" class="headerlink" title="Renaming Keys"></a>Renaming Keys</h3><p>You can rename a key using the rename command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::rename(<span class="string">'current:sales'</span>, <span class="string">'previous:sales'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>An error is returned if the original key doesn’t exist, and it overrides the second key if it already exists.</p>
-<p>Renaming keys is usually a fast operation unless a key with the desired name exists, in that case Redis will try to delete that existing key first before renaming this one, deleting a key that holds a very big value might be a bit slow.</p>
-<p>So I have to check first if the second key exists to prevent overriding?<br>Yeah you can use exists to check if the second key exists… OR:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::renamenx(<span class="string">'current:sales'</span>, <span class="string">'previous:sales'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>This will check first if the second key exists, if yes it just returns 0 without doing anything, so it only renames the key if the second key does not exist.</p>
-<blockquote>
-<p><a href="https://divinglaravel.com/redis/redis-commands" target="_blank" rel="noopener">https://divinglaravel.com/redis/redis-commands</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -984,7 +982,7 @@ if (!-f $request_filename) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -994,7 +992,7 @@ if (!-f $request_filename) {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,104 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/12/javascript中作用域和变量提升/" itemprop="url">
+                  javascript中作用域和变量提升
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-12T16:35:59+08:00" content="2016-12-12">
+              2016-12-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>留给中国队的时间已经不多了。<br></blockquote><br>“function函数”是一等公民！<code>编译阶段</code>，会把定义式的函数优先执行，也会把所有var变量创建，默认值为undefined，以提高程序的执行效率！<br>总结：当JavaScript引擎解析脚本时，它会在预编译期对所有声明的变量和函数进行处理！并且是先预声明变量，再预定义函数！</p>
+<h3 id="变量提升"><a href="#变量提升" class="headerlink" title="变量提升"></a>变量提升</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> v=<span class="string">'Hello World'</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(v);</span><br><span class="line">    <span class="keyword">var</span> v=<span class="string">'I love you'</span>;</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>提示说“undefined”</p>
+<h3 id="函数提升"><a href="#函数提升" class="headerlink" title="函数提升"></a>函数提升</h3><p>函数声明方式提升【成功】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myTest</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    foo();</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">"我来自 foo"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">myTest();</span><br></pre></td></tr></table></figure></p>
+<p>函数表达式方式提升【失败】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myTest</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    foo();</span><br><span class="line">   <span class="keyword">var</span> foo =<span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">"我来自 foo"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">myTest();</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/09/python投票和ip地址的伪造/" itemprop="url">
                   python投票和ip地址的伪造
                 </a>
@@ -309,7 +407,8 @@
       
         
           
-            <p><blockquote class="blockquote-center"><br>全怪我们太穷了，又不认识人。<br></blockquote></p>
+            <blockquote class="blockquote-center"><br>全怪我们太穷了，又不认识人。<br></blockquote>
+
 <h3 id="项目说明"><a href="#项目说明" class="headerlink" title="项目说明"></a>项目说明</h3><ul>
 <li>投票地址：<a href="http://kepudasai.cdstm.cn/index.php?kepu-postvote" target="_blank" rel="noopener">http://kepudasai.cdstm.cn/index.php?kepu-postvote</a></li>
 <li>投票限制：IP，每个ip每天10票</li>
@@ -318,7 +417,7 @@
 </ul>
 <h3 id="php获取IP问题"><a href="#php获取IP问题" class="headerlink" title="php获取IP问题"></a>php获取IP问题</h3><p>一般我们写的获取ip的方式：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetIP</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>];</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>];</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"REMOTE_ADDR"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"REMOTE_ADDR"</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $cip = <span class="string">"0.0.0.0"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $cip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其实这是有问题的，通过header我们可以轻易改变ip：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$curl = curl_init();    <span class="comment">//初始化一个curl对象  </span></span><br><span class="line">curl_setopt($curl, CURLOPT_URL, <span class="string">"127.0.0.1/server.php"</span>); </span><br><span class="line">$header = <span class="keyword">array</span>(        <span class="comment">//构造头部</span></span><br><span class="line">    <span class="string">'CLIENT-IP:58.68.44.61'</span>, </span><br><span class="line">    <span class="string">'X-FORWARDED-FOR:58.68.44.61'</span>, </span><br><span class="line">); </span><br><span class="line"></span><br><span class="line">curl_setopt($curl, CURLOPT_HTTPHEADER, $header); </span><br><span class="line">curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>); </span><br><span class="line"></span><br><span class="line">$str = curl_exec($curl);    <span class="comment">//执行请求  </span></span><br><span class="line">curl_close($curl);    <span class="comment">//关闭c</span></span><br><span class="line"><span class="keyword">echo</span> $str;    <span class="comment">//输出抓取的结果</span></span><br></pre></td></tr></table></figure></p>
-<p>解决方法：<br>在判断的时候以$_SERVER[“REMOTE_ADDR”]优先。</p>
+<p>解决方法：<br>在判断的时候以<code>$_SERVER[&quot;REMOTE_ADDR&quot;]</code>优先。</p>
 <h3 id="python脚本"><a href="#python脚本" class="headerlink" title="python脚本"></a>python脚本</h3><p>初学，不喜勿喷<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">'http://kepudasai.cdstm.cn/index.php?kepu-postvote'</span></span><br><span class="line"></span><br><span class="line">data = &#123;<span class="string">'group'</span>: <span class="string">'gaozhongzu'</span>,<span class="string">'key'</span> : <span class="number">10</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createHeader</span><span class="params">()</span>:</span></span><br><span class="line">    ip = socket.inet_ntoa(struct.pack(<span class="string">'&gt;I'</span>, random.randint(<span class="number">1</span>, <span class="number">0xffffffff</span>)))</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0'</span>,</span><br><span class="line">        <span class="string">'CLIENT-IP'</span>: ip,</span><br><span class="line">        <span class="string">'X-FORWARDED-FOR'</span>: ip</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> headers</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">toupiao</span><span class="params">()</span>:</span></span><br><span class="line">    index = <span class="number">0</span></span><br><span class="line">    headers = createHeader();</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        html = requests.post(url, data=data, headers=headers)</span><br><span class="line">        result = json.loads(html.text)</span><br><span class="line">        <span class="keyword">if</span>(result[<span class="string">'error'</span>] == <span class="number">1</span>):</span><br><span class="line">            time.sleep(random.randint(<span class="number">1</span>, <span class="number">3</span>))</span><br><span class="line">            headers = createHeader();</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span>(index == <span class="number">10000</span>):</span><br><span class="line">            <span class="keyword">print</span> index</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">toupiao()</span><br></pre></td></tr></table></figure></p>
 
           
@@ -681,132 +780,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/04/laravel5-2使用JWT/" itemprop="url">
-                  laravel5.2使用JWT
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-04T13:45:40+08:00" content="2016-12-04">
-              2016-12-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>more less<br></blockquote>
-
-<p>JWT stand for Json Web Token. JWT will helps to create authentication and connect front-end and back-end function. JWT through we can create login and register API. So first we have to install “tymon/jwt-auth” package in laravel 5.2.</p>
-<h3 id="JWT-Installation"><a href="#JWT-Installation" class="headerlink" title="JWT Installation"></a>JWT Installation</h3><p>First fire following command on your terminal.</p>
-<p>Installation Package</p>
-<p><code>composer require tymon/jwt-auth</code><br>After install this package, Now open config/app.php file and add service provider and aliase.<br><code>config/app.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">	....</span><br><span class="line">	<span class="string">'Tymon\JWTAuth\Providers\JWTAuthServiceProvider'</span>,</span><br><span class="line">],</span><br><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">	....</span><br><span class="line">	<span class="string">'JWTAuth'</span> =&gt; <span class="string">'Tymon\JWTAuth\Facades\JWTAuth'</span></span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
-<p>Now we need to publish JWT configration file, that way we can change configration like token expire time etc. so, let’s fire bellow command.</p>
-<p><code>php artisan vendor:publish --provider=&quot;Tymon\JWTAuth\Providers\JWTAuthServiceProvider&quot;</code><br>At last on installation, we have to generate jwt key, fire bellow command on your terminal.</p>
-<p><code>php artisan jwt:generate</code></p>
-<h3 id="Create-API-Route"><a href="#Create-API-Route" class="headerlink" title="Create API Route"></a>Create API Route</h3><p>Now we require to create create route for API, in bellow route you can see i use two middleware “api” and “cors”. cors is not mandatory, but when you call api and found like:</p>
-<p>“Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at <a href="http://test.com/api/register" target="_blank" rel="noopener">http://test.com/api/register</a>. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing).”</p>
-<p>Then you have two must be create cors middleware by following link : Ajax - Cross-Origin Request Blocked in Larave 5?.</p>
-<p><code>app/Http/routes.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Route::group([<span class="string">'middleware'</span> =&gt; [<span class="string">'api'</span>,<span class="string">'cors'</span>],<span class="string">'prefix'</span> =&gt; <span class="string">'api'</span>], <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    Route::post(<span class="string">'register'</span>, <span class="string">'APIController@register'</span>);</span><br><span class="line">    Route::post(<span class="string">'login'</span>, <span class="string">'APIController@login'</span>);</span><br><span class="line">    Route::group([<span class="string">'middleware'</span> =&gt; <span class="string">'jwt-auth'</span>], <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    	Route::post(<span class="string">'get_user_details'</span>, <span class="string">'APIController@get_user_details'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>In above i use also added jwt-auth for token is valid or not. so we must need to create jwt-auth middleware and first fire following command.</p>
-<p><code>php artisan make:middleware authJWT</code><br>On now you can check on Middleware(app/Http/Middleware) directory, you can find authJWT.php file and put bellow code on that file.</p>
-<p><code>app/Http/Middleware/authJWT.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Middleware</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Closure</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">JWTAuth</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Exception</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">authJWT</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            $user = JWTAuth::toUser($request-&gt;input(<span class="string">'token'</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($e <span class="keyword">instanceof</span> \Tymon\JWTAuth\Exceptions\TokenInvalidException)&#123;</span><br><span class="line">                <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span>=&gt;<span class="string">'Token is Invalid'</span>]);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span> ($e <span class="keyword">instanceof</span> \Tymon\JWTAuth\Exceptions\TokenExpiredException)&#123;</span><br><span class="line">                <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span>=&gt;<span class="string">'Token is Expired'</span>]);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span>=&gt;<span class="string">'Something is wrong'</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $next($request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Ok, now register new created middleware on Kernel.php(app/Http/Kernel.php) file and append following line.</p>
-<p><code>app/Http/Kernel.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Http</span>\<span class="title">Kernel</span> <span class="title">as</span> <span class="title">HttpKernel</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kernel</span> <span class="keyword">extends</span> <span class="title">HttpKernel</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">    <span class="keyword">protected</span> $routeMiddleware = [</span><br><span class="line">        ...</span><br><span class="line">        <span class="string">'jwt-auth'</span> =&gt; \App\Http\Middleware\authJWT::class,</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Create-Controller"><a href="#Create-Controller" class="headerlink" title="Create Controller"></a>Create Controller</h3><p>Here we have to create controller that will manage all route request. so first create “APIController” and put bellow code.</p>
-<p><code>app/Http/Controllers/APIController.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">User</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Hash</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">JWTAuth</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APIController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;        </span><br><span class="line">    	$input = $request-&gt;all();</span><br><span class="line">    	$input[<span class="string">'password'</span>] = Hash::make($input[<span class="string">'password'</span>]);</span><br><span class="line">    	User::create($input);</span><br><span class="line">        <span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span>=&gt;<span class="keyword">true</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	$input = $request-&gt;all();</span><br><span class="line">    	<span class="keyword">if</span> (!$token = JWTAuth::attempt($input)) &#123;</span><br><span class="line">            <span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span> =&gt; <span class="string">'wrong email or password.'</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        	<span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span> =&gt; $token]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_user_details</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	$input = $request-&gt;all();</span><br><span class="line">    	$user = JWTAuth::toUser($input[<span class="string">'token'</span>]);</span><br><span class="line">        <span class="keyword">return</span> response()-&gt;json([<span class="string">'result'</span> =&gt; $user]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Test-API-from-Front-end"><a href="#Test-API-from-Front-end" class="headerlink" title="Test API from Front-end"></a>Test API from Front-end</h3><p>Don’t forgot to change <a href="http://learnl52.hd" target="_blank" rel="noopener">http://learnl52.hd</a> = your site url.</p>
-<p>Now we are ready to check our API from front-end side. i did make jquery ajax request example but you can also call API in angularjs. first fire register api that will return just success if user created success fully.</p>
-<p>Call Register API<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://learnl52.hd/api/register"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	data: &#123;<span class="string">"name"</span>:<span class="string">"HD"</span>,<span class="string">"email"</span>:<span class="string">"test@gmail.com"</span>,<span class="string">"password"</span>:<span class="string">"123456"</span>&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">		alert(<span class="string">"user created successfully"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>Now you can fire login API, this API will return token in result if, email and password will not wrong. that token you have to pass in all other route that way you can identify this user is current login user so fire following way:</p>
-<p>Call Login API<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://learnl52.hd/api/login"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	data: &#123;<span class="string">"email"</span>:<span class="string">"test@gmail.com"</span>,<span class="string">"password"</span>:<span class="string">"123456"</span>&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">		alert(data.result)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>At last we can fire get_user_details API, This API will take only one paramete token, token is that you find on login API. this API will return all users details if your token is valid, if token is not valid then return error message. fire ajax like this way:</p>
-<p>Call Get User Details API<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://learnl52.hd/api/get_user_details"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	data: &#123;<span class="string">"token"</span>:your toke here&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(data)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="add"><a href="#add" class="headerlink" title="add"></a>add</h3><p>Require the barryvdh/laravel-cors package in your composer.json and update your dependencies.</p>
-<p><code>composer require barryvdh/laravel-cors</code><br>Add the Cors\ServiceProvider to your<code>config/app.php</code>providers array:</p>
-<p><code>Barryvdh\Cors\ServiceProvider::class,</code></p>
-<blockquote>
-<p><a href="http://itsolutionstuff.com/post/laravel-52-api-using-jwt-authentication-tutorial-from-scratch-exampleexample.html" target="_blank" rel="noopener">http://itsolutionstuff.com/post/laravel-52-api-using-jwt-authentication-tutorial-from-scratch-exampleexample.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -850,7 +823,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">357</span>
+              <span class="site-state-item-count">358</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -860,7 +833,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">140</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
