@@ -265,6 +265,104 @@
             
               
                 
+                <a class="post-title-link" href="/2019/06/05/laravel大量数据库查询导致php进程内存耗尽/" itemprop="url">
+                  Laravel大量数据库查询导致php进程内存耗尽
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-06-05T12:39:26+08:00" content="2019-06-05">
+              2019-06-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>行路难，不在水，不在山，只在人情反覆间<br></blockquote>
+
+<p>Laravel框架默认存储每次请求(每次命令行执行也相当于一次请求)的所有数据库查询语句！！！<br>在普通的http中数据库请求语句并不多，所有不会导致问题，但是需要大量数据库查询的命令行工具就显然不能这么干，</p>
+<h3 id="禁用query日志"><a href="#禁用query日志" class="headerlink" title="禁用query日志"></a>禁用query日志</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::connection()-&gt;disableQueryLog();  <span class="comment">//禁用query log</span></span><br></pre></td></tr></table></figure>
+<h3 id="打印sql"><a href="#打印sql" class="headerlink" title="打印sql"></a>打印sql</h3><p>在 <code>AppServiceProvider.php</code> 的 boot 方法中添加如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (env(<span class="string">'APP_ENV'</span>) === <span class="string">'local'</span>) &#123;</span><br><span class="line">        DB::connection()-&gt;enableQueryLog();</span><br><span class="line">        Event::listen(<span class="string">'kernel.handled'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($request, $response)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ( $request-&gt;has(<span class="string">'sql-debug'</span>) ) &#123;</span><br><span class="line">                $queries = DB::getQueryLog();</span><br><span class="line">                dd($queries);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/05/30/mysql模糊查询unicode汉字/" itemprop="url">
                   MySQL模糊查询unicode汉字
                 </a>
@@ -670,107 +768,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/11/10/git恢复被删除的文件/" itemprop="url">
-                  git恢复被删除的文件
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-11-10T23:03:32+08:00" content="2018-11-10">
-              2018-11-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>寂寞空庭春欲晚，梨花满地不开门。<br></blockquote><br>大多数我们是不知道在何时删除了某个文件，通过下面这个命令我们可以查看在哪个 commit 中删除了哪些文件。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --diff-filter=D --summary</span><br></pre></td></tr></table></figure></p>
-<p>执行这个命令后效果如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">commit <span class="number">6</span>dcf1e6332e2f0cc10902b995a6efda72b88ebc4</span><br><span class="line">Author: 杨国奇 &lt;lnmput@gmail.com&gt;</span><br><span class="line">Date:   Fri Nov <span class="number">16</span> <span class="number">17</span>:<span class="number">58</span>:<span class="number">27</span> <span class="number">2018</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    修改页面</span><br><span class="line"></span><br><span class="line"> delete mode <span class="number">100644</span> <span class="keyword">public</span>/themes/lal/fdssf.php</span><br><span class="line"></span><br><span class="line">commit cef7eed4b38360a4f3f6ea70c173654df30c486f</span><br><span class="line">Author: 杨国奇 &lt;lnmput@gmail.com&gt;</span><br><span class="line">Date:   Wed Nov <span class="number">7</span> <span class="number">17</span>:<span class="number">25</span>:<span class="number">44</span> <span class="number">2018</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    调整代码结构</span><br><span class="line"></span><br><span class="line"> delete mode <span class="number">100644</span> app/Http/Controllers/Homes.php</span><br><span class="line"> delete mode <span class="number">100644</span> app/Http/Requests/AddressAddRequest.php</span><br><span class="line"> delete mode <span class="number">100644</span> app/Http/Requests/Web/AddressStoreRequest.php</span><br><span class="line"></span><br><span class="line">commit <span class="number">572110</span>f5deed9d3ff76ccc9a7da75c0e5ed324ce</span><br><span class="line">Author: 杨子鳄鱼 &lt;lnmput@gmail.com&gt;</span><br><span class="line">Date:   Wed Nov <span class="number">7</span> <span class="number">00</span>:<span class="number">04</span>:<span class="number">51</span> <span class="number">2018</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    更新缓存</span><br><span class="line"></span><br><span class="line"> delete mode <span class="number">100644</span> app/Console/Commands/InitCommand.php</span><br></pre></td></tr></table></figure></p>
-<p>比如我想恢复 ic_selected.png 这个文件，我们可以看到删除该文件对应的 commit id :f541888b0e7255cc6aa22a277f3dd9fe5502e5e2。</p>
-<p>接下来我们执行下面这个命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout $commit~<span class="number">1</span> filename</span><br></pre></td></tr></table></figure></p>
-<p>这个命令会检出该 commit 的上一个提交中的文件，因为我们是在该 commit 中删除的文件，所以需要在上一个 commit 才能恢复出文件。</p>
-<blockquote>
-<p><a href="https://www.jianshu.com/p/41ad0dcfd8da" target="_blank" rel="noopener">https://www.jianshu.com/p/41ad0dcfd8da</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -814,7 +811,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">358</span>
+              <span class="site-state-item-count">359</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

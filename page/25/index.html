@@ -265,6 +265,184 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/22/Github的Restful-HTTP-API设计分解/" itemprop="url">
+                  Github的Restful-HTTP-API设计分解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-22T15:46:39+08:00" content="2018-03-22">
+              2018-03-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>在硝烟中想起冰棒汽水的味道<br>和那些无所事事一整个夏天的年少<br></blockquote>
+
+<h3 id="什么是-RESTful"><a href="#什么是-RESTful" class="headerlink" title="什么是 RESTful"></a>什么是 RESTful</h3><p>RESTful 是一种软件设计风格，由 Roy Fielding 在他的 论文 中提出，全称为 Representational State Transfer，直译为表现层状态转移，或许可以解释为用 URL 定位资源，用 HTTP 动词描述操作，不用太纠结于定义，接下来我们会详细讨论。</p>
+<p>RESTful 风格的接口，目前来看，实现的最好的就是 Github API，经常被效仿。接下来我们通过分析 Github API 来引出我们的 API 设计原则。</p>
+<h3 id="为什么选择-RESTful"><a href="#为什么选择-RESTful" class="headerlink" title="为什么选择 RESTful"></a>为什么选择 RESTful</h3><p>我认为一套接口应该尽量满足以下几个原则：</p>
+<ul>
+<li>安全可靠，高效，易扩展。</li>
+<li>简单明了，可读性强，没有歧义。</li>
+<li>API 风格统一，调用规则，传入参数和返回数据有统一的标准。</li>
+</ul>
+<p>我们当然可以根据自己的经验，或者参考知名公司的接口总结设计出一套满足要求的接口，但是每个人对接口的理解不同，设计出来的接口也会有所不同，接口的命名，请求参数的格式，响应的结果，错误响应的错误码，等等很多地方都会有不一样的实现。当你去寻求一种设计理念来帮助我们设计出满足要求的接口，一定会发现 RESTful。<br>RESTful 的设计理念基于 HTTP 协议，因为 Roy Fielding 就是 HTTP 协议（1.0版和1.1版）的主要设计者。它是一种设计风格，没有规定我们一定如何实现，但是为我们提供了很好的设计理念。风格的统一，使得我们不需要过多的解释，就能让使用者明白该如何使用，同时也会有很多现成的工具来帮助我们实现 RESTful 风格的接口。</p>
+<h3 id="RESTful-设计原则"><a href="#RESTful-设计原则" class="headerlink" title="RESTful 设计原则"></a>RESTful 设计原则</h3><h4 id="1-HTTPS"><a href="#1-HTTPS" class="headerlink" title="1. HTTPS"></a>1. HTTPS</h4><p>HTTPS 为接口的安全提供了保障，可以有效防止通信被窃听和篡改。而且现在部署 HTTPS 的成本也越来越低，你可以通过 cerbot 等工具，方便快速的制作免费的安全证书，所以生产环境，请务必使用 HTTPS。</p>
+<blockquote>
+<p>另外注意，非 HTTPS 的 API 调用，不要重定向到 HTTPS，而要直接返回调用错误以禁止不安全的调用。</p>
+</blockquote>
+<h4 id="2-域名"><a href="#2-域名" class="headerlink" title="2. 域名"></a>2. 域名</h4><p>应当尽可能的将 API 与其主域名区分开，可以使用专用的域名，访问我们的 API，例如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.vxndy.com</span></span><br></pre></td></tr></table></figure></p>
+<p>或者可以放在主域名下，例如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//www.vxndy.com/api</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-版本控制"><a href="#3-版本控制" class="headerlink" title="3. 版本控制"></a>3. 版本控制</h4><p>随着业务的发展，需求的不断变化，API 的迭代是必然的，很可能当前版本正在使用，而我们就得开发甚至上线一个不兼容的新版本，为了让旧用户可以正常使用，为了保证开发的顺利进行，我们需要控制好 API 的版本。</p>
+<p>通常情况下，有两种做法：</p>
+<ul>
+<li><p>将版本号直接加入 URL 中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.vxndy.com/v1</span></span><br><span class="line">https:<span class="comment">//api.vxndy.com/v2</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 HTTP 请求头的 Accept 字段进行区分</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.larabbs.com/</span></span><br><span class="line">    Accept: application/prs.vxndy.v1+json</span><br><span class="line">    Accept: application/prs.vxndy.v2+json</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Github Api 虽然默认使用了第一种方法，但是其实是推荐并实现了第二种方法的，我们同样也尽量使用第二种方式。</p>
+<h4 id="4-用-URL-定位资源"><a href="#4-用-URL-定位资源" class="headerlink" title="4. 用 URL 定位资源"></a>4. 用 URL 定位资源</h4><p>在 RESTful 的架构中，所有的一切都表示资源，每一个 URL 都代表着一种资源，资源应当是一个名词，而且大部分情况下是名词的复数，尽量不要在 URL 中出现动词。<br>先来看看 github 的 例子：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET /issues                                      列出所有的 issue</span><br><span class="line">GET /orgs/:org/issues                            列出某个项目的 issue</span><br><span class="line">GET /repos/:owner/:repo/issues/:number           获取某个项目的某个 issue</span><br><span class="line">POST /repos/:owner/:repo/issues                  为某个项目创建 issue</span><br><span class="line">PATCH /repos/:owner/:repo/issues/:number         修改某个 issue</span><br><span class="line">PUT /repos/:owner/:repo/issues/:number/lock      锁住某个 issue</span><br><span class="line">DELETE /repos/:owner/:repo/issues/:number/lock   接收某个 issue</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>例子中冒号开始的代表变量，例如 /repos/summerblue/larabbs/issues</p>
+</blockquote>
+<p>在 github 的实现中，我们可以总结出：</p>
+<ul>
+<li>资源的设计可以嵌套，表明资源与资源之间的关系。</li>
+<li>大部分情况下我们访问的是某个资源集合，想得到单个资源可以通过资源的 id 或number 等唯一标识获取。</li>
+<li>某些情况下，资源会是单数形式，例如某个项目某个 issue 的锁，每个 issue 只会有一把锁，所以它是单数。</li>
+</ul>
+<p>错误的例子<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST https:<span class="comment">//api.larabbs.com/createTopic</span></span><br><span class="line">GET https:<span class="comment">//api.larabbs.com/topic/show/1</span></span><br><span class="line">POST https:<span class="comment">//api.larabbs.com/topics/1/comments/create</span></span><br><span class="line">POST https:<span class="comment">//api.larabbs.com/topics/1/comments/100/delete</span></span><br></pre></td></tr></table></figure></p>
+<p>正确的例子<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST https:<span class="comment">//api.larabbs.com/topics</span></span><br><span class="line">GET https:<span class="comment">//api.larabbs.com/topics/1</span></span><br><span class="line">POST https:<span class="comment">//api.larabbs.com/topics/1/comments</span></span><br><span class="line">DELETE https:<span class="comment">//api.larabbs.com/topics/1/comments/100</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="5-用-HTTP-动词描述操作"><a href="#5-用-HTTP-动词描述操作" class="headerlink" title="5. 用 HTTP 动词描述操作"></a>5. 用 HTTP 动词描述操作</h4><p>HTTP 设计了很多动词，来表示不同的操作，RESTful 很好的利用的这一点，我们需要正确的使用 HTTP 动词，来表明我们要如何操作资源。<br>先来解释一个概念，幂等性，指一次和多次请求某一个资源应该具有同样的副作用，也就是一次访问与多次访问，对这个资源带来的变化是相同的。</p>
+<p>常用的动词及幂等性</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">动词	描述	                              是否幂等</span><br><span class="line">GET	获取资源，单个或多个	                  是</span><br><span class="line">POST	创建资源	                                  否</span><br><span class="line">PUT	更新资源，客户端提供完整的资源数据	          是</span><br><span class="line">PATCH	更新资源，客户端提供部分的资源数据	          否</span><br><span class="line">DELETE	删除资源	                                  是</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>为什么 PUT 是幂等的而 PATCH 是非幂等的，因为 PUT 是根据客户端提供了完整的资源数据，客户端提交什么就替换为什么，而 PATCH 有可能是根据客户端提供的参数，动态的计算出某个值，例如每次请求后资源的某个参数减1，所以多次调用，资源会有不同的变化。</p>
+</blockquote>
+<p>另外需要注意的是，GET 请求是安全的，不允许通过 GET 请求改变（更新或创建）资源，但是真实使用中，为了方便统计类的数据，会有一些例外情况，例如帖子详情，记录访问次数，每调用一次，访问次数 +1;</p>
+<h4 id="6-资源过滤"><a href="#6-资源过滤" class="headerlink" title="6. 资源过滤"></a>6. 资源过滤</h4><p>我们需要提供合理的参数供客户端过滤资源，例如<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?state=closed: 不同状态的资源</span><br><span class="line">?page=<span class="number">2</span>&amp;per_page=<span class="number">100</span>：访问第几页数据，每页多少条。</span><br><span class="line">?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序。</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-正确使用状态码"><a href="#7-正确使用状态码" class="headerlink" title="7. 正确使用状态码"></a>7. 正确使用状态码</h4><p>HTTP 提供了丰富的状态码供我们使用，正确的使用状态码可以让响应数据更具可读性。</p>
+<ul>
+<li>200 OK - 对成功的 GET、PUT、PATCH 或 DELETE 操作进行响应。也可以被用在不创建新资源的 POST 操作上</li>
+<li>201 Created - 对创建新资源的 POST 操作进行响应。应该带着指向新资源地址的 Location 头</li>
+<li>202 Accepted - 服务器接受了请求，但是还未处理，响应中应该包含相应的指示信息，告诉客户端该去哪里查询关于本次请求的信息</li>
+<li>204 No Content - 对不会返回响应体的成功请求进行响应（比如 DELETE 请求）</li>
+<li>304 Not Modified - HTTP缓存header生效的时候用</li>
+<li>400 Bad Request - 请求异常，比如请求中的body无法解析</li>
+<li>401 Unauthorized - 没有进行认证或者认证非法</li>
+<li>403 Forbidden - 服务器已经理解请求，但是拒绝执行它</li>
+<li>404 Not Found - 请求一个不存在的资源</li>
+<li>405 Method Not Allowed - 所请求的 HTTP 方法不允许当前认证用户访问</li>
+<li>410 Gone - 表示当前请求的资源不再可用。当调用老版本 API 的时候很有用</li>
+<li>415 Unsupported Media Type - 如果请求中的内容类型是错误的</li>
+<li>422 Unprocessable Entity - 用来表示校验错误</li>
+<li>429 Too Many Requests - 由于请求频次达到上限而被拒绝访问</li>
+</ul>
+<h4 id="8-数据响应格式"><a href="#8-数据响应格式" class="headerlink" title="8. 数据响应格式"></a>8. 数据响应格式</h4><p>考虑到响应数据的可读性及通用性，默认使用 JSON 作为数据响应格式。如果客户端有需求使用其他的响应格式，例如 XML，需要在 Accept 头中指定需要的格式。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.vxndy.com/</span></span><br><span class="line">    Accept: application/prs.vxndy.v1+json</span><br><span class="line">    Accept: application/prs.vxndy.v1+xml</span><br></pre></td></tr></table></figure>
+<p>对于错误数据，默认使用如下结构：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">'message' =&gt; ':message',          // 错误的具体描述</span><br><span class="line">'errors' =&gt; ':errors',            // 参数的具体错误描述，422 等状态提供</span><br><span class="line">'code' =&gt; ':code',                // 自定义的异常码</span><br><span class="line">'status_code' =&gt; ':status_code',  // http状态码</span><br><span class="line">'debug' =&gt; ':debug',              // debug 信息，非生产环境提供</span><br></pre></td></tr></table></figure></p>
+<p>例如<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"message"</span>: <span class="string">"422 Unprocessable Entity"</span>,</span><br><span class="line">    <span class="attr">"errors"</span>: &#123;</span><br><span class="line">        <span class="attr">"name"</span>: [</span><br><span class="line">            <span class="string">"姓名 必须为字符串。"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"status_code"</span>: <span class="number">422</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"message"</span>: <span class="string">"您无权访问该订单"</span>,</span><br><span class="line">    <span class="attr">"status_code"</span>: <span class="number">403</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="9-调用频率限制"><a href="#9-调用频率限制" class="headerlink" title="9. 调用频率限制"></a>9. 调用频率限制</h4><p>为了防止服务器被攻击，减少服务器压力，需要对接口进行合适的限流控制，需要在响应头信息中加入合适的信息，告知客户端当前的限流情况</p>
+<ul>
+<li>X-RateLimit-Limit :100 最大访问次数</li>
+<li>X-RateLimit-Remaining :93 剩余的访问次数</li>
+<li>X-RateLimit-Reset :1513784506 到该时间点，访问次数会重置为 X-RateLimit-Limit</li>
+</ul>
+<h4 id="10-编写文档"><a href="#10-编写文档" class="headerlink" title="10. 编写文档"></a>10. 编写文档</h4><p>为了方便用户使用，我们需要提供清晰的文档，尽可能包括以下几点</p>
+<ul>
+<li>包括每个接口的请求参数，每个参数的类型限制，是否必填，可选的值等。</li>
+<li>响应结果的例子说明，包括响应结果中，每个参数的释义。</li>
+<li>对于某一类接口，需要有尽量详细的文字说明，比如针对一些特定场景，接口应该如何调用。</li>
+</ul>
+<blockquote>
+<p><a href="https://developer.github.com/v3/" target="_blank" rel="noopener">https://developer.github.com/v3/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/20/面向切面编程AOP/" itemprop="url">
                   面向切面编程AOP
                 </a>
@@ -673,108 +851,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/08/Laravel使用markdown详细/" itemprop="url">
-                  Laravel使用markdown详细
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-08T16:40:30+08:00" content="2018-03-08">
-              2018-03-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>可我咋觉得你躺在这<br>我李云龙的半条命<br>也埋在这儿了……<br></blockquote>
-
-<h3 id="使用SimpleMDE编辑器"><a href="#使用SimpleMDE编辑器" class="headerlink" title="使用SimpleMDE编辑器"></a>使用SimpleMDE编辑器</h3><h4 id="页面上引入css和js文件"><a href="#页面上引入css和js文件" class="headerlink" title="页面上引入css和js文件"></a>页面上引入css和js文件</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">name</span>=<span class="string">"profile"</span> <span class="attr">placeholder</span>=<span class="string">"这里请介绍你的专栏内容, 写作计划, 更新进度, 答疑情况等内容"</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> simplemde = <span class="keyword">new</span> SimpleMDE(&#123;</span><br><span class="line">    spellChecker: <span class="literal">false</span>,</span><br><span class="line">    autosave: &#123;</span><br><span class="line">        enabled: <span class="literal">true</span>,</span><br><span class="line">        delay: <span class="number">5000</span>,</span><br><span class="line">        unique_id: <span class="string">"article_content"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    forceSync: <span class="literal">true</span>,</span><br><span class="line">    toolbar: [</span><br><span class="line">        <span class="string">"bold"</span>, <span class="string">"italic"</span>, <span class="string">"heading"</span>, <span class="string">"|"</span>, <span class="string">"quote"</span>, <span class="string">"code"</span>, <span class="string">"table"</span>,</span><br><span class="line">        <span class="string">"horizontal-rule"</span>, <span class="string">"unordered-list"</span>, <span class="string">"ordered-list"</span>, <span class="string">"|"</span>,</span><br><span class="line">        <span class="string">"link"</span>, <span class="string">"image"</span>, <span class="string">"|"</span>, <span class="string">"side-by-side"</span>, <span class="string">'fullscreen'</span>, <span class="string">"|"</span>,</span><br><span class="line">        &#123;</span><br><span class="line">            name: <span class="string">"guide"</span>,</span><br><span class="line">            action: <span class="function"><span class="keyword">function</span> <span class="title">customFunction</span>(<span class="params">editor</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">'https://github.com/riku/Markdown-Syntax-CN/blob/master/syntax.md'</span>, <span class="string">'_blank'</span>);</span><br><span class="line">                <span class="keyword">if</span> (win) &#123;</span><br><span class="line">                    <span class="comment">//Browser has allowed it to be opened</span></span><br><span class="line">                    win.focus();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">//Browser has blocked it</span></span><br><span class="line">                    alert(<span class="string">'Please allow popups for this website'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            className: <span class="string">"fa fa-info-circle"</span>,</span><br><span class="line">            title: <span class="string">"Markdown 语法！"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            name: <span class="string">"publish"</span>,</span><br><span class="line">            action: <span class="function"><span class="keyword">function</span> <span class="title">customFunction</span>(<span class="params">editor</span>) </span>&#123;</span><br><span class="line">                $(<span class="string">'.submit-btn'</span>).click();</span><br><span class="line">            &#125;,</span><br><span class="line">            className: <span class="string">"fa fa-paper-plane"</span>,</span><br><span class="line">            title: <span class="string">"发布文章"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="页面输出解析markdown"><a href="#页面输出解析markdown" class="headerlink" title="页面输出解析markdown"></a>页面输出解析markdown</h3><h4 id="安装扩展包"><a href="#安装扩展包" class="headerlink" title="安装扩展包"></a>安装扩展包</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> erusev/parsedown</span><br></pre></td></tr></table></figure>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$Parsedown = <span class="keyword">new</span> Parsedown();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $Parsedown-&gt;text(<span class="string">'Hello _Parsedown_!'</span>); <span class="comment"># prints: &lt;p&gt;Hello &lt;em&gt;Parsedown&lt;/em&gt;!&lt;/p&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://simplemde.com/" target="_blank" rel="noopener">https://simplemde.com/</a><br><a href="https://packagist.org/packages/erusev/parsedown" target="_blank" rel="noopener">https://packagist.org/packages/erusev/parsedown</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -818,7 +894,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">358</span>
+              <span class="site-state-item-count">359</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

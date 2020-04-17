@@ -265,6 +265,114 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/29/Laravel5-4新特性-Laravel-mix和laravel-elixir比较/" itemprop="url">
+                  Laravel5.4新特性-Laravel-mix和laravel-elixir比较
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-29T14:54:11+08:00" content="2017-09-29">
+              2017-09-29
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>年纪越大,越没有人会原谅你的穷<br></blockquote>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><code>Laravel Mix</code> 提供了一套流式 API，使用一些通用的 CSS 和 JavaScript 预处理器为 Laravel 应用定义 Webpack 构建步骤。通过简单的方法链，你可以流式定义资源管道。例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mix.js(<span class="string">'resources/assets/js/app.js'</span>, <span class="string">'public/js'</span>)</span><br><span class="line">   .sass(<span class="string">'resources/assets/sass/app.scss'</span>, <span class="string">'public/css'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>如果你对如何开始使用 Webpack 和前端资源编译感到困惑，那么你会爱上 Laravel Mix。不过，并不是强制要求在开发期间使用它。你可以自由选择使用任何前端资源管道工具，或者压根不使用。</p>
+<h2 id="webpack用法"><a href="#webpack用法" class="headerlink" title="webpack用法"></a>webpack用法</h2><p>Mix 是位于 Webpack 顶层的配置层，所以要运行 Mix 任务你只需要在运行包含在默认 package.json 文件中的其中某个 NPM 脚本即可：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.安装package.json 包</span></span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.运行所有 Mix 任务...</span></span><br><span class="line">npm run dev</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行所有 Mix 任务并减少输出...</span></span><br><span class="line"><span class="comment">// npm run production</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.监控前端资源改变</span></span><br><span class="line">npm run watch</span><br><span class="line">监控前端资源改变</span><br></pre></td></tr></table></figure></p>
+<p><code>npm run watch</code>命令将会持续在终端运行并监听所有相关文件的修改，Webpack将会在发现修改后自动重新编译资源文件：</p>
+<p><code>webpack.mix.js</code> 添加版本<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; mix &#125; = <span class="built_in">require</span>(<span class="string">'laravel-mix'</span>);</span><br><span class="line"></span><br><span class="line">mix.js(<span class="string">'resources/assets/js/app.js'</span>, <span class="string">'public/js'</span>)</span><br><span class="line">   .sass(<span class="string">'resources/assets/sass/app.scss'</span>, <span class="string">'public/css'</span>)</span><br><span class="line">   .version();</span><br></pre></td></tr></table></figure></p>
+<p>前端<code>app.blade.php</code>引入资源方法修改：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Styles --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; mix('css/app.css') &#125;&#125;"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">&lt;!-- Scripts --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; mix('js/app.js') &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Laravel-elixir"><a href="#Laravel-elixir" class="headerlink" title="Laravel-elixir"></a>Laravel-elixir</h2><p>旧版本用的是<code>laravel-elixir</code>处理的，只需执行gulp命令即可整合前端的资源,<code>gulpfile.js</code>为入口文件<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elixir = <span class="built_in">require</span>(<span class="string">'laravel-elixir'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"> | Elixir Asset Management</span></span><br><span class="line"><span class="comment"> |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"> |</span></span><br><span class="line"><span class="comment"> | Elixir provides a clean, fluent API for defining some basic Gulp tasks</span></span><br><span class="line"><span class="comment"> | for your Laravel application. By default, we are compiling the Sass</span></span><br><span class="line"><span class="comment"> | file for our application, as well as publishing vendor resources.</span></span><br><span class="line"><span class="comment"> |</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">elixir(<span class="function"><span class="keyword">function</span>(<span class="params">mix</span>) </span>&#123;</span><br><span class="line">    mix.sass(<span class="string">'app.scss'</span>)</span><br><span class="line">      .browserify(<span class="string">'app.js'</span>);</span><br><span class="line">     mix.version([<span class="string">'js/app.js'</span>, <span class="string">'css/app.css'</span>])</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>如果运行该命令后，全端资源有缓存影响，我们可以在上边的配置文件中，对输出的资源加版本：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix.version([<span class="string">'app.js'</span>, <span class="string">'app.css'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>在前端 HTML 页面引入打包后的 css 或 js 资源时，可以用全局的方法 elixir这样写：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Styles --&gt;</span></span><br><span class="line">// <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; asset('css/app.css') &#125;&#125;"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; elixir('css/app.css') &#125;&#125;"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Scripts --&gt;</span></span><br><span class="line">// <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; asset('js/app.js') &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; elixir('js/app.js') &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后再执行gulp命令：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gulp</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://segmentfault.com/a/1190000008666954" target="_blank" rel="noopener">https://segmentfault.com/a/1190000008666954</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/28/在Laravel中设置没有加密的cookie/" itemprop="url">
                   在Laravel中设置没有加密的cookie
                 </a>
@@ -671,105 +779,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/22/php实现跳转的一个坑/" itemprop="url">
-                  php实现跳转的一个坑
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-22T10:14:53+08:00" content="2017-09-22">
-              2017-09-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>被人看得见的努力,都是肤浅的努力<br></blockquote></p>
-<h3 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h3><p>If you don’t put a die() or exit() after your header(‘Location: <a href="http://something" target="_blank" rel="noopener">http://something</a>‘) your script may continue resulting in unexpected behaviour. This may for example result in content being disclosed that you actually wanted to prevent with the redirect (HTTP 301). The aforementioned may not directly be visible for an end user as the browser may not render it (due to the 301). Conclusion, the exit() and die() functions stop the script from continuing.</p>
-<h3 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h3><p>这句话的意思是说如果你不在header(‘Location: <a href="http://something&#39;)你的脚本后面加上" target="_blank" rel="noopener">http://something&#39;)你的脚本后面加上</a> die() 或者 exit(), 你的脚本就会继续向下执行,这样你的脚本就可能跳转不成功;</p>
-<blockquote>
-<p><a href="https://stackoverflow.com/questions/8665985/php-utilizing-exit-or-die-after-headerlocation" target="_blank" rel="noopener">https://stackoverflow.com/questions/8665985/php-utilizing-exit-or-die-after-headerlocation</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -813,7 +822,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">358</span>
+              <span class="site-state-item-count">359</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

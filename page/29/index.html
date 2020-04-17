@@ -265,6 +265,112 @@
             
               
                 
+                <a class="post-title-link" href="/2018/01/24/说说laravel管道pipeline的实现/" itemprop="url">
+                  说说laravel管道pipeline的实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-24T09:19:26+08:00" content="2018-01-24">
+              2018-01-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我来过，我战斗过，我不在乎结局。<br></blockquote><br>Laravel中比较优雅的实现了MiddleWare. 主要用来层层递进的处理Request.</p>
+<h3 id="Pipeline对象"><a href="#Pipeline对象" class="headerlink" title="Pipeline对象"></a>Pipeline对象</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">new</span> Pipeline())</span><br><span class="line">     -&gt;send($passable) <span class="comment">// 待处理对象，要经过流水线的对象（比如request对象）</span></span><br><span class="line">     -&gt;through($middlewares) <span class="comment">// 流水线上的各个环节（中间件）</span></span><br><span class="line">     -&gt;via(<span class="string">'handle'</span>) <span class="comment">// 指定每个环节的处理方法，比如 Authenticate::handle</span></span><br><span class="line">     -&gt;then($handler); <span class="comment">// 尽头，最后的处理（返回时，则是源头）</span></span><br></pre></td></tr></table></figure>
+<h3 id="then-方法"><a href="#then-方法" class="headerlink" title="then()方法"></a>then()方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">then</span><span class="params">(Closure $destination)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $pipeline = array_reduce(</span><br><span class="line">        array_reverse(<span class="keyword">$this</span>-&gt;pipes), <span class="keyword">$this</span>-&gt;carry(), <span class="keyword">$this</span>-&gt;prepareDestination($destination)</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> $pipeline(<span class="keyword">$this</span>-&gt;passable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>$this-&gt;pipes 是我们的中间件数组:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">2018</span><span class="number">-01</span><span class="number">-24</span> <span class="number">08</span>:<span class="number">55</span>:<span class="number">58</span>] local.INFO: <span class="keyword">array</span> (</span><br><span class="line">  <span class="number">0</span> =&gt; <span class="string">'App\\Http\\Middleware\\EncryptCookies'</span>,</span><br><span class="line">  <span class="number">1</span> =&gt; <span class="string">'Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse'</span>,</span><br><span class="line">  <span class="number">2</span> =&gt; <span class="string">'Illuminate\\Session\\Middleware\\StartSession'</span>,</span><br><span class="line">  <span class="number">3</span> =&gt; <span class="string">'Illuminate\\View\\Middleware\\ShareErrorsFromSession'</span>,</span><br><span class="line">  <span class="number">4</span> =&gt; <span class="string">'App\\Http\\Middleware\\VerifyCsrfToken'</span>,</span><br><span class="line">  <span class="number">5</span> =&gt; <span class="string">'Illuminate\\Auth\\Middleware\\Authenticate'</span>,</span><br><span class="line">  <span class="number">6</span> =&gt; <span class="string">'Illuminate\\Routing\\Middleware\\SubstituteBindings'</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h3 id="carry-方法"><a href="#carry-方法" class="headerlink" title="carry()方法"></a>carry()方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">carry</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($passable)</span> <span class="title">use</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ($pipe <span class="keyword">instanceof</span> Closure) &#123;</span><br><span class="line">                <span class="comment">// If the pipe is an instance of a Closure, we will just call it directly but</span></span><br><span class="line">                <span class="comment">// otherwise we'll resolve the pipes out of the container and call it with</span></span><br><span class="line">                <span class="comment">// the appropriate method and arguments, returning the results back out.</span></span><br><span class="line">                <span class="keyword">return</span> $pipe($passable, $stack);</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (! is_object($pipe)) &#123;</span><br><span class="line">                <span class="keyword">list</span>($name, $parameters) = <span class="keyword">$this</span>-&gt;parsePipeString($pipe);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// If the pipe is a string we will parse the string and resolve the class out</span></span><br><span class="line">                <span class="comment">// of the dependency injection container. We can then build a callable and</span></span><br><span class="line">                <span class="comment">// execute the pipe function giving in the parameters that are required.</span></span><br><span class="line">                $pipe = <span class="keyword">$this</span>-&gt;getContainer()-&gt;make($name);</span><br><span class="line"></span><br><span class="line">                $parameters = array_merge([$passable, $stack], $parameters);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// If the pipe is already an object we'll just make a callable and pass it to</span></span><br><span class="line">                <span class="comment">// the pipe as-is. There is no need to do any extra parsing and formatting</span></span><br><span class="line">                <span class="comment">// since the object we're given was already a fully instantiated object.</span></span><br><span class="line">                $parameters = [$passable, $stack];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> $pipe-&gt;&#123;<span class="keyword">$this</span>-&gt;method&#125;(...$parameters);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用了<code>array_reduce</code>和闭包, 在闭包中判断, 如果是迭代就执行这个迭代.<br><code>$this-&gt;method</code> 这个方法是<code>handle</code>, 也是每次我们需要自定义中间件时需要实现的方法.</p>
+<h3 id="简化说明"><a href="#简化说明" class="headerlink" title="简化说明"></a>简化说明</h3><p>先看下面这段代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$arr = [<span class="string">'AAAA'</span>];</span><br><span class="line"></span><br><span class="line">$res = array_reduce($arr, <span class="function"><span class="keyword">function</span><span class="params">($carry, $item)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($carry, $item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_null($carry)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'Carry IS NULL'</span> . $item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>此时的数组长度为1，并且没有指定初始值, 故仅仅会迭代一次,返回一个闭包 use（$carry = null, $item = ‘AAAA’），当我们执行（$res()）这个闭包时，得到的结果为Carry IS NULLAAAA</p>
+<p>然后我们再看另外一段代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$arr = [<span class="string">'AAAA'</span>, <span class="string">'BBBB'</span>];</span><br><span class="line"></span><br><span class="line">$res = array_reduce($arr, <span class="function"><span class="keyword">function</span><span class="params">($carry, $item)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($carry, $item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_null($carry)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'Carry IS NULL'</span> . $item;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ($carry <span class="keyword">instanceof</span> \Closure) &#123;</span><br><span class="line">            <span class="keyword">return</span> $carry() . $item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>我们新增了一个条件判断，若当前迭代的值是一个闭包，返回该闭包的执行结果。<br>当我们执行这个闭包时，满足$carry instanceof \Closure，得到结果Carry IS NULLAAAABBBB。</p>
+<blockquote>
+<p><a href="https://laravel-china.org/articles/5206/the-use-of-php-built-in-function-array-reduce-in-laravel" target="_blank" rel="noopener">https://laravel-china.org/articles/5206/the-use-of-php-built-in-function-array-reduce-in-laravel</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/01/23/php的剩余参数/" itemprop="url">
                   php的剩余参数
                 </a>
@@ -690,150 +796,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/19/如何使用Service模式/" itemprop="url">
-                  如何使用Service模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-19T10:58:36+08:00" content="2018-01-19">
-              2018-01-19
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>没人能嘲笑你的梦想，他们都是在嘲笑你的实力<br></blockquote><br>若将商业逻辑都写在 controller，会造成 controller 肥大而难以维护，基于SOLID原则，我们应该使用 Service 模式辅助 controller，将相关的商业逻辑封装在不同的 service，方便中大型程序的维护。</p>
-<h3 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h3><p>商业逻辑中，常见的如 :</p>
-<ul>
-<li>牵涉到外部行为 : 如发送Email，使用外部API。</li>
-<li>使用PHP写的逻辑 : 如根据购买的件数，有不同的折扣。</li>
-</ul>
-<p>若将商业逻辑写在 controller，会造成 controller 肥大，日后难以维护。</p>
-<p>如发送Email，初学者常会在 controller 直接调用 Mail::queue():<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Mail::queue(<span class="string">'email.index'</span>, $request-&gt;all(), <span class="function"><span class="keyword">function</span> <span class="params">(Message $message)</span> </span>&#123;</span><br><span class="line">        $message-&gt;sender(env(<span class="string">'MAIL_USERNAME'</span>));</span><br><span class="line">        $message-&gt;subject(env(<span class="string">'MAIL_SUBJECT'</span>));</span><br><span class="line">        $message-&gt;to(env(<span class="string">'MAIL_TO_ADDR'</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在中大型程序中，会有几个问题 :</p>
-<ul>
-<li>将牵涉到外部行为的商业逻辑写在 controller，造成 controller 的肥大难以维护。</li>
-<li>违反 SOLID 的单一职责原则 : 外部行为不应该写在 controller。</li>
-<li>controller 直接相依于外部行为，使得我们无法对 controller 做单元测试。</li>
-</ul>
-<p>比较好的方式是使用 service :</p>
-<ul>
-<li>将外部行为注入到 service。</li>
-<li>在 service 使用外部行为。</li>
-<li>将 service 注入到 controller。</li>
-</ul>
-<h3 id="问题的解决"><a href="#问题的解决" class="headerlink" title="问题的解决"></a>问题的解决</h3><h4 id="EmailService-php"><a href="#EmailService-php" class="headerlink" title="EmailService.php"></a>EmailService.php</h4><p>app/Services/EmailService.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Mail</span>\<span class="title">Mailer</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Mail</span>\<span class="title">Message</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EmailService</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> Mailer */</span></span><br><span class="line">    <span class="keyword">private</span> $mail;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * EmailService constructor.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> Mailer $mail</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Mailer $mail)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mail = $mail;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送Email</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array $request</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">(array $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mail-&gt;queue(<span class="string">'email.index'</span>, $request, <span class="function"><span class="keyword">function</span> <span class="params">(Message $message)</span> </span>&#123;</span><br><span class="line">            $message-&gt;sender(env(<span class="string">'MAIL_USERNAME'</span>));</span><br><span class="line">            $message-&gt;subject(env(<span class="string">'MAIL_SUBJECT'</span>));</span><br><span class="line">            $message-&gt;to(env(<span class="string">'MAIL_TO_ADDR'</span>));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>将相依的Mailer注入到EmailService。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@var</span> Mailer */</span></span><br><span class="line"><span class="keyword">private</span> $mail;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * EmailService constructor.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> Mailer $mail</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Mailer $mail)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;mail = $mail;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>将发送 Emai的商业逻辑写在send()。不是使用Mail facade，而是使用注入的$this-&gt;mail。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 發送Email</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> array $request</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">(array $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;mail-&gt;queue(<span class="string">'email.index'</span>, $request, <span class="function"><span class="keyword">function</span> <span class="params">(Message $message)</span> </span>&#123;</span><br><span class="line">        $message-&gt;sender(env(<span class="string">'MAIL_USERNAME'</span>));</span><br><span class="line">        $message-&gt;subject(env(<span class="string">'MAIL_SUBJECT'</span>));</span><br><span class="line">        $message-&gt;to(env(<span class="string">'MAIL_TO_ADDR'</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="UserController-php"><a href="#UserController-php" class="headerlink" title="UserController.php"></a>UserController.php</h4><p>app/Http/Controllers/UserController.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Requests</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">MyBlog</span>\<span class="title">Services</span>\<span class="title">EmailService</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> EmailService */</span></span><br><span class="line">    <span class="keyword">protected</span> $emailService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * UserController constructor.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> EmailService $emailService</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(EmailService $emailService)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;emailService = $emailService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Store a newly created resource in storage.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> \Illuminate\Http\Response</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;emailService-&gt;send($request-&gt;all());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>将相依的 EmailService 注入到 UserController<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@var</span>  EmailService */</span></span><br><span class="line"><span class="keyword">protected</span> $emailService;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * UserController constructor.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> EmailService $emailService</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(EmailService $emailService)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;emailService = $emailService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>从原本直接相依于 Mail facade，改成相依于注入的 EmailService<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Store a newly created resource in storage.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> \Illuminate\Http\Response</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;emailService-&gt;send($request-&gt;all());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="实际的问题"><a href="#实际的问题" class="headerlink" title="实际的问题"></a>实际的问题</h3><h4 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h4><p>如根据购买的件数，有不同的折扣，初学者常会在 controller 直接写 if…else 逻辑。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $qty = $request-&gt;input(<span class="string">'qty'</span>);</span><br><span class="line"></span><br><span class="line">    $price = <span class="number">500</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($qty == <span class="number">1</span>) &#123;</span><br><span class="line">        $discount = <span class="number">1.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> ($qty == <span class="number">2</span>) &#123;</span><br><span class="line">        $discount = <span class="number">0.9</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> ($qty == <span class="number">3</span>) &#123;</span><br><span class="line">        $discount = <span class="number">0.8</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        $discount = <span class="number">0.7</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $total = $price * $qty * $discount;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span>($total);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在中大型程序中，会有几个问题 :</p>
-<ul>
-<li>将 PHP 写的商业逻辑直接写在 controller，造成 controller 的肥大难以维护。</li>
-<li>违反 SOLID的 单一职责原则 : 商业逻辑不应该写在 controller。</li>
-<li>违反 SOLID的 单一职责原则 : 若未来想要改变折扣与加总的算法，都需要改到此 method，也就是说，此 method 同时包含了计算折扣与计算加总的职责，因此违反 SOLID 的单一职责原则。</li>
-<li>直接写在 controller 的逻辑无法被其他 controller 使用。</li>
-</ul>
-<p>比较好的方式是使用 service:</p>
-<ul>
-<li>将相依物件注入到 service。</li>
-<li>在 service 写 PHP逻辑使用相依物件。</li>
-<li>将 service 注入到 controller。</li>
-</ul>
-<h4 id="OrderService-php"><a href="#OrderService-php" class="headerlink" title="OrderService.php"></a>OrderService.php</h4><p>app/Services/OrderService.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderService</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 計算折扣</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> int $qty</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> float</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDiscount</span><span class="params">($qty)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($qty == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> ($qty == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.9</span>;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> ($qty == <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.7</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 計算最後價錢</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> integer $qty</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> float $discount</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> float</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getTotal</span><span class="params">($qty, $discount)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">500</span> * $qty * $discount;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="OrderController-php"><a href="#OrderController-php" class="headerlink" title="OrderController.php"></a>OrderController.php</h4><p>app/Http/Controllers/OrderController.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Requests</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">MyBlog</span>\<span class="title">Services</span>\<span class="title">OrderService</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> OrderService */</span></span><br><span class="line">    <span class="keyword">protected</span> $orderService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * OrderController constructor.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> OrderService $orderService</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(OrderService $orderService)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;orderService = $orderService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Store a newly created resource in storage.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> \Illuminate\Http\Response</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $qty = $request-&gt;input(<span class="string">'qty'</span>);</span><br><span class="line"></span><br><span class="line">        $discount = <span class="keyword">$this</span>-&gt;orderService-&gt;getDiscount($qty);</span><br><span class="line">        $total = <span class="keyword">$this</span>-&gt;orderService-&gt;getTotal($qty, $discount);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span>($total);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="详细链接"><a href="#详细链接" class="headerlink" title="详细链接"></a>详细链接</h3><ol>
-<li><a href="/2017/02/27/如何使用Repository模式/">如何使用Repository模式</a></li>
-<li><a href="/2017/02/27/如何使用Presenter模式/">如何使用Presenter模式</a></li>
-<li><a href="/2018/01/19/如何使用Service模式/">如何使用Service模式</a></li>
-<li><a href="/2017/02/27/laravel的中大型架构/">laravel的中大型架构</a></li>
-</ol>
-<blockquote>
-<p><a href="http://oomusou.io/laravel/laravel-service/" target="_blank" rel="noopener">http://oomusou.io/laravel/laravel-service/</a><br><a href="http://blog.iwanli.me/article/B8ApLAab.html" target="_blank" rel="noopener">http://blog.iwanli.me/article/B8ApLAab.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -877,7 +839,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">358</span>
+              <span class="site-state-item-count">359</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

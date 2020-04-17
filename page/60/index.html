@@ -265,6 +265,102 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/05/git丢弃本地修改的所有文件/" itemprop="url">
+                  git丢弃本地修改的所有文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-05T14:28:43+08:00" content="2017-02-05">
+              2017-02-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我喜欢你，像风走了八万里，不问归期。<br></blockquote><br>git checkout . #本地所有修改的。没有的提交的，都返回到原来的状态<br>git stash #把所有没有提交的修改暂存到stash里面。可用git stash pop回复。<br>git reset –hard HASH #返回到某个节点，不保留修改。<br>git reset –soft HASH #返回到某个节点。保留修改</p>
+<p>git clean -df #返回到某个节点<br>git clean 参数<br>    -n 显示 将要 删除的 文件 和  目录<br>    -f 删除 文件<br>    -df 删除 文件 和 目录<br>也可以使用：</p>
+<p>git checkout . &amp;&amp; git clean -xdf</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/24/MYSQL静态表-动态表-压缩表/" itemprop="url">
                   MYSQL静态表-动态表-压缩表
                 </a>
@@ -640,112 +736,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/30/linux的输出定向/" itemprop="url">
-                  linux的输出定向
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T13:37:17+08:00" content="2016-12-30">
-              2016-12-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你懂的越多，懂你的越少。<br></blockquote><br>最近Laravel文档里的一句配置引起了我的兴趣<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * php /path/to/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
-<p>她是什么意思呢？</p>
-<p>shell中可能经常能看到：</p>
-<p>1：&gt; 代表重定向到哪里，例如：echo “123″ &gt; /home/123.txt</p>
-<p>2：/dev/null 代表空设备文件</p>
-<p>3：2&gt; 表示stderr标准错误</p>
-<p>4：&amp; 表示等同于的意思，2&gt;&amp;1，表示2的输出重定向等同于1</p>
-<p>5：1 表示stdout标准输出，系统默认值是1，所以”&gt;/dev/null”等同于 “1&gt;/dev/null”</p>
-<p>分解这个组合：“&gt;/dev/null 2&gt;&amp;1” 为五部分。</p>
-<p>因此，&gt;/dev/null 2&gt;&amp;1也可以写成“1&gt; /dev/null 2&gt; &amp;1”</p>
-<p>那么本文标题的语句执行过程为：</p>
-<p>1&gt;/dev/null ：首先表示标准输出重定向到空设备文件，也就是不输出任何信息到终端，说白了就是不显示任何信息。</p>
-<p>2&gt;&amp;1 ：接着，标准错误输出重定向 到 标准输出，因为之前标准输出已经重定向到了空设备文件，所以标准错误输出也重定向到空设备文件。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -789,7 +779,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">358</span>
+              <span class="site-state-item-count">359</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
