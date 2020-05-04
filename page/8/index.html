@@ -265,6 +265,234 @@
             
               
                 
+                <a class="post-title-link" href="/2018/09/05/laravel使用ajax上传图片/" itemprop="url">
+                  Laravel使用Ajax上传图片
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-09-05T09:12:17+08:00" content="2018-09-05">
+              2018-09-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>You know some birds are not meant to be caged, their feathers are just too bright.<br></blockquote>
+
+<p>File uploads is one of the most important functions on the internet, and we have bigger files nowadays, which means it’s not enough to have simple input fields – we need AJAX and processing file upload “in the background”. Here I will show you a simple example of that in Laravel 5.</p>
+<p>Let’s say, we have a simple form to upload the product and many photos for it.</p>
+<p>And we want to upload photos and see upload progress immediately, only then submitting the form. For that we will use a jQuery-File-Upload library.</p>
+<h3 id="Step-1-Database-structure"><a href="#Step-1-Database-structure" class="headerlink" title="Step 1. Database structure"></a>Step 1. Database structure</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Schema::create(<span class="string">'products'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">    $table-&gt;string(<span class="string">'name'</span>);</span><br><span class="line">    $table-&gt;timestamps();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Schema::create(<span class="string">'product_photos'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">    $table-&gt;integer(<span class="string">'product_id'</span>)-&gt;unsigned()-&gt;nullable();</span><br><span class="line">    $table-&gt;foreign(<span class="string">'product_id'</span>)-&gt;references(<span class="string">'id'</span>)-&gt;on(<span class="string">'products'</span>);</span><br><span class="line">    $table-&gt;string(<span class="string">'filename'</span>);</span><br><span class="line">    $table-&gt;timestamps();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>And then we have two simple models – app/Product.php and app/ProductPhoto.php.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Product</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'name'</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductPhoto</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'product_id'</span>, <span class="string">'filename'</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">product</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Product'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>As you can see, field <code>product_photos.product_id</code> is nullable – which means we can upload photos without saving product with them yet. We’ll show later why.</p>
+<h3 id="Step-2-Routes-and-MVC"><a href="#Step-2-Routes-and-MVC" class="headerlink" title="Step 2. Routes and MVC"></a>Step 2. Routes and MVC</h3><p>First, let’s decide our URLs. In routes/web.php we will have this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Route::get(<span class="string">'/'</span>, <span class="string">'UploadController@uploadForm'</span>);</span><br><span class="line">Route::post(<span class="string">'/upload'</span>, <span class="string">'UploadController@uploadSubmit'</span>);</span><br><span class="line">Route::post(<span class="string">'/product'</span>, <span class="string">'UploadController@postProduct'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Basically, homepage for the form, then /upload for AJAX file submit, and /product for submitting the whole product with photos.</p>
+<p>Then we have app/Http/Controllers/UploadController.php with these methods:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadForm</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'upload_form'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadSubmit</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// This method will cover file upload</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postProduct</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// This method will cover whole product submit</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Step-3-Building-the-form"><a href="#Step-3-Building-the-form" class="headerlink" title="Step 3. Building the form"></a>Step 3. Building the form</h3><p>Our resources/views/upload_form.blade.php will look like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/product"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    &#123;&#123; csrf_field() &#125;&#125;</span><br><span class="line">    Product name:</span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    Product photos (can add more than one):</span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">id</span>=<span class="string">"fileupload"</span> <span class="attr">name</span>=<span class="string">"photos[]"</span> <span class="attr">data-url</span>=<span class="string">"/upload"</span> <span class="attr">multiple</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"files_list"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"loading"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"file_ids"</span> <span class="attr">id</span>=<span class="string">"file_ids"</span> <span class="attr">value</span>=<span class="string">""</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"Upload"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Step-4-Processing-the-upload-and-submit"><a href="#Step-4-Processing-the-upload-and-submit" class="headerlink" title="Step 4. Processing the upload and submit"></a>Step 4. Processing the upload and submit</h3><p>Now, let’s download jQuery-File-Upload library and put its /js contents into our /public/js. And then we can use it like this – in the end of our upload_form.blade.php:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/vendor/jquery.ui.widget.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/jquery.iframe-transport.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/jquery.fileupload.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    $(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        $(<span class="string">'#fileupload'</span>).fileupload(&#123;</span><br><span class="line">            dataType: <span class="string">'json'</span>,</span><br><span class="line">            add: <span class="function"><span class="keyword">function</span> <span class="params">(e, data)</span> </span>&#123;</span><br><span class="line">                $(<span class="string">'#loading'</span>).text(<span class="string">'Uploading...'</span>);</span><br><span class="line">                data.submit();</span><br><span class="line">            &#125;,</span><br><span class="line">            done: <span class="function"><span class="keyword">function</span> <span class="params">(e, data)</span> </span>&#123;</span><br><span class="line">                $.each(data.result.files, <span class="function"><span class="keyword">function</span> <span class="params">(index, file)</span> </span>&#123;</span><br><span class="line">                    $(<span class="string">'&lt;p/&gt;'</span>).html(file.name + <span class="string">' ('</span> + file.size + <span class="string">' KB)'</span>).appendTo($(<span class="string">'#files_list'</span>));</span><br><span class="line">                    <span class="keyword">if</span> ($(<span class="string">'#file_ids'</span>).val() != <span class="string">''</span>) &#123;</span><br><span class="line">                        $(<span class="string">'#file_ids'</span>).val($(<span class="string">'#file_ids'</span>).val() + <span class="string">','</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    $(<span class="string">'#file_ids'</span>).val($(<span class="string">'#file_ids'</span>).val() + file.fileID);</span><br><span class="line">                &#125;);</span><br><span class="line">                $(<span class="string">'#loading'</span>).text(<span class="string">''</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>To be honest, I’m not a strong front-ender, so the syntax was written according to jQuery-File-Upload library examples. But basically, it works like this:</p>
+<ul>
+<li>fileupload() method is attached to input field and takes two important parameters – name=”photos[]” data-url=”/upload”;</li>
+<li>Those parameters are passed via AJAX request to /upload URL – meaning UploadController and method uploadSubmit();</li>
+<li>uploadSubmit() physically uploads the file, stores information in the database but doesn’t store product_photos.product_id because we don’t have ID yet. After upload it returns JSON with array of file results;</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadSubmit</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $photos = [];</span><br><span class="line">    <span class="keyword">foreach</span> ($request-&gt;photos <span class="keyword">as</span> $photo) &#123;</span><br><span class="line">        $filename = $photo-&gt;store(<span class="string">'photos'</span>);</span><br><span class="line">        $product_photo = ProductPhoto::create([</span><br><span class="line">            <span class="string">'filename'</span> =&gt; $filename</span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        $photo_object = <span class="keyword">new</span> \stdClass();</span><br><span class="line">        $photo_object-&gt;name = str_replace(<span class="string">'photos/'</span>, <span class="string">''</span>,$photo-&gt;getClientOriginalName());</span><br><span class="line">        $photo_object-&gt;size = round(Storage::size($filename) / <span class="number">1024</span>, <span class="number">2</span>);</span><br><span class="line">        $photo_object-&gt;fileID = $product_photo-&gt;id;</span><br><span class="line">        $photos[] = $photo_object;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> response()-&gt;json(<span class="keyword">array</span>(<span class="string">'files'</span> =&gt; $photos), <span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Those results are shown to the user in the file list (filename and size) and also in the hidden field file_ids which stores values from product_photos.id column;</li>
+</ul>
+<p>We can upload more files like this, and our files list will grow bigger and bigger. As soon as we hit the main submit – the data will be posted and UploadController method postProduct() will save the data into products DB table, and also assign new product ID to product_photos entries:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postProduct</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $product = Product::create($request-&gt;all());</span><br><span class="line">    ProductPhoto::whereIn(<span class="string">'id'</span>, explode(<span class="string">","</span>, $request-&gt;file_ids))</span><br><span class="line">        -&gt;update([<span class="string">'product_id'</span> =&gt; $product-&gt;id]);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Product saved successfully'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://laraveldaily.com/laravel-ajax-file-upload-blueimp-jquery-library/" target="_blank" rel="noopener">https://laraveldaily.com/laravel-ajax-file-upload-blueimp-jquery-library/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/09/05/laravel集合中的when方法/" itemprop="url">
+                  Laravel集合中的when方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-09-05T08:55:51+08:00" content="2018-09-05">
+              2018-09-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>Hope is a good thing and maybe the best of things. And no good thing ever dies.<br></blockquote>
+
+<p>Starting at v5.4.12, Laravel Collections now includes a when method that allows you to perform conditional actions on the items without breaking the chain.</p>
+<p>Like all the other Laravel Collection methods this one can have a lot of use cases but one example that comes to mind is being able to filter based on a query string parameter.</p>
+<p>To demonstrate that example, let’s pretend we have a list of hosts from the Laravel News Podcast:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$hosts = [</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Eric Barnes'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">0</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Jack Fruh'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">0</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Jacob Bennett'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">1</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Michael Dyrynda'</span>, <span class="string">'location'</span> =&gt; <span class="string">'AU'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">1</span>],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>Previously to filter based on a query string you might do something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$inUsa = collect($hosts)-&gt;where(<span class="string">'location'</span>, <span class="string">'USA'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (request(<span class="string">'retired'</span>)) &#123;</span><br><span class="line">    $inUsa = $inUsa-&gt;filter(<span class="function"><span class="keyword">function</span><span class="params">($employee)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ! $employee[<span class="string">'is_active'</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>With the new when method you can now do this all in one Collection chain:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$inUsa = collect($hosts)</span><br><span class="line">    -&gt;where(<span class="string">'location'</span>, <span class="string">'USA'</span>)</span><br><span class="line">    -&gt;when(request(<span class="string">'retired'</span>), <span class="function"><span class="keyword">function</span><span class="params">($collection)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $collection-&gt;reject(<span class="function"><span class="keyword">function</span><span class="params">($employee)</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $employee[<span class="string">'is_active'</span>];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://laravel-news.com/laravel-collections-when-method" target="_blank" rel="noopener">https://laravel-news.com/laravel-collections-when-method</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/09/05/区块链分币项目/" itemprop="url">
                   区块链分币项目
                 </a>
@@ -617,252 +845,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/08/09/swoole之粘包问题/" itemprop="url">
-                  swoole之粘包问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-08-09T22:51:16+08:00" content="2018-08-09">
-              2018-08-09
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>人不知道要守住多少秘密才能安度一生。<br></blockquote>
-
-<p>什么是粘包问题，为什么我们要讲这个看起来比较奇怪的问题呢？<br>不着急解释，我们先看一个例子<br>创建一个server，server端代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TcpBufferServer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_serv;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * init</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv = <span class="keyword">new</span> Swoole\Server(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Server received data: &#123;$data&#125;"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * start server</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">start</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$reload = <span class="keyword">new</span> TcpBufferServer;</span><br><span class="line">$reload-&gt;start();</span><br></pre></td></tr></table></figure></p>
-<p>server的代码很简单，仅仅是在收到客户端代码后，标准输出一句话而已，client的代码需要注意了，我们写了一个for循环，连续向server send三条信息，代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_SYNC);</span><br><span class="line">$client-&gt;connect(<span class="string">'127.0.0.1'</span>, <span class="number">9501</span>) || <span class="keyword">exit</span>(<span class="string">"connect failed. Error: &#123;$client-&gt;errCode&#125;\n"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 向服务端发送数据</span></span><br><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">3</span>; $i++) &#123;</span><br><span class="line">    $client-&gt;send(<span class="string">"Just a test.\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line">$client-&gt;close();</span><br></pre></td></tr></table></figure></p>
-<p>在未运行测试的情况下，我们期望server所在终端输出的结果应该是这样的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Server received data: Just a test.</span><br><span class="line">Server received data: Just a test.</span><br><span class="line">Server received data: Just a test.</span><br></pre></td></tr></table></figure></p>
-<p>注意哦，我们期望的结果是server被回调了3次，才有上述期望的结果值<br>实际运行的结果呢?<br><img src="/images/sw11.png" alt><br>上图左边是server输出的信息。<br>我们看到，左侧显示的结果是server一次性输出的结果，按理论来说，client发起了3次请求，server应该跟我们期望的结果一致，会执行3次呀，这怎么回事呢？<br>这个问题，便是我们今天要说的粘包问题。<br>为了说清楚这个问题，我们先来看下client/server之间数据传递的过程</p>
-<ul>
-<li>客户端-&gt;发送数据</li>
-<li>服务端-&gt;接收数据</li>
-</ul>
-<p>通常我们直觉性的认为，客户端直接向网络中传输数据，对端从网络中读取数据，但是这是不正确的。<br>socket有缓冲区buffer的概念，每个TCP socket在内核中都有一个发送缓冲区和一个接收缓冲区。客户端send操作仅仅是把数据拷贝到buffer中，也就是说send完成了，数据并不代表已经发送到服务端了，之后才由TCP协议从buffer中发送到服务端。此时服务端的接收缓冲区被TCP缓存网络上来的数据，而后server才从buffer中读取数据。<br>所以，在onReceive中我们拿到的数据并没有办法保证数据包的完整性，swoole_server可能会同时收到多个请求包，也可能只收到一个请求包的一部分数据。<br>这就是一个大问题呀，如此TCP协议不行呀，这货虽然能保证我们能正确的接收到数据但是数据不对呀，这麻烦不容小觑。<br>既然是个问题，那我们自然也就有解决问题的方法，不然我下面说啥呢，对吧。</p>
-<p>swoole给我们提供了两种解决方案:</p>
-<h4 id="EOF结束协议"><a href="#EOF结束协议" class="headerlink" title="EOF结束协议"></a>EOF结束协议</h4><p>EOF，end of file，意思是我们在每一个数据包的结尾加一个eof标记，表示这就是一个完整的数据包，但是如果你的数据本身含有EOF标记，那就会造成收到的数据包不完整，所以开启EOF支持后，应避免数据中含有EOF标记。</p>
-<p>在swoole_server中，我们可以配置open_eof_check为true，打开EOF检测，配置package_eof来指定EOF标记。</p>
-<p>swoole_server收到一个数据包时，会检测数据包的结尾是否是我们设置的EOF标记，如果不是就会一直拼接数据包，直到超出buffer或者超时才会终止，一旦认定是一个完整的数据包，就会投递给Worker进程，这时候我们才可以在回调内处理数据。</p>
-<p>这样server就能保证接收到一个完整的数据包了？不能保证，这样只能保证server能收到一个或者多个完整的数据包。</p>
-<p>为啥是多个呢？</p>
-<p>我们说了开启EOF检测，即open_eof_check设置为true，server只会检测数据包的末尾是否有EOF标记，如果向我们开篇的案例连发3个EOF的数据，server可能还是会一次性收到，这样我们只能在回调内对数据包进行拆分处理。</p>
-<p>我们拿开篇的案例为例</p>
-<p>server开启eof检测并指定eof标记是\r\n，代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;_serv-&gt;set([ </span><br><span class="line">    <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>, </span><br><span class="line">    <span class="string">'open_eof_check'</span> =&gt; <span class="keyword">true</span>, <span class="comment">//打开EOF检测 </span></span><br><span class="line">    <span class="string">'package_eof'</span> =&gt; <span class="string">"\r\n"</span>, <span class="comment">//设置EOF </span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
-<p>客户端设置发送的数据末尾是\r\n符号，代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">3</span>; $i++) &#123; </span><br><span class="line">    $client-&gt;send(<span class="string">"Just a test.\r\n"</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>按照我们刚才的分析，server的效果可能会一次性收到多个完整的包，我们运行看看结果<br><img src="/images/sw12.png" alt></p>
-<p>因此我们还需要在onReceive回调内对收到的数据进行拆分处理<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// echo "Server received data: &#123;$data&#125;" . PHP_EOL;</span></span><br><span class="line"></span><br><span class="line">    $datas = explode(<span class="string">"\r\n"</span>, $data);</span><br><span class="line">    <span class="keyword">foreach</span> ($datas <span class="keyword">as</span> $data)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!$data)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Server received data: &#123;$data&#125;"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>此时我们再看下运行结果<br><img src="/images/sw13.png" alt></p>
-<p>自行分包的效果便实现了，考虑到自行分包稍微麻烦，swoole提供了open_eof_split配置参数，启用该参数后，server会从左到右对数据进行逐字节对比，查找数据中的EOF标记进行分包，效果跟我们刚刚自行拆包是一样的，性能较差。<br>在案例的基础上我们看看open_eof_split配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">    <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">    <span class="string">'open_eof_check'</span> =&gt; <span class="keyword">true</span>, <span class="comment">//打开EOF检测</span></span><br><span class="line">    <span class="string">'package_eof'</span> =&gt; <span class="string">"\r\n"</span>, <span class="comment">//设置EOF</span></span><br><span class="line">    <span class="string">'open_eof_split'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
-<p>onReceive的回调，我们不需要自行拆包<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="keyword">echo</span> <span class="string">"Server received data: &#123;$data&#125;"</span> . PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>client的测试代码使用\r\n（同server端package_eof标记一致），我们看下运行效果<br><img src="/images/sw14.png" alt><br>EOF标记解决粘包就说这么多，下面我们再看看另一种解决方案</p>
-<h4 id="固定包头-包体协议"><a href="#固定包头-包体协议" class="headerlink" title="固定包头+包体协议"></a>固定包头+包体协议</h4><p>下面我们要说的，对于部分同学可能有点难度，对于不理解的，建议多看多操作多问多查，不躲避不畏惧，这样才能有所提高。<br>固定包头是一种非常通用的协议，它的含义就是在你要发送的数据包的前面，添加一段信息，这段信息了包含了你要发送的数据包的长度，长度一般是2个或者4个字节的整数。<br>在这种协议下，我们的数据包的组成就是包头+包体。其中包头就是包体长度的二进制形式。比如我们本来想向服务端发送一段数据 “Just a test.” 共12个字符，现在我们要发送的数据就应该是这样的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pack(<span class="string">'N'</span>, strlen(<span class="string">"Just a test."</span>)) . <span class="string">"Just a test."</span></span><br></pre></td></tr></table></figure></p>
-<p>其中php的pack函数是把数据打包成二进制字符串。<br>为什么这样就能保证Worker进程收到的是一个完整的数据包呢？我来解释一下：<br>当server收到一个数据包（可能是多个完整的数据包）之后，会先解出包头指定的数据长度，然后按照这个长度取出后面的数据，如果一次性收到多个数据包，依次循环，如此就能保证Worker进程可以一次性收到一个完整的数据包。<br>估计好多人都看蒙了，这都是神马玩意？我们以案例来分析<br>server代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ServerPack</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_serv;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * init</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv = <span class="keyword">new</span> Swoole\Server(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">            <span class="string">'open_length_check'</span>     =&gt; <span class="keyword">true</span>,      <span class="comment">// 开启协议解析</span></span><br><span class="line">            <span class="string">'package_length_type'</span>   =&gt; <span class="string">'N'</span>,     <span class="comment">// 长度字段的类型</span></span><br><span class="line">            <span class="string">'package_length_offset'</span> =&gt; <span class="number">0</span>,       <span class="comment">//第几个字节是包长度的值</span></span><br><span class="line">            <span class="string">'package_body_offset'</span>   =&gt; <span class="number">4</span>,       <span class="comment">//第几个字节开始计算长度</span></span><br><span class="line">            <span class="string">'package_max_length'</span>    =&gt; <span class="number">81920</span>,  <span class="comment">//协议最大长度</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $info = unpack(<span class="string">'N'</span>, $data);</span><br><span class="line">        $len = $info[<span class="number">1</span>];</span><br><span class="line">        $body = substr($data, - $len);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"server received data: &#123;$body&#125;\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * start server</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">start</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$reload = <span class="keyword">new</span> ServerPack;</span><br><span class="line">$reload-&gt;start();</span><br></pre></td></tr></table></figure></p>
-<p>客户端的代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_SYNC);</span><br><span class="line">$client-&gt;connect(<span class="string">'127.0.0.1'</span>, <span class="number">9501</span>) || <span class="keyword">exit</span>(<span class="string">"connect failed. Error: &#123;$client-&gt;errCode&#125;\n"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 向服务端发送数据</span></span><br><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">3</span>; $i++) &#123;</span><br><span class="line">    $data = <span class="string">"Just a test."</span>;</span><br><span class="line">    $data = pack(<span class="string">'N'</span>, strlen($data)) . $data;</span><br><span class="line">    $client-&gt;send($data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$client-&gt;close();</span><br></pre></td></tr></table></figure></p>
-<p>运行的结果<br><img src="/images/sw15.png" alt><br>结果没错，是我们期望的结果。</p>
-<p>我们来分析下这是为什么</p>
-<p>1、首先，在server端我们配置了open_length_check，该参数表明我们要开启固定包头协议解析</p>
-<p>2、package_length_type配置，表明包头长度的类型，这个类型跟客户端使用pack打包包头的类型一致，一般设置为N或者n，N表示4个字节，n表示2个字节</p>
-<p>3、我们看下客户端的代码 pack(‘N’, strlen($data)) . $data，这句话就是包头+包体的意思，包头是pack函数打包的二进制数据，内容便是真实数据的长度 strlen($data)。</p>
-<p>在内存中，整数一般占用4个字节，所以我们看到，在这段数据中0-4字节表示的是包头，剩余的就是真实的数据。但是server不知道呀，怎么告诉server这一事实呢？</p>
-<p>看配置package_length_offset和package_body_offset，前者就是告诉server，从第几个字节开始是长度，后者就是从第几个字节开始计算长度。</p>
-<p>4、既然如此，我们就可以在onReceive回调对数据解包，然后从包头中取出包体长度，再从接收到的数据中截取真正的包体。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$info = unpack(<span class="string">'N'</span>, $data);</span><br><span class="line">$len = $info[<span class="number">1</span>];</span><br><span class="line">$body = substr($data, - $len);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"server received data: &#123;$body&#125;\n"</span>;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/08/08/谈谈redis的setnx/" itemprop="url">
-                  谈谈Redis的SETNX
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-08-08T13:38:29+08:00" content="2018-08-08">
-              2018-08-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我愿意舍弃一切，以想念你终此一生。<br></blockquote>
-
-<p>在 Redis 里，所谓 SETNX，是「SET if Not eXists」的缩写，也就是只有不存在的时候才设置，可以利用它来实现锁的效果，不过很多人没有意识到 SETNX 有陷阱！</p>
-<p>比如说：某个查询数据库的接口，因为调用量比较大，所以加了缓存，并设定缓存过期后刷新，问题是当并发量比较大的时候，如果没有锁机制，那么缓存过期的瞬间，大量并发请求会穿透缓存直接查询数据库，造成雪崩效应，如果有锁机制，那么就可以控制只有一个请求去更新缓存，其它的请求视情况要么等待，要么使用过期的缓存。</p>
-<p>下面以目前 PHP 社区里最流行的 PHPRedis 扩展为例，实现一段演示代码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$ok = $redis-&gt;setNX($key, $value);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($ok) &#123;</span><br><span class="line">    $cache-&gt;update();</span><br><span class="line">    $redis-&gt;del($key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>缓存过期时，通过 SetNX  获取锁，如果成功了，那么更新缓存，然后删除锁。看上去逻辑非常简单，可惜有问题：如果请求执行因为某些原因意外退出了，导致创建了锁但是没有删除锁，那么这个锁将一直存在，以至于以后缓存再也得不到更新。于是乎我们需要给锁加一个过期时间以防不测：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$redis-&gt;multi();</span><br><span class="line">$redis-&gt;setNX($key, $value);</span><br><span class="line">$redis-&gt;expire($key, $ttl);</span><br><span class="line">$redis-&gt;exec();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>因为 SetNX 不具备设置过期时间的功能，所以我们需要借助 Expire 来设置，同时我们需要把两者用 Multi/Exec 包裹起来以确保请求的原子性，以免 SetNX 成功了 Expire 却失败了。 可惜还有问题：当多个请求到达时，虽然只有一个请求的 SetNX 可以成功，但是任何一个请求的 Expire 却都可以成功，如此就意味着即便获取不到锁，也可以刷新过期时间，如果请求比较密集的话，那么过期时间会一直被刷新，导致锁一直有效。于是乎我们需要在保证原子性的同时，有条件的执行 Expire，接着便有了如下 Lua 代码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">local key   = KEYS[<span class="number">1</span>]</span><br><span class="line">local value = KEYS[<span class="number">2</span>]</span><br><span class="line">local ttl   = KEYS[<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">local ok = redis.call(<span class="string">'setnx'</span>, key, value)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> ok == <span class="number">1</span> then</span><br><span class="line">  redis.call(<span class="string">'expire'</span>, key, ttl)</span><br><span class="line">end</span><br><span class="line"> </span><br><span class="line"><span class="keyword">return</span> ok</span><br></pre></td></tr></table></figure>
-<p>想到实现一个看起来很简单的功能还要用到 Lua 脚本，着实有些麻烦。其实 Redis 已经考虑到了大家的疾苦，从 2.6.12 起，SET 涵盖了 SETEX 的功能，并且 SET 本身已经包含了设置过期时间的功能，也就是说，我们前面需要的功能只用 SET 就可以实现。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$ok = $redis-&gt;set($key, $value, <span class="keyword">array</span>(<span class="string">'nx'</span>, <span class="string">'ex'</span> =&gt; $ttl));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($ok) &#123;</span><br><span class="line">    $cache-&gt;update();</span><br><span class="line">    $redis-&gt;del($key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如上代码是完美的吗？答案是还差一点！设想一下，如果一个请求更新缓存的时间比较长，甚至比锁的有效期还要长，导致在缓存更新过程中，锁就失效了，此时另一个请求会获取锁，但前一个请求在缓存更新完毕的时候，如果不加以判断直接删除锁，就会出现误删除其它请求创建的锁的情况，所以我们在创建锁的时候需要引入一个随机值：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment"># 这个方法我自己没有试验通过， 会报错</span></span><br><span class="line">$ok = $redis-&gt;set($key, $random, <span class="keyword">array</span>(<span class="string">'nx'</span>, <span class="string">'ex'</span> =&gt; $ttl));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($ok) &#123;</span><br><span class="line">    $cache-&gt;update();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($redis-&gt;get($key) == $random) &#123;</span><br><span class="line">        $redis-&gt;del($key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>补充：本文在删除锁的时候，实际上是有问题的，没有考虑到 GC pause 之类的问题造成的影响，比如 A 请求在 DEL 之前卡住了，然后锁过期了，这时候 B 请求又成功获取到了锁，此时 A 请求缓过来了，就会 DEL 掉 B 请求创建的锁，此问题远比想象的要复杂，具体解决方案参见本文最后关于锁的若干个参考链接。</p>
-<blockquote>
-<p><a href="https://huoding.com/2015/09/14/463" target="_blank" rel="noopener">https://huoding.com/2015/09/14/463</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -901,7 +888,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

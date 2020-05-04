@@ -265,6 +265,223 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/02/flex布局方式之父容器/" itemprop="url">
+                  flex布局方式之父容器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-02T14:43:57+08:00" content="2016-12-02">
+              2016-12-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>没有学到死，就往死里学。<br></blockquote><br>最近学习了微信小程序，才接触到了这一布局方式，大概试了一下，记录：</p>
+<p>使用方式：</p>
+<h3 id="1-html"><a href="#1-html" class="headerlink" title="1. html"></a>1. html</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>5<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>6<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>7<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>8<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>9<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-定义基本css样式："><a href="#2-定义基本css样式：" class="headerlink" title="2. 定义基本css样式："></a>2. 定义基本css样式：</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span>&#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#c0ffb6</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">150px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">background-color</span>: <span class="number">#4cae4c</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-设置父容器为flex布局："><a href="#3-设置父容器为flex布局：" class="headerlink" title="3. 设置父容器为flex布局："></a>3. 设置父容器为flex布局：</h3><ul>
+<li><p>div 块儿级元素</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>或者 行内元素</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: inline-flex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>设为Flex布局以后，子元素的float、clear和vertical-align属性将失效</p>
+<h3 id="4-flex-direction-属性："><a href="#4-flex-direction-属性：" class="headerlink" title="4. flex-direction 属性："></a>4. flex-direction 属性：</h3><p>决定容器里面元素的排列方式<br>横向排列<br>横向反转排列<br>纵向排列<br>纵向反转排列<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: column;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-flex-wrap-属性"><a href="#5-flex-wrap-属性" class="headerlink" title="5. flex-wrap 属性"></a>5. flex-wrap 属性</h3><p>横向排列的子元素是否换行<br>在子元素的大小超出了父容器的大小以后是换行显示<br>不换行： nowrap  设置了不换行以后，子元素的大小将。。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">650px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">background-color</span>: <span class="number">#4cae4c</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="6-justify-content-属性"><a href="#6-justify-content-属性" class="headerlink" title="6. justify-content 属性"></a>6. justify-content 属性</h3><p>子元素的对齐方式<br>左对齐<br>右对齐<br>居中显示<br>相等间隔<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">	<span class="attribute">justify-content</span>: space-around;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="7-align-items"><a href="#7-align-items" class="headerlink" title="7. align-items:"></a>7. align-items:</h3><p>决定子元素在垂直位置上的对齐方式<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">	<span class="attribute">justify-content</span>: space-around;</span><br><span class="line">	<span class="attribute">align-items</span>: flex-end;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="8-align-self-属性"><a href="#8-align-self-属性" class="headerlink" title="8. align-self 属性"></a>8. align-self 属性</h3><p>决定当前元素的对齐方式，用于覆盖父容器的align-items 属性<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">	<span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">450px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">background-color</span>: <span class="number">#4cae4c</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item1</span>&#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">120px</span>;</span><br><span class="line">	<span class="attribute">align-self</span>: flex-end;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item2</span>&#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item3</span>&#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">150px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/01/laravel和nginx的404/" itemprop="url">
+                  laravel和nginx的404
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-01T09:02:31+08:00" content="2016-12-01">
+              2016-12-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>是谁来自山川湖海，却囿于昼夜、厨房与爱。<br></blockquote>
+
+<h3 id="laravel的404"><a href="#laravel的404" class="headerlink" title="laravel的404"></a>laravel的404</h3><ul>
+<li>配置404页面<br>在<code>resources\views\errors\404.blade.php</code>，如果配置了该页面，那么访问任何一个不存在的路由，就会显示到该页面，同时返回的状态码也会是404，同样，也可以通过代码<code>abort(404);</code>来展示出404页面，如果在你的视图文件中没有配置404.blade.php 页面，那么访问一个不存在的路由就会引起程序报错。</li>
+</ul>
+<h3 id="nginx的404"><a href="#nginx的404" class="headerlink" title="nginx的404"></a>nginx的404</h3><ul>
+<li>配置404页面<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen  <span class="number">80</span>;</span><br><span class="line">    server_name  www.la51.dev la51.dev;</span><br><span class="line">    root   <span class="string">"D:/phpStudy/WWW/la51/public"</span>;</span><br><span class="line">    fastcgi_intercept_errors on;</span><br><span class="line">    error_page <span class="number">404</span>  /<span class="number">404.</span>html ;</span><br><span class="line">    location / &#123;</span><br><span class="line">        index  index.html index.htm index.php;</span><br><span class="line">        <span class="comment">#autoindex  on;</span></span><br><span class="line">        try_files $uri $uri/ /index.php?$query_string;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>404.html在网站的根目录下，关键的两句，`fastcgi_intercept_errors on;error_page 404  /404.html ;这样访问一个不存在的页面，即使没有在laravel中做相关的配置，也能在路由不存在时跳转到404页面；</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/11/30/chrome消息传递实例/" itemprop="url">
                   chrome消息传递实例
                 </a>
@@ -542,216 +759,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/25/事件DOMContentLoaded和load的区别/" itemprop="url">
-                  事件DOMContentLoaded和load的区别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-25T09:18:27+08:00" content="2016-11-25">
-              2016-11-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>她是你姑姑，又是你师父，怎么能做你妻子！<br></blockquote>
-
-<h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>他们的区别是，触发的时机不一样，先触发DOMContentLoaded事件，后触发load事件。</p>
-<p>DOM文档加载的步骤为：</p>
-<ul>
-<li>解析HTML结构。</li>
-<li>加载外部脚本和样式表文件。</li>
-<li>解析并执行脚本代码。</li>
-<li>DOM树构建完成。//DOMContentLoaded</li>
-<li>加载图片等外部文件。</li>
-<li>页面加载完毕。//load</li>
-</ul>
-<p>在第4步，会触发DOMContentLoaded事件。在第6步，触发load事件。<br>用原生js可以这么写:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不兼容老的浏览器，兼容写法见[jQuery中ready与load事件](http://www.imooc.com/code/3253)，或用jQuery</span></span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">"DOMContentLoaded"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="comment">// ...代码...</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"load"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ...代码...</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
-<p>用jQuery这么写:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DOMContentLoaded</span></span><br><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ...代码...</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//load</span></span><br><span class="line">$(<span class="built_in">document</span>).load(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ...代码...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://www.jianshu.com/p/d851db5f2f30" target="_blank" rel="noopener">http://www.jianshu.com/p/d851db5f2f30</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/20/python模拟登录知乎/" itemprop="url">
-                  python模拟登录知乎
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-20T22:29:40+08:00" content="2016-11-20">
-              2016-11-20
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>身不饥寒，天未曾负我；学无长进，我何以对天<br></blockquote>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Author: LoveNight</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> BS</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhiHuClient</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="string">"""连接知乎的工具类，维护一个Session</span></span><br><span class="line"><span class="string">    2015.11.11</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    用法：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    client = ZhiHuClient()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    # 第一次使用时需要调用此方法登录一次，生成cookie文件</span></span><br><span class="line"><span class="string">    # 以后可以跳过这一步</span></span><br><span class="line"><span class="string">    client.login("username", "password")</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    # 用这个session进行其他网络操作，详见requests库</span></span><br><span class="line"><span class="string">    session = client.getSession()</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 网址参数是账号类型</span></span><br><span class="line">    TYPE_PHONE_NUM = <span class="string">"phone_num"</span></span><br><span class="line">    TYPE_EMAIL = <span class="string">"email"</span></span><br><span class="line">    loginURL = <span class="string">r"http://www.zhihu.com/login/&#123;0&#125;"</span></span><br><span class="line">    homeURL = <span class="string">r"http://www.zhihu.com"</span></span><br><span class="line">    captchaURL = <span class="string">r"http://www.zhihu.com/captcha.gif"</span></span><br><span class="line"></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">"User-Agent"</span>: <span class="string">"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36"</span>,</span><br><span class="line">        <span class="string">"Accept"</span>: <span class="string">"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"</span>,</span><br><span class="line">        <span class="string">"Accept-Encoding"</span>: <span class="string">"gzip, deflate"</span>,</span><br><span class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</span><br><span class="line">        <span class="string">"Upgrade-Insecure-Requests"</span>: <span class="string">"1"</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    captchaFile = os.path.join(sys.path[<span class="number">0</span>], <span class="string">"captcha.gif"</span>)</span><br><span class="line">    cookieFile = os.path.join(sys.path[<span class="number">0</span>], <span class="string">"cookie"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        os.chdir(sys.path[<span class="number">0</span>])  <span class="comment"># 设置脚本所在目录为当前工作目录</span></span><br><span class="line"></span><br><span class="line">        self.__session = requests.Session()</span><br><span class="line">        self.__session.headers = self.headers  <span class="comment"># 用self调用类变量是防止将来类改名</span></span><br><span class="line">        <span class="comment"># 若已经有 cookie 则直接登录</span></span><br><span class="line">        self.__cookie = self.__loadCookie()</span><br><span class="line">        <span class="keyword">if</span> self.__cookie:</span><br><span class="line">            print(<span class="string">"检测到cookie文件，直接使用cookie登录"</span>)</span><br><span class="line">            self.__session.cookies.update(self.__cookie)</span><br><span class="line">            soup = BS(self.open(<span class="string">r"http://www.zhihu.com/"</span>).text, <span class="string">"html.parser"</span>)</span><br><span class="line">            print(<span class="string">"已登陆账号： %s"</span> % soup.find(<span class="string">"span"</span>, class_=<span class="string">"name"</span>).getText())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"没有找到cookie文件，请调用login方法登录一次！"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 登录</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, username, password)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        验证码错误返回：</span></span><br><span class="line"><span class="string">        &#123;'errcode': 1991829, 'r': 1, 'data': &#123;'captcha': '请提交正确的验证码 :('&#125;, 'msg': '请提交正确的验证码 :('&#125;</span></span><br><span class="line"><span class="string">        登录成功返回：</span></span><br><span class="line"><span class="string">        &#123;'r': 0, 'msg': '登陆成功'&#125;</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.__username = username</span><br><span class="line">        self.__password = password</span><br><span class="line">        self.__loginURL = self.loginURL.format(self.__getUsernameType())</span><br><span class="line">        <span class="comment"># 随便开个网页，获取登陆所需的_xsrf</span></span><br><span class="line">        html = self.open(self.homeURL).text</span><br><span class="line">        soup = BS(html, <span class="string">"html.parser"</span>)</span><br><span class="line">        _xsrf = soup.find(<span class="string">"input"</span>, &#123;<span class="string">"name"</span>: <span class="string">"_xsrf"</span>&#125;)[<span class="string">"value"</span>]</span><br><span class="line">        <span class="comment"># 下载验证码图片</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            captcha = self.open(self.captchaURL).content</span><br><span class="line">            <span class="keyword">with</span> open(self.captchaFile, <span class="string">"wb"</span>) <span class="keyword">as</span> output:</span><br><span class="line">                output.write(captcha)</span><br><span class="line">            <span class="comment"># 人眼识别</span></span><br><span class="line">            print(<span class="string">"="</span> * <span class="number">50</span>)</span><br><span class="line">            print(<span class="string">"已打开验证码图片，请识别！"</span>)</span><br><span class="line">            subprocess.call(self.captchaFile, shell=<span class="literal">True</span>)</span><br><span class="line">            captcha = input(<span class="string">"请输入验证码："</span>)</span><br><span class="line">            os.remove(self.captchaFile)</span><br><span class="line">            <span class="comment"># 发送POST请求</span></span><br><span class="line">            data = &#123;</span><br><span class="line">                <span class="string">"_xsrf"</span>: _xsrf,</span><br><span class="line">                <span class="string">"password"</span>: self.__password,</span><br><span class="line">                <span class="string">"remember_me"</span>: <span class="string">"true"</span>,</span><br><span class="line">                self.__getUsernameType(): self.__username,</span><br><span class="line">                <span class="string">"captcha"</span>: captcha</span><br><span class="line">            &#125;</span><br><span class="line">            res = self.__session.post(self.__loginURL, data=data)</span><br><span class="line">            print(<span class="string">"="</span> * <span class="number">50</span>)</span><br><span class="line">            <span class="comment"># print(res.text) # 输出脚本信息，调试用</span></span><br><span class="line">            <span class="keyword">if</span> res.json()[<span class="string">"r"</span>] == <span class="number">0</span>:</span><br><span class="line">                print(<span class="string">"登录成功"</span>)</span><br><span class="line">                self.__saveCookie()</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">"登录失败"</span>)</span><br><span class="line">                print(<span class="string">"错误信息 ---&gt;"</span>, res.json()[<span class="string">"msg"</span>])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getUsernameType</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""判断用户名类型</span></span><br><span class="line"><span class="string">        经测试，网页的判断规则是纯数字为phone_num，其他为email</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.__username.isdigit():</span><br><span class="line">            <span class="keyword">return</span> self.TYPE_PHONE_NUM</span><br><span class="line">        <span class="keyword">return</span> self.TYPE_EMAIL</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__saveCookie</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""cookies 序列化到文件</span></span><br><span class="line"><span class="string">        即把dict对象转化成字符串保存</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">with</span> open(self.cookieFile, <span class="string">"w"</span>) <span class="keyword">as</span> output:</span><br><span class="line">            cookies = self.__session.cookies.get_dict()</span><br><span class="line">            json.dump(cookies, output)</span><br><span class="line">            print(<span class="string">"="</span> * <span class="number">50</span>)</span><br><span class="line">            print(<span class="string">"已在同目录下生成cookie文件："</span>, self.cookieFile)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__loadCookie</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""读取cookie文件，返回反序列化后的dict对象，没有则返回None"""</span></span><br><span class="line">        <span class="keyword">if</span> os.path.exists(self.cookieFile):</span><br><span class="line">            print(<span class="string">"="</span> * <span class="number">50</span>)</span><br><span class="line">            <span class="keyword">with</span> open(self.cookieFile, <span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">                cookie = json.load(f)</span><br><span class="line">                <span class="keyword">return</span> cookie</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open</span><span class="params">(self, url, delay=<span class="number">0</span>, timeout=<span class="number">10</span>)</span>:</span></span><br><span class="line">        <span class="string">"""打开网页，返回Response对象"""</span></span><br><span class="line">        <span class="keyword">if</span> delay:</span><br><span class="line">            time.sleep(delay)</span><br><span class="line">        <span class="keyword">return</span> self.__session.get(url, timeout=timeout)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getSession</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.__session</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    client = ZhiHuClient()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 第一次使用时需要调用此方法登录一次，生成cookie文件</span></span><br><span class="line">    <span class="comment"># 以后可以跳过这一步</span></span><br><span class="line">    client.login(<span class="string">"username"</span>, <span class="string">"password"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 用这个session进行其他网络操作，详见requests库</span></span><br><span class="line">    session = client.getSession()</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/63/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/63/">63</a><span class="page-number current">64</span><a class="page-number" href="/page/65/">65</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/65/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/63/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/63/">63</a><span class="page-number current">64</span><a class="page-number" href="/page/65/">65</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/65/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -790,7 +802,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

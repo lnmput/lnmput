@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="世界上最廉价的东西就是男人一事无成时的温柔。 .strings 和 stripped_strings123456789101112131415161718#如果tag中包含多个字符串,可以使用 .strings 来循环获取:#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings #可以去除多余空白内容:from bs4 import BeautifulSoupimpor">
+<meta name="description" content="世界上最廉价的东西就是男人一事无成时的温柔。  .strings 和 stripped_strings123456789101112131415161718#如果tag中包含多个字符串,可以使用 .strings 来循环获取:#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings #可以去除多余空白内容:from bs4 import BeautifulSoupimpo">
 <meta name="keywords" content="Python,BeautifulSoup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BeautifulSoup的一写用法">
 <meta property="og:url" content="https://swoole.app/2016/10/24/BeautifulSoup的一写用法/index.html">
 <meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
-<meta property="og:description" content="世界上最廉价的东西就是男人一事无成时的温柔。 .strings 和 stripped_strings123456789101112131415161718#如果tag中包含多个字符串,可以使用 .strings 来循环获取:#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings #可以去除多余空白内容:from bs4 import BeautifulSoupimpor">
+<meta property="og:description" content="世界上最廉价的东西就是男人一事无成时的温柔。  .strings 和 stripped_strings123456789101112131415161718#如果tag中包含多个字符串,可以使用 .strings 来循环获取:#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings #可以去除多余空白内容:from bs4 import BeautifulSoupimpo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-27T13:13:51.000Z">
+<meta property="og:updated_time" content="2020-05-03T13:00:22.678Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BeautifulSoup的一写用法">
-<meta name="twitter:description" content="世界上最廉价的东西就是男人一事无成时的温柔。 .strings 和 stripped_strings123456789101112131415161718#如果tag中包含多个字符串,可以使用 .strings 来循环获取:#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings #可以去除多余空白内容:from bs4 import BeautifulSoupimpor">
+<meta name="twitter:description" content="世界上最廉价的东西就是男人一事无成时的温柔。  .strings 和 stripped_strings123456789101112131415161718#如果tag中包含多个字符串,可以使用 .strings 来循环获取:#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings #可以去除多余空白内容:from bs4 import BeautifulSoupimpo">
 
 
 
@@ -304,7 +304,8 @@
       
 
       
-        <p><blockquote class="blockquote-center"><br>世界上最廉价的东西就是男人一事无成时的温柔。<br></blockquote></p>
+        <blockquote class="blockquote-center"><br>世界上最廉价的东西就是男人一事无成时的温柔。<br></blockquote>
+
 <h3 id="strings-和-stripped-strings"><a href="#strings-和-stripped-strings" class="headerlink" title=".strings 和 stripped_strings"></a>.strings 和 stripped_strings</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#如果tag中包含多个字符串,可以使用 .strings 来循环获取:</span></span><br><span class="line"><span class="comment">#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings </span></span><br><span class="line"><span class="comment">#可以去除多余空白内容:</span></span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span>  requests</span><br><span class="line">url = <span class="string">'http://www.tripadvisor.cn/Attractions-g60763-Activities-New_York_City_New_York.html'</span></span><br><span class="line">wbData = requests.get(url)</span><br><span class="line">response = BeautifulSoup(wbData.text,<span class="string">'lxml'</span>)</span><br><span class="line">titles = response.select(<span class="string">'div.property_title &gt; a[target="_blank"]'</span>)</span><br><span class="line">images = response.select(<span class="string">'img[width:"160"]'</span>)</span><br><span class="line">cates = response.select(<span class="string">'div.p13n_reasoning_v2'</span>)</span><br><span class="line"><span class="keyword">for</span> title,image,cate <span class="keyword">in</span> zip(titles,images,cates):</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">'title'</span>:title.get_text(),</span><br><span class="line">        <span class="string">'image'</span>:image.get(<span class="string">'src'</span>),</span><br><span class="line">        <span class="string">'cate'</span>:list(cate.stripped_strings)</span><br><span class="line">    &#125;</span><br><span class="line">    print(data)</span><br></pre></td></tr></table></figure>
       
     </div>
@@ -434,7 +435,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

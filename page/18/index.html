@@ -265,6 +265,257 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/15/在php7-1中使用openssl取代mcrypt/" itemprop="url">
+                  在PHP7.1中使用openssl取代mcrypt
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T16:43:55+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>学着把眼泪像珍珠一样收藏，把眼泪都贮存在成功的那一天流淌，那一天，哪怕流它个大海汪洋。<br></blockquote>
+
+<p>The mcrypt extension has been abandonware for nearly a decade now, and was also fairly complex to use. It has therefore been deprecated in favour of OpenSSL, where it will be removed from the core and into PECL in PHP 7.2.</p>
+<h3 id="加密基础"><a href="#加密基础" class="headerlink" title="加密基础"></a>加密基础</h3><p>加密算法一般分为两种：对称加密算法和非对称加密算法。</p>
+<ul>
+<li><p>对称加密<br>对称加密算法是消息发送者和接收者使用同一个密匙，发送者使用密匙加密了文件，接收者使用同样的密匙解密，获取信息。常见的对称加密算法有：des/aes/3des.</p>
+<p>对称加密算法的特点有：速度快，加密前后文件大小变化不大，但是密匙的保管是个大问题，因为消息发送方和接收方任意一方的密匙丢失，都会导致信息传输变得不安全。</p>
+</li>
+<li><p>非对称加密<br>与对称加密相对的是非对称加密，非对称加密的核心思想是使用一对相对的密匙，分为公匙和私匙，私匙自己安全保存，而将公匙公开。公钥与私钥是一对，如果用公钥对数据进行加密，只有用对应的私钥才能解密；如果用私钥对数据进行加密，那么只有用对应的公钥才能解密。发送数据前只需要使用接收方的公匙加密就行了。常见的非对称加密算法有RSA/DSA:</p>
+<p>非对称加密虽然没有密匙保存问题，但其计算量大，加密速度很慢,有时候我们还需要对大块数据进行分块加密。</p>
+</li>
+</ul>
+<h3 id="PHP的openssl扩展"><a href="#PHP的openssl扩展" class="headerlink" title="PHP的openssl扩展"></a>PHP的openssl扩展</h3><p>openssl扩展使用openssl加密扩展包，封装了多个用于加密解密相关的PHP函数，极大地方便了对数据的加密解密。</p>
+<h3 id="非对称加密-RSA为例"><a href="#非对称加密-RSA为例" class="headerlink" title="非对称加密(RSA为例)"></a>非对称加密(RSA为例)</h3><p>生成RSA私钥,可以指定长度,单位bit<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out yangzie_private.pem <span class="number">1024</span></span><br></pre></td></tr></table></figure></p>
+<p>生成对应的公钥<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -pubout -in yangzie_private.pem -out yangzie_public.pem</span><br></pre></td></tr></table></figure></p>
+<p>你可以把这里生成的公钥拷贝到其他的服务端, 用户加密或者解密数据</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">$private_key_path = storage_path(<span class="string">'yangzie_private.pem'</span>);</span><br><span class="line">$public_key_path = storage_path(<span class="string">'yangzie_public.pem'</span>);</span><br><span class="line">$private_key = file_get_contents($private_key_path);</span><br><span class="line">$public_key = file_get_contents($public_key_path);</span><br><span class="line"></span><br><span class="line"><span class="comment">//判断私钥是否是可用的</span></span><br><span class="line">$pi_key = openssl_pkey_get_private($private_key);</span><br><span class="line"></span><br><span class="line"><span class="comment">//判断公钥是否是可用的</span></span><br><span class="line">$pu_key = openssl_pkey_get_public($public_key);</span><br><span class="line"></span><br><span class="line"><span class="comment">//原始数据</span></span><br><span class="line">$data = <span class="string">"hello"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加密后的数据</span></span><br><span class="line">$encrypted = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密后的数据</span></span><br><span class="line">$decrypted = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//私钥加密，也可使用openssl_public_encrypt公钥加密，然后使用openssl_private_decrypt解密，加密后数据在$encrypted</span></span><br><span class="line">openssl_private_encrypt($data, $encrypted, $pi_key);</span><br><span class="line"></span><br><span class="line"><span class="comment">//加密后的内容通常含有特殊字符，需要编码转换下，在网络间通过url传输时要注意base64编码是否是url安全的</span></span><br><span class="line">$encrypted = base64_encode($encrypted);</span><br><span class="line"></span><br><span class="line">dump($encrypted);</span><br><span class="line"></span><br><span class="line"><span class="comment">//私钥加密的内容通过公钥可解密出来,公钥加密的可用私钥解密。不能混淆</span></span><br><span class="line">openssl_public_decrypt(base64_decode($encrypted),$decrypted,$pu_key);</span><br><span class="line"></span><br><span class="line">dump($decrypted);</span><br></pre></td></tr></table></figure>
+<p>或者<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//私钥加密</span></span><br><span class="line">openssl_private_encrypt($data,$encrypted,$pi_key);</span><br><span class="line">$encrypted = base64_encode($encrypted);</span><br><span class="line"><span class="comment">//公钥解密</span></span><br><span class="line">openssl_public_decrypt(base64_decode($encrypted),$decrypted,$pu_key);</span><br><span class="line"><span class="keyword">echo</span> $decrypted; <span class="comment">//hello</span></span><br></pre></td></tr></table></figure></p>
+<p>使用PHP自己也可生成一对公私钥<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$config = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">"digest_alg"</span> =&gt; <span class="string">"sha512"</span>,</span><br><span class="line">    <span class="string">"private_key_bits"</span> =&gt; <span class="number">4096</span>,</span><br><span class="line">    <span class="string">"private_key_type"</span> =&gt; OPENSSL_KEYTYPE_RSA,</span><br><span class="line">);</span><br><span class="line"><span class="comment">// 创建公私钥</span></span><br><span class="line">$res = openssl_pkey_new($config);</span><br><span class="line"><span class="comment">// 获得私钥 $privKey</span></span><br><span class="line">openssl_pkey_export($res, $privKey);</span><br><span class="line"><span class="comment">// 获得公钥 $pubKey</span></span><br><span class="line">$pubKey = openssl_pkey_get_details($res);</span><br><span class="line">$pubKey = $pubKey[<span class="string">"key"</span>];</span><br><span class="line">$data = <span class="string">'hello'</span>;</span><br><span class="line"><span class="comment">// 私钥加密</span></span><br><span class="line">openssl_private_encrypt($data, $encrypted ,$privKey);</span><br><span class="line"><span class="comment">// 公钥解密</span></span><br><span class="line">openssl_public_decrypt($encrypted, $decrypted, $pubKey);</span><br><span class="line"><span class="keyword">echo</span> $decrypted;</span><br></pre></td></tr></table></figure></p>
+<p>非对称加密的缺点是加密和解密花费时间长、速度慢，只适合对少量数据进行加密。如果既想有很快的加密速度又想保证数据比对称加密更加安全，可对数据进行对称加密，对秘钥做非对称加密，因为一般秘钥的长度会小于数据的长度。</p>
+<h3 id="对称加密-AES为例"><a href="#对称加密-AES为例" class="headerlink" title="对称加密(AES为例)"></a>对称加密(AES为例)</h3><p>AES加密时需要统一四个参数：</p>
+<ul>
+<li>密钥长度 (Key Size)</li>
+<li>加密模式 (Cipher Mode)</li>
+<li>填充方式 (Padding)</li>
+<li>初始向量 (Initialization Vector)</li>
+</ul>
+<p>由于前后端开发所使用的语言不统一，导致经常出现前后端之间互相不能解密的情况出现，其实，无论什么语言系统，AES的算法总是相同的，导致结果不一致的原因在于上述的四个参数不一致，下面就来了解一下这四个参数的含义</p>
+<ul>
+<li>密钥长度<br>AES算法下，key的长度有三种：128、192、256 bits，三种不同密钥长度就需要我们传入的key传入不同长度的字符串，例如我们选择AES-128,那我们定的key需要是长度为16的字符串</li>
+<li>加密模式<br>AES属于块加密，块加密中有CBC、ECB、CTR、OFB、CFB等几种工作模式，为了保持前后端统一，我们选择ECB模式</li>
+<li>填充方式<br>由于块加密只能对特定长度的数据块进行加密，因此CBC、ECB模式需要在最后一数据块加密前进行数据填充</li>
+<li>初始向量<br>使用除ECB以外的其他加密模式均需要传入一个初始向量，其大小与Block Size相等</li>
+</ul>
+<p>参考Laravel中的加密类<code>vendor\laravel\framework\src\Illuminate\Encryption\Encrypter.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 加密</span></span><br><span class="line">$name = <span class="string">'yangguoqi'</span>;</span><br><span class="line">$secret = encrypt($name);</span><br><span class="line"></span><br><span class="line">$a = <span class="string">'eyJpdiI6Im42Z3IzeVNmTDNtXC9nT0NvaGV0NjNRPT0iLCJ2YWx1ZSI6IjhlTGRGYyt6aWhubjREM1BTM0EybExpdlhuMU1FTFwvSUhzUTVnNHRwekJNPSIsIm1hYyI6IjlmZTY3MDczMDg0NzJiMDUwNTRiMGNiYWM3YTAzYzQ4Y2EwOTA4MjJkMDM2OWEyZmVhODcwODUxZWNjMDRkYWEifQ=='</span>;</span><br><span class="line">$b = <span class="string">'eyJpdiI6InJcL1IwcklzbFcyTUZsSVhNS1k3RXFBPT0iLCJ2YWx1ZSI6IlwvV1dCcWdXS21hbERmWnFPWDVYa1hlN0RadkJlQUt4Nkh4bzczS2JuOEFRPSIsIm1hYyI6IjhhN2E0OWE2ZTc3ZTU4YzQzOGYzYmUzZDA3NWYwNTVlOTllNzQ1ZWY5YTE0NzE4NTUzM2E2MDY4ZDVkMzNhOTYifQ=='</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line">dump(decrypt($a));</span><br><span class="line">dump(decrypt($b));</span><br></pre></td></tr></table></figure>
+<h3 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h3><p>如何限制放在公网的服务器只有局域网内部的人才可以使用或者登录?</p>
+<p>一开始想到的就是针对IP的限制, 但是由于公司使用网络的出口 IP 并不固定, 而且 IP 太多, 一个个设置太过麻烦, 然后在想想是否可以通过这样的方式, 比如进入系统的第一步就是登录, 我们就在登录这做一些手脚, 登录的时候在JS访问一个放置在局域网内的脚本, 可以返回一些加密过后约定的内容, 连同登录表单一起提交到系统后台验证, 因为外网的人无法访问到这个脚本, 既然也无法拿到我们事先约定好的加密数据, 自然无法登录.<br>JS脚本<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    $(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        $.ajax(&#123;</span><br><span class="line">              url: <span class="string">'http://192.168.1.6/zq_check_login/auth.php'</span>,</span><br><span class="line">              dataType: <span class="string">'jsonp'</span>, <span class="attr">jsonp</span>: <span class="string">'hash'</span>,</span><br><span class="line">              data: &#123;<span class="attr">get</span>: <span class="number">1</span>&#125;</span><br><span class="line">        &#125;).done(<span class="function"><span class="keyword">function</span> (<span class="params"> data </span>) </span>&#123;</span><br><span class="line">              <span class="keyword">if</span> (data.code === <span class="number">200</span>) &#123;</span><br><span class="line">                  <span class="keyword">var</span> token = $(<span class="string">"&lt;input/&gt;"</span>).attr(&#123;</span><br><span class="line">                      name: <span class="string">'access_token'</span>,</span><br><span class="line">                      type: <span class="string">'hidden'</span></span><br><span class="line">                  &#125;).val(data.token);</span><br><span class="line">  </span><br><span class="line">                  <span class="keyword">var</span> ip = $(<span class="string">"&lt;input/&gt;"</span>).attr(&#123;</span><br><span class="line">                      name: <span class="string">'access_private_ip'</span>,</span><br><span class="line">                      type: <span class="string">'hidden'</span></span><br><span class="line">                  &#125;).val(data.ip);</span><br><span class="line">  </span><br><span class="line">                  $(<span class="string">"form"</span>).prepend(token, ip);</span><br><span class="line">  </span><br><span class="line">                  $(<span class="string">"button[type='submit']"</span>).attr(<span class="string">'disabled'</span>, <span class="literal">false</span>);</span><br><span class="line">              &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>登录验证<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$publicKey = file_get_contents(storage_path(<span class="string">'app/public.pem'</span>));</span><br><span class="line">$key = openssl_pkey_get_public($publicKey);</span><br><span class="line">$encode = base64_decode($request[<span class="string">'access_token'</span>]);</span><br><span class="line">$result = openssl_public_decrypt($encode, $decrypted, $key);</span><br><span class="line"><span class="keyword">if</span> (!$result) &#123;</span><br><span class="line">    <span class="keyword">return</span> flash_message(<span class="string">'身份验证失败！'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$arr = json_decode($decrypted, <span class="keyword">true</span>);</span><br><span class="line">$rt = substr(now()-&gt;toDateTimeString(), <span class="number">0</span>, <span class="number">13</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!starts_with($arr[<span class="string">'date'</span>], $rt)) &#123;</span><br><span class="line">    <span class="keyword">return</span> flash_message(<span class="string">'身份验证失败，请重试。'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!starts_with($arr[<span class="string">'ip'</span>], <span class="string">'192.168'</span>) &amp;&amp; !starts_with($arr[<span class="string">'ip'</span>], <span class="string">'127.'</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> flash_message(<span class="string">'身份验证失败，请重试！'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/08/swoole的核心概念/" itemprop="url">
+                  swoole的核心概念
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-08T09:29:04+08:00" content="2018-05-08">
+              2018-05-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>只要从现在开始努力，最坏不过是大器晚成<br></blockquote>
+
+<p>当 Swoole 启动时, 一共会建立 2 + n + m 个进程，其 n 为 Worker 数， m 为 TaskWorker 数，2 为一个 Master 进程和一个 Manager 进程</p>
+<h3 id="Swoole框架模型"><a href="#Swoole框架模型" class="headerlink" title="Swoole框架模型"></a>Swoole框架模型</h3><p>Swoole Server 中有以下几种角色，分别是：Master(Process)、Reactor(Thread)、Manager(Process)、Worker(Process) 和 TaskWoker(Process);<br><img style="margin-left: 0;" src="/images/swoole01.png"></p>
+<h4 id="Master-Process"><a href="#Master-Process" class="headerlink" title="Master(Process)"></a>Master(Process)</h4><p>Master 是 Swoole 的主要 Process，当我们启动 Swoole 时，当下的 Process 就会成为 Master Process 并负责建立 Main Reactor、建立和管理 Reactor、建立 Manager 并开始接受客户端请求等工作。</p>
+<p>首先 Master 会透过 fork 函数建立一个 Manager，接着建立 Reactor，当全部建立完成后会呼叫 onStart 的 callback function，此时可以在这个 callback function 中对 Master 做一些处理或修改。如：将 Master 重新命名，保存 Master 的 PID 档桉等。</p>
+<p>这裡要特别注意，因为 Master 不应该存在任何商业逻辑，因此 Swoole 底层会禁止你在此处做一些行为，如：发送请求、呼叫 Swoole 的异步 API 等等。</p>
+<h4 id="Reactor-Thread"><a href="#Reactor-Thread" class="headerlink" title="Reactor(Thread)"></a>Reactor(Thread)</h4><p>Reactor 以 Multi-Thread 的方式执行，Reactor 底层由 epoll 函数来实现（在Mac系统是透过 Kqueue），用于实际监听和处理来自客户端的 Connect 请求，并完全是透过异步、非阻塞的模式来运作。</p>
+<h4 id="Manager-Process"><a href="#Manager-Process" class="headerlink" title="Manager(Process)"></a>Manager(Process)</h4><p>Swoole 中 Worker/Task worker 都是由 Manager 所 fork 并管理的。当 Manager 被建立时，会呼叫 onManagerStart 的 callback function 通知上层的应用。</p>
+<p>当底下的某个 Worker 意外结束执行时，Manager 会负责回收的工作，并同时建立新的 Worker 补足固定的数量维持 Swoole 的正常运作。</p>
+<p>当 Manager 退出时，会呼叫 onManagerStop 的 callback function，可以利用此时进行一些回收逻辑。</p>
+<h4 id="Worker-Process"><a href="#Worker-Process" class="headerlink" title="Worker(Process)"></a>Worker(Process)</h4><p>Worker 以 Multi-Process 的方式执行，是 Swoole 中执行大部分逻辑的地方，因此在 Worker 中所对应的 callback function 数量也是最多的。</p>
+<p>当 Worker 启动后会呼叫 onWorkerStart 的 callback function，在这裡我们就能够使用全部 Swoole 所提供的 API 了。</p>
+<p>当上层的 Reactor 收到客户端的请求后，就会将数据打包发送给 Worker，并在相对应的 callback function 中（如：onReceive、onRequest、onMessage等）处理这些资料，并可以将处理结果回传给 Reactor，再回传至客户端中。如果 Worker 正常退出，会呼叫 onWorkerStop 的 callback function，若是处理数据过程中出现严重错误或者 Worker 请求达到处理上限时，则会呼叫 onWorkerError 的 callback function 并结束该 Worker。</p>
+<h4 id="Task-Worker-Process"><a href="#Task-Worker-Process" class="headerlink" title="Task Worker(Process)"></a>Task Worker(Process)</h4><p>Task Worker 一样以 Multi-Process 的方式执行，只接受由 Worker 中透过 swoole_server-&gt;task/taskwait 方法指派过来的任务，并将结果回传给 Worker。</p>
+<h3 id="Process-间的通讯"><a href="#Process-间的通讯" class="headerlink" title="Process 间的通讯"></a>Process 间的通讯</h3><p>在 Swoole 中，Process 间的通讯可以分为以下几三种状况：</p>
+<ul>
+<li>Master &lt;=&gt; Worker</li>
+<li>Worker &lt;=&gt; Worker</li>
+<li>Worker &lt;=&gt; Task Worker</li>
+</ul>
+<p>前两种情形，在 Swoole 底层统一使用 Unix Socket 进行通讯，这些 socket 也都归併到各自 Process 的 Reactor 中进行管理。而第三种情况，除了预设的 Unix Socket 外，还可以使用由系统提供的 Message Queue 来实作。</p>
+<h3 id="Reactor-Worker-Task的关系"><a href="#Reactor-Worker-Task的关系" class="headerlink" title="Reactor,Worker,Task的关系"></a>Reactor,Worker,Task的关系</h3><p>一个通俗的比喻，假设Server就是一个工厂，那Reactor就是销售，接受客户订单。而Worker就是工人，当销售接到订单后，Worker去工作生产出客户要的东西。而TaskWorker可以理解为行政人员，可以帮助Worker干些杂事，让Worker专心工作。</p>
+<blockquote>
+<p><a href="https://wiki.swoole.com/wiki/page/163.html" target="_blank" rel="noopener">https://wiki.swoole.com/wiki/page/163.html</a><br><a href="https://blog.albert-chen.com/swoole-basic-concepts/" target="_blank" rel="noopener">https://blog.albert-chen.com/swoole-basic-concepts/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/03/laravel中使用macro方法实例举例/" itemprop="url">
                   laravel中使用macro方法实例举例
                 </a>
@@ -621,241 +872,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/02/关于composer的一点儿思考/" itemprop="url">
-                  关于composer的一点儿思考
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-02T10:37:57+08:00" content="2018-05-02">
-              2018-05-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>像我这样的人…<br></blockquote>
-
-<h3 id="composer-lock文件是否需要版本控制器"><a href="#composer-lock文件是否需要版本控制器" class="headerlink" title="composer.lock文件是否需要版本控制器"></a>composer.lock文件是否需要版本控制器</h3><ul>
-<li><p>什么是 composer.lock 文件?<br><code>composer.lock</code> 文件是当你第一次使用 <code>composer install</code> 或者 执行 <code>composer update</code> 后生成的文件, 此文件里定义了当前项目的代码依赖, 还有最重要的, 这些代码依赖的对应的版本.</p>
-</li>
-<li><p>composer.lock 文件作用是什么?<br>默认情况下, 当执行 <code>composer install</code> 的时候, Composer 会检查当前项目是否有 <code>composer.lock</code> 文件, 如果有的话, 就会按照此文件去下载代码依赖和其指定的版本.</p>
-</li>
-<li><p>好处<br>团队开发的时, clone 下代码后, 使用 <code>composer install</code> 可以确保大家使用的依赖包都是同一个版本的, 避免没必要的混乱;<br>在一个现有的项目上开发的时候, 执行 <code>composer update</code> 后, 偶尔会发现刚刚更新了某个代码包把程序整挂了, 这个时候, 如果 <code>composer.lock</code> 是加入版本控制器的话, 直接一个 <code>git diff</code> 命令, 就可以查看到这次更新了那个包, 快速定位到问题的所在;<br>在线上部署的时候, 可以确保线上生成环境下使用所有代码是和开发时候使用的一致, 因为 <code>composer.lock</code> 会确保你在执行 <code>composer install</code> 命令后, 按照文件里面指定的版本去下载代码依赖包;</p>
-</li>
-</ul>
-<h3 id="composer-install与composer-update的区别"><a href="#composer-install与composer-update的区别" class="headerlink" title="composer install与composer update的区别"></a>composer install与composer update的区别</h3><h4 id="composer-install"><a href="#composer-install" class="headerlink" title="composer install"></a>composer install</h4><p>install 命令从当前目录读取 composer.json 文件，处理了依赖关系，并把其安装到 vendor 目录下。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer install</span><br></pre></td></tr></table></figure></p>
-<p>如果当前目录下存在 <code>composer.lock</code> 文件，它会从此文件读取依赖版本，而不是根据 <code>composer.json</code>文件去获取依赖。这确保了该库的每个使用者都能得到相同的依赖版本。<br>如果没有<code>composer.lock</code> 文件，composer 将在处理完依赖关系后创建它。</p>
-<h4 id="composer-update"><a href="#composer-update" class="headerlink" title="composer update"></a>composer update</h4><p>为了获取依赖的最新版本，并且升级 composer.lock 文件，你应该使用 update 命令。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer update</span><br></pre></td></tr></table></figure></p>
-<p>这将解决项目的所有依赖，并将确切的版本号写入 <code>composer.lock</code>。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/26/编译安装nginx/" itemprop="url">
-                  编译安装nginx
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-26T15:25:58+08:00" content="2018-04-26">
-              2018-04-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>等一个不爱你的人，就像在机场等一艘船<br></blockquote>
-
-<h3 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h3><p>在linux使用make方式安装，需要保证linux已经具备比较OK的编译环境，例如gcc等编译工具。一般而言，服务器提供商在安装的系统中已经默认集成了这些软件，但是为了保险起见，我们还是通过一些较为基础的方式，把这些依赖包都跑一遍，以防在之后的编译中出差错。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc gcc-c++ autoconf automake libtool make cmake<span class="comment"># yum -y install zlib zlib-devel openssl openssl-devel pcre-devel</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="创建用来运行nginx的用户及组"><a href="#创建用来运行nginx的用户及组" class="headerlink" title="创建用来运行nginx的用户及组"></a>创建用来运行nginx的用户及组</h3><p>我们创建一个新的用户和用户组来运行nginx，这样可以把nginx和root分开，保证nginx不具备root权限。但是，我们并不希望nginx成为一个真实的可以登陆到远程进行操作的用户，所以，我们并不给它创建家目录，在useradd的时候，用-M参数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd nginx</span><br><span class="line">useradd -g nginx -M nginx</span><br></pre></td></tr></table></figure></p>
-<p>-g参数为nginx用户指定了一个组<br>-M参数保证其不自动生成home目录</p>
-<p>禁止用户登陆也很方便，只需要修改配置文件中有关用户和用户组的信息即可。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/passwd</span></span><br></pre></td></tr></table></figure></p>
-<p>找到nginx，将后面的<code>/bin/bash</code>改为<code>/sbin/nologin</code>即可。</p>
-<h3 id="编译安装Nginx"><a href="#编译安装Nginx" class="headerlink" title="编译安装Nginx"></a>编译安装Nginx</h3><ul>
-<li><p>下载</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//xxxxxxxxxx/nginx1.7.x.tar.gz# tar zxvf nginx1.7.x.tar.gz# cd nginx1.7.x</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./configure --prefix=/usr/local/nginx \--pid-path=/usr/local/nginx/run/nginx.pid \--with-http_ssl_module \--user=nginx \ --group=nginx \--with-pcre \--without-mail_pop3_module \--without-mail_imap_module \--without-mail_smtp_module</span></span><br></pre></td></tr></table></figure>
-<p>说明可以使用<code>./configure --help</code>查看一些配置信息</p>
-</li>
-<li><p>编译</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/nginx</span><br><span class="line">ls</span><br><span class="line">sbin/nginx</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="nginx服务的载入"><a href="#nginx服务的载入" class="headerlink" title="nginx服务的载入"></a>nginx服务的载入</h3><p>make编译安装的软件，可不像yum安装的服务，我们熟悉的service命令并不起效，不然你用service nginx restart试试看。这是因为service调用/etc/ini.d/目录下的程序完成，而该目录下并不存在nginx这个程序。那么这个时候怎么重启nginx呢？如下操作：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
-<p>这个操作可以重新加载nginx的配置文件，相当于重启。如果一定要重启整个服务，那只能通过杀死nginx进程，然后在运行程序了。</p>
-<p>不过为了使用我们熟悉的service操作, 现在提供一个文件(nginx)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> nginx Startup script for the Nginx HTTP Server</span><br><span class="line"><span class="meta">#</span> this script create it by ivan at 2010.12.29.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> chkconfig: - 85 15</span><br><span class="line"><span class="meta">#</span> description: Nginx is a high-performance web and proxy server.</span><br><span class="line"><span class="meta">#</span>              It has a lot of features, but it's not for everyone.</span><br><span class="line"><span class="meta">#</span> processname: nginx</span><br><span class="line"><span class="meta">#</span> pidfile: /var/run/nginx.pid</span><br><span class="line"><span class="meta">#</span> config: /etc/nginx.conf</span><br><span class="line"></span><br><span class="line">nginxd=/usr/local/nginx/sbin/nginx</span><br><span class="line">nginx_config=/usr/local/nginx/conf/nginx.conf</span><br><span class="line">nginx_pid=/usr/local/nginx/run/nginx.pid</span><br><span class="line"></span><br><span class="line">RETVAL=0</span><br><span class="line">prog="nginx"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Source function library.</span><br><span class="line">. /etc/rc.d/init.d/functions</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Source networking configuration.</span><br><span class="line">. /etc/sysconfig/network</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Check that networking is up.</span><br><span class="line">[ $&#123;NETWORKING&#125; = "no" ] &amp;&amp; exit 0</span><br><span class="line">[ -x $nginxd ] || exit 0</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Start nginx daemons functions.</span><br><span class="line">start()&#123;</span><br><span class="line"></span><br><span class="line">        if [ -e $nginx_pid ]; then</span><br><span class="line">                echo "nginx already running..."</span><br><span class="line">                exit 1</span><br><span class="line">        fi</span><br><span class="line">        echo -n $"Starting $prog:"</span><br><span class="line">        daemon $nginxd -c $&#123;nginx_config&#125;</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">        [ $RETVAL = 0 ] &amp;&amp; touch /var/lock/subsys/nginx</span><br><span class="line">        return $RETVAL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Stop nginx daemons functions.</span><br><span class="line">stop()&#123;</span><br><span class="line">        echo -n $"Stopping $prog:"</span><br><span class="line">        killproc $nginxd</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">        [ $RETVAL = 0 ] &amp;&amp; rm -f /var/lock/subsys/nginx $nginx_pid</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>reload nginx service functions.</span><br><span class="line">reload()&#123;</span><br><span class="line">        echo -n $"Reloading $proc:"</span><br><span class="line">        killproc $nginxd -HUP</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> See how we were called.</span><br><span class="line">case "$1" in</span><br><span class="line">        start)</span><br><span class="line">                start</span><br><span class="line">                ;;</span><br><span class="line">        stop)</span><br><span class="line">                stop</span><br><span class="line">                ;;</span><br><span class="line">        reload)</span><br><span class="line">                reload</span><br><span class="line">                ;;</span><br><span class="line">        restart)</span><br><span class="line">                stop</span><br><span class="line">                start</span><br><span class="line">                ;;</span><br><span class="line">        status)</span><br><span class="line">                status $prog</span><br><span class="line">                RETVAL=$?</span><br><span class="line">                ;;</span><br><span class="line">        *)</span><br><span class="line">                echo $"Usage: $prog &#123;start|stop|restart|reload|status|help&#125;"</span><br><span class="line">                exit 1</span><br><span class="line">esac</span><br><span class="line"></span><br><span class="line">exit $RETVAL</span><br></pre></td></tr></table></figure></p>
-<p>放到/etc/ini.d/目录下，并执行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/init.d/nginx <span class="comment"># chkconfig --add nginx# chkconfig nginx on</span></span><br></pre></td></tr></table></figure></p>
-<p>这样就可以通过service nginx restart等方法来操作nginx了。</p>
-<blockquote>
-<p><a href="https://www.tangshuang.net/1774.html" target="_blank" rel="noopener">https://www.tangshuang.net/1774.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -894,7 +915,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

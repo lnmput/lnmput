@@ -265,6 +265,236 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/02/关于composer的一点儿思考/" itemprop="url">
+                  关于composer的一点儿思考
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-02T10:37:57+08:00" content="2018-05-02">
+              2018-05-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>像我这样的人…<br></blockquote>
+
+<h3 id="composer-lock文件是否需要版本控制器"><a href="#composer-lock文件是否需要版本控制器" class="headerlink" title="composer.lock文件是否需要版本控制器"></a>composer.lock文件是否需要版本控制器</h3><ul>
+<li><p>什么是 composer.lock 文件?<br><code>composer.lock</code> 文件是当你第一次使用 <code>composer install</code> 或者 执行 <code>composer update</code> 后生成的文件, 此文件里定义了当前项目的代码依赖, 还有最重要的, 这些代码依赖的对应的版本.</p>
+</li>
+<li><p>composer.lock 文件作用是什么?<br>默认情况下, 当执行 <code>composer install</code> 的时候, Composer 会检查当前项目是否有 <code>composer.lock</code> 文件, 如果有的话, 就会按照此文件去下载代码依赖和其指定的版本.</p>
+</li>
+<li><p>好处<br>团队开发的时, clone 下代码后, 使用 <code>composer install</code> 可以确保大家使用的依赖包都是同一个版本的, 避免没必要的混乱;<br>在一个现有的项目上开发的时候, 执行 <code>composer update</code> 后, 偶尔会发现刚刚更新了某个代码包把程序整挂了, 这个时候, 如果 <code>composer.lock</code> 是加入版本控制器的话, 直接一个 <code>git diff</code> 命令, 就可以查看到这次更新了那个包, 快速定位到问题的所在;<br>在线上部署的时候, 可以确保线上生成环境下使用所有代码是和开发时候使用的一致, 因为 <code>composer.lock</code> 会确保你在执行 <code>composer install</code> 命令后, 按照文件里面指定的版本去下载代码依赖包;</p>
+</li>
+</ul>
+<h3 id="composer-install与composer-update的区别"><a href="#composer-install与composer-update的区别" class="headerlink" title="composer install与composer update的区别"></a>composer install与composer update的区别</h3><h4 id="composer-install"><a href="#composer-install" class="headerlink" title="composer install"></a>composer install</h4><p>install 命令从当前目录读取 composer.json 文件，处理了依赖关系，并把其安装到 vendor 目录下。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer install</span><br></pre></td></tr></table></figure></p>
+<p>如果当前目录下存在 <code>composer.lock</code> 文件，它会从此文件读取依赖版本，而不是根据 <code>composer.json</code>文件去获取依赖。这确保了该库的每个使用者都能得到相同的依赖版本。<br>如果没有<code>composer.lock</code> 文件，composer 将在处理完依赖关系后创建它。</p>
+<h4 id="composer-update"><a href="#composer-update" class="headerlink" title="composer update"></a>composer update</h4><p>为了获取依赖的最新版本，并且升级 composer.lock 文件，你应该使用 update 命令。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer update</span><br></pre></td></tr></table></figure></p>
+<p>这将解决项目的所有依赖，并将确切的版本号写入 <code>composer.lock</code>。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/26/编译安装nginx/" itemprop="url">
+                  编译安装nginx
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-26T15:25:58+08:00" content="2018-04-26">
+              2018-04-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>等一个不爱你的人，就像在机场等一艘船<br></blockquote>
+
+<h3 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h3><p>在linux使用make方式安装，需要保证linux已经具备比较OK的编译环境，例如gcc等编译工具。一般而言，服务器提供商在安装的系统中已经默认集成了这些软件，但是为了保险起见，我们还是通过一些较为基础的方式，把这些依赖包都跑一遍，以防在之后的编译中出差错。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc gcc-c++ autoconf automake libtool make cmake<span class="comment"># yum -y install zlib zlib-devel openssl openssl-devel pcre-devel</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="创建用来运行nginx的用户及组"><a href="#创建用来运行nginx的用户及组" class="headerlink" title="创建用来运行nginx的用户及组"></a>创建用来运行nginx的用户及组</h3><p>我们创建一个新的用户和用户组来运行nginx，这样可以把nginx和root分开，保证nginx不具备root权限。但是，我们并不希望nginx成为一个真实的可以登陆到远程进行操作的用户，所以，我们并不给它创建家目录，在useradd的时候，用-M参数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd nginx</span><br><span class="line">useradd -g nginx -M nginx</span><br></pre></td></tr></table></figure></p>
+<p>-g参数为nginx用户指定了一个组<br>-M参数保证其不自动生成home目录</p>
+<p>禁止用户登陆也很方便，只需要修改配置文件中有关用户和用户组的信息即可。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/passwd</span></span><br></pre></td></tr></table></figure></p>
+<p>找到nginx，将后面的<code>/bin/bash</code>改为<code>/sbin/nologin</code>即可。</p>
+<h3 id="编译安装Nginx"><a href="#编译安装Nginx" class="headerlink" title="编译安装Nginx"></a>编译安装Nginx</h3><ul>
+<li><p>下载</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//xxxxxxxxxx/nginx1.7.x.tar.gz# tar zxvf nginx1.7.x.tar.gz# cd nginx1.7.x</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./configure --prefix=/usr/local/nginx \--pid-path=/usr/local/nginx/run/nginx.pid \--with-http_ssl_module \--user=nginx \ --group=nginx \--with-pcre \--without-mail_pop3_module \--without-mail_imap_module \--without-mail_smtp_module</span></span><br></pre></td></tr></table></figure>
+<p>说明可以使用<code>./configure --help</code>查看一些配置信息</p>
+</li>
+<li><p>编译</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/nginx</span><br><span class="line">ls</span><br><span class="line">sbin/nginx</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="nginx服务的载入"><a href="#nginx服务的载入" class="headerlink" title="nginx服务的载入"></a>nginx服务的载入</h3><p>make编译安装的软件，可不像yum安装的服务，我们熟悉的service命令并不起效，不然你用service nginx restart试试看。这是因为service调用/etc/ini.d/目录下的程序完成，而该目录下并不存在nginx这个程序。那么这个时候怎么重启nginx呢？如下操作：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
+<p>这个操作可以重新加载nginx的配置文件，相当于重启。如果一定要重启整个服务，那只能通过杀死nginx进程，然后在运行程序了。</p>
+<p>不过为了使用我们熟悉的service操作, 现在提供一个文件(nginx)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> nginx Startup script for the Nginx HTTP Server</span><br><span class="line"><span class="meta">#</span> this script create it by ivan at 2010.12.29.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> chkconfig: - 85 15</span><br><span class="line"><span class="meta">#</span> description: Nginx is a high-performance web and proxy server.</span><br><span class="line"><span class="meta">#</span>              It has a lot of features, but it's not for everyone.</span><br><span class="line"><span class="meta">#</span> processname: nginx</span><br><span class="line"><span class="meta">#</span> pidfile: /var/run/nginx.pid</span><br><span class="line"><span class="meta">#</span> config: /etc/nginx.conf</span><br><span class="line"></span><br><span class="line">nginxd=/usr/local/nginx/sbin/nginx</span><br><span class="line">nginx_config=/usr/local/nginx/conf/nginx.conf</span><br><span class="line">nginx_pid=/usr/local/nginx/run/nginx.pid</span><br><span class="line"></span><br><span class="line">RETVAL=0</span><br><span class="line">prog="nginx"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Source function library.</span><br><span class="line">. /etc/rc.d/init.d/functions</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Source networking configuration.</span><br><span class="line">. /etc/sysconfig/network</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Check that networking is up.</span><br><span class="line">[ $&#123;NETWORKING&#125; = "no" ] &amp;&amp; exit 0</span><br><span class="line">[ -x $nginxd ] || exit 0</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Start nginx daemons functions.</span><br><span class="line">start()&#123;</span><br><span class="line"></span><br><span class="line">        if [ -e $nginx_pid ]; then</span><br><span class="line">                echo "nginx already running..."</span><br><span class="line">                exit 1</span><br><span class="line">        fi</span><br><span class="line">        echo -n $"Starting $prog:"</span><br><span class="line">        daemon $nginxd -c $&#123;nginx_config&#125;</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">        [ $RETVAL = 0 ] &amp;&amp; touch /var/lock/subsys/nginx</span><br><span class="line">        return $RETVAL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Stop nginx daemons functions.</span><br><span class="line">stop()&#123;</span><br><span class="line">        echo -n $"Stopping $prog:"</span><br><span class="line">        killproc $nginxd</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">        [ $RETVAL = 0 ] &amp;&amp; rm -f /var/lock/subsys/nginx $nginx_pid</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>reload nginx service functions.</span><br><span class="line">reload()&#123;</span><br><span class="line">        echo -n $"Reloading $proc:"</span><br><span class="line">        killproc $nginxd -HUP</span><br><span class="line">        RETVAL=$?</span><br><span class="line">        echo</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> See how we were called.</span><br><span class="line">case "$1" in</span><br><span class="line">        start)</span><br><span class="line">                start</span><br><span class="line">                ;;</span><br><span class="line">        stop)</span><br><span class="line">                stop</span><br><span class="line">                ;;</span><br><span class="line">        reload)</span><br><span class="line">                reload</span><br><span class="line">                ;;</span><br><span class="line">        restart)</span><br><span class="line">                stop</span><br><span class="line">                start</span><br><span class="line">                ;;</span><br><span class="line">        status)</span><br><span class="line">                status $prog</span><br><span class="line">                RETVAL=$?</span><br><span class="line">                ;;</span><br><span class="line">        *)</span><br><span class="line">                echo $"Usage: $prog &#123;start|stop|restart|reload|status|help&#125;"</span><br><span class="line">                exit 1</span><br><span class="line">esac</span><br><span class="line"></span><br><span class="line">exit $RETVAL</span><br></pre></td></tr></table></figure></p>
+<p>放到/etc/ini.d/目录下，并执行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/init.d/nginx <span class="comment"># chkconfig --add nginx# chkconfig nginx on</span></span><br></pre></td></tr></table></figure></p>
+<p>这样就可以通过service nginx restart等方法来操作nginx了。</p>
+<blockquote>
+<p><a href="https://www.tangshuang.net/1774.html" target="_blank" rel="noopener">https://www.tangshuang.net/1774.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/25/使用swoole进行系统监控/" itemprop="url">
                   使用swoole进行系统监控
                 </a>
@@ -579,237 +809,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/24/git忽略已经被提交的文件/" itemprop="url">
-                  git忽略已经被提交的文件
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-24T13:46:41+08:00" content="2018-04-24">
-              2018-04-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>现在努力的你，未来的事情谁说得清楚呢？<br>但你不努力，未来是怎样大概都知道了。<br></blockquote>
-
-<h3 id="问题起因"><a href="#问题起因" class="headerlink" title="问题起因"></a>问题起因</h3><p>有时候我们会遇到这样的场景,失误或是不小心将IDE的一些配置文件(如.idea文件夹)推送到了git仓库.而且你的同事拉取了代码,那么无论他们修改配置文件还是修复路径,他们:</p>
-<ul>
-<li><p>要么提交上去,谁拉代码谁冲突</p>
-</li>
-<li><p>要么不提,每次提交的时候小心翼翼不把这些配置文件提上去</p>
-</li>
-</ul>
-<h3 id="为什么-gitignore文件不管用"><a href="#为什么-gitignore文件不管用" class="headerlink" title="为什么.gitignore文件不管用"></a>为什么.gitignore文件不管用</h3><p>也许这时你马上会想,”shit,最好马上把这些文件添加到.gitignore”.然后你就做了,结果坑爹的发现:那些已经被添加到仓库的文件,只要修改就会出现在被修改的列表里,根本不管用</p>
-<p>这是因为.gitignore的设计就是为了那些没有被追踪的文件(即不在仓库中),如果你将一个已经被追踪的文件添加到.gitignore文件(或者使用add -f强制添加),这个文件还是会像工程里的其他文件一样被追踪的</p>
-<h3 id="正确的姿势"><a href="#正确的姿势" class="headerlink" title="正确的姿势"></a>正确的姿势</h3><ul>
-<li>将要忽略的文件或者文件夹加入 .gitignore 文件</li>
-<li><p>停止追踪文件或者文件夹 </p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached log -r <span class="comment">// log文件夹</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提交</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/17/字节与字符的区别/" itemprop="url">
-                  字节与字符的区别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-17T15:09:02+08:00" content="2018-04-17">
-              2018-04-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>山中何事，松花酿酒，春水煎茶。<br></blockquote>
-
-<h3 id="一通分析"><a href="#一通分析" class="headerlink" title="一通分析"></a>一通分析</h3><p>PHP代码中字符串的默认编码方式是根据页面的编码方式决定的, 一般情况下我们设置的都是utf-8编码,当然也不排除其他情况;<br>默认utf8格式<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$str=<span class="string">'我'</span>;</span><br><span class="line"><span class="keyword">echo</span> strlen($str);  <span class="comment">// 3个字节</span></span><br></pre></td></tr></table></figure></p>
-<p>转成gbk格式<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$str=<span class="string">'我'</span>;</span><br><span class="line">$str = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>, $str);</span><br><span class="line"><span class="keyword">echo</span> strlen($str);  <span class="comment">// 2个字节</span></span><br></pre></td></tr></table></figure></p>
-<p>出现乱码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$str=<span class="string">'我'</span>;</span><br><span class="line">$str = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>, $str);</span><br><span class="line"><span class="keyword">echo</span> strlen($str);  <span class="comment">// 2个字节</span></span><br><span class="line"><span class="keyword">echo</span> $str; <span class="comment">// ��</span></span><br></pre></td></tr></table></figure></p>
-<p>解决乱码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">header(<span class="string">"Content-type: text/html; charset=gb2312"</span>);</span><br><span class="line">$str=<span class="string">'我'</span>;</span><br><span class="line">$str = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>, $str);</span><br><span class="line"><span class="keyword">echo</span> strlen($str);  <span class="comment">// 2个字节</span></span><br><span class="line"><span class="keyword">echo</span> $str; <span class="comment">// ��</span></span><br></pre></td></tr></table></figure></p>
-<p>或者是将我们的网页的编码方式改成<code>gbk</code>, 因为新版的Chrome已经移除了修改页面编码方式的工具, 不过我们可以借助他的一款扩展程序<code>Set Character Encoding</code>来解决;</p>
-<p><code>注意header头的作用是申明页面渲染的编码方式, 并不能影响PHP代码中相关字符的编码方式</code></p>
-<h3 id="字节和字符"><a href="#字节和字符" class="headerlink" title="字节和字符"></a>字节和字符</h3><p>字节(Byte)是计量单位，表示数据量多少，是计算机存储容量的计量单位。一个字节占8位。<br>字符(Character)计算机中使用的文字和符号，比如’A’、’B’、’$’、’&amp;’等。</p>
-<ul>
-<li><p>ASCII码中，一个英文字母（不分大小写）占一个字节的空间，一个中文汉字占两个字节的空间。</p>
-</li>
-<li><p>UTF-8编码中，一个英文字符等于一个字节，一个中文等于三个字节。</p>
-</li>
-<li><p>Unicode编码中，一个英文等于两个字节，一个中文等于两个字节。</p>
-</li>
-</ul>
-<p>符号：英文标点占一个字节，中文标点占两个字节。举例：英文句号“.”占1个字节的大小，中文句号“。”占2个字节的大小。</p>
-<h3 id="单位换算"><a href="#单位换算" class="headerlink" title="单位换算"></a>单位换算</h3><blockquote>
-<p>1字节(Byte) = 8位(bit) （1B=8位(bit)）<br>1KB=1024B<br>1MB=1024KB</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -848,7 +852,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,213 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/05/golang中下划线使用方法/" itemprop="url">
+                  golang中下划线使用方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-05T11:46:29+08:00" content="2018-07-05">
+              2018-07-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我想有一间书房，不负光阴，静享慢乐<br></blockquote>
+
+<h3 id="用在import"><a href="#用在import" class="headerlink" title="用在import"></a>用在import</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	<span class="string">"database/sql"</span></span><br><span class="line">    _<span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>引入包，会先调用包中的初始化函数，这种使用方式仅让导入的包做初始化，而不使用包中其他功能</p>
+<h3 id="用在返回值"><a href="#用在返回值" class="headerlink" title="用在返回值"></a>用在返回值</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _,v := range Slice&#123;&#125;</span><br><span class="line"></span><br><span class="line">_,err := func()</span><br></pre></td></tr></table></figure>
+<p>表示忽略某个值。单函数有多个返回值，用来获取某个特定的值</p>
+<h3 id="用在变量"><a href="#用在变量" class="headerlink" title="用在变量"></a>用在变量</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type T struct&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> _ I = T&#123;&#125;</span><br><span class="line"></span><br><span class="line">其中 I为<span class="class"><span class="keyword">interface</span></span></span><br></pre></td></tr></table></figure>
+<p>上面用来判断 type T是否实现了I,用作类型断言，如果T没有实现借口I，则编译错误.</p>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/309f55a152db" target="_blank" rel="noopener">https://www.jianshu.com/p/309f55a152db</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/03/nginx的empty-gif模块/" itemprop="url">
+                  nginx的empty_gif模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-03T20:05:37+08:00" content="2018-07-03">
+              2018-07-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你对自由的理解是什么？说「不」的能力。<br></blockquote>
+
+<p>用过百度统计的都知道百度使用1x1的空白图片传递统计参数，自己做异步统计的兄弟是否使用静态文件来传递参数。为什么使用空白图片呢，而不是自己存放一张小图呢，nginx里面的空白图片是保存在内存中的，速度绝对比硬盘上读取的快. 看下如何使用empty_gif生成响应1x1的空白图片吧.</p>
+<p>或许哪天ttlsa自己要做统计，咱们也可以使用empty_gif来传递参数，说归说，肯定性还是比较小，能用第三方的统计就用第三方统计。</p>
+<h3 id="nginx配置"><a href="#nginx配置" class="headerlink" title="nginx配置"></a>nginx配置</h3><p>nginx的模块 ngx_http_empty_gif_module， 编译安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location = /_.gif &#123;</span><br><span class="line">    empty_gif;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>自定义配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       <span class="number">80</span>;</span><br><span class="line">    server_name  test.ttlsa.com;</span><br><span class="line">    access_log  /data/logs/nginx/test.ttlsa.com.access.log  main;</span><br><span class="line"></span><br><span class="line">    index index.html index.php index.html;</span><br><span class="line">    root /data/site/test.ttlsa.com;</span><br><span class="line"></span><br><span class="line">    location ~* /<span class="number">3145</span>/</span><br><span class="line">    &#123;</span><br><span class="line">        empty_gif;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>我们在访问的时候带上所要统计的参数就可以<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test.ttlsa.com/<span class="number">3145</span>?time=hhh</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://nginx.org/en/docs/http/ngx_http_empty_gif_module.html" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_empty_gif_module.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/28/使用docker搭建lnmp环境/" itemprop="url">
                   使用docker搭建lnmp环境
                 </a>
@@ -605,231 +812,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/22/alpine简介/" itemprop="url">
-                  Alpine简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-22T14:00:27+08:00" content="2018-06-22">
-              2018-06-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>让未来到来，让过去过去。<br></blockquote>
-
-<p>Alpine 操作系统是一个面向安全的轻型 Linux 发行版。它不同于通常 Linux 发行版，Alpine 采用了 musl libc 和 busybox 以减小系统的体积和运行时资源消耗，但功能上比 busybox 又完善的多，因此得到开源社区越来越多的青睐。在保持瘦身的同时，Alpine 还提供了自己的包管理工具 apk，可以通过 <a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">https://pkgs.alpinelinux.org/packages</a> 网站上查询包信息，也可以直接通过 apk 命令直接查询和安装各种软件。</p>
-<p>Alpine 由非商业组织维护的，支持广泛场景的 Linux发行版，它特别为资深/重度Linux用户而优化，关注安全，性能和资源效能。Alpine 镜像可以适用于更多常用场景，并且是一个优秀的可以适用于生产的基础系统/环境。</p>
-<p>Alpine Docker 镜像也继承了 Alpine Linux 发行版的这些优势。相比于其他 Docker 镜像，它的容量非常小，仅仅只有 5 MB 左右（对比 Ubuntu 系列镜像接近 200 MB），且拥有非常友好的包管理机制。官方镜像来自 docker-alpine 项目。</p>
-<p>目前 Docker 官方已开始推荐使用 Alpine 替代之前的 Ubuntu 做为基础镜像环境。这样会带来多个好处。包括镜像下载速度加快，镜像安全性提高，主机之间的切换更方便，占用更少磁盘空间等。</p>
-<h3 id="Docker下的运行"><a href="#Docker下的运行" class="headerlink" title="Docker下的运行"></a>Docker下的运行</h3><p>官方 Alpine 镜像的文档：<a href="http://gliderlabs.viewdocs.io/docker-alpine/" target="_blank" rel="noopener">http://gliderlabs.viewdocs.io/docker-alpine/</a></p>
-<p>可以使用Docker Toolbox，创建一台Docker虚拟主机，在该主机的Docker环境下运行alpine的 Docker容器。该容器就是一个Alpine Linux系统，<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull alpine</span><br><span class="line"></span><br><span class="line">docker run -it --name myalpine alpine</span><br></pre></td></tr></table></figure></p>
-<h3 id="作为Docker容器的基础镜像"><a href="#作为Docker容器的基础镜像" class="headerlink" title="作为Docker容器的基础镜像"></a>作为Docker容器的基础镜像</h3><p>以Alpine为基础镜像，创建一个MySQL容器，镜像大小只有36.5MB，<br>同样的方式使用Ubuntu系统作为基础镜像，镜像大小有184MB，<br>Dockerfile文件的内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:<span class="number">3.6</span></span><br><span class="line">RUN apk add --no-cache mysql-client</span><br><span class="line">ENTRYPOINT [<span class="string">"mysql"</span>]</span><br></pre></td></tr></table></figure></p>
-<p>创建一个test/mysqlclient:1.0镜像<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t test/mysqlclient:<span class="number">1.0</span> .</span><br></pre></td></tr></table></figure></p>
-<h3 id="Alpine的配置和使用"><a href="#Alpine的配置和使用" class="headerlink" title="Alpine的配置和使用"></a>Alpine的配置和使用</h3><h4 id="网络相关文件"><a href="#网络相关文件" class="headerlink" title="网络相关文件"></a>网络相关文件</h4><p>主机名文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hostname</span><br></pre></td></tr></table></figure></p>
-<p>主机IP和域名映射文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hosts</span><br></pre></td></tr></table></figure></p>
-<p>安装nginx<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add --update nginx</span><br></pre></td></tr></table></figure></p>
-<p>安装openssh-server服务器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add openssh-server</span><br></pre></td></tr></table></figure></p>
-<h3 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h3><ul>
-<li>Alpine 官网：<a href="http://alpinelinux.org/" target="_blank" rel="noopener">http://alpinelinux.org/</a></li>
-<li>Alpine 官方仓库：<a href="https://github.com/alpinelinux" target="_blank" rel="noopener">https://github.com/alpinelinux</a></li>
-<li>Alpine 官方镜像：<a href="https://hub.docker.com/_/alpine/" target="_blank" rel="noopener">https://hub.docker.com/_/alpine/</a></li>
-<li>Alpine 官方镜像仓库：<a href="https://github.com/gliderlabs/docker-alpine" target="_blank" rel="noopener">https://github.com/gliderlabs/docker-alpine</a></li>
-</ul>
-<blockquote>
-<p><a href="https://blog.csdn.net/CSDN_duomaomao/article/details/76152416" target="_blank" rel="noopener">https://blog.csdn.net/CSDN_duomaomao/article/details/76152416</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/21/nginx与php-fpm的负载均衡/" itemprop="url">
-                  nginx与php-fpm的负载均衡
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-21T11:01:18+08:00" content="2018-06-21">
-              2018-06-21
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你不必跑在任何人后边。<br></blockquote>
-
-<p>Nginx反向代理负载均衡架构图(三台服务器为例)</p>
-<p><img src="/images/jiagou.jpg" alt></p>
-<h3 id="Nginx负载均衡-图示-192-168-1-1-80服务器配置"><a href="#Nginx负载均衡-图示-192-168-1-1-80服务器配置" class="headerlink" title="Nginx负载均衡(图示:192.168.1.1:80服务器配置)"></a>Nginx负载均衡(图示:192.168.1.1:80服务器配置)</h3><p>upstream示例配置</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream icontact_pool &#123;  </span><br><span class="line">    server  <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>:<span class="number">9000</span>    weight=<span class="number">5</span>    max_fails=<span class="number">3</span> fail_timeout=<span class="number">20</span>s;  </span><br><span class="line">    server  <span class="number">192.168</span><span class="number">.1</span><span class="number">.2</span>:<span class="number">9000</span>    weight=<span class="number">3</span>    max_fails=<span class="number">3</span> fail_timeout=<span class="number">20</span>s;  </span><br><span class="line">    server  <span class="number">192.168</span><span class="number">.1</span><span class="number">.3</span>:<span class="number">9000</span>    weight=<span class="number">2</span>    max_fails=<span class="number">3</span> fail_timeout=<span class="number">20</span>s;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="ngxin虚拟主机负载均衡配置"><a href="#ngxin虚拟主机负载均衡配置" class="headerlink" title="ngxin虚拟主机负载均衡配置"></a>ngxin虚拟主机负载均衡配置</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">server &#123;  </span><br><span class="line">    listen  <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>:<span class="number">80</span>;  </span><br><span class="line">    server_name <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>;  </span><br><span class="line">  </span><br><span class="line">    access_log  /<span class="keyword">var</span>/log/nginx/balance/loadbalance.access.log;    </span><br><span class="line">    error_log   /<span class="keyword">var</span>/log/nginx/balance/loadbalance.error.log;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#允许列目录  </span></span><br><span class="line">    location / &#123;  </span><br><span class="line">        root    /balance/;  </span><br><span class="line">        autoindex   on;  </span><br><span class="line">        autoindex_exact_size    off;  </span><br><span class="line">        autoindex_localtime on;  </span><br><span class="line">        allow allow;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#proxy the php scripts to fpm_pool_upstream  </span></span><br><span class="line">    location ~ \.php$ &#123;  </span><br><span class="line">        root    /balance;  </span><br><span class="line">        <span class="keyword">include</span> /etc/nginx/fastcgi_params;  </span><br><span class="line">        <span class="comment">#将webserver接收的客户端请求通过fastcgi负载均衡到php5-fpm的池  </span></span><br><span class="line">        fastcgi_pass    icontact_pool;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="负载均衡服务器处理php请求"><a href="#负载均衡服务器处理php请求" class="headerlink" title="负载均衡服务器处理php请求"></a>负载均衡服务器处理php请求</h3><p>192.168.1.1:9000、192.168.1.2:9000、192.168.1.3:9000为后端的三台负载均衡服务器监听的fpm地址和端口号，负载均衡服务器通过fastcgi将http请求和上下文参数发送给这个fpm池，然后fpm负责解析php程序</p>
-<blockquote>
-<p><a href="https://blog.csdn.net/wzy_1988/article/details/8230562" target="_blank" rel="noopener">https://blog.csdn.net/wzy_1988/article/details/8230562</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -868,7 +855,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

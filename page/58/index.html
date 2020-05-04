@@ -265,6 +265,200 @@
             
               
                 
+                <a class="post-title-link" href="/2017/03/08/python实现Markdown转html/" itemprop="url">
+                  python实现Markdown转html
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-08T10:31:01+08:00" content="2017-03-08">
+              2017-03-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>女人容颜逝去要十年，男人贬值不过一瞬间。<br></blockquote>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> markdown</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MarkdownToHtml</span>:</span></span><br><span class="line"></span><br><span class="line">    headTag = <span class="string">'&lt;head&gt;&lt;meta charset="utf-8" /&gt;&lt;/head&gt;'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, cssFilePath = None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> cssFilePath != <span class="literal">None</span>:</span><br><span class="line">            self.genStyle(cssFilePath)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">genStyle</span><span class="params">(self,cssFilePath)</span>:</span></span><br><span class="line">        <span class="keyword">with</span> open(cssFilePath,<span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            cssString = f.read()</span><br><span class="line">        self.headTag = self.headTag[:<span class="number">-7</span>] + <span class="string">'&lt;style type="text/css"&gt;&#123;&#125;&lt;/style&gt;'</span>.format(cssString) + self.headTag[<span class="number">-7</span>:]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">markdownToHtml</span><span class="params">(self,**arguments)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'sourceFilePath'</span> <span class="keyword">in</span> arguments:</span><br><span class="line">            sourceFilePath = arguments[<span class="string">'sourceFilePath'</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'destinationDirectory'</span> <span class="keyword">in</span> arguments:</span><br><span class="line">            destinationDirectory = arguments[<span class="string">'destinationDirectory'</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 未定义输出目录则将源文件目录(注意要转换为绝对路径)作为输出目录</span></span><br><span class="line">            destinationDirectory = os.path.dirname(os.path.abspath(sourceFilePath))</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'outputFileName'</span> <span class="keyword">in</span> arguments:</span><br><span class="line">            outputFileName = arguments[<span class="string">'outputFileName'</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 未定义输出文件名则沿用输入文件名</span></span><br><span class="line">            outputFileName = os.path.splitext(os.path.basename(sourceFilePath))[<span class="number">0</span>] + <span class="string">'.html'</span></span><br><span class="line">        <span class="keyword">if</span> destinationDirectory[<span class="number">-1</span>] != <span class="string">'/'</span>:</span><br><span class="line">            destinationDirectory += <span class="string">'/'</span></span><br><span class="line">        <span class="keyword">with</span> open(sourceFilePath,<span class="string">'r'</span>, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            markdownText = f.read()</span><br><span class="line">        <span class="comment"># 编译出原始 HTML 文本</span></span><br><span class="line">        rawHtml = self.headTag + markdown.markdown(markdownText,output_format=<span class="string">'html5'</span>)</span><br><span class="line">        <span class="comment"># 格式化 HTML 文本为可读性更强的格式</span></span><br><span class="line">        beautifyHtml = BeautifulSoup(rawHtml,<span class="string">'html5lib'</span>).prettify()</span><br><span class="line">        <span class="keyword">with</span> open(destinationDirectory + outputFileName, <span class="string">'w'</span>, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(beautifyHtml)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    mth = MarkdownToHtml()</span><br><span class="line">    <span class="comment"># 做一个命令行参数列表的浅拷贝，不包含脚本文件名</span></span><br><span class="line">    argv = sys.argv[<span class="number">1</span>:]</span><br><span class="line">    <span class="comment"># 目前列表 argv 可能包含源文件路径之外的元素（即选项信息）</span></span><br><span class="line">    <span class="comment"># 程序最后遍历列表 argv 进行编译 markdown 时，列表中的元素必须全部是源文件路径</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">'-s'</span> <span class="keyword">in</span> argv:</span><br><span class="line">        cssArgIndex = argv.index(<span class="string">'-s'</span>) +<span class="number">1</span></span><br><span class="line">        cssFilePath = argv[cssArgIndex]</span><br><span class="line">        <span class="comment"># 检测样式表文件路径是否有效</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(cssFilePath):</span><br><span class="line">            print(<span class="string">'Invalid Path: '</span> + cssFilePath)</span><br><span class="line">            sys.exit()</span><br><span class="line">        mth.genStyle(cssFilePath)</span><br><span class="line">        <span class="comment"># POP顺序不能随意变化</span></span><br><span class="line">        argv.pop(cssArgIndex)</span><br><span class="line">        argv.pop(cssArgIndex<span class="number">-1</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'-o'</span> <span class="keyword">in</span> argv:</span><br><span class="line">        dirArgIndex = argv.index(<span class="string">'-o'</span>) +<span class="number">1</span></span><br><span class="line">        outputDirectory = argv[dirArgIndex]</span><br><span class="line">        <span class="comment"># 检测输出目录是否有效</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(outputDirectory):</span><br><span class="line">            print(<span class="string">'Invalid Directory: '</span> + outputDirectory)</span><br><span class="line">            sys.exit()</span><br><span class="line">        <span class="comment"># POP顺序不能随意变化</span></span><br><span class="line">        argv.pop(dirArgIndex)</span><br><span class="line">        argv.pop(dirArgIndex<span class="number">-1</span>)</span><br><span class="line">        argumentsList = [dict([(<span class="string">'sourceFilePath'</span>,filePath), (<span class="string">'destinationDirectory'</span>,outputDirectory)]) <span class="keyword">for</span> filePath <span class="keyword">in</span> argv]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        argumentsList = [dict([(<span class="string">'sourceFilePath'</span>,filePath)]) <span class="keyword">for</span> filePath <span class="keyword">in</span> argv]</span><br><span class="line">    <span class="comment"># 至此，列表 argv 中的元素均是源文件路径</span></span><br><span class="line">    <span class="keyword">for</span> argument <span class="keyword">in</span> argumentsList:</span><br><span class="line">        <span class="comment"># 检测文件路径是否有效</span></span><br><span class="line">        <span class="keyword">if</span> os.path.isfile(argument[<span class="string">'sourceFilePath'</span>]):</span><br><span class="line">            mth.markdownToHtml(**argument)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">'Invalid Path: '</span>+argument[<span class="string">'sourceFilePath'</span>])</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/28/laravel使用Facades中注意的地方/" itemprop="url">
+                  laravel使用Facades中注意的地方
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-28T10:01:35+08:00" content="2017-02-28">
+              2017-02-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>你为什么从事喜剧行业？人们总是嘲笑我，所以我想，去他妈的，干脆收他们点儿钱！<br></blockquote><br>Laravel facades 就是服务容器里那些基类的「静态代理」，相比于传统的静态方法调用，facades 在提供更简洁且丰富的语法的同时，还有更好的可测试性和扩展性。</p>
+<p>所有的 Laravel facades 都在 Illuminate\Support\Facades 这个命名空间下。所以我们可以用类似下面的代码轻松调用：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">Cache</span>;</span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'/cache'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Cache::get(<span class="string">'key'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用注意"><a href="#使用注意" class="headerlink" title="使用注意"></a>使用注意</h3><p>使用 facades 最主要的风险就是会引起类的体积的膨胀。由于 facades 使用起来非常简单而且不需要注入，我们会不经意间在单个类中大量使用。不像是使用依赖注入，用得越多，构造方法会越长，在视觉上就会引起注意，提醒你这个类有点太庞大了。所以，在使用 facades 时，要特别注意把类的体积控制在一个合理的范围。<br>在开发第三方扩展包时，如果需要使用和 Laravel 交互的扩展包，最好是注入 Laravel contracts 而不是使用 facades，因为扩展包不是在 Laravel 内部使用的，无法使用 Laravel 的 facades 的测试辅助函数。</p>
+<h3 id="Laravel-contracts"><a href="#Laravel-contracts" class="headerlink" title="Laravel contracts"></a>Laravel contracts</h3><p>Laravel 中的 Contract 是一组定义了框架核心服务的接口。例如，<code>Illuminate\Contracts\Queue\Queue contract</code> 定义了实现队列任务所需实现的方法，而 <code>Illuminate\Contracts\Mail\Mailer</code> contract 定义了发送邮件所需要实现的方法。</p>
+<p>框架为每个 contract 都提供了一个相对应的实现。例如，Laravel 为队列提供了各种驱动的实现，以及基于 SwiftMailer 对邮件功能的实现。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/02/27/如何使用Presenter模式/" itemprop="url">
                   如何使用Presenter模式?
                 </a>
@@ -559,206 +753,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/24/如何理解web语义化/" itemprop="url">
-                  如何理解web语义化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-24T09:58:27+08:00" content="2017-02-24">
-              2017-02-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>最大的痛苦，不是失败，是我本可以。<br></blockquote>
-
-<p>什么是语义化？其实简单说来就是让机器可以读懂内容。先随便扯扯。对于当前的 Web 而言，HTML 是联系大多数 Web 资源的纽带，也是内容的载体。在 Web 被刚刚设计出来的时候，Tim Berners-Lee 可能不会想到它现在会达到的规模以及深入到我们生活的那么多方面。也许起初的想法很简单：用来发布 Web 内容和资源的索引，方便人们查看。但是随着 Web 规模的不断扩大，信息量之大已经不在人肉处理的范围之内了。这个时候人们开始用机器来处理 Web 上发布的各种内容，搜索引擎就诞生了。再后来，人们又设计了各种智能程序来对索引好的内容作各种处理和挖掘。所以让机器能够更好地读懂 Web 上发布的各种内容就变得越来越重要。其实 HTML 在刚开始设计出来的时候就是带有一定的「语义」的，包括段落、表格、图片、标题等等，但这些更多地只是方便浏览器等 UA 对它们作合适的处理。但逐渐地，机器也要借助 HTML 提供的语义以及自然语言处理的手段来「读懂」它们从网上获取的 HTML 文档，但它们无法读懂例如「红色的文字」或者是深度嵌套的表格布局中内容的含义，因为太多已有的内容都是专门为了可视化的浏览器设计的。面对这种情况，出现了两种观点：我们可以让机器的理解能力越来越接近人类，人能看懂、听懂的东西，机器也能理解；我们应该在发布内容的时候，就用机器可读的、被广泛认可的语义信息来描述内容，来降低机器处理 Web 内容的难度（HTML 本身就已经是朝这个方向迈出的一小步了）。<br>内容的语义表达能力和 AI 的智能程度决定了机器分析处理 Web 内容能力的高低。上面观点 1 的方向是朝着人类水平的人工智能努力，而观点 2 的方向正是万维网创始人 Tim Berners-Lee 爵士提出的美好愿景：语义网。语义网我就不多说了，简单来说就是让一切内容和包括对关系的描述都成为 Web 上的资源，都可以由唯一的 URI 定义，语义明确、机器可读。显然，两条路都的终极目标都很遥远，第一条路技术上难以实现，而第二条路实施起来障碍太多。我认为我们当前能够看得见摸得着的 Web 语义化，其实就是在往第二条路的方向上，迈出的一小步，即对已经有的被广泛认可的 HTML 标准做改进。我们刚开始意识到，我们必须回归内容本身，将内容本身的语义合理地表述出来，再为不同的用户代理设计不同的样式描述，也就是我们说的内容与样式分离。这样我们在提供内容的时候，首先要做的就是将内容本身进行合理的描述，暂时不用考虑它的最终呈现会是什么样子。HTML 规范其实一直在往语义化的方向上努力，许多元素、属性在设计的时候，就已经考虑了如何让各种用户代理甚至网络爬虫更好地理解 HTML 文档。HTML5 更是在之前规范的基础上，将所有表现层（presentational）的语义描述都进行了修改或者删除，增加了不少可以表达更丰富语义的元素。为什么这样的语义元素是有意义的？因为它们被广泛认可。所谓语义本身就是对符号的一种共识，被认可的程度越高、范围越广，人们就越可以依赖它实现各种各样的功能。HTML5 并非 Web 语义唯一倚仗的规范，除了 W3C 和 WHATWG 外，还有其它的组织在为扩展、标准化 Web 语义做着贡献。只要有浏览器厂商、搜索引擎原意支持，它们的规范一样可以成为通用的基础设施。例如 microformats 社区以及 <a href="http://Schema.org" target="_blank" rel="noopener">http://Schema.org</a> 上都有对 HTML 以及 Microdata（<a href="http://www.w3.org/TR/html5/microdata.html）" target="_blank" rel="noopener">http://www.w3.org/TR/html5/microdata.html）</a> 规范的扩展词汇表，Google、Bing、Yahoo! 等搜索引擎以及各个主流浏览器都不同程度地接纳了其中定义的语义扩展，并应用在了生产中。下面举两个 Google 应用扩展语义的例子。Google 的搜索结果，可以根据 microformats 的 hCard 语法从抓取的页面识别出人物信息：</p>
-<blockquote>
-<p><a href="https://www.zhihu.com/question/20455165" target="_blank" rel="noopener">https://www.zhihu.com/question/20455165</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/24/ios设备中web开发的一些问题/" itemprop="url">
-                  ios设备中web开发的一些问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-24T09:47:10+08:00" content="2017-02-24">
-              2017-02-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>今天翻的是书，明天数的是钱。<br></blockquote></p>
-<h3 id="时间格式"><a href="#时间格式" class="headerlink" title="时间格式"></a>时间格式</h3><p>ios设备目前不支持这种时间格式:yyyy-mm-dd hh:mm:ss<br>但是支持这种:mm/dd/yyyy hh:mm:ss,使用的时候注意移动设备上的格式化问题\</p>
-<h3 id="input框自定义ios键盘"><a href="#input框自定义ios键盘" class="headerlink" title="input框自定义ios键盘"></a>input框自定义ios键盘</h3><p>如果类型是search的话，需要把input放在一个action为空的form中，例如：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"search"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/57/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><span class="page-number current">58</span><a class="page-number" href="/page/59/">59</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/59/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/57/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><span class="page-number current">58</span><a class="page-number" href="/page/59/">59</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/59/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -797,7 +796,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

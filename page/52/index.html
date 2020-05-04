@@ -265,6 +265,211 @@
             
               
                 
+                <a class="post-title-link" href="/2017/06/18/怎样理解阻塞非阻塞与同步异步的区别/" itemprop="url">
+                  怎样理解阻塞非阻塞与同步异步的区别
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-18T10:47:12+08:00" content="2017-06-18">
+              2017-06-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>千万不要让你本来努力就能获得的东西因为懈怠而失去了机会。<br></blockquote><br>“阻塞”与”非阻塞”与”同步”与“异步”不能简单的从字面理解，提供一个从分布式系统角度的回答。</p>
+<h3 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h3><p>同步与异步同步和异步关注的是消息通信机制 (synchronous communication/ asynchronous communication)所谓同步，就是在发出一个<em>调用</em>时，在没有得到结果之前，该<em>调用</em>就不返回。但是一旦调用返回，就得到返回值了。换句话说，就是由<em>调用者</em>主动等待这个<em>调用</em>的结果。而异步则是相反，<em>调用</em>在发出之后，这个调用就直接返回了，所以没有返回结果。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在<em>调用</em>发出后，<em>被调用者</em>通过状态、通知来通知调用者，或通过回调函数处理这个调用。典型的异步编程模型比如Node.js举个通俗的例子：你打电话问书店老板有没有《分布式系统》这本书，如果是同步通信机制，书店老板会说，你稍等，”我查一下”，然后开始查啊查，等查好了（可能是5秒，也可能是一天）告诉你结果（返回结果）。而异步通信机制，书店老板直接告诉你我查一下啊，查好了打电话给你，然后直接挂电话了（不返回结果）。然后查好了，他会主动打电话给你。在这里老板通过“回电”这种方式来回调。</p>
+<h3 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h3><p>阻塞与非阻塞阻塞和非阻塞关注的是程序在等待调用结果（消息，返回值）时的状态.阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。还是上面的例子，你打电话问书店老板有没有《分布式系统》这本书，你如果是阻塞式调用，你会一直把自己“挂起”，直到得到这本书有没有的结果，如果是非阻塞式调用，你不管老板有没有告诉你，你自己先一边去玩了， 当然你也要偶尔过几分钟check一下老板有没有返回结果。在这里阻塞与非阻塞与是否同步异步无关。跟老板通过什么方式回答你结果无关。</p>
+<blockquote>
+<p><a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank" rel="noopener">https://www.zhihu.com/question/19732473/answer/20851256</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/16/PHP扩展和包的管理PEAR-PECL-Composer/" itemprop="url">
+                  PHP扩展和包的管理PEAR-PECL-Composer
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-16T10:24:18+08:00" content="2017-06-16">
+              2017-06-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>其实要说梦想的话, 我的梦想就是多赚点儿钱…<br></blockquote><br>扩展（Extension）一般偏底层，包（Application，Package）一般偏应用。不建议做过分的区分，在使用中能够理解和区分即可。<br>对于他们的管理目前有PEAR、PECL、Composer。</p>
+<h3 id="PEAR"><a href="#PEAR" class="headerlink" title="PEAR"></a>PEAR</h3><p>PEAR是PHP扩展与应用库(the PHP Extension and Application Repository)的缩写。<a href="http://pear.php.net/" target="_blank" rel="noopener">http://pear.php.net/</a><br>Bakken在1999年创立了PEAR项目，目标是试图定义一种标准，帮助开发者编写可移植、可重用的代码，避免重复发明“车轮”。代码均是PHP编写的。<br>涵盖了页面呈现、数据库访问、文件操作、数据结构、缓存操作、网络协议、WebService 等许多方面，用户可以通过下载这些类库，并适当的作一些定制以实现自己需要的功能。<br>但是随着Git、github等发展，其逐渐被Composer包管理替代。</p>
+<h3 id="PECL"><a href="#PECL" class="headerlink" title="PECL"></a>PECL</h3><p>“PHP Extension Community Library”的缩写，即PHP 扩展库。<a href="https://pecl.php.net/" target="_blank" rel="noopener">https://pecl.php.net/</a><br>PECL是使用C语言开发的，通常用于补充一些用PHP难以完成的底层功能，往往需要重新编译或者在配置文件中设置后才能在用户自己的代码中使用。<br>2种使用方式：<br>命令模式，和pear的命令一致，通过man pecl显示此命令的用法<br>编译模式，即phpize</p>
+<h3 id="Composer"><a href="#Composer" class="headerlink" title="Composer"></a>Composer</h3><p>PHP包管理工具，在“帮助开发者编写可移植、可重用的代码，避免重复发明“车轮””上和PEAR有相同的目标和思想，但是composer的包一般放在github、bitbucket等上，通过packagist 可以浏览上传等</p>
+<h3 id="以Yaml安装使用为例"><a href="#以Yaml安装使用为例" class="headerlink" title="以Yaml安装使用为例"></a>以Yaml安装使用为例</h3><h4 id="pecl安装"><a href="#pecl安装" class="headerlink" title="pecl安装"></a>pecl安装</h4><p><a href="http://php.net/manual/zh/install.pecl.pear.php" target="_blank" rel="noopener">http://php.net/manual/zh/install.pecl.pear.php</a></p>
+<p>pecl install yaml<br>这将下载 yaml 的源代码，编译之，并将 yaml.so 安装到扩展库目录 extension_dir 中。然后 yaml.so就可以通过 php.ini 加载了。</p>
+<h4 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h4><p><a href="http://php.net/manual/zh/install.pecl.phpize.php" target="_blank" rel="noopener">http://php.net/manual/zh/install.pecl.phpize.php</a><br>有时候不能用 pecl 安装命令。这可能是因为在防火墙后面，或者是因为想要安装的扩展库还没有 PECL 兼容的包，例如 SVN 中尚未发布的扩展库。<br>如果要编译这种扩展库，可以用更底层的编译工具来手工进行编译。phpize 命令是用来准备 PHP 扩展库的编译环境的。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ wget https:<span class="comment">//pecl.php.net/get/yaml-1.3.0.tgz</span></span><br><span class="line">$ tar -xzvf yaml<span class="number">-1.3</span><span class="number">.0</span>.tgz</span><br><span class="line">$ cd yaml<span class="number">-1.3</span><span class="number">.0</span></span><br><span class="line">$ phpize</span><br><span class="line">$ ./configure</span><br><span class="line">$ make</span><br><span class="line">$ make install</span><br></pre></td></tr></table></figure></p>
+<p>成功的安装将创建 yaml.so 并放置于 PHP 的扩展库目录 extension_dir 中。需要调整 php.ini 加入 extension=yaml.so 这一行之后才能使用此扩展库。<br>使用 phpize –help 命令可以显示此命令用法。</p>
+<h4 id="composer"><a href="#composer" class="headerlink" title="composer"></a>composer</h4><p>可以参看文档 <a href="http://www.jianshu.com/p/f0b9a319711f" target="_blank" rel="noopener">http://www.jianshu.com/p/f0b9a319711f</a></p>
+<p>composer require mustangostang/spyc<br>目前主流的方式，对于偏底层的扩展通过编译方式安装，对于偏应用的通过composer方式。</p>
+<blockquote>
+<p><a href="http://www.jianshu.com/p/d8b75dbc852a" target="_blank" rel="noopener">http://www.jianshu.com/p/d8b75dbc852a</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/06/15/php使用fsockopen传送post到别的url并取得回应的内容/" itemprop="url">
                   php使用fsockopen传送post到别的url并取得回应的内容
                 </a>
@@ -544,206 +749,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/11/PHP魔术函数之-sleep和-wakeup/" itemprop="url">
-                  PHP魔术函数之__sleep和__wakeup
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-11T10:25:53+08:00" content="2017-06-11">
-              2017-06-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>最重要的东西,用眼睛是看不见的。<br></blockquote><br>在PHP5中有两个魔术方法<strong>sleep()方法和</strong>wakeup()方法，在对象串行化的时候，会调用一个<strong>sleep()方法来完成一 些睡前的事情；而在重新醒来，即由二进制串重新组成一个对象的时候，则会自动调用PHP的另一个函数</strong>wakeup()，做一些对象醒来就要做的动作。</p>
-<p><strong>sleep()函数不接受任何参数， 但返回一个数组，其中包含需要串行化的属性。末被包含的属性将在串行化时被忽略，如果没有</strong>sleep()方法，PHP将保存所有属性。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">//下面是人的成员属性</span></span><br><span class="line">    <span class="keyword">var</span> $name;  <span class="comment">//人的名子</span></span><br><span class="line">    <span class="keyword">var</span> $sex;   <span class="comment">//人的性别</span></span><br><span class="line">    <span class="keyword">var</span> $age;   <span class="comment">//人的年龄</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义一个构造方法参数为属性姓名$name、性别$sex和年龄$age进行赋值</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name = <span class="string">""</span>, $sex = <span class="string">""</span>, $age = <span class="string">""</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;sex = $sex;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;age = $age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//这个人可以说话的方法, 说出自己的属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">say</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"我的名子叫："</span> . <span class="keyword">$this</span>-&gt;name . <span class="string">" 性别："</span> . <span class="keyword">$this</span>-&gt;sex . <span class="string">" 我的年龄是："</span> . <span class="keyword">$this</span>-&gt;age . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__sleep</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Implement __sleep() method.</span></span><br><span class="line">        $arr = <span class="keyword">array</span>(<span class="string">"name"</span>, <span class="string">"age"</span>); <span class="comment">// 此时，属性$sex将被删除！！！</span></span><br><span class="line">        <span class="keyword">return</span> $arr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Implement __wakeup() method.</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;age = <span class="number">40</span>;  <span class="comment">//重新生成对象时，并重新赋值$age为40</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$p1 = <span class="keyword">new</span> Person(<span class="string">"张三"</span>, <span class="string">"男"</span>, <span class="number">20</span>);</span><br><span class="line">$p1_string = serialize($p1);    <span class="comment">//把一个对象串行化，返一个字符串</span></span><br><span class="line"><span class="keyword">echo</span> $p1_string . <span class="string">"&lt;br&gt;"</span>;     <span class="comment">//串行化的字符串我们通常不去解析</span></span><br><span class="line">$p2 = unserialize($p1_string);  <span class="comment">//把一个串行化的字符串反串行化形成对象$p2</span></span><br><span class="line">$p2-&gt;say();</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/11/php中json-encode和serialize对比/" itemprop="url">
-                  php中json_encode和serialize对比
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-11T09:55:24+08:00" content="2017-06-11">
-              2017-06-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>如果毫不费力，你就是在浪费时间<br></blockquote>
-
-<h3 id="json-encode"><a href="#json-encode" class="headerlink" title="json_encode"></a>json_encode</h3><p>PHP Version &gt;= 5.0.0<br>Nesting Limit of 20.<br>PHP Version &gt;= 5.2.3<br>Nesting Limit of 128.<br>PHP Version &gt;= 5.3.0<br>Nesting Limit of 512.<br>Small footprint vs PHP’s serialize’d string.<br>serialize() &amp; unserialize()</p>
-<h3 id="serialize"><a href="#serialize" class="headerlink" title="serialize"></a>serialize</h3><p>PHP Version &gt;= 4.0.0<br>You’re storing objects that need to be unserialized as the correct class(反序列化的对象依然可以被正常调用)</p>
-<h3 id="Serialization-of-‘Closure’-is-not-allowed"><a href="#Serialization-of-‘Closure’-is-not-allowed" class="headerlink" title="Serialization of ‘Closure’ is not allowed"></a>Serialization of ‘Closure’ is not allowed</h3><p>Apparently anonymous functions cannot be serialized.(匿名函数不能被序列化)</p>
-<p>Example<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$function = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"ABC"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">serialize($function); <span class="comment">// would throw error</span></span><br></pre></td></tr></table></figure></p>
-<p>You can try this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">emailCallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'ZendMail_'</span> . microtime(<span class="keyword">true</span>) . <span class="string">'.tmp'</span>;</span><br><span class="line">&#125;</span><br><span class="line">$callback = <span class="string">"emailCallback"</span> ;</span><br><span class="line"></span><br><span class="line">serialize($callback); <span class="comment">// success</span></span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/51/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><span class="page-number current">52</span><a class="page-number" href="/page/53/">53</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/53/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/51/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><span class="page-number current">52</span><a class="page-number" href="/page/53/">53</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/53/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -782,7 +792,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

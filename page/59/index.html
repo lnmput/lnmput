@@ -265,6 +265,201 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/24/如何理解web语义化/" itemprop="url">
+                  如何理解web语义化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-24T09:58:27+08:00" content="2017-02-24">
+              2017-02-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>最大的痛苦，不是失败，是我本可以。<br></blockquote>
+
+<p>什么是语义化？其实简单说来就是让机器可以读懂内容。先随便扯扯。对于当前的 Web 而言，HTML 是联系大多数 Web 资源的纽带，也是内容的载体。在 Web 被刚刚设计出来的时候，Tim Berners-Lee 可能不会想到它现在会达到的规模以及深入到我们生活的那么多方面。也许起初的想法很简单：用来发布 Web 内容和资源的索引，方便人们查看。但是随着 Web 规模的不断扩大，信息量之大已经不在人肉处理的范围之内了。这个时候人们开始用机器来处理 Web 上发布的各种内容，搜索引擎就诞生了。再后来，人们又设计了各种智能程序来对索引好的内容作各种处理和挖掘。所以让机器能够更好地读懂 Web 上发布的各种内容就变得越来越重要。其实 HTML 在刚开始设计出来的时候就是带有一定的「语义」的，包括段落、表格、图片、标题等等，但这些更多地只是方便浏览器等 UA 对它们作合适的处理。但逐渐地，机器也要借助 HTML 提供的语义以及自然语言处理的手段来「读懂」它们从网上获取的 HTML 文档，但它们无法读懂例如「红色的文字」或者是深度嵌套的表格布局中内容的含义，因为太多已有的内容都是专门为了可视化的浏览器设计的。面对这种情况，出现了两种观点：我们可以让机器的理解能力越来越接近人类，人能看懂、听懂的东西，机器也能理解；我们应该在发布内容的时候，就用机器可读的、被广泛认可的语义信息来描述内容，来降低机器处理 Web 内容的难度（HTML 本身就已经是朝这个方向迈出的一小步了）。<br>内容的语义表达能力和 AI 的智能程度决定了机器分析处理 Web 内容能力的高低。上面观点 1 的方向是朝着人类水平的人工智能努力，而观点 2 的方向正是万维网创始人 Tim Berners-Lee 爵士提出的美好愿景：语义网。语义网我就不多说了，简单来说就是让一切内容和包括对关系的描述都成为 Web 上的资源，都可以由唯一的 URI 定义，语义明确、机器可读。显然，两条路都的终极目标都很遥远，第一条路技术上难以实现，而第二条路实施起来障碍太多。我认为我们当前能够看得见摸得着的 Web 语义化，其实就是在往第二条路的方向上，迈出的一小步，即对已经有的被广泛认可的 HTML 标准做改进。我们刚开始意识到，我们必须回归内容本身，将内容本身的语义合理地表述出来，再为不同的用户代理设计不同的样式描述，也就是我们说的内容与样式分离。这样我们在提供内容的时候，首先要做的就是将内容本身进行合理的描述，暂时不用考虑它的最终呈现会是什么样子。HTML 规范其实一直在往语义化的方向上努力，许多元素、属性在设计的时候，就已经考虑了如何让各种用户代理甚至网络爬虫更好地理解 HTML 文档。HTML5 更是在之前规范的基础上，将所有表现层（presentational）的语义描述都进行了修改或者删除，增加了不少可以表达更丰富语义的元素。为什么这样的语义元素是有意义的？因为它们被广泛认可。所谓语义本身就是对符号的一种共识，被认可的程度越高、范围越广，人们就越可以依赖它实现各种各样的功能。HTML5 并非 Web 语义唯一倚仗的规范，除了 W3C 和 WHATWG 外，还有其它的组织在为扩展、标准化 Web 语义做着贡献。只要有浏览器厂商、搜索引擎原意支持，它们的规范一样可以成为通用的基础设施。例如 microformats 社区以及 <a href="http://Schema.org" target="_blank" rel="noopener">http://Schema.org</a> 上都有对 HTML 以及 Microdata（<a href="http://www.w3.org/TR/html5/microdata.html）" target="_blank" rel="noopener">http://www.w3.org/TR/html5/microdata.html）</a> 规范的扩展词汇表，Google、Bing、Yahoo! 等搜索引擎以及各个主流浏览器都不同程度地接纳了其中定义的语义扩展，并应用在了生产中。下面举两个 Google 应用扩展语义的例子。Google 的搜索结果，可以根据 microformats 的 hCard 语法从抓取的页面识别出人物信息：</p>
+<blockquote>
+<p><a href="https://www.zhihu.com/question/20455165" target="_blank" rel="noopener">https://www.zhihu.com/question/20455165</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/24/ios设备中web开发的一些问题/" itemprop="url">
+                  ios设备中web开发的一些问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-24T09:47:10+08:00" content="2017-02-24">
+              2017-02-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>今天翻的是书，明天数的是钱。<br></blockquote></p>
+<h3 id="时间格式"><a href="#时间格式" class="headerlink" title="时间格式"></a>时间格式</h3><p>ios设备目前不支持这种时间格式:yyyy-mm-dd hh:mm:ss<br>但是支持这种:mm/dd/yyyy hh:mm:ss,使用的时候注意移动设备上的格式化问题\</p>
+<h3 id="input框自定义ios键盘"><a href="#input框自定义ios键盘" class="headerlink" title="input框自定义ios键盘"></a>input框自定义ios键盘</h3><p>如果类型是search的话，需要把input放在一个action为空的form中，例如：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"search"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/02/21/centos系统python版本升级从2-6到2-7/" itemprop="url">
                   centos系统python版本升级从2.6到2.7
                 </a>
@@ -546,233 +741,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/07/phpize安装php扩展/" itemprop="url">
-                  phpize安装php扩展
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-07T14:30:32+08:00" content="2017-02-07">
-              2017-02-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>这十年来做过的事，能令你无悔骄傲吗？<br>那时候你所相信的事，应该没动摇吧？<br></blockquote><br>如果要安装的扩展在php源码ext目录中没有，那么这个扩展需要到<a href="http://pecl.php.net" target="_blank" rel="noopener">http://pecl.php.net</a> 搜索下载</p>
-<p>以安装libevent扩展为例（假设系统安装了libevent-dev库）</p>
-<h3 id="1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"><a href="#1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）" class="headerlink" title="1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"></a>1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># wget http://pecl.php.net/get/libevent-0.1.0.tgz</span></span><br><span class="line">-<span class="number">-2015</span><span class="number">-05</span><span class="number">-26</span> <span class="number">21</span>:<span class="number">43</span>:<span class="number">40</span>--  http:<span class="comment">//pecl.php.net/get/libevent-0.1.0.tgz</span></span><br><span class="line">Resolving pecl.php.net... <span class="number">104.236</span><span class="number">.228</span><span class="number">.160</span></span><br><span class="line">Connecting to pecl.php.net|<span class="number">104.236</span><span class="number">.228</span><span class="number">.160</span>|:<span class="number">80.</span>.. connected.</span><br><span class="line">HTTP request sent, awaiting response... <span class="number">200</span> OK</span><br><span class="line">Length: <span class="number">9806</span> (<span class="number">9.6</span>K) [application/octet-stream]</span><br><span class="line">Saving to: “libevent<span class="number">-0.1</span><span class="number">.0</span>.tgz”</span><br><span class="line"></span><br><span class="line"><span class="number">100</span>%[=======================================================&gt;] <span class="number">9</span>,<span class="number">806</span>       <span class="number">41.4</span>K/s   in <span class="number">0.2</span>s</span><br></pre></td></tr></table></figure>
-<h3 id="2、解压扩展文件压缩包"><a href="#2、解压扩展文件压缩包" class="headerlink" title="2、解压扩展文件压缩包"></a>2、解压扩展文件压缩包</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># tar -zxvf libevent-0.1.0.tgz</span></span><br><span class="line">package.xml</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/config.m4</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/CREDITS</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/libevent.c</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
-<h3 id="3、进入到源码目录"><a href="#3、进入到源码目录" class="headerlink" title="3、进入到源码目录"></a>3、进入到源码目录</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># cd libevent-0.1.0/</span></span><br></pre></td></tr></table></figure>
-<h3 id="4、运行phpize命令"><a href="#4、运行phpize命令" class="headerlink" title="4、运行phpize命令"></a>4、运行phpize命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># phpize</span></span><br><span class="line">Configuring <span class="keyword">for</span>:</span><br><span class="line">PHP Api Version:         <span class="number">20090626</span></span><br><span class="line">Zend Module Api No:      <span class="number">20090626</span></span><br><span class="line">Zend Extension Api No:   <span class="number">220090626</span></span><br></pre></td></tr></table></figure>
-<h3 id="5、运行configure命令"><a href="#5、运行configure命令" class="headerlink" title="5、运行configure命令"></a>5、运行configure命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># ./configure</span></span><br><span class="line">checking <span class="keyword">for</span> grep that handles long lines <span class="keyword">and</span> -e... /bin/grep</span><br><span class="line">checking <span class="keyword">for</span> egrep... /bin/grep -E</span><br><span class="line">checking <span class="keyword">for</span> a sed that does not truncate output... /bin/sed</span><br><span class="line">checking <span class="keyword">for</span> cc... cc</span><br><span class="line">checking whether the C compiler works... yes</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<h3 id="6、运行make命令"><a href="#6、运行make命令" class="headerlink" title="6、运行make命令"></a>6、运行make命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># /bin/bash /data/test/libevent-0.1.0/libtool --mode=compile cc  -I. -I/data/test/libevent-0.1.0 -DPHP_ATOM_INC -I/data/test/libevent-0.1.0/include</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<h3 id="7、运行make-install命令"><a href="#7、运行make-install命令" class="headerlink" title="7、运行make install命令"></a>7、运行make install命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># make install</span></span><br><span class="line">Installing shared extensions:     /usr/lib/php5/<span class="number">20090626</span>/</span><br></pre></td></tr></table></figure>
-<h3 id="8、配置ini文件"><a href="#8、配置ini文件" class="headerlink" title="8、配置ini文件"></a>8、配置ini文件</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过运行 php --ini查找php.ini文件位置，然后在文件中添加extension=libevent.so</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://doc3.workerman.net/appendices/install-extension.html" target="_blank" rel="noopener">http://doc3.workerman.net/appendices/install-extension.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/07/关于php的PECL和PEAR/" itemprop="url">
-                  关于php的PECL和PEAR
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-07T11:09:44+08:00" content="2017-02-07">
-              2017-02-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>总有一天，我会拥有我梦寐以求的6块腹肌，可是我还是先把这个汉堡吃完……<br></blockquote>
-
-<h3 id="什么是PEAR"><a href="#什么是PEAR" class="headerlink" title="什么是PEAR"></a>什么是PEAR</h3><p>PEAR的全称是PHP Extension and Application Repository，是PHP的扩展库，采用PHP语言编写。所以我们可以直接下载，并在我们的代码中包含(include)扩展库。</p>
-<h3 id="什么是PECL"><a href="#什么是PECL" class="headerlink" title="什么是PECL"></a>什么是PECL</h3><p>PECL的全称是PHP Extension Community Library，它也是PHP的扩展库。PECL的扩展都是采用C语言编写的，可以被载入PHP中，给PHP增加额外的功能，比如PHP的Mongo扩展。<br>即 php 的 so 格式的扩展</p>
-<h4 id="centos"><a href="#centos" class="headerlink" title="centos"></a>centos</h4><ul>
-<li>安装: yum install php-pear</li>
-</ul>
-<h4 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h4><ul>
-<li>安装: sudo apt-get install php-pear</li>
-</ul>
-<h3 id="phpize"><a href="#phpize" class="headerlink" title="phpize"></a>phpize</h3><h4 id="centos-1"><a href="#centos-1" class="headerlink" title="centos"></a>centos</h4><ul>
-<li>安装: yum install php-devel</li>
-<li>查看: which phpize</li>
-</ul>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>在网页中打印phpinfo()看到安装了某个扩展，不代表命令行的PHP CLI也安装了对应的扩展。</p>
-<ul>
-<li>如何确定PHP CLI安装了哪些扩展</li>
-</ul>
-<p>运行 <code>php -m</code> 会列出命令行 PHP CLI 已经安装的扩展</p>
-<ul>
-<li>如何确定PHP CLI 的php.ini文件的位置</li>
-</ul>
-<p>可以运行<code>php --ini</code>查找PHP CLI的ini文件位置</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/58/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><span class="page-number current">59</span><a class="page-number" href="/page/60/">60</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/60/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/58/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><span class="page-number current">59</span><a class="page-number" href="/page/60/">60</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/60/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -811,7 +784,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

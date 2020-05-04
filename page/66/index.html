@@ -265,6 +265,211 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/26/python大数据抓取和存储/" itemprop="url">
+                  python大数据抓取和存储
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-26T20:54:22+08:00" content="2016-10-26">
+              2016-10-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>愿你梦里有喝不完的酒，<br>醒来后能酩酊大醉地过完这一生。<br>你要照顾好你黑色的头发，<br>挑剔的胃和爱笑的眼睛。<br>我已经原谅了从前的自己，就像谅解了一个野心勃勃的傻逼，体恤了一个笨手笨脚的勇士，释怀了一个难以启齿的秘密。<br></blockquote></p>
+<h3 id="mongodb"><a href="#mongodb" class="headerlink" title="mongodb"></a>mongodb</h3><p>安装这里就不再赘述<br>安装pymongo：</p>
+<ol>
+<li>pip install wheel</li>
+<li>下载找对应 的 whl 文件<br> <a href="https://pypi.python.org/pypi/pymongo#downloads" target="_blank" rel="noopener">https://pypi.python.org/pypi/pymongo#downloads</a></li>
+<li>pip install whl   文件的正确位置</li>
+</ol>
+<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>  pymongo</span><br><span class="line">client = pymongo.MongoClient(<span class="string">'localhost'</span>,<span class="number">27017</span>)</span><br><span class="line">dbname = client[<span class="string">'dbname'</span>]</span><br><span class="line">tbname = dbname[<span class="string">'tbname'</span>]</span><br><span class="line">path = <span class="string">'demo.txt'</span></span><br><span class="line"><span class="keyword">with</span> open(path,<span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    lines = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> index,line <span class="keyword">in</span> enumerate(lines):</span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'index'</span>:index,</span><br><span class="line">            <span class="string">'line'</span>:line,</span><br><span class="line">            <span class="string">'words'</span>:len(line.split())</span><br><span class="line">        &#125;</span><br><span class="line">        tbname.insert_one(data)</span><br></pre></td></tr></table></figure>
+<h3 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>  pymongo</span><br><span class="line">client = pymongo.MongoClient(<span class="string">'localhost'</span>,<span class="number">27017</span>)</span><br><span class="line">dbname = client[<span class="string">'dbname'</span>]</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> tbname.find():</span><br><span class="line">    print(item)</span><br><span class="line"></span><br><span class="line"><span class="comment">#或者</span></span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> tbname.find(&#123;<span class="string">'words'</span>:<span class="number">0</span>&#125;):</span><br><span class="line">    print(item)</span><br></pre></td></tr></table></figure>
+<h3 id="大数据抓取"><a href="#大数据抓取" class="headerlink" title="大数据抓取"></a>大数据抓取</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般爬取的有多个列表页和每个列表页下的多个内容页</span></span><br><span class="line"><span class="comment"># 事先会把需要爬取的URL放到数据库里</span></span><br><span class="line"><span class="comment"># 一般的错误处理</span></span><br><span class="line"><span class="comment"># 过滤掉一些不正确的url地址</span></span><br><span class="line"><span class="comment"># 需要抓取的页面中的元素不存在</span></span><br><span class="line"><span class="comment"># 页面访问错误，比如404，500这样的错误有可能会引起爬虫报错</span></span><br><span class="line"><span class="comment"># 监控程序，用于监控已经爬取的数据量的多少或者url的多少</span></span><br></pre></td></tr></table></figure>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#头部</span></span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> pymongo</span><br><span class="line"></span><br><span class="line">client =pymongo.MongoClient(<span class="string">'localhost'</span>,<span class="number">27017</span>)</span><br><span class="line">db58 = client[<span class="string">'db58'</span>]</span><br><span class="line">tb58 = db58[<span class="string">'tb58'</span>]</span><br><span class="line">tb58item = db58[<span class="string">'tb58item'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取具体内容</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links_from</span><span class="params">(channel,pages)</span>:</span></span><br><span class="line">    list_view = <span class="string">'&#123;&#125;/pn&#123;&#125;'</span>.format(channel,str(pages))</span><br><span class="line">    wb_data = requests.get(list_view)</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    soup = BeautifulSoup(wb_data.text,<span class="string">'lxml'</span>)</span><br><span class="line">    <span class="keyword">if</span> soup.find(<span class="string">'td'</span>,<span class="string">'t'</span>):</span><br><span class="line">        <span class="keyword">for</span> link <span class="keyword">in</span> soup.select(<span class="string">'td.t &gt; a.t'</span>):</span><br><span class="line">            item_link = link.get(<span class="string">'href'</span>).split(<span class="string">'?'</span>)[<span class="number">0</span>]</span><br><span class="line">            tb58.insert_one(item_link)</span><br><span class="line">            print(item_link)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># 产生多页</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_all_links_from</span><span class="params">(channel)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> num  <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">101</span>):</span><br><span class="line">        get_links_from(channel,num)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 监控程序，实时显示数据库中的数据量</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> page_parsing <span class="keyword">import</span> tb58item</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    print(tb58item.find().count())</span><br><span class="line">    time.sleep(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/25/python的一些抽象理解/" itemprop="url">
+                  python的一些抽象理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-25T09:02:11+08:00" content="2016-10-25">
+              2016-10-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>除了现实中的蝇营狗苟，我的心中还住着星辰大海<br></blockquote></p>
+<h3 id="关于导入"><a href="#关于导入" class="headerlink" title="关于导入"></a>关于导入</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="comment"># 在urllib库里查找request模块，只导入一个urlopen函数</span></span><br></pre></td></tr></table></figure>
+<h3 id="range用法"><a href="#range用法" class="headerlink" title="range用法"></a>range用法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#代表从1到5(不包含5)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment">#代表从1到5，间隔2(不包含5)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>,<span class="number">2</span>):</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment">#代表从0到5(不包含5)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<h3 id="时间的用法"><a href="#时间的用法" class="headerlink" title="时间的用法"></a>时间的用法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 格式化当前时间</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">print</span> (time.strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>, time.localtime()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 休息间隔2秒</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前时间戳</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">print(time.time())</span><br></pre></td></tr></table></figure>
+<h3 id="format-格式化"><a href="#format-格式化" class="headerlink" title="format 格式化"></a>format 格式化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links_from</span><span class="params">(channel,pages)</span>:</span></span><br><span class="line">    list_view = <span class="string">'&#123;&#125;/pn&#123;&#125;'</span>.format(channel,str(pages))</span><br><span class="line">    wb_data = requests.get(list_view)</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    soup = BeautifulSoup(wb_data.text,<span class="string">'lxml'</span>)</span><br><span class="line">    <span class="keyword">if</span> soup.find(<span class="string">'td'</span>,<span class="string">'t'</span>):</span><br><span class="line">        <span class="keyword">for</span> link <span class="keyword">in</span> soup.select(<span class="string">'td.t &gt; a.t'</span>):</span><br><span class="line">            item_link = link.get(<span class="string">'href'</span>).split(<span class="string">'?'</span>)[<span class="number">0</span>]</span><br><span class="line">            tb58.insert_one(item_link)</span><br><span class="line">            print(item_link)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<h3 id="if-else-结构"><a href="#if-else-结构" class="headerlink" title="if else 结构"></a>if else 结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">number = <span class="number">23</span></span><br><span class="line">guess = int(input(<span class="string">'请输入一个整数：'</span>))      <span class="comment">#等待输入整数</span></span><br><span class="line"><span class="keyword">if</span> guess == number:</span><br><span class="line">    print(<span class="string">'恭喜，你猜对了。'</span>)    <span class="comment"># 新块从这里开始</span></span><br><span class="line">    print(<span class="string">'(但你没有获得任何奖品！)'</span>)    <span class="comment"># 新块在这里结束</span></span><br><span class="line"><span class="keyword">elif</span> guess &lt; number:</span><br><span class="line">    print(<span class="string">'不对，你猜的有点儿小'</span>)    <span class="comment"># 另一个块</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">'不对，你猜的有点大'</span>)</span><br><span class="line">print(<span class="string">'完成'</span>)</span><br><span class="line"><span class="comment"># if语句执行完后，最后的语句总是被执行</span></span><br></pre></td></tr></table></figure>
+<h3 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1、空语句 do nothing</span></span><br><span class="line"><span class="comment">#2、保证格式完整</span></span><br><span class="line"><span class="comment">#3、保证语义完整</span></span><br><span class="line">以<span class="keyword">if</span>语句为例，在c或c++/java中：</span><br><span class="line"><span class="keyword">if</span>(true)  </span><br><span class="line">;//do nothing  </span><br><span class="line"><span class="keyword">else</span>  </span><br><span class="line">&#123;  </span><br><span class="line">//do something  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment"># 而在python中</span></span><br><span class="line"><span class="keyword">if</span> true:  </span><br><span class="line"><span class="keyword">pass</span> <span class="comment">#do nothing  </span></span><br><span class="line"><span class="keyword">else</span>:  </span><br><span class="line"><span class="comment">#do something</span></span><br></pre></td></tr></table></figure>
+<h3 id="map函数"><a href="#map函数" class="headerlink" title="map函数"></a>map函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># map()函数接收两个参数，一个是函数，一个是序列，map将传入的函数依次作</span></span><br><span class="line"><span class="comment">#用到序列的每个元素并把结果作为新的list返回。</span></span><br><span class="line"><span class="comment">#在python3里面，map()的返回值已经不再是list,而是iterators</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x * x</span><br><span class="line">a = map(f, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])</span><br><span class="line">print(list(a))</span><br></pre></td></tr></table></figure>
+<h3 id="导入函数和变量"><a href="#导入函数和变量" class="headerlink" title="导入函数和变量"></a>导入函数和变量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 位于同一个文件夹下两个py文件</span></span><br><span class="line"><span class="comment"># demo.py,定义一个函数和变量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">haha</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'haha'</span>)</span><br><span class="line">list = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># test.py,调用这个函数和变量</span></span><br><span class="line"><span class="keyword">import</span> demo</span><br><span class="line">test.haha()</span><br><span class="line">print(test.list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以选择仅仅导入函数或者变量</span></span><br><span class="line"><span class="keyword">from</span> test <span class="keyword">import</span> haha</span><br><span class="line">haha()</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/24/BeautifulSoup的一写用法/" itemprop="url">
                   BeautifulSoup的一写用法
                 </a>
@@ -309,7 +514,8 @@
       
         
           
-            <p><blockquote class="blockquote-center"><br>世界上最廉价的东西就是男人一事无成时的温柔。<br></blockquote></p>
+            <blockquote class="blockquote-center"><br>世界上最廉价的东西就是男人一事无成时的温柔。<br></blockquote>
+
 <h3 id="strings-和-stripped-strings"><a href="#strings-和-stripped-strings" class="headerlink" title=".strings 和 stripped_strings"></a>.strings 和 stripped_strings</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#如果tag中包含多个字符串,可以使用 .strings 来循环获取:</span></span><br><span class="line"><span class="comment">#输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings </span></span><br><span class="line"><span class="comment">#可以去除多余空白内容:</span></span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span>  requests</span><br><span class="line">url = <span class="string">'http://www.tripadvisor.cn/Attractions-g60763-Activities-New_York_City_New_York.html'</span></span><br><span class="line">wbData = requests.get(url)</span><br><span class="line">response = BeautifulSoup(wbData.text,<span class="string">'lxml'</span>)</span><br><span class="line">titles = response.select(<span class="string">'div.property_title &gt; a[target="_blank"]'</span>)</span><br><span class="line">images = response.select(<span class="string">'img[width:"160"]'</span>)</span><br><span class="line">cates = response.select(<span class="string">'div.p13n_reasoning_v2'</span>)</span><br><span class="line"><span class="keyword">for</span> title,image,cate <span class="keyword">in</span> zip(titles,images,cates):</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">'title'</span>:title.get_text(),</span><br><span class="line">        <span class="string">'image'</span>:image.get(<span class="string">'src'</span>),</span><br><span class="line">        <span class="string">'cate'</span>:list(cate.stripped_strings)</span><br><span class="line">    &#125;</span><br><span class="line">    print(data)</span><br></pre></td></tr></table></figure>
           
         
@@ -545,207 +751,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/24/laravel中如何打印sql/" itemprop="url">
-                  laravel中如何打印sql
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-24T10:13:28+08:00" content="2016-10-24">
-              2016-10-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你也是一片<br>在我胸口颤动的小叶子。<br>生命之风将你吹送至此。<br></blockquote>
-
-<h3 id="第一种方法"><a href="#第一种方法" class="headerlink" title="第一种方法"></a>第一种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//in our case,</span></span><br><span class="line"> DB::table(<span class="string">'users'</span>)-&gt;toSql(); </span><br><span class="line"><span class="comment">//return</span></span><br><span class="line">select * from users</span><br></pre></td></tr></table></figure>
-<h3 id="第二种方法"><a href="#第二种方法" class="headerlink" title="第二种方法"></a>第二种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'haha'</span>,<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    Event::listen(<span class="string">'illuminate.query'</span>, <span class="function"><span class="keyword">function</span><span class="params">($query, $params, $time, $conn)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        dd(<span class="keyword">array</span>($query, $params, $time, $conn));</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    \RainLab\User\Models\User::whereBetween(<span class="string">'created_at'</span>, </span><br><span class="line">    	[<span class="string">'2016-05-26 00:00:00'</span>, <span class="string">'2016-06-27 00:00:00'</span>]</span><br><span class="line">    	)-&gt;get([<span class="string">'email'</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="第三种方法"><a href="#第三种方法" class="headerlink" title="第三种方法"></a>第三种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DB::enableQueryLog();</span><br><span class="line">   $users = \RainLab\User\Models\User::whereBetween(<span class="string">'created_at'</span>, [<span class="string">'2016-05-26 00:00:00'</span>, <span class="string">'2016-06-27 00:00:00'</span>])-&gt;get();</span><br><span class="line">   dd(DB::getQueryLog());</span><br></pre></td></tr></table></figure>
-<h3 id="第四种方法"><a href="#第四种方法" class="headerlink" title="第四种方法"></a>第四种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trace_sql</span><span class="params">($dump = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    \DB::listen(<span class="function"><span class="keyword">function</span> <span class="params">($event)</span> <span class="title">use</span><span class="params">($dump)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($dump) &#123;</span><br><span class="line">            dump($event-&gt;sql);</span><br><span class="line">            dump($event-&gt;bindings);</span><br><span class="line">        &#125;</span><br><span class="line">        info($event-&gt;sql);</span><br><span class="line">        info($event-&gt;bindings);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="最后一种方法"><a href="#最后一种方法" class="headerlink" title="最后一种方法"></a>最后一种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//安装 debug</span></span><br><span class="line">composer <span class="keyword">require</span> barryvdh/laravel-debugbar</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/17/python小实例/" itemprop="url">
-                  python小实例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-17T14:46:25+08:00" content="2016-10-17">
-              2016-10-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>自此无心爱良夜，任他明月下西楼。<br></blockquote>
-
-<h3 id="按逗号分隔列表"><a href="#按逗号分隔列表" class="headerlink" title="按逗号分隔列表"></a>按逗号分隔列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">L = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line">s1 = <span class="string">','</span>.join(str(n) <span class="keyword">for</span> n <span class="keyword">in</span> L)</span><br><span class="line"><span class="keyword">print</span> s1</span><br></pre></td></tr></table></figure>
-<h3 id="有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？"><a href="#有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？" class="headerlink" title="有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？"></a>有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">            <span class="keyword">if</span>( i != k ) <span class="keyword">and</span> (i != j) <span class="keyword">and</span> (j != k):</span><br><span class="line">                <span class="keyword">print</span> i,j,k</span><br></pre></td></tr></table></figure>
-<h3 id="交换两个变量"><a href="#交换两个变量" class="headerlink" title="交换两个变量"></a>交换两个变量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exchange</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    a,b = b,a</span><br><span class="line">    <span class="keyword">return</span> (a,b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    x = <span class="number">10</span></span><br><span class="line">    y = <span class="number">20</span></span><br><span class="line">print(<span class="string">'x = %d,y = %d'</span> % (x,y))</span><br><span class="line"></span><br><span class="line">x,y = exchange(x,y)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'x = %d,y = %d'</span> % (x,y))</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/65/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><span class="page-number current">66</span><a class="page-number" href="/page/67/">67</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/67/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/65/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><span class="page-number current">66</span><a class="page-number" href="/page/67/">67</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/67/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -784,7 +794,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

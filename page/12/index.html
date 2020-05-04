@@ -265,6 +265,240 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/10/shell输出颜色和闪烁控制/" itemprop="url">
+                  shell输出颜色和闪烁控制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-10T09:20:17+08:00" content="2018-07-10">
+              2018-07-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>平平淡淡是懒惰，是害怕，是贪图安逸，是一条不敢见世面的土狗<br></blockquote>
+
+<p>在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，在使用的时候直接调用函数会方便很多</p>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> -e <span class="string">"\033[字背景颜色;字体颜色m字符串\033[控制码"</span></span><br></pre></td></tr></table></figure>
+<h3 id="定制颜色函数"><a href="#定制颜色函数" class="headerlink" title="定制颜色函数"></a>定制颜色函数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span># blue to echo </span><br><span class="line">function blue()&#123;</span><br><span class="line">    echo -e "\033[34m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># green to echo </span><br><span class="line">function green()&#123;</span><br><span class="line">    echo -e "\033[32m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># warning</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以把这些函数写入到一个公共的SHELL脚本中，每次在编写其他脚本的时候用如下方式调用，即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /root/bin/common</span><br></pre></td></tr></table></figure>
+<p>或者可以把上述代码直接粘贴到当前编写的脚本中去。<br>当然可以推荐第一种方式。不用每次都复制粘贴。 直接 source 调用 即可</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># blue to echo </span><br><span class="line">function blue()&#123;</span><br><span class="line">    echo -e "\033[35m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># green to echo </span><br><span class="line">function green()&#123;</span><br><span class="line">    echo -e "\033[32m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error</span><br><span class="line">function red()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># warning</span><br><span class="line">function yellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line">Dev-web-solr [/opt/hexo2] 2016-11-28 17:52:03</span><br><span class="line">root@pts/4 $ cat /root/bin/test.sh </span><br><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">source /root/bin/common</span><br><span class="line"></span><br><span class="line">green "hello world with green color"</span><br><span class="line">blue "hello world with blue color"</span><br><span class="line"></span><br><span class="line">bred "error info with blink"</span><br><span class="line">byellow "warning info with blink"</span><br></pre></td></tr></table></figure>
+<h3 id="字体背景颜色"><a href="#字体背景颜色" class="headerlink" title="字体背景颜色"></a>字体背景颜色</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">40:黑 </span><br><span class="line">41:深红 </span><br><span class="line">42:绿 </span><br><span class="line">43:黄色 </span><br><span class="line">44:蓝色 </span><br><span class="line">45:紫色 </span><br><span class="line">46:深绿 </span><br><span class="line">47:白色</span><br></pre></td></tr></table></figure>
+<h3 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">30:黑 </span><br><span class="line">31:红 </span><br><span class="line">32:绿 </span><br><span class="line">33:黄 </span><br><span class="line">34:蓝色 </span><br><span class="line">35:紫色 </span><br><span class="line">36:深绿 </span><br><span class="line">37:白色</span><br></pre></td></tr></table></figure>
+<h3 id="控制码"><a href="#控制码" class="headerlink" title="控制码"></a>控制码</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">\33[0m 关闭所有属性 </span><br><span class="line">\33[01m 设置高亮度 </span><br><span class="line">\33[04m 下划线 </span><br><span class="line">\33[05m 闪烁 </span><br><span class="line">\33[07m 反显 </span><br><span class="line">\33[08m 消隐 </span><br><span class="line">\33[30m -- \33[37m 设置前景色 </span><br><span class="line">\33[40m -- \33[47m 设置背景色 </span><br><span class="line">\33[nA 光标上移n行 </span><br><span class="line">\33[nB 光标下移n行 </span><br><span class="line">\33[nC 光标右移n行 </span><br><span class="line">\33[nD 光标左移n行 </span><br><span class="line">\33[y;xH设置光标位置 </span><br><span class="line">\33[2J 清屏 </span><br><span class="line">\33[K 清除从光标到行尾的内容 </span><br><span class="line">\33[s 保存光标位置 </span><br><span class="line">\33[u 恢复光标位置 </span><br><span class="line">\33[?25l 隐藏光标 </span><br><span class="line">\33[?25h 显示光标</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/ba1b8aded634" target="_blank" rel="noopener">https://www.jianshu.com/p/ba1b8aded634</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/09/持续集成是什么/" itemprop="url">
+                  持续集成是什么
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-09T11:16:41+08:00" content="2018-07-09">
+              2018-07-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>生活本来就不容易， 如果有一天你觉得容易了， 那一定是有人分担了你的不容易<br></blockquote>
+
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>持续集成指的是，频繁地（一天多次）将代码集成到主干。</p>
+<p>它的好处主要有两个:</p>
+<ul>
+<li>快速发现错误。每完成一点更新，就集成到主干，可以快速发现错误，定位错误也比较容易。</li>
+<li>防止分支大幅偏离主干。如果不是经常集成，主干又在不断更新，会导致以后集成的难度变大，甚至难以集成。</li>
+</ul>
+<p>持续集成的目的，就是让产品可以快速迭代，同时还能保持高质量。它的核心措施是，代码集成到主干之前，必须通过自动化测试。只要有一个测试用例失败，就不能集成。<br>Martin Fowler说过，”持续集成并不能消除Bug，而是让它们非常容易发现和改正。”<br>与持续集成相关的，还有两个概念，分别是持续交付和持续部署。</p>
+<h3 id="持续交付"><a href="#持续交付" class="headerlink" title="持续交付"></a>持续交付</h3><p>持续交付（Continuous delivery）指的是，频繁地将软件的新版本，交付给质量团队或者用户，以供评审。如果评审通过，代码就进入生产阶段。<br>持续交付可以看作持续集成的下一步。它强调的是，不管怎么更新，软件是随时随地可以交付的。</p>
+<h3 id="持续部署"><a href="#持续部署" class="headerlink" title="持续部署"></a>持续部署</h3><p>持续部署（continuous deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境。<br>持续部署的目标是，代码在任何时刻都是可部署的，可以进入生产阶段。<br>持续部署的前提是能自动化完成测试、构建、部署等步骤。</p>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>根据持续集成的设计，代码从提交到生产，整个过程有以下几步</p>
+<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>流程的第一步，是开发者向代码仓库提交代码。所有后面的步骤都始于本地代码的一次提交（commit）。</p>
+<h4 id="测试（第一轮）"><a href="#测试（第一轮）" class="headerlink" title="测试（第一轮）"></a>测试（第一轮）</h4><p>代码仓库对commit操作配置了钩子（hook），只要提交代码或者合并进主干，就会跑自动化测试。<br>测试有好几种</p>
+<ul>
+<li>单元测试：针对函数或模块的测试</li>
+<li>集成测试：针对整体产品的某个功能的测试，又称功能测试</li>
+<li>端对端测试：从用户界面直达数据库的全链路测试</li>
+</ul>
+<p>第一轮至少要跑单元测试。</p>
+<h4 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h4><p>通过第一轮测试，代码就可以合并进主干，就算可以交付了。<br>交付后，就先进行构建（build），再进入第二轮测试。所谓构建，指的是将源码转换为可以运行的实际代码，比如安装依赖，配置各种资源（样式表、JS脚本、图片）等等。<br>常用的构建工具如下</p>
+<ul>
+<li>Jenkins</li>
+<li>Travis</li>
+<li>Codeship</li>
+<li>Strider</li>
+</ul>
+<h4 id="测试（第二轮）"><a href="#测试（第二轮）" class="headerlink" title="测试（第二轮）"></a>测试（第二轮）</h4><p>建完成，就要进行第二轮测试。如果第一轮已经涵盖了所有测试内容，第二轮可以省略，当然，这时构建步骤也要移到第一轮测试前面。<br>第二轮是全面测试，单元测试和集成测试都会跑，有条件的话，也要做端对端测试。所有测试以自动化为主，少数无法自动化的测试用例，就要人工跑。<br>需要强调的是，新版本的每一个更新点都必须测试到。如果测试的覆盖率不高，进入后面的部署阶段后，很可能会出现严重的问题。</p>
+<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>通过了第二轮测试，当前代码就是一个可以直接部署的版本（artifact）。将这个版本的所有文件打包（ tar filename.tar * ）存档，发到生产服务器。<br>生产服务器将打包文件，解包成本地的一个目录，再将运行路径的符号链接（symlink）指向这个目录，然后重新启动应用。这方面的部署工具有Ansible，Chef，Puppet等。</p>
+<h4 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h4><p>一旦当前版本发生问题，就要回滚到上一个版本的构建结果。最简单的做法就是修改一下符号链接，指向上一个版本的目录。</p>
+<blockquote>
+<p><a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/08/systemd入门教程/" itemprop="url">
                   systemd入门教程
                 </a>
@@ -527,7 +761,7 @@
 
 <p>curl 是一种命令行工具，作用是发出网络请求，然后获取数据，显示在”标准输出”（stdout）上面。它支持多种协议，下面列举其常用功能。</p>
 <h3 id="查看网页源码"><a href="#查看网页源码" class="headerlink" title="查看网页源码"></a>查看网页源码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl yangguoqi.me</span><br></pre></td></tr></table></figure>
-<p>这个网页我做了301跳转，所以我们看到的源码是这样<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;&lt;title&gt;<span class="number">301</span> Moved Permanently&lt;/title&gt;&lt;/head&gt;</span><br><span class="line">&lt;body bgcolor=<span class="string">"white"</span>&gt;</span><br><span class="line">&lt;center&gt;&lt;h1&gt;<span class="number">301</span> Moved Permanently&lt;/h1&gt;&lt;/center&gt;</span><br><span class="line">&lt;hr&gt;&lt;center&gt;nginx&lt;/center&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个网页我做了301跳转，所以我们看到的源码是这样<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>301 Moved Permanently<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">bgcolor</span>=<span class="string">"white"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">h1</span>&gt;</span>301 Moved Permanently<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">hr</span>&gt;</span><span class="tag">&lt;<span class="name">center</span>&gt;</span>nginx<span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="保存网页源码"><a href="#保存网页源码" class="headerlink" title="保存网页源码"></a>保存网页源码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o yang.txt yangguoqi.me</span><br></pre></td></tr></table></figure>
 <h3 id="自动跳转"><a href="#自动跳转" class="headerlink" title="自动跳转"></a>自动跳转</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L yangguoqi.me</span><br></pre></td></tr></table></figure>
 <p>这样的操作会跟随发生301跳转，获得跳转后的最终源码</p>
@@ -564,218 +798,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/05/golang中下划线使用方法/" itemprop="url">
-                  golang中下划线使用方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-05T11:46:29+08:00" content="2018-07-05">
-              2018-07-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我想有一间书房，不负光阴，静享慢乐<br></blockquote>
-
-<h3 id="用在import"><a href="#用在import" class="headerlink" title="用在import"></a>用在import</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	<span class="string">"database/sql"</span></span><br><span class="line">    _<span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>引入包，会先调用包中的初始化函数，这种使用方式仅让导入的包做初始化，而不使用包中其他功能</p>
-<h3 id="用在返回值"><a href="#用在返回值" class="headerlink" title="用在返回值"></a>用在返回值</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _,v := range Slice&#123;&#125;</span><br><span class="line"></span><br><span class="line">_,err := func()</span><br></pre></td></tr></table></figure>
-<p>表示忽略某个值。单函数有多个返回值，用来获取某个特定的值</p>
-<h3 id="用在变量"><a href="#用在变量" class="headerlink" title="用在变量"></a>用在变量</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type T struct&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> _ I = T&#123;&#125;</span><br><span class="line"></span><br><span class="line">其中 I为<span class="class"><span class="keyword">interface</span></span></span><br></pre></td></tr></table></figure>
-<p>上面用来判断 type T是否实现了I,用作类型断言，如果T没有实现借口I，则编译错误.</p>
-<blockquote>
-<p><a href="https://www.jianshu.com/p/309f55a152db" target="_blank" rel="noopener">https://www.jianshu.com/p/309f55a152db</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/03/nginx的empty-gif模块/" itemprop="url">
-                  nginx的empty_gif模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-03T20:05:37+08:00" content="2018-07-03">
-              2018-07-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你对自由的理解是什么？说「不」的能力。<br></blockquote>
-
-<p>用过百度统计的都知道百度使用1x1的空白图片传递统计参数，自己做异步统计的兄弟是否使用静态文件来传递参数。为什么使用空白图片呢，而不是自己存放一张小图呢，nginx里面的空白图片是保存在内存中的，速度绝对比硬盘上读取的快. 看下如何使用empty_gif生成响应1x1的空白图片吧.</p>
-<p>或许哪天ttlsa自己要做统计，咱们也可以使用empty_gif来传递参数，说归说，肯定性还是比较小，能用第三方的统计就用第三方统计。</p>
-<h3 id="nginx配置"><a href="#nginx配置" class="headerlink" title="nginx配置"></a>nginx配置</h3><p>nginx的模块 ngx_http_empty_gif_module， 编译安装<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location = /_.gif &#123;</span><br><span class="line">    empty_gif;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>自定义配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       <span class="number">80</span>;</span><br><span class="line">    server_name  test.ttlsa.com;</span><br><span class="line">    access_log  /data/logs/nginx/test.ttlsa.com.access.log  main;</span><br><span class="line"></span><br><span class="line">    index index.html index.php index.html;</span><br><span class="line">    root /data/site/test.ttlsa.com;</span><br><span class="line"></span><br><span class="line">    location ~* /<span class="number">3145</span>/</span><br><span class="line">    &#123;</span><br><span class="line">        empty_gif;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>我们在访问的时候带上所要统计的参数就可以<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test.ttlsa.com/<span class="number">3145</span>?time=hhh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://nginx.org/en/docs/http/ngx_http_empty_gif_module.html" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_empty_gif_module.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -814,7 +841,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

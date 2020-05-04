@@ -265,6 +265,212 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/24/PHP函数call-user-func-array用法/" itemprop="url">
+                  PHP函数call_user_func_array用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T12:13:26+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>无她，唯手熟尔<br></blockquote></p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>调用函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($b, $c)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">echo</span> $b;</span><br><span class="line">  <span class="keyword">echo</span> $c;</span><br><span class="line">&#125;</span><br><span class="line">call_user_func_array(<span class="string">'a'</span>, <span class="keyword">array</span>(<span class="string">"111"</span>, <span class="string">"222"</span>));</span><br><span class="line"><span class="comment">//显示 111 222</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>调用静态方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">Class</span> <span class="title">ClassA</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">bc</span><span class="params">($b, $c)</span> </span>&#123;</span><br><span class="line">	$bc = $b + $c;</span><br><span class="line">	  <span class="keyword">echo</span> $bc;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">call_user_func_array(<span class="keyword">array</span>(<span class="string">'ClassA'</span>,<span class="string">'bc'</span>), <span class="keyword">array</span>(<span class="string">"111"</span>, <span class="string">"222"</span>));</span><br><span class="line"><span class="comment">//显示 333</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>说明：这样就可以用数组的方式给类的方法传入必要的参数</p>
+<p>调用普通方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Hello, World!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> MyClass();</span><br><span class="line">call_user_func(<span class="keyword">array</span>($a, <span class="string">'hello'</span>));</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/24/PHP大量数据循环时内存耗尽问题的解决方案/" itemprop="url">
+                  PHP大量数据循环时内存耗尽问题的解决方案
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T10:52:33+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我的肺功能快衰竭了，没有两天了，请大家不要打钱了，谢谢大家这段时间的帮助，希望来生没有痛苦。—魏则西<br></blockquote>
+
+<p>最近在开发一个PHP程序时遇到了下面的错误：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHP Fatal error: Allowed memory size of <span class="number">268</span> <span class="number">435</span> <span class="number">456</span> bytes exhausted</span><br></pre></td></tr></table></figure></p>
+<p>错误信息显示允许的最大内存已经耗尽。遇到这样的错误起初让我很诧异，但转眼一想，也不奇怪，因为我正在开发的这个程序是要用一个foreach循环语句在一个有4万条记录的表里全表搜索具有特定特征的数据，也就是说，一次要把4万条数据取出，然后逐条检查每天数据。可想而知，4万条数据全部加载到内存中，内存不爆才怪。</p>
+<p>毕竟编程这么多年，我隐约记得PHP里提供有非一次全部加载数据的API，是像处理流媒体那样，随用随取随丢、数据并不会积累在内存的查询方法。经过简单的搜索，果然在官方网站上找到的正确的用法。</p>
+<p>这个问题在PHP的官方网站上叫缓冲查询和非缓冲查询(Buffered and Unbuffered queries)。 PHP的查询缺省模式是缓冲模式。也就是说，查询数据结果会一次全部提取到内存里供PHP程序处理。这样给了PHP程序额外的功能，比如说，计算行数，将 指针指向某一行等。更重要的是程序可以对数据集反复进行二次查询和过滤等操作。但这种缓冲查询模式的缺陷就是消耗内存，也就是用空间换速度。</p>
+<p>相对的，另外一种PHP查询模式是非缓冲查询，数据库服务器会一条一条的返回数据，而不是一次全部返回，这样的结果就是PHP程序消耗较少的内存，但却增加了数据库服务器的压力，因为数据库会一直等待PHP来取数据，一直到数据全部取完。</p>
+<p>很显然，缓冲查询模式适用于小数据量查询，而非缓冲查询适应于大数据量查询。</p>
+<p>对于PHP的缓冲模式查询大家都知道，下面列举的例子是如何执行非缓冲查询API。</p>
+<h3 id="非缓冲查询方法一-mysqli"><a href="#非缓冲查询方法一-mysqli" class="headerlink" title="非缓冲查询方法一: mysqli"></a>非缓冲查询方法一: mysqli</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$mysqli  = <span class="keyword">new</span> mysqli(<span class="string">"localhost"</span>, <span class="string">"my_user"</span>, <span class="string">"my_password"</span>, <span class="string">"world"</span>); </span><br><span class="line">$uresult = $mysqli-&gt;query(<span class="string">"SELECT Name FROM City"</span>, MYSQLI_USE_RESULT); </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($uresult) &#123; </span><br><span class="line">   <span class="keyword">while</span> ($row = $uresult-&gt;fetch_assoc()) &#123; </span><br><span class="line">       <span class="keyword">echo</span> $row[<span class="string">'Name'</span>] . PHP_EOL; </span><br><span class="line">   &#125; </span><br><span class="line">&#125; </span><br><span class="line">$uresult-&gt;close(); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="非缓冲查询方法二-pdo-mysql"><a href="#非缓冲查询方法二-pdo-mysql" class="headerlink" title="非缓冲查询方法二: pdo_mysql"></a>非缓冲查询方法二: pdo_mysql</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=world"</span>, <span class="string">'my_user'</span>, <span class="string">'my_pass'</span>); </span><br><span class="line">$pdo-&gt;setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, <span class="keyword">false</span>); </span><br><span class="line"></span><br><span class="line">$uresult = $pdo-&gt;query(<span class="string">"SELECT Name FROM City"</span>); </span><br><span class="line"><span class="keyword">if</span> ($uresult) &#123; </span><br><span class="line">   <span class="keyword">while</span> ($row = $uresult-&gt;fetch(PDO::FETCH_ASSOC)) &#123; </span><br><span class="line">       <span class="keyword">echo</span> $row[<span class="string">'Name'</span>] . PHP_EOL; </span><br><span class="line">   &#125; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="非缓冲查询方法三-mysql"><a href="#非缓冲查询方法三-mysql" class="headerlink" title="非缓冲查询方法三: mysql"></a>非缓冲查询方法三: mysql</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$conn = mysql_connect(<span class="string">"localhost"</span>, <span class="string">"my_user"</span>, <span class="string">"my_pass"</span>); </span><br><span class="line">$db   = mysql_select_db(<span class="string">"world"</span>); </span><br><span class="line"></span><br><span class="line">$uresult = mysql_unbuffered_query(<span class="string">"SELECT Name FROM City"</span>); </span><br><span class="line"><span class="keyword">if</span> ($uresult) &#123; </span><br><span class="line">   <span class="keyword">while</span> ($row = mysql_fetch_assoc($uresult)) &#123; </span><br><span class="line">       <span class="keyword">echo</span> $row[<span class="string">'Name'</span>] . PHP_EOL; </span><br><span class="line">   &#125; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.codeceo.com/article/php-foreach-memory.html" target="_blank" rel="noopener">http://www.codeceo.com/article/php-foreach-memory.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/23/PHP中的随机性——你觉得自己幸运吗？/" itemprop="url">
                   PHP中的随机性——你觉得自己幸运吗？
                 </a>
@@ -568,243 +774,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/18/PHP设置会话Session超时过期时间实现登录时间限制/" itemprop="url">
-                  PHP设置会话Session超时过期时间实现登录时间限制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-18T19:49:10+08:00" content="2016-08-18">
-              2016-08-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我亦只有一个一生，不能慷慨赠予我不爱的人。<br></blockquote>
-
-<h3 id="设置php-ini配置文件"><a href="#设置php-ini配置文件" class="headerlink" title="设置php.ini配置文件"></a>设置php.ini配置文件</h3><p>第一种方法即设置php.ini配置文件，设置session.gc_maxlifetime和session.cookie_lifetime节点属性值，当然也可以使用ini_set函数改变当前上下文环境的属性值：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ini_set(<span class="string">'session.gc_maxlifetime'</span>, <span class="string">"3600"</span>); <span class="comment">// 秒</span></span><br><span class="line">ini_set(<span class="string">"session.cookie_lifetime"</span>,<span class="string">"3600"</span>); <span class="comment">// 秒</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="设置Session时间戳"><a href="#设置Session时间戳" class="headerlink" title="设置Session时间戳"></a>设置Session时间戳</h3><p>第二种方法即设置Session时间戳，比如下面的办法。<br>在登录成功时设置时间戳为当前时间推后1小时，<code>$_SESSION[&#39;expiretime&#39;] = time() + 3600</code>;。在检查用户登录情况使用如下代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_SESSION[<span class="string">'expiretime'</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span>($_SESSION[<span class="string">'expiretime'</span>] &lt; time()) &#123;</span><br><span class="line">        <span class="keyword">unset</span>($_SESSION[<span class="string">'expiretime'</span>]);</span><br><span class="line">        header(<span class="string">'Location: logout.php?TIMEOUT'</span>); <span class="comment">// 登出</span></span><br><span class="line">        <span class="keyword">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $_SESSION[<span class="string">'expiretime'</span>] = time() + <span class="number">3600</span>; <span class="comment">// 刷新时间戳</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://wangye.org/blog/archives/933/" target="_blank" rel="noopener">http://wangye.org/blog/archives/933/</a><br><a href="http://www.laruence.com/2012/01/10/2469.html" target="_blank" rel="noopener">http://www.laruence.com/2012/01/10/2469.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/18/请手动释放你的资源/" itemprop="url">
-                  请手动释放你的资源
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-18T19:16:12+08:00" content="2016-08-18">
-              2016-08-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>谢谢那些喜欢我的人<br></blockquote><br>我从来不认为这个问题是个问题, 直到昨天.</p>
-<p>昨天晚上的时候, 我提交了一个RFC, 关于引入finally到PHP, 实现这个功能的出发点很简单, 因为我看见不少人的需求, 另外还有就是Stas说, 一直只看到讨论, 没看到有人实现. 于是我就给实现了.</p>
-<p>发到邮件组以后, 一个开发组的同学Nikita Popov(nikic), 表示强烈反对这个RFC, 当然最初的论点他说了很多, 最后我们在线讨论的时候, 他表达了一个他的观点:</p>
-<p>“PHP在请求结束后会释放所有的资源, 所以我们没有必要调用fclose,或者mysql_close来释放资源, PHP会替我们做”</p>
-<p>并且他表示, 他从来都不会调用fclose, 认为fclose的存在只是为了继承C函数族.</p>
-<p>我很惊讶, 我也不知道还有多少人是和他一样的想法, 所以我决定写这篇文章.</p>
-<p>在PHP5.2以前, PHP使用引用计数(Reference count)来做资源管理, 当一个zval的引用计数为0的时候, 它就会被释放. 虽然存在循环引用(Cycle reference), 但这样的设计对于开发Web脚本来说, 没什么问题, 因为Web脚本的特点和它追求的目标就是执行时间短, 不会长期运行. 对于循环引用造成的资源泄露, 会在请求结束时释放掉. 也就是说, 请求结束时释放资源, 是一种部补救措施(backup).</p>
-<p>然而, 随着PHP被越来越多的人使用, 就有很多人在一些后台脚本使用PHP, 这些脚本的特点是长期运行, 如果存在循环引用, 导致引用计数无法及时释放不用的资源, 则这个脚本最终会内存耗尽退出.</p>
-<p>所以在PHP5.3以后, 我们引入了GC, 也就是说, 我们引入GC是为了解决用户无法解决的问题.</p>
-<p>这个是历史, 我简单介绍下, 现在让我们回头来看开头的问题, 是不是因为PHP会在请求结束后释放所有的资源, 于是我们就可以不用手动释放呢?</p>
-<p>看一个例子:<br>Mysql最大连接数(mysql.max_connections)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">   $db = mysql_connect() ;</span><br><span class="line">   $resut = mysql_query();</span><br><span class="line">   <span class="comment">// process result...</span></span><br><span class="line">   usleep(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">   <span class="comment">//mysql_close($db);  let's say, you didn't call to this</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// other logic, assuming it costs 5s</span></span><br><span class="line">   sleep(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">exit</span>(<span class="number">0</span>); <span class="comment">//finish</span></span><br></pre></td></tr></table></figure></p>
-<p>上面的例子, 我们会保持一个和Mysql的连接5秒钟, 这样的脚本对于一般的应用来说没有关系, 但是对于一个请求量很大的脚本来说, 会导致一个致命问题:</p>
-<p>比如一个繁忙的应用, 每秒要处理来自用户的1000个请求, 那么5秒钟请求多少个? 5 * 1000 = 5000, 而Mysql有最大连接数限制(mysql.max_connections), 这个数字一般不超过2000, 默认的会更低:(mysql.max_connections),</p>
-<p>那么, 这样代码会导致你的应用, 根本无法正常提供服务. 而如果我们在对Mysql的处理完成后就关闭这个连接, 那么就不会触发这个问题.</p>
-<p>而我们在实践中, 遇到过一个更加实际的问题, 看下面的例子:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line">$mmc = <span class="keyword">new</span> Memcached();</span><br><span class="line">$mysql = mysql_connect();</span><br><span class="line"><span class="comment">//process</span></span><br><span class="line">mysql_close($mysql);</span><br><span class="line">$mmc-&gt;close();</span><br></pre></td></tr></table></figure>
-<p>这是一个真实的教训, 代码如上面所示, 突然有一天我们的Mysql出现了问题, 导致连接Mysql的耗时增大, 然后就导致, 一个脚本对Memcached连接占用过长, 最后Memcache因为连接数太多, 就拒绝服务了..</p>
-<p>所以, 我们一定要让连接代价最高的资源, 最先初始化.</p>
-<p>系统最大句柄 (/proc/sys/fs/file-max)</p>
-<p>这个很简单, 如果你持续打开句柄, 而不释放, 那么你有可能触发系统最大句柄限制, 对于进程来说, 自己还有进程可打开句柄数限制(ulimit -n).</p>
-<p>系统调用是昂贵的(System call is expensive)</p>
-<p>PHP之所以会在请求结束后正确的释放掉所有的资源, 内存, 这是因为当我们在脚本中使用新的内存的时候, PHP会向OS申请一大块内存(ZEND_MM_SEG_SIZE大小), 然后分给你你需要的合适的一块小内存.</p>
-<p>当你不使用这块小内存的时候, PHP也不会返还给OS, 而是保留下来给后续的处理使用.</p>
-<p>我们知道, malloc(3)会导致系统调用(brk(2))(当然也可能是mmap, 我们此处不考虑这个细节, thanks to 华裔), 而系统调用是昂贵的.</p>
-<p>所以, 如果你使用完了资源不及时释放, 那么后续的逻辑如果请求内存, PHP发现之前申请的一大块内存已经分光了, 它就只好再次向OS发起malloc调用, 得到一块新的大内存. 并且它还需要对这个大内存做一些标记处理..</p>
-<p>而如果你使用完资源, 及时释放的话, 那么下次脚本申请内存的时候, 你之前归还的内存块就可以被重复利用, 那么也许你的整个脚本只需要和OS申请一次内存.</p>
-<p>内存峰值(Memory peak usage)</p>
-<p>这个和上面的有一定的关系, 当你使用完资源就释放, 然后后续又使用这样的资源. 那么PHP的内存占用会是:</p>
-<p>资源+1 -&gt; 资源-1 -&gt; 资源+1 -&gt; 资源-1 (峰值是1)</p>
-<p>而如果你是等到PHP请求结束再释放:</p>
-<p>资源+1 -&gt; 资源 + 1 …. -&gt; 资源 -1 -&gt; 资源 – 1 (峰值是2)</p>
-<p>也就说, 一个良好的编写的脚本可能要比一个瞎写的脚本, 要省很多峰值内存..</p>
-<p>考虑一个极端情况, 对一个很繁忙的服务器来说, 比如有10个PHP进程, 每个PHP进程最大1G内存, 而服务器只有8G内存.</p>
-<p>结论 (conclusion)</p>
-<p>结论很明显, 我开头也说过了, 我从来不认为这个是个问题.</p>
-<p>这里说一句, 如果你买了一本PHP的书, 它告诉你: “不用在PHP主动释放资源, 因为PHP会帮你释放”的话, 我建议你, 烧了它.</p>
-<blockquote>
-<p><a href="http://www.laruence.com/2012/08/06/2681.html" target="_blank" rel="noopener">http://www.laruence.com/2012/08/06/2681.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/67/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><span class="page-number current">68</span><a class="page-number" href="/page/69/">69</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/69/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/67/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><span class="page-number current">68</span><a class="page-number" href="/page/69/">69</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/69/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -843,7 +817,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">359</span>
+              <span class="site-state-item-count">361</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
