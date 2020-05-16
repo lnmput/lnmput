@@ -265,6 +265,113 @@
             
               
                 
+                <a class="post-title-link" href="/2018/01/23/用array-map和array-reduce替代foreach循环/" itemprop="url">
+                  用array_map和array_reduce替代foreach循环
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-23T11:07:07+08:00" content="2018-01-23">
+              2018-01-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>零落成泥碾作尘，只有香如故。<br></blockquote>
+
+
+
+<h3 id="array-map"><a href="#array-map" class="headerlink" title="array_map"></a>array_map</h3><p>返回用户自定义函数作用后的数组<br>向array_map传入数组，出来的还是数组，而不是上面array_reduce()的一个值。所以，array_map()最简单的就是把 callback函数作用到每个数组的值上，最常见的场景就是 intval()、trim()  数组中的值，在一些框架的源码中也经常见到，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$arr = <span class="keyword">array</span>(<span class="string">'2'</span>,<span class="string">'3'</span>,<span class="string">'4'</span>,<span class="string">'5'</span>);</span><br><span class="line">array_map(<span class="string">'intval'</span> , $arr);</span><br><span class="line">array_map(<span class="string">'htmlspecialchars'</span> , $arr);</span><br></pre></td></tr></table></figure></p>
+<h3 id="array-reduce"><a href="#array-reduce" class="headerlink" title="array_reduce"></a>array_reduce</h3><p>使用回调函数迭代地将数组简化为单一的值<br>使用array_reduce()替代foreach()循环最常用的一个业务场景也许就是数组求和，比如:</p>
+<h4 id="使用foreach"><a href="#使用foreach" class="headerlink" title="使用foreach"></a>使用foreach</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$arr = [<span class="string">'2'</span>,<span class="string">'3'</span>,<span class="string">'4'</span>,<span class="string">'5'</span>];</span><br><span class="line">array_map(<span class="string">'intval'</span> , $arr);</span><br><span class="line">array_map(<span class="string">'htmlspecialchars'</span> , $arr);</span><br></pre></td></tr></table></figure>
+<h4 id="使用array-reduce"><a href="#使用array-reduce" class="headerlink" title="使用array_reduce"></a>使用array_reduce</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$nums = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>];</span><br><span class="line">$sum = array_reduce($nums, <span class="function"><span class="keyword">function</span> <span class="params">($res, $num)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $res + $num;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dd($sum);</span><br></pre></td></tr></table></figure>
+<h4 id="array-reduce带初始值"><a href="#array-reduce带初始值" class="headerlink" title="array_reduce带初始值"></a>array_reduce带初始值</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$arr = [<span class="string">'AAAA'</span>, <span class="string">'BBBB'</span>, <span class="string">'CCCC'</span>];</span><br><span class="line">$res = array_reduce($arr, <span class="function"><span class="keyword">function</span><span class="params">($carry, $item)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $carry . $item;</span><br><span class="line">&#125;, <span class="string">'所有字符:'</span>);</span><br><span class="line">dd($res);</span><br><span class="line"><span class="comment">// 所有字符:AAAABBBBCCCC</span></span><br></pre></td></tr></table></figure>
+<h3 id="扩展array-filter"><a href="#扩展array-filter" class="headerlink" title="扩展array_filter"></a>扩展array_filter</h3><p>该函数把输入数组中的每个键值传给回调函数。如果回调函数返回 true，则把输入数组中的当前键值返回结果数组中。数组键名保持不变。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">odd</span><span class="params">($var)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ($var % <span class="number">2</span> == <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">even</span><span class="params">($var)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ($var % <span class="number">2</span> == <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$array1 = [<span class="string">"a"</span>=&gt;<span class="number">1</span>, <span class="string">"b"</span>=&gt;<span class="number">2</span>, <span class="string">"c"</span>=&gt;<span class="number">3</span>, <span class="string">"d"</span>=&gt;<span class="number">4</span>, <span class="string">"e"</span>=&gt;<span class="number">5</span>];</span><br><span class="line">$array2 = [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"Odd : "</span>;</span><br><span class="line">dump(array_filter($array1, <span class="string">"odd"</span>));</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"Even: "</span>;</span><br><span class="line">dump(array_filter($array2, <span class="string">"even"</span>));</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://blog.tanteng.me/2015/07/array-map-reduce-foreach/" target="_blank" rel="noopener">https://blog.tanteng.me/2015/07/array-map-reduce-foreach/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/01/23/S-O-L-I-D面向对象设计的5大原则/" itemprop="url">
                   S.O.L.I.D面向对象设计的5大原则
                 </a>
@@ -727,114 +834,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/16/ECMAScript6中剩余参数的用法/" itemprop="url">
-                  ECMAScript6中剩余参数的用法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-16T09:10:51+08:00" content="2018-01-16">
-              2018-01-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>少年易老学难成，一寸光阴不可轻<br></blockquote>
-
-<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>如果函数的最后一个命名参数以<code>...</code>为前缀，则它将成为一个数组，其中从0（包括）到theArgs.length（排除）的元素由传递给函数的实际参数提供。</p>
-<h3 id="剩余参数和-arguments对象的区别"><a href="#剩余参数和-arguments对象的区别" class="headerlink" title="剩余参数和 arguments对象的区别"></a>剩余参数和 <code>arguments</code>对象的区别</h3><ul>
-<li>剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参。</li>
-<li>arguments对象不是一个真正的数组，而剩余参数是真正的 Array实例，也就是说你能够在它上面直接使用所有的数组方法，比如 sort，map，forEach或pop。</li>
-<li>arguments对象还有一些附加的属性 （如callee属性）。</li>
-</ul>
-<h3 id="一般的求和函数"><a href="#一般的求和函数" class="headerlink" title="一般的求和函数"></a>一般的求和函数</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Array</span>.from(<span class="built_in">arguments</span>).reduce(<span class="function">(<span class="params">sum, no</span>) =&gt;</span> sum + no, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log( sum(<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>));</span><br></pre></td></tr></table></figure>
-<h3 id="使用剩余参数改写"><a href="#使用剩余参数改写" class="headerlink" title="使用剩余参数改写"></a>使用剩余参数改写</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">...numbers</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> numbers.reduce(<span class="function">(<span class="params">prev, surr</span>) =&gt;</span> prev + surr, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log( sum(<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>));</span><br></pre></td></tr></table></figure>
-<h3 id="其他用法"><a href="#其他用法" class="headerlink" title="其他用法"></a>其他用法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> palyer = [<span class="string">'yangzie'</span>, <span class="string">'male'</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>];</span><br><span class="line"><span class="keyword">const</span> [name, sex, ...scores] = palyer;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(name);</span><br><span class="line"><span class="built_in">console</span>.log(sex);</span><br><span class="line"><span class="built_in">console</span>.log(scores);</span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rate</span>(<span class="params">rate, ...numbers</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(rate, numbers);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">rate(<span class="number">0.98</span>, <span class="number">10</span>,<span class="number">20</span>,<span class="number">30</span>);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Rest_parameters" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Rest_parameters</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -878,7 +877,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

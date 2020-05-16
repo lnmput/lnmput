@@ -265,6 +265,111 @@
             
               
                 
+                <a class="post-title-link" href="/2018/02/23/laravel-helpers-make-life-easier/" itemprop="url">
+                  laravel-helpers-make-life-easier
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-23T18:08:20+08:00" content="2018-02-23">
+              2018-02-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>在没有充分的知识作为前提的情况下，<br>即使行了万里路，<br>也不过是邮差而已。<br></blockquote><br>There are a ton of helper methods in Laravel that make development more efficient. If you work with the framework, I encourage you to see what helpers you can introduce in your day-to-day work. In this blog post, I’d like to point out a few of my favorites.</p>
+<h3 id="data-get"><a href="#data-get" class="headerlink" title="data_get"></a>data_get</h3><p>The data_get() helper allows you to get a value from an array or object with dot notation. This functions similarly to array_get() as well. The optional third parameter can be used to supply a default value if the key is not found.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$array = [<span class="string">'albums'</span> =&gt; [<span class="string">'rock'</span> =&gt; [<span class="string">'count'</span> =&gt; <span class="number">75</span>]]];</span><br><span class="line"></span><br><span class="line">$count = data_get($array, <span class="string">'albums.rock.count'</span>); <span class="comment">// 75</span></span><br><span class="line">$avgCost = data_get($array, <span class="string">'albums.rock.avg_cost'</span>, <span class="number">0</span>); <span class="comment">// 0</span></span><br><span class="line"></span><br><span class="line">$object-&gt;albums-&gt;rock-&gt;count = <span class="number">75</span>;</span><br><span class="line"></span><br><span class="line">$count = data_get($object, <span class="string">'albums.rock.count'</span>); <span class="comment">// 75</span></span><br><span class="line">$avgCost = data_get($object, <span class="string">'albums.rock.avg_cost'</span>, <span class="number">0</span>); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure></p>
+<p>If you use a “wildcard” (*) in your dot notation, Laravel will return an array of results.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$array = [<span class="string">'albums'</span> =&gt; [<span class="string">'rock'</span> =&gt; [<span class="string">'count'</span> =&gt; <span class="number">75</span>], <span class="string">'punk'</span> =&gt; [<span class="string">'count'</span> =&gt; <span class="number">12</span>]]];</span><br><span class="line">$counts = data_get($array, <span class="string">'albums.*.count'</span>); <span class="comment">// [75, 12]</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="str-plural"><a href="#str-plural" class="headerlink" title="str_plural"></a>str_plural</h3><p>The str_plural() helper converts a string to its plural form. Currently, only English is supported. The optional second parameter will allow the helper to choose the plural or singular form. The helper is also smart enough to help with “uncountable” or special case words.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tr_plural(<span class="string">'dog'</span>); <span class="comment">// dogs</span></span><br><span class="line">str_plural(<span class="string">'cat'</span>); <span class="comment">// cats</span></span><br><span class="line"></span><br><span class="line">str_plural(<span class="string">'dog'</span>, <span class="number">2</span>); <span class="comment">// dogs</span></span><br><span class="line">str_plural(<span class="string">'cat'</span>, <span class="number">1</span>); <span class="comment">// cat</span></span><br><span class="line"></span><br><span class="line">str_plural(<span class="string">'child'</span>); <span class="comment">// children</span></span><br><span class="line">str_plural(<span class="string">'person'</span>); <span class="comment">// people</span></span><br><span class="line">str_plural(<span class="string">'fish'</span>); <span class="comment">// fish</span></span><br><span class="line">str_plural(<span class="string">'deer'</span>, <span class="number">2</span>); <span class="comment">// deer</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="route"><a href="#route" class="headerlink" title="route"></a>route</h3><p>The route() helper generates a URL for the specified named route. The optional second argument will accept additional route parameters. If additional parameters aren’t named Laravel will try it’s best to match them to the attributes on the route then will add any remaining parameters to the end of the URL.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'burgers'</span>, <span class="string">'BurgersController@index'</span>)-&gt;name(<span class="string">'burgers'</span>);</span><br><span class="line">route(<span class="string">'burgers'</span>); <span class="comment">// http://example.com/burgers</span></span><br><span class="line">route(<span class="string">'burgers'</span>, [<span class="string">'order_by'</span> =&gt; <span class="string">'price'</span>]); <span class="comment">// http://example.com/burgers?order_by=price</span></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'burgers/&#123;id&#125;'</span>, <span class="string">'BurgersController@show'</span>)-&gt;name(<span class="string">'burgers.show'</span>);</span><br><span class="line">route(<span class="string">'burgers.show'</span>, <span class="number">1</span>); <span class="comment">// http://example.com/burgers/1</span></span><br><span class="line">route(<span class="string">'burgers.show'</span>, [<span class="string">'id'</span> =&gt; <span class="number">1</span>]); <span class="comment">// http://example.com/burgers/1</span></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'employees/&#123;id&#125;/&#123;name&#125;'</span>, <span class="string">'EmployeesController@show'</span>)-&gt;name(<span class="string">'employees.show'</span>);</span><br><span class="line">route(<span class="string">'employees.show'</span>, [<span class="number">5</span>, <span class="string">'chris'</span>]); <span class="comment">// http://example.com/employees/5/chris</span></span><br><span class="line">route(<span class="string">'employees.show'</span>, [<span class="string">'id'</span> =&gt; <span class="number">5</span>, <span class="string">'name'</span> =&gt; <span class="string">'chris'</span>]); <span class="comment">// http://example.com/employees/5/chris</span></span><br><span class="line">route(<span class="string">'employees.show'</span>, [<span class="string">'id'</span> =&gt; <span class="number">5</span>, <span class="string">'name'</span> =&gt; <span class="string">'chris'</span>, <span class="string">'hide'</span> =&gt; <span class="string">'email'</span>]); <span class="comment">// http://example.com/employees/5/chris?hide=email</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="abort-if"><a href="#abort-if" class="headerlink" title="abort_if"></a>abort_if</h3><p>The abort_if() helper throws an exception if the given expression evaluates to true. The optional third parameter will accept a custom response text, and the optional fourth argument will accept an array of headers.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">abort_if(! Auth::user()-&gt;isAdmin(), <span class="number">403</span>);</span><br><span class="line">abort_if(! Auth::user()-&gt;isAdmin(), <span class="number">403</span>, <span class="string">'Sorry, you are not an admin'</span>);</span><br><span class="line">abort_if(Auth::user()-&gt;isCustomer(), <span class="number">403</span>);</span><br></pre></td></tr></table></figure></p>
+<p>So many of us have done something similar to the below example, and the abort_if() helper can cut it down to one line.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// In "admin" specific controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (! Auth::user()-&gt;isAdmin()) &#123;</span><br><span class="line">        abort(<span class="number">403</span>, <span class="string">'Sorry, you are not an admin'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// better!</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    abort_if(! Auth::user()-&gt;isAdmin(), <span class="number">403</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="optional"><a href="#optional" class="headerlink" title="optional"></a>optional</h3><p>The optional() helper allows you to access properties or call methods on an object. If the given object is null, properties and methods will return null instead of causing an error.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// User 1 exists, with account</span></span><br><span class="line">$user1 = User::find(<span class="number">1</span>);</span><br><span class="line">$accountId = $user1-&gt;account-&gt;id; <span class="comment">// 123</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// User 2 exists, without account</span></span><br><span class="line">$user2 = User::find(<span class="number">2</span>);</span><br><span class="line">$accountId = $user2-&gt;account-&gt;id; <span class="comment">// PHP Error: Trying to get property of non-object</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Fix without optional()</span></span><br><span class="line">$accountId = $user2-&gt;account ? $user2-&gt;account-&gt;id : <span class="keyword">null</span>; <span class="comment">// null</span></span><br><span class="line">$accountId = $user2-&gt;account-&gt;id ?? <span class="keyword">null</span>; <span class="comment">// null</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Fix with optional()</span></span><br><span class="line">$accountId = optional($user2-&gt;account)-&gt;id; <span class="comment">// null</span></span><br></pre></td></tr></table></figure></p>
+<p>The optional() helper is ideal when using objects you might not own or calling nested data within Eloquent relationships that may, or may not, be available.</p>
+<blockquote>
+<p><a href="https://laravel-news.com/5-laravel-helpers-make-life-easier" target="_blank" rel="noopener">https://laravel-news.com/5-laravel-helpers-make-life-easier</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/02/23/node开发环境报错error-code-ELIFECYCLE/" itemprop="url">
                   node开发环境报错error-code-ELIFECYCLE
                 </a>
@@ -678,117 +783,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/31/使用docker在centos下安装java环境/" itemprop="url">
-                  使用docker在centos下安装java环境
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-31T18:01:05+08:00" content="2018-01-31">
-              2018-01-31
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>既然庸庸碌碌也难逃一死，何不奋起一搏？<br></blockquote>
-
-<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
-<li><p>docker安装</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>主机安装并配置java环境, 要求使用解压版的jdk<br>配置环境变量, 修改<code>/etc/profile</code>加入以下内容,修改后 马上生效还需要运行 <code>source /etc/profile</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/jdk1<span class="number">.8</span><span class="number">.0</span>_161</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装centos镜像</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull centos</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><p>创建的一个空的文件夹<code>build_jdk</code>, 并将我们的<code>jdk</code>目录拷贝到这个目录：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r jdk1<span class="number">.8</span><span class="number">.0</span>_161 /root/build_jdk/</span><br></pre></td></tr></table></figure></p>
-<p>创建<code>Dockerfile</code>文件<br>需要将主机的jdk文件拷贝到镜像里, 并配置环境变量<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM centos:latest</span><br><span class="line">COPY jdk1<span class="number">.8</span><span class="number">.0</span>_161 /usr/local/jdk1<span class="number">.8</span><span class="number">.0</span>_161</span><br><span class="line">ENV JAVA_HOME=/usr/local/jdk1<span class="number">.8</span><span class="number">.0</span>_161</span><br><span class="line">ENV PATH $JAVA_HOME/bin:$PATH</span><br><span class="line">ENV CLASSPATH .:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line">CMD /usr/sbin/init</span><br></pre></td></tr></table></figure></p>
-<p>生成镜像<br>在Dockerfile文件的文件加下执行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t centos:jdk .</span><br></pre></td></tr></table></figure></p>
-<p>注意后面的<code>.</code>代表当前目录<br>生成容器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --privileged -d -p <span class="number">8080</span>:<span class="number">80</span> --name myjdk -v /home/demo:/<span class="keyword">var</span>/www/html centos:jdk</span><br></pre></td></tr></table></figure></p>
-<p>–privileged 参数，给容器加特权,否则交互式方式进入容器无法操作一些譬如修改内核、修改系统参数、甚至启动服务等<br>-d 在后台启动<br>-p 端口映射<br>-v 文件夹共享<br>–name 给容器起一个名称<br>镜像名:镜像标签<br>启动容器的时候执行的命令,  必须要执行<code>/usr/sbin/init</code>这个命令， </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -832,7 +826,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

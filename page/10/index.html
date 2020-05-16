@@ -265,6 +265,118 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/03/laravel中env函数的坑/" itemprop="url">
+                  Laravel中env函数的坑
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-03T13:50:22+08:00" content="2018-08-03">
+              2018-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不自量力的还手 直至死方休<br></blockquote>
+
+<p>最近项目中遇到了一个问题， 问题出在env函数上，在Middleware中读取环境变量时取到的竟然是null<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dump(env(<span class="string">'APP_ENV'</span>) === <span class="keyword">null</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>查看env 的代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">env</span><span class="params">($key, $default = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $value = getenv($key);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($value === <span class="keyword">false</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> value($default);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 此处省略部分代码</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以发现，实际上调用的就是php自带的<code>getenv</code>函数，如果取不到值，那必定是某段执行putenv或者操作<code>$_ENV</code>全局变量的代码没有执行，而且这些环境变量设置操作一定是在初始化的时候进行的<br>如果对Laravel的Kernel执行顺序比较了解的话，应该知道，在Kernel启动阶段会首先执行一组bootstrappers<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Illuminate/Foundation/Http/Kernel.php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kernel</span> <span class="keyword">implements</span> <span class="title">KernelContract</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The bootstrap classes for the application.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> $bootstrappers = [</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\DetectEnvironment'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\LoadConfiguration'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\ConfigureLogging'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\HandleExceptions'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\RegisterFacades'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\RegisterProviders'</span>,</span><br><span class="line">        <span class="string">'Illuminate\Foundation\Bootstrap\BootProviders'</span>,</span><br><span class="line">    ];</span><br></pre></td></tr></table></figure></p>
+<p>其中一个bootstrapper名为DetectEnvironment，而它的嫌疑是最大的，检查这个类<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Illuminate/Foundation/Bootstrap/DetectEnvironment.php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DetectEnvironment</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Bootstrap the given application.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Contracts\Foundation\Application  $app</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrap</span><span class="params">(Application $app)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (! $app-&gt;configurationIsCached()) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;checkForSpecificEnvironmentFile($app);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                (<span class="keyword">new</span> Dotenv($app-&gt;environmentPath(), $app-&gt;environmentFile()))-&gt;load();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InvalidPathException $e) &#123;</span><br><span class="line">                <span class="comment">//</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在代码中，我们并没有发现任何执行putenv或者操作<code>$_ENV</code>全局变量的地方，实际上在整个Laravel的框架代码里也没有发现蛛丝马迹，那么这些环境变量是如何保存进来的呢？<br>如果Laravel框架里没有执行这些代码，我们应该可以推测是框架使用的第三方组件做了这些事情<br>而事实也确实如此，可以看到在DetectEnvironment类的bootstrap方法里实例化了一个Dotenv类的对象，而Dotenv\Loader正是执行了读取.env文件，执行putenv的操作。<br>那么env获取不到值只能说明Dotenv的实例化并没有执行</p>
+<p>再仔细看一下DetectEnvironment类，在实例化Dotenv前，先进行了一个 if 判断<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (! $app-&gt;configurationIsCached())</span><br></pre></td></tr></table></figure></p>
+<p>而这个方法的作用就是判断 <code>bootstrap/cache/config.php</code> 缓存文件是否存在，如果文件存在则不会执行Dotenv的实例化操作，也就不会往<code>$_ENV</code>里存数据，自然env函数是取不到值的</p>
+<p><code>bootstrap/cache/config.php</code>是执行下面的命令生成的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:cache</span><br></pre></td></tr></table></figure></p>
+<p>清除使用命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:clear</span><br></pre></td></tr></table></figure></p>
+<p>那么，真相大白了，之前在开发时并没有出现问题，是因为没有执行 config:cache 命令，而项目上线后为了优化访问速度，生成了缓存文件，导致env取值失败</p>
+<p>如果使用了config:cache，env函数只能在config目录下的配置文件的php里使用，不可以在其他地方使用。</p>
+<p>一个非常简单的办法就是将<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env(<span class="string">'APP_ENV'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config(<span class="string">'app.env'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>config函数会优先读取 bootstrap/cache/config.php 中缓存的配置，如果没有缓存文件，则会直接读取 config 目录下的所有配置文件</p>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/83f9cd407751" target="_blank" rel="noopener">https://www.jianshu.com/p/83f9cd407751</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/08/03/linux查找含有某字符串的所有文件/" itemprop="url">
                   Linux查找含有某字符串的所有文件
                 </a>
@@ -671,121 +783,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/25/crontab计划任务指定执行用户/" itemprop="url">
-                  crontab计划任务指定执行用户
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-25T12:10:10+08:00" content="2018-07-25">
-              2018-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>就算终有一散，也别辜负相遇。好好相遇，好好告别。<br></blockquote>
-
-<p>linux下可以通过配置crontab来定时执行任务，执行体可以是一条系统命令或自己写的一个脚本，同时可以指派用户来执行。配置crontab有两种方法。</p>
-<h3 id="使用crontab命令，例如添加一个新的或编辑已有的，使用："><a href="#使用crontab命令，例如添加一个新的或编辑已有的，使用：" class="headerlink" title="使用crontab命令，例如添加一个新的或编辑已有的，使用："></a>使用crontab命令，例如添加一个新的或编辑已有的，使用：</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
-<p>就可以进入配置文件。此时配置crontab的执行者是当前登入用户，如果当前用户是root，需要为其他用户配置，可以使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">crontab -e -u 用户名</span><br><span class="line"></span><br><span class="line">或</span><br><span class="line">su 用户名</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure></p>
-<p>这种方法有一个缺点，就是当前系统中配置的crontab不在一个配置文件中，让管理员不方便查询系统到底有多少个crontab。</p>
-<h3 id="直接在-etc-crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息"><a href="#直接在-etc-crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息" class="headerlink" title="直接在/etc/crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息"></a>直接在/etc/crontab文件中添加，不过需要是root身份。打开文件，应该会看到类似下面的信息</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=/</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name command to be executed</span></span><br></pre></td></tr></table></figure>
-<p>要添加新的crontab，只需要在文件最后增加即可。注意这里面需要指定用户名；而方法1中则不需要，如果指定了，它会认为是命令的一部分，从而可能导致crontab执行失败。</p>
-<p>如果服务器都是有root来管理，建议添加crontab使用方法2，这样系统中的所有计划任务都在一起，一目了然。</p>
-<h3 id="注意问题"><a href="#注意问题" class="headerlink" title="注意问题"></a>注意问题</h3><p>我在配置Laravel的计划任务的时候有这样一条配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/crontab</span><br><span class="line"></span><br><span class="line"> * * * * www /bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
-<p>正常保存以后发现计划任务并没有顺利执行， 随想这去查看日志<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail <span class="number">-10</span> /<span class="keyword">var</span>/log/cron</span><br></pre></td></tr></table></figure></p>
-<p>发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">35</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24729</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">35</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24729</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">36</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24782</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">36</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24782</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">37</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24834</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">37</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24834</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">38</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24887</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">38</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24887</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24940</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24940</span>]: (CRON) ERROR chdir failed (/home/www): No such file <span class="keyword">or</span> directory</span><br><span class="line">Jul <span class="number">25</span> <span class="number">12</span>:<span class="number">40</span>:<span class="number">01</span> ip<span class="number">-172</span><span class="number">-31</span><span class="number">-45</span><span class="number">-45</span> CROND[<span class="number">24995</span>]: (www) CMD (/bin/php /data/wwwroot/<span class="number">51</span>ito.io/ethgo/artisan schedule:run &gt;&gt; /dev/<span class="keyword">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>意思就是指定某一个执行计划任务的时候需要这个用户必须有家目录， 那么进行以下操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /home</span><br><span class="line">mkdir www</span><br><span class="line">chown -R www:www www</span><br></pre></td></tr></table></figure></p>
-<p>经过以上的一番操作， 正常运行</p>
-<h3 id="ubuntu没有计划任务日志解决办法"><a href="#ubuntu没有计划任务日志解决办法" class="headerlink" title="ubuntu没有计划任务日志解决办法"></a>ubuntu没有计划任务日志解决办法</h3><p>修改rsyslog<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rsyslog.d/<span class="number">50</span>-<span class="keyword">default</span>.conf</span><br></pre></td></tr></table></figure></p>
-<p>搜索cron 把如下行之前的注释”#”去掉<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#cron.*   /var/log/cron.log</span></span><br></pre></td></tr></table></figure></p>
-<p>重启rsyslog<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo  service rsyslog  restart</span><br></pre></td></tr></table></figure></p>
-<p> 现在看看定时任务的日志<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f /<span class="keyword">var</span>/log/cron.log</span><br></pre></td></tr></table></figure></p>
-<h3 id="Debian系统"><a href="#Debian系统" class="headerlink" title="Debian系统"></a>Debian系统</h3><p>重启<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://www.netingcn.com/crontab-designate.html" target="_blank" rel="noopener">http://www.netingcn.com/crontab-designate.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -829,7 +826,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,120 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/24/laravel5-6的路由签名/" itemprop="url">
+                  laravel5.6的路由签名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-24T15:54:57+08:00" content="2018-04-24">
+              2018-04-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>Still water run deep.<br></blockquote>
+
+<p>In the latest Laravel 5.6.12 Release a new signed URLs feature was introduced. In this article, we’ll work on enabling signed URLs in an application and look at a few options of how to use them.</p>
+<h3 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h3><p>First, you’ll need to run composer update laravel/framework in your terminal to pull the latest changes.</p>
+<p>Second, you’ll need to add the new ValidateSignature to your route middleware in <code>/app/Http/Kernel.php</code>.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $routeMiddleware = [</span><br><span class="line">         <span class="comment">// ...</span></span><br><span class="line">         <span class="string">'guest'</span> =&gt; \App\Http\Middleware\RedirectIfAuthenticated::class,</span><br><span class="line">+        <span class="string">'signed'</span> =&gt; \Illuminate\Routing\Middleware\ValidateSignature::class,</span><br><span class="line">         <span class="string">'throttle'</span> =&gt; \Illuminate\Routing\Middleware\ThrottleRequests::class,</span><br><span class="line">     ];</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>That’s it! Now you can start adding signed URLs to your application.</p>
+<h3 id="Starting-Point"><a href="#Starting-Point" class="headerlink" title="Starting Point"></a>Starting Point</h3><p>Let’s say we have an event planning application that we let users RSVP to upcoming events. We want to email all users a link so they can quickly respond “yes” or “no” if they are going. However, we don’t want to force them to log into the application again if they happen to be logged out.</p>
+<p>Currently, we have the following event.rsvp route in our <code>routes/web.php</code> file.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'event/&#123;id&#125;/rsvp/&#123;user&#125;/&#123;response&#125;'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($id, $user, $response)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Add response from user for event.</span></span><br><span class="line">&#125;)-&gt;name(<span class="string">'event.rsvp'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>and our URL is generated like so<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> \<span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">URL</span>;</span><br><span class="line">Url::route(<span class="string">'event.rsvp'</span>, [<span class="string">'id'</span> =&gt; <span class="number">25</span>, <span class="string">'user'</span> =&gt; <span class="number">100</span>, <span class="string">'response'</span> =&gt; <span class="string">'yes'</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>which generates:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//example.com/event/25/rsvp/100/yes</span></span><br></pre></td></tr></table></figure></p>
+<p>We can see that a curious or malicious user will be easily able to change any variables in the URL, which is far from ideal.</p>
+<h3 id="Signing-a-URL"><a href="#Signing-a-URL" class="headerlink" title="Signing a URL"></a>Signing a URL</h3><p>Now that we have a prime candidate for a signed URL let’s add the signature handling.</p>
+<p>First, we’ll need to add the signed middleware to our route definition.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'event/&#123;id&#125;/rsvp/&#123;user&#125;/&#123;response&#125;'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($id, $user, $response)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Add response from user for event.</span></span><br><span class="line">&#125;)-&gt;name(<span class="string">'event.rsvp'</span>)-&gt;middleware(<span class="string">'signed'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Next, we’ll change our <code>Url::route()</code> to <code>Url::signedRoute()</code> in our application.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> \<span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">URL</span>;</span><br><span class="line"></span><br><span class="line">Url::signedRoute(<span class="string">'event.rsvp'</span>, [<span class="string">'id'</span> =&gt; <span class="number">25</span>, <span class="string">'user'</span> =&gt; <span class="number">100</span>, <span class="string">'response'</span> =&gt; <span class="string">'yes'</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>Laravel will generate a new signed URL given the route name, and all of the parameters, which generates a URL similar to the following:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//example.com/event/25/rsvp/100/yes?</span></span><br><span class="line">signature=<span class="number">30</span>a3877b00890fff0d7ca25f82c6387ff16a98d21008ddc9689ed3c20ef13cd4</span><br></pre></td></tr></table></figure></p>
+<p>Now by using this signed URL if that same “curious” user tries to tamper with the user id, changing it from 100 to 101, or the signature ending with 4 to 5 Laravel will throw an <code>Illuminate\Routing\Exceptions\InvalidSignatureException</code>.</p>
+<h3 id="Temporary-URLs"><a href="#Temporary-URLs" class="headerlink" title="Temporary URLs"></a>Temporary URLs</h3><p>In addition to just signing a URL, Laravel gives us a great way to add an expiration to a signature as well. If we want the link to expire in 1 hour from generation, we can update our code to the following.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> \<span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">URL</span>;</span><br><span class="line"></span><br><span class="line">URL::temporarySignedRoute(<span class="string">'event.rsvp'</span>, now()-&gt;addHour(), [</span><br><span class="line">    <span class="string">'id'</span> =&gt; <span class="number">25</span>, </span><br><span class="line">    <span class="string">'user'</span> =&gt; <span class="number">100</span>, </span><br><span class="line">    <span class="string">'response'</span> =&gt; <span class="string">'yes'</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
+<p>which generates the following:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//example.com/event/25/rsvp/100/yes?expires=1521543365</span></span><br><span class="line">&amp;signature=d32f53ced4a781f287b612d21a3b7d3c38ebc5ae53951115bb9af4bc3f88a87a</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://laravel-news.com/signed-routes" target="_blank" rel="noopener">https://laravel-news.com/signed-routes</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/24/git忽略已经被提交的文件/" itemprop="url">
                   git忽略已经被提交的文件
                 </a>
@@ -746,113 +860,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/13/laravel辅助函数tap的使用方法/" itemprop="url">
-                  laravel辅助函数tap的使用方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-13T10:47:36+08:00" content="2018-04-13">
-              2018-04-13
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>被门夹过的核桃还能补脑嘛<br></blockquote><br>Laravel 5.3 中增加了一个新的全局帮助函数 tap()，改进了框架的声明能力。这个微妙的语法是从 Ruby 和 Lodash 借鉴而来，允许你去 tap 成链。<br>先看看 tap() 帮助函数的代码，只有短短的几行：<br>Laravel5.3的tap<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tap</span><span class="params">($value, $callback)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $callback($value);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Laravel5.4的tap<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tap</span><span class="params">($value, $callback = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_null($callback)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HigherOrderTapProxy($value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $callback($value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>你需要传一个值和一个回调到方法中，值作为回调的参数，回调将执行，最后值被返回。</p>
-</blockquote>
-<h3 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h3><p>默认情况下会返回一bool值<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line">$res = $user-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">dd($res); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>返回user实例<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line">$res = tap($user)-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">dd($res);</span><br></pre></td></tr></table></figure></p>
-<h3 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h3><p>返回user实例<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$name = <span class="string">'樊雨薇'</span>;</span><br><span class="line"><span class="keyword">return</span> tap(\App\Models\User::query()-&gt;find(<span class="number">1</span>), <span class="function"><span class="keyword">function</span> <span class="params">($instance)</span> <span class="title">use</span> <span class="params">($name)</span></span>&#123;</span><br><span class="line">    $instance-&gt;name = $name;</span><br><span class="line">    $instance-&gt;save();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="第三种情况"><a href="#第三种情况" class="headerlink" title="第三种情况"></a>第三种情况</h3><p>让我们看看 <code>Illuminate\Cache\Repository</code> 下的 <code>pull</code> 方法，此函数将从指定键的缓存中获取值，并将其删除。<code>pull</code> 方法的实现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pull</span><span class="params">($key, $default = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $value = <span class="keyword">$this</span>-&gt;get($key, $default);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">$this</span>-&gt;forget($key) <span class="comment">// returns a boolean;</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子中，$this-&gt; forget() 返回一个布尔值，所以要使我们的函数返回原始值，需要将其储存到临时变量 $value 中。以下是 tap() 的实现，不再需要临时变量：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pull</span><span class="params">($key, $default = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">return</span> tap(<span class="keyword">$this</span>-&gt;get($key, $default), <span class="function"><span class="keyword">function</span> <span class="params">($value)</span> <span class="title">use</span> <span class="params">($key)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">$this</span>-&gt;forget($key);</span><br><span class="line">   &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="第四种情况"><a href="#第四种情况" class="headerlink" title="第四种情况"></a>第四种情况</h3><p>vendor\laravel\framework\src\Illuminate\View\Factory.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">make</span><span class="params">($view, $data = [], $mergeData = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $path = <span class="keyword">$this</span>-&gt;finder-&gt;find(</span><br><span class="line">        $view = <span class="keyword">$this</span>-&gt;normalizeName($view)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里是视图文件的绝对路径</span></span><br><span class="line">    <span class="comment">// D:\phpStudy\WWW\ccerp-v2\resources\views/home.blade.php</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Next, we will create the view instance and call the view creator for the view</span></span><br><span class="line">    <span class="comment">// which can set any data, etc. Then we will return the view instance back to</span></span><br><span class="line">    <span class="comment">// the caller for rendering or performing other view manipulations on this.</span></span><br><span class="line">    $data = array_merge($mergeData, <span class="keyword">$this</span>-&gt;parseData($data));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注意 tap 辅助函数的用法, 最后返回的是 view 实例</span></span><br><span class="line">    <span class="comment">// $this-&gt;viewInstance($view, $path, $data) 生成一个新的 view 实例, 闭包传递的$view就是这个view实例</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> tap(<span class="keyword">$this</span>-&gt;viewInstance($view, $path, $data), <span class="function"><span class="keyword">function</span> <span class="params">($view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;callCreator($view);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://derekmd.com/2017/02/laravel-tap/?utm_source=learninglaravel.net" target="_blank" rel="noopener">http://derekmd.com/2017/02/laravel-tap/?utm_source=learninglaravel.net</a><br><a href="https://pigjian.com/article/laravel-tap-the-usage" target="_blank" rel="noopener">https://pigjian.com/article/laravel-tap-the-usage</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -896,7 +903,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,118 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/08/javascript中的函数预解析和变量提升/" itemprop="url">
+                  javascript中的函数预解析和变量提升
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-08T22:59:52+08:00" content="2017-08-08">
+              2017-08-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>小时候，向喜欢的姑娘展示快<br>长大后，向喜欢的姑娘展示慢<br></blockquote></p>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>如果一个变量在函数体内部申明，则该变量的作用域为整个函数体，在函数体外不可引用该变量：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    x = x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">x = x + <span class="number">2</span>; <span class="comment">// ReferenceError! 无法在函数体外引用变量x</span></span><br></pre></td></tr></table></figure></p>
+<p>如果两个不同的函数各自申明了同一个变量，那么该变量只在各自的函数体内起作用。换句话说，不同函数内部的同名变量互相独立，互不影响：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    x = x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="string">'A'</span>;</span><br><span class="line">    x = x + <span class="string">'B'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由于JavaScript的函数可以嵌套，此时，内部函数可以访问外部函数定义的变量，反过来则不行：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> y = x + <span class="number">1</span>; <span class="comment">// bar可以访问foo的变量x!</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> z = y + <span class="number">1</span>; <span class="comment">// ReferenceError! foo不可以访问bar的变量y!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果内部函数和外部函数的变量名重名怎么办？<br>JavaScript的函数在查找变量时从自身函数定义开始，从“内”向“外”查找。如果内部函数定义了与外部函数重名的变量，则内部函数的变量将“屏蔽”外部函数的变量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> x = <span class="string">'A'</span>;</span><br><span class="line">        alert(<span class="string">'x in bar() = '</span> + x); <span class="comment">// 'A'</span></span><br><span class="line">    &#125;</span><br><span class="line">    alert(<span class="string">'x in foo() = '</span> + x); <span class="comment">// 1</span></span><br><span class="line">    bar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>不在任何函数内定义的变量就具有全局作用域。实际上，JavaScript默认有一个全局对象window，全局作用域的变量实际上被绑定到window的一个属性：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> course = <span class="string">'Learn JavaScript'</span>;</span><br><span class="line">alert(course); <span class="comment">// 'Learn JavaScript'</span></span><br><span class="line">alert(<span class="built_in">window</span>.course); <span class="comment">// 'Learn JavaScript'</span></span><br></pre></td></tr></table></figure></p>
+<p>由于函数定义有两种方式，以变量方式var foo = function () {}定义的函数实际上也是一个全局变量，因此，顶层函数的定义也被视为一个全局变量，并绑定到window对象：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="string">'foo'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(); <span class="comment">// 直接调用foo()</span></span><br><span class="line"><span class="built_in">window</span>.foo(); <span class="comment">// 通过window.foo()调用</span></span><br></pre></td></tr></table></figure></p>
+<p>进一步大胆地猜测，我们每次直接调用的alert()函数其实也是window的一个变量：</p>
+<h3 id="变量提升"><a href="#变量提升" class="headerlink" title="变量提升"></a>变量提升</h3><p>JavaScript的函数定义有个特点，它会先扫描整个函数体的语句，把所有申明的变量“提升”到函数顶部,JavaScript引擎自动提升了变量y的声明，但不会提升变量y的赋值。</p>
+<p>考虑下面的代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myvar = <span class="string">'my value'</span>;</span><br><span class="line">alert(myvar); <span class="comment">// my value</span></span><br></pre></td></tr></table></figure></p>
+<p>Okay, 当然，弹出的结果肯定是”my value”，但是，跟着我，让我下面创建个方法，弹出相同的值：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myvar = <span class="string">'my value'</span>;</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  alert(myvar); <span class="comment">// my value</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>好吧，好吧，仍然很明显，我知道。现在，让我们加点猛的调料，在匿名函数内部创建一个同名的局部变量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myvar = <span class="string">'my value'</span>;</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  alert(myvar); <span class="comment">// undefined</span></span><br><span class="line">  <span class="keyword">var</span> myvar = <span class="string">'local value'</span>;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>在当前的作用域内，无论在哪里变量声明，在幕后，其都在顶部被“预解析”了。不过，仅声明被“预解析”。该变量即使初始化，其当前的值，在<code>作用域的顶部</code>，也会被设置成undefined。<br>恩，现在让我们好好的破译下这个“声明”和“初始化”，以var joe = ‘plumber’;为模特吧。<br>声明(Declaration)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> joe; <span class="comment">// the declaration</span></span><br></pre></td></tr></table></figure></p>
+<p>初始化(Initialization)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">joe = <span class="string">'plumber'</span>; <span class="comment">// the initialization</span></span><br></pre></td></tr></table></figure></p>
+<p>现在，我们知道了这些术语的意思，就可以更好的理解到底背地里都干了些什么勾当，请看下面的伪函数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">'a'</span>;</span><br><span class="line">  <span class="comment">// 一行代码</span></span><br><span class="line">  <span class="keyword">var</span> b = <span class="string">'b'</span>;</span><br><span class="line">  <span class="comment">// 更多行的代码</span></span><br><span class="line">  <span class="keyword">var</span> c= <span class="string">'c'</span>; <span class="comment">// antipattern</span></span><br><span class="line">  <span class="comment">// 最后一行脚本</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>需注意，上面的这做法是不太好的。但是，先不管这个，在程序的背后，这个变量声明无论在函数作用域的什么地方，都被置顶解析了，就像下面这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a, b, c; <span class="comment">// variables declared</span></span><br><span class="line">  a = <span class="string">'a'</span>;</span><br><span class="line">  <span class="comment">// 一行代码</span></span><br><span class="line">  b = <span class="string">'b'</span>; <span class="comment">// initialized</span></span><br><span class="line">  <span class="comment">// 更多行的代码</span></span><br><span class="line">  c= <span class="string">'c'</span>; <span class="comment">// initialized</span></span><br><span class="line">  <span class="comment">// 最后一行脚本</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://www.zhangxinxu.com/wordpress/2010/10/%E7%BF%BB%E8%AF%91-%E8%A7%A3%E9%87%8Ajavascript%E7%9A%84%E2%80%9C%E9%A2%84%E8%A7%A3%E6%9E%90%E7%BD%AE%E9%A1%B6%E8%A7%A3%E6%9E%90%E2%80%9D/" target="_blank" rel="noopener">http://www.zhangxinxu.com/wordpress/2010/10/%E7%BF%BB%E8%AF%91-%E8%A7%A3%E9%87%8Ajavascript%E7%9A%84%E2%80%9C%E9%A2%84%E8%A7%A3%E6%9E%90%E7%BD%AE%E9%A1%B6%E8%A7%A3%E6%9E%90%E2%80%9D/</a><br><a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014344993159773a464f34e1724700a6d5dd9e235ceb7c000" target="_blank" rel="noopener">https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014344993159773a464f34e1724700a6d5dd9e235ceb7c000</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/08/var-let-const的区别/" itemprop="url">
                   var,let,const的区别
                 </a>
@@ -656,106 +768,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/04/mysql中的数字类型/" itemprop="url">
-                  mysql中的数字类型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-04T09:14:30+08:00" content="2017-08-04">
-              2017-08-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>如果不走出去，你就会认为你看到的就是你的全部。<br></blockquote>
-
-<h3 id="bigint"><a href="#bigint" class="headerlink" title="bigint"></a>bigint</h3><p>最大数: 18446744073709551615, 也就是2的64次方减去1, 也就是unsigned(无符号)<br>有符号范围:-2的63次方—2的63次方-1<br>默认长度:20<br>在mysql建表中的length，只是用于显示的位数,不影响所能存储的最大数</p>
-<h3 id="int"><a href="#int" class="headerlink" title="int"></a>int</h3><p>最大数: 4294967295, 也就是2的32次方减去1,也就是unsigned(无符号)<br>有符号范围:-2的31次方—2的31次方-1<br>默认长度:10<br>在mysql建表中的length，只是用于显示的位数,不影响所能存储的最大数</p>
-<h3 id="smallint"><a href="#smallint" class="headerlink" title="smallint"></a>smallint</h3><p>最大数: 65535, 也就是2的16次方减去1, 也就是unsigned(无符号)<br>有符号范围:-2的15次方—2的15次方-1<br>默认长度:5<br>在mysql建表中的length，只是用于显示的位数,不影响所能存储的最大数</p>
-<h3 id="tinyint"><a href="#tinyint" class="headerlink" title="tinyint"></a>tinyint</h3><p>最大数: 255, 也就是2的8次方减去1, 也就是unsigned(无符号)<br>有符号范围:-2的7次方—2的7次方-1<br>默认长度:3<br>在mysql建表中的length，只是用于显示的位数,不影响所能存储的最大数</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>插入像bigint这样非常大的数字请注意检查mysql的严格模式<br>laravel默认mysql是开启严格模式的</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -799,7 +811,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/21/swoole结合thinkphp5实现毫秒级定时器/" itemprop="url">
+                  swoole结合thinkphp5实现毫秒级定时器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-21T12:46:20+08:00" content="2017-09-21">
+              2017-09-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我有一把折断的剑，一条荆棘的路，一个看不清的未来和一场回不去的梦。<br></blockquote></p>
+<h3 id="创建命令行类"><a href="#创建命令行类" class="headerlink" title="创建命令行类"></a>创建命令行类</h3><p>创建application/console/Timer.php文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">Console</span>;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Command</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Input</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Output</span>;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Timer</span> <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $server;</span><br><span class="line">    <span class="comment">// 命令行配置函数</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">configure</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// setName 设置命令行名称</span></span><br><span class="line">        <span class="comment">// setDescription 设置命令行描述</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;setName(<span class="string">'timer:start'</span>)-&gt;setDescription(<span class="string">'Start TCP(Timer) Server!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置命令返回信息</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">(Input $input, Output $output)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server = <span class="keyword">new</span> \swoole_server(<span class="string">'0.0.0.0'</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">4</span>,</span><br><span class="line">            <span class="string">'daemonize'</span>  =&gt; <span class="keyword">false</span>,</span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Start'</span>, [<span class="keyword">$this</span>, <span class="string">'onStart'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'WorkerStart'</span>, [<span class="keyword">$this</span>, <span class="string">'onWorkerStart'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Connect'</span>, [<span class="keyword">$this</span>, <span class="string">'onConnect'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'Close'</span>, [<span class="keyword">$this</span>, <span class="string">'onClose'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;start();</span><br><span class="line">        <span class="comment">// $output-&gt;writeln("TCP: Start.\n");</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 主进程启动时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onStart</span><span class="params">(\swoole_server $server)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Start"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Worker 进程启动时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onWorkerStart</span><span class="params">(\swoole_server $server, $worker_id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 仅在第一个 Worker 进程启动时启动 Timer 定时器</span></span><br><span class="line">        <span class="keyword">if</span> ($worker_id == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 启动 Timer，每 1000 毫秒回调一次 onTick 函数，</span></span><br><span class="line">            swoole_timer_tick(<span class="number">1000</span>, [<span class="keyword">$this</span>, <span class="string">'onTick'</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 定时任务函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onTick</span><span class="params">($timer_id, $params = null)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'Hello'</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 建立连接时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onConnect</span><span class="params">(\swoole_server $server, $fd, $from_id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Connect"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 收到信息时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">(\swoole_server $server, $fd, $from_id, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"message: &#123;$data&#125; form Client: &#123;$fd&#125;"</span> . PHP_EOL;</span><br><span class="line">        <span class="comment">// 将受到的客户端消息再返回给客户端</span></span><br><span class="line">        $server-&gt;send($fd, <span class="string">"Message form Server: "</span>.$data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 关闭连时回调函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onClose</span><span class="params">(\swoole_server $server, $fd, $from_id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Close"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="注册命令"><a href="#注册命令" class="headerlink" title="注册命令"></a>注册命令</h3><p>文件所在 application/command.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">'app\console\Timer'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>接下来就可以通过命令行来启动毫秒定时器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think timer:start</span><br></pre></td></tr></table></figure></p>
+<h3 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ2ze20vl8jnphmrpet8txZ tp5]<span class="comment"># php think timer:start</span></span><br><span class="line">Start</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br><span class="line">Hello</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.iswoole.com/article/2067" target="_blank" rel="noopener">http://www.iswoole.com/article/2067</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/20/javascript获取系统当前时间/" itemprop="url">
                   javascript获取系统当前时间
                 </a>
@@ -646,110 +747,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/11/linux环境变量设置/" itemprop="url">
-                  linux环境变量设置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-11T14:14:37+08:00" content="2017-09-11">
-              2017-09-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>普通玩家选择标准配置，高级玩家选择自定义配置<br></blockquote><br>Linux是一个多用户多任务的操作系统，可以在Linux中为不同的用户设置不同的运行环境，具体做法是设置不同用户的环境变量。</p>
-<h3 id="Linux环境变量分类"><a href="#Linux环境变量分类" class="headerlink" title="Linux环境变量分类"></a>Linux环境变量分类</h3><h4 id="按照生命周期来分"><a href="#按照生命周期来分" class="headerlink" title="按照生命周期来分"></a>按照生命周期来分</h4><p>1、永久的：需要用户修改相关的配置文件，变量永久生效。<br>2、临时的：用户利用export命令，在当前终端下声明环境变量，关闭Shell终端失效。</p>
-<h4 id="按照作用域来分"><a href="#按照作用域来分" class="headerlink" title="按照作用域来分"></a>按照作用域来分</h4><p>1、系统环境变量：系统环境变量对该系统中所有用户都有效。<br>2、用户环境变量：顾名思义，这种类型的环境变量只对特定的用户有效。</p>
-<h3 id="Linux设置环境变量的方法"><a href="#Linux设置环境变量的方法" class="headerlink" title="Linux设置环境变量的方法"></a>Linux设置环境变量的方法</h3><h4 id="在-etc-profile文件中添加变量-对所有用户生效（永久的）"><a href="#在-etc-profile文件中添加变量-对所有用户生效（永久的）" class="headerlink" title="在/etc/profile文件中添加变量 对所有用户生效（永久的）"></a>在/etc/profile文件中添加变量 对所有用户生效（永久的）</h4><p>用vim在文件/etc/profile文件中增加变量，该变量将会对Linux下所有用户有效，并且是“永久的”。<br>例如：编辑/etc/profile文件，添加CLASSPATH变量<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile    </span><br><span class="line">export CLASSPATH=./JAVA_HOME/lib;$JAVA_HOME/jre/lib</span><br></pre></td></tr></table></figure></p>
-<p>注：修改文件后要想马上生效还要运行source /etc/profile不然只能在下次重进此用户时生效。</p>
-<h4 id="在用户目录下的-bash-profile文件中增加变量-【对单一用户生效（永久的）】"><a href="#在用户目录下的-bash-profile文件中增加变量-【对单一用户生效（永久的）】" class="headerlink" title="在用户目录下的.bash_profile文件中增加变量 【对单一用户生效（永久的）】"></a>在用户目录下的.bash_profile文件中增加变量 【对单一用户生效（永久的）】</h4><p>用vim ~/.bash_profile文件中增加变量，改变量仅会对当前用户有效，并且是“永久的”。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bash.profile</span><br><span class="line">export CLASSPATH=./JAVA_HOME/lib;$JAVA_HOME/jre/lib</span><br></pre></td></tr></table></figure></p>
-<p>注：修改文件后要想马上生效还要运行$ source ~/.bash_profile不然只能在下次重进此用户时生效。</p>
-<h4 id="直接运行export命令定义变量-【只对当前shell（BASH）有效（临时的）】"><a href="#直接运行export命令定义变量-【只对当前shell（BASH）有效（临时的）】" class="headerlink" title="直接运行export命令定义变量 【只对当前shell（BASH）有效（临时的）】"></a>直接运行export命令定义变量 【只对当前shell（BASH）有效（临时的）】</h4><p>在shell的命令行下直接使用export 变量名=变量值<br>定义变量，该变量只在当前的shell（BASH）或其子shell（BASH）下是有效的，shell关闭了，变量也就失效了，再打开新shell时就没有这个变量，需要使用的话还需要重新定义。</p>
-<blockquote>
-<p><a href="http://www.jianshu.com/p/ac2bc0ad3d74" target="_blank" rel="noopener">http://www.jianshu.com/p/ac2bc0ad3d74</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -793,7 +790,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

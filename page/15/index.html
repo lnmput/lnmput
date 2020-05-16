@@ -265,6 +265,153 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/14/nginx的配置虚拟主机负载均衡和反向代理三/" itemprop="url">
+                  nginx的配置虚拟主机负载均衡和反向代理三
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-14T15:38:40+08:00" content="2018-06-14">
+              2018-06-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>老吾老，以及人之老；幼吾幼，以及人之幼。<br></blockquote>
+
+<h3 id="nginx中的-location-正则模块"><a href="#nginx中的-location-正则模块" class="headerlink" title="nginx中的 location 正则模块"></a>nginx中的 location 正则模块</h3><p>首先看下location 正则匹配的使用。</p>
+<p>还记得之前是如何用location来定位.php文件的吗?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9000</span>; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        <span class="keyword">include</span>        fastcgi.conf;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们用~来表示location开启正则匹配, 这样：location ~。</p>
+<p>还可以用这个来匹配静态资源，缓存它们，设置过期时间：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~ .*\.(gif|jpg|jpeg|bmp|png|ico|txt|mp3|mp4|swf)&#123;</span><br><span class="line">    expires <span class="number">15</span>d;</span><br><span class="line">&#125;</span><br><span class="line">location ~ .*\.(css|js)&#123;</span><br><span class="line">    expires <span class="number">12</span>h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>expires 用来设置HTTP应答中的Expires和Cache-Control的头标时间，来告诉浏览器访问这个静态文件时，不用再去请求服务器，直接从本地缓存读取就可以了。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法： expires [time|epoch|max|off]</span><br><span class="line">默认值： expires off</span><br><span class="line">作用域： http, server, location</span><br></pre></td></tr></table></figure></p>
+<p>可以在time值中使用正数或负数。“Expires”头标的值将通过当前系统时间加上您设定的 time 值来获得。</p>
+<p>可以设置的参数如下：</p>
+<ul>
+<li>epoch 指定“Expires”的值为 1 January, 1970, 00:00:01 GMT。 </li>
+<li>max 指定“Expires”的值为 31 December 2037 23:59:59 GMT，“Cache-Control”的值为10年。 </li>
+<li>-1 指定“Expires”的值为 服务器当前时间 -1s,即永远过期 </li>
+<li>负数：Cache-Control: no-cache </li>
+<li>正数或零：Cache-Control: max-age = #, # 会转换为指定时间的秒数。比如：1d、2h、3m。 </li>
+<li>off 表示不修改“Expires”和“Cache-Control”的值</li>
+</ul>
+<p>比如再看个例子:</p>
+<p>控制图片等过期时间为30天<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location~ \.(gif|jpg|jpeg|png|bmp|ico)$ &#123;</span><br><span class="line">        expires <span class="number">30</span>d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以控制哪一个文件目录的时间，比如控制匹配/resource/或者/mediatorModule/里所有的文件缓存设置到最长时间。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ /(resource|mediatorModule)/ &#123;</span><br><span class="line">        root    /opt/demo;</span><br><span class="line">        expires max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="URL重写模块（Rewrite）"><a href="#URL重写模块（Rewrite）" class="headerlink" title="URL重写模块（Rewrite）"></a>URL重写模块（Rewrite）</h3><p>重写模块与很多模块一起使用。先看一下是怎么用的，看2个例子，然后我们再一点一点讲每个的使用方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location /download/ &#123;</span><br><span class="line">  <span class="keyword">if</span> ($forbidden) &#123;</span><br><span class="line">    <span class="keyword">return</span>   <span class="number">403</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ($slow) &#123;</span><br><span class="line">    limit_rate  <span class="number">10</span>k;</span><br><span class="line">  &#125;</span><br><span class="line">  rewrite  ^/(download/.*)/media/(.*)\..*$  /$<span class="number">1</span>/mp3/$<span class="number">2.</span>mp3    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    root   html;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">    rewrite ^/bbs/(.*)$ http:<span class="comment">//192.168.18.201/forum/$1;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="break"><a href="#break" class="headerlink" title="break"></a>break</h4><p>break 和变成语言中的用法一样，就是跳出某个逻辑。</p>
+<p>语法：break<br>默认值：none<br>使用字段：server, location, if<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!-f $request_filename) &#123;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子就是在if里面使用break,意思是如果访问的文件名不存在，就跳出。</p>
+<h4 id="if"><a href="#if" class="headerlink" title="if"></a>if</h4><p>语法：if (condition) { … }<br>默认值：none<br>使用字段：server, location</p>
+<p>if 判断一个条件，如果条件成立，则后面的大括号内的语句将执行，相关配置从上级继承。</p>
+<p>可以在判断语句中指定下列值：</p>
+<ul>
+<li>一个变量的名称；不成立的值为：空字符传”“或者一些用“0”开始的字符串。</li>
+<li>一个使用=或者!=运算符的比较语句。</li>
+<li>使用符号~*和~模式匹配的正则表达式：</li>
+<li>~为区分大小写的匹配。</li>
+<li>~*不区分大小写的匹配（firefox匹配FireFox）。</li>
+<li>!~和!~*意为“不匹配的”。</li>
+<li>使用-f和!-f检查一个文件是否存在。</li>
+<li>使用-d和!-d检查一个目录是否存在。</li>
+<li>使用-e和!-e检查一个文件，目录或者软链接是否存在。</li>
+<li>使用-x和!-x检查一个文件是否为可执行文件。</li>
+</ul>
+<p>我们一一来举例看看。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($http_user_agent ~ MSIE) &#123;</span><br><span class="line">  rewrite  ^(.*)$  /msie/$<span class="number">1</span>  <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>$http_user_agent变量获取浏览器的agent，使用~ 来匹配大小写<br>用户如果使用的IE 浏览器，就执行if 里面的操作。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($request_method = POST ) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">405</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>$request_method变量获取请求的方法，使用=来判断是否等于POST 。如果复合，就执行if 里面的操作。</p>
+<p><code>`php
+if (!-f $request_filename) {
+  break;
+  proxy_pass  http://127.0.0.1;
+}</code><br>$request_filename变量获取请求的文件名，使用!-f来匹配文件，如果不是一个文件名，就执行if 里面的逻辑。</p>
+<blockquote>
+<p><a href="https://www.zybuluo.com/phper/note/133244" target="_blank" rel="noopener">https://www.zybuluo.com/phper/note/133244</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/14/nginx的配置虚拟主机负载均衡和反向代理二/" itemprop="url">
                   nginx的配置虚拟主机负载均衡和反向代理二
                 </a>
@@ -794,127 +941,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/14/在laravel中使用redis/" itemprop="url">
-                  在laravel中使用redis
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-14T14:31:18+08:00" content="2018-06-14">
-              2018-06-14
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>Honesty is the best policy.<br></blockquote>
-
-<p>Redis is a storage server that persists your data in memory which makes read &amp; write operations very fast, you can also configure it to store the data on disk occasionally, replicate to secondary nodes, and automatically split the data across multiple nodes.</p>
-<p>That said, you might want to use Redis when fast access to your data is necessary (caching, live analytics, queue system, etc…), however you’ll need another data storage for when the data is too large to fit in memory or you don’t really need to have fast access, so a combination of Redis &amp; another relational or non-relational database gives you the power to build large scale applications where you can efficiently store large data but also provide a way to read portions of the data very fast.</p>
-<h3 id="Use-Case"><a href="#Use-Case" class="headerlink" title="Use Case"></a>Use Case</h3><p>Think of a cloud-based Point Of Sale application for restaurants, as owner it’s extremely important to be able to monitor different statistics related to sales, inventory, performance of different branches, and many other metrics. Let’s focus on one particular metric which is Product Sales, as a developer you want to build a dashboard where the restaurant owner can see live updates on what products have more sales throughout the day.</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select SUM(order_products.price), products.name</span><br><span class="line">from order_products</span><br><span class="line">join products on order_products.product_id = products.id</span><br><span class="line">where DATE(order_products.created_at) = CURDATE()</span><br><span class="line">where order_products.status = <span class="string">"done"</span></span><br></pre></td></tr></table></figure>
-<p>The sql query above will bring you a list with the sales each product made throughout the day, but it’s a relatively heavy query to run when the restaurant serves thousands of orders every day, simply put you can’t run this query in a live-updates dashboard that pulls for updates every 60 seconds or something, it’d be cool if you can cache the product sales every time an order is served and be able to read from the cache, something like:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Event::listen(<span class="string">'newOrder'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($order)</span> </span>&#123;</span><br><span class="line">    $order-&gt;products-&gt;each(<span class="function"><span class="keyword">function</span><span class="params">($product)</span></span>&#123;</span><br><span class="line">        SomeStorage::increment(<span class="string">"product:&#123;$product-&gt;id&#125;:sales:2017-05-22"</span>, $product-&gt;sales);</span><br><span class="line">    );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>So now on every new order we’ll increment the sales for each product, and we can simply read these numbers later like:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$sales = Product::all()-&gt;map(<span class="function"><span class="keyword">function</span><span class="params">($product)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> SomeStorage::get(<span class="string">"product:&#123;$product-&gt;id&#125;:sales:2017-05-22"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>Replace SomeStorage with Redis and now you have today’s product sales living in your server’s memory, and it’s super fast to read from memory, so you don’t have to run that large query every time you need to update the analytics numbers in the live dashboard.</p>
-<h3 id="Another-Use-Case"><a href="#Another-Use-Case" class="headerlink" title="Another Use Case"></a>Another Use Case</h3><p>Now you want to know the number of unique visitors opening your website every day, we might store it in SQL having a table with user_id &amp; date fields, and later on we can just run a query like:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select COUNT(Distinct user_id) <span class="keyword">as</span> count from unique_visits where date = <span class="string">"2017-05-22"</span></span><br></pre></td></tr></table></figure>
-<p>So we just have to add a record in that database table every time a user visits the site. But still on a high traffic website adding this extra DB interaction might not be the best idea, wouldn’t it be cool if we can just do:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SomeStorage::addUnique(<span class="string">'unique_visits:2017-05-22'</span>, $user-&gt;id);</span><br></pre></td></tr></table></figure>
-<p>And later on we can do:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SomeStorage::count(<span class="string">'unique_visits:2017-05-22'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>Storing this in memory is fast and reading the stored numbers from memory is super fast, that’s exactly what we need, so I hope by now you got a feel on when using Redis might be a good idea. And by the way the method names used in the above examples don’t exist in redis, I’m just trying to give you a feel about what you can achieve.</p>
-<h3 id="The-Atomic-nature-of-redis-operations"><a href="#The-Atomic-nature-of-redis-operations" class="headerlink" title="The Atomic nature of redis operations"></a>The Atomic nature of redis operations</h3><p>Individual commands in Redis are guaranteed to be atomic, that means nothing will change while executing a command, for example:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$monthSales = Redis::getSet(<span class="string">'monthSales'</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p>This command gets the value of the monthSales key and then sets it to zero, it’s guaranteed that no other client can change the value or maybe rename the key between the get and set operations, that’s due to the single threaded nature of Redis in which a single system process serves all clients at the same time but can only perform 1 operation at a time, it’s similar to how you can listen to multiple client alterations on the project at the same time but can only work on 1 alteration at a given moment.</p>
-<p>There’s also a way to guarantee the atomicity of a group of commands using transactions, more on that later, but briefly let’s say you have 2 clients:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Client <span class="number">1</span> wants to increment the value</span><br><span class="line">Client <span class="number">1</span> wants to read that value</span><br><span class="line">Client <span class="number">2</span> wants to increment the value</span><br></pre></td></tr></table></figure>
-<p>These commands might run in the following order:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Client <span class="number">1</span>: Increment value</span><br><span class="line">Client <span class="number">2</span>: Increment value</span><br><span class="line">Client <span class="number">1</span>: read value</span><br></pre></td></tr></table></figure>
-<p>Which will result the read operation from Client 1 to give unexpected results since the value was altered in the middle, that’s when a transaction makes sense.</p>
-<blockquote>
-<p><a href="https://divinglaravel.com/redis/before-the-dive" target="_blank" rel="noopener">https://divinglaravel.com/redis/before-the-dive</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -958,7 +984,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

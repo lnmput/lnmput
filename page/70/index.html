@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/11/ssdb一个高性能的nosql数据库/" itemprop="url">
+                  ssdb一个高性能的nosql数据库
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-11T22:26:19+08:00" content="2016-08-11">
+              2016-08-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>某天，你无端想起一个人，她曾让你对明天有所期许，但是却完全没有出现在你的明天里。<br></blockquote>
+
+<h3 id="简要说明"><a href="#简要说明" class="headerlink" title="简要说明"></a>简要说明</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.</span><br><span class="line">基于google/leveldb 开发SSDB是一个开源的高性能数据库服务器, </span><br><span class="line">使用Google 的 LevelDB作为存储引擎, 大家有可能没听过leveldb的名字，</span><br><span class="line">但是淘宝的开源nosql tair大家应该有所耳闻吧，他也是基于leveldb做的开发。</span><br><span class="line">ssdb支持T级别的数据, 同时支持类似Redis中的zset和hash等数据结构,</span><br><span class="line">在同时需求高性能和大数据的条件下, 是一个可以代替Redis的方案.</span><br><span class="line">ssdb是一个持久化存储的KV系统，和Memcached、Redis这种内存型的KV系统不同，</span><br><span class="line">ssdb不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。</span><br></pre></td></tr></table></figure>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https:<span class="comment">//github.com/ideawu/ssdb/archive/master.zip</span></span><br><span class="line">unzip master</span><br><span class="line">cd ssdb-master</span><br><span class="line">make</span><br><span class="line"><span class="comment"># optional, install ssdb in /usr/local/ssdb</span></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># start master</span></span><br><span class="line">./ssdb-server ssdb.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># or start as daemon</span></span><br><span class="line">./ssdb-server -d ssdb.conf</span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">'SSDB.php'</span>);</span><br><span class="line">$ssdb = <span class="keyword">new</span> SimpleSSDB(<span class="string">'127.0.0.1'</span>, <span class="number">8888</span>);</span><br><span class="line">$resp = $ssdb-&gt;set(<span class="string">'key'</span>, <span class="string">'123'</span>);</span><br><span class="line">$resp = $ssdb-&gt;get(<span class="string">'key'</span>);</span><br><span class="line"><span class="keyword">echo</span> $resp; <span class="comment">// output: 123</span></span><br></pre></td></tr></table></figure>
+<h3 id="关于leveldb"><a href="#关于leveldb" class="headerlink" title="关于leveldb"></a>关于leveldb</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LevelDB是google开源的一个key-value存储引擎库，类似于开源的Lucene索引库一样。</span><br><span class="line">其他的软件开发者可以利用该库做二次开发，来满足定制需求。</span><br><span class="line">LevelDB采用日志式的写方式来提高写性能，但是牺牲了部分读性能。</span><br><span class="line">为了弥补牺牲了的读性能，一些人提议使用SSD作为存储介质。</span><br></pre></td></tr></table></figure>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修改ssdb.conf文件，把ip改成<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>，允许外网访问</span><br><span class="line">高级应用可以查看主从这一块儿</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://ssdb.io/zh_cn/" target="_blank" rel="noopener">http://ssdb.io/zh_cn/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/10/php三种工作方式-CGI模式-FastCGI模式-Apache的mod-php/" itemprop="url">
                   php三种工作方式-CGI模式-FastCGI模式-Apache的mod_php
                 </a>
@@ -668,122 +772,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/04/在laravel中使用twig模板引擎/" itemprop="url">
-                  在laravel中使用twig模板引擎
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-04T11:30:38+08:00" content="2016-08-04">
-              2016-08-04
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你走了好，不然总担心你要走。<br></blockquote></p>
-<h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><ul>
-<li>laravel 5.1</li>
-</ul>
-<h3 id="实验步骤"><a href="#实验步骤" class="headerlink" title="实验步骤"></a>实验步骤</h3><ul>
-<li>1.安装扩展包</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> rcrowe/twigbridge</span><br></pre></td></tr></table></figure>
-<ul>
-<li>2.在config/app.php下配置</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">     ...</span><br><span class="line">                TwigBridge\ServiceProvider::class,</span><br><span class="line">],</span><br><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">    ... </span><br><span class="line">                <span class="string">'Twig'</span> =&gt; TwigBridge\Facade\Twig::class,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-<ul>
-<li>3.发布配置文件,该操作会在config目录下新建一个专属twig的配置文件twigbrage.php</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish --provider=<span class="string">"TwigBridge\ServiceProvider"</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>4.开始使用</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回视图</span></span><br><span class="line">Route::get(<span class="string">'test'</span>,<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    $users = \App\User::all();</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'hello'</span>,compact(<span class="string">'users'</span>));</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//新建视图文件resources/views/hello.twig</span></span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &#123;%  <span class="keyword">for</span> user in users %&#125;</span><br><span class="line">        &#123;&#123; user.name &#125;&#125;</span><br><span class="line">    &#123;%  <span class="keyword">endfor</span> %&#125;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><blockquote>
-<p><a href="https://packagist.org/packages/rcrowe/twigbridge" target="_blank" rel="noopener">https://packagist.org/packages/rcrowe/twigbridge</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -827,7 +815,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

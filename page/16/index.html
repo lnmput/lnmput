@@ -265,6 +265,127 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/14/在laravel中使用redis/" itemprop="url">
+                  在laravel中使用redis
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-14T14:31:18+08:00" content="2018-06-14">
+              2018-06-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>Honesty is the best policy.<br></blockquote>
+
+<p>Redis is a storage server that persists your data in memory which makes read &amp; write operations very fast, you can also configure it to store the data on disk occasionally, replicate to secondary nodes, and automatically split the data across multiple nodes.</p>
+<p>That said, you might want to use Redis when fast access to your data is necessary (caching, live analytics, queue system, etc…), however you’ll need another data storage for when the data is too large to fit in memory or you don’t really need to have fast access, so a combination of Redis &amp; another relational or non-relational database gives you the power to build large scale applications where you can efficiently store large data but also provide a way to read portions of the data very fast.</p>
+<h3 id="Use-Case"><a href="#Use-Case" class="headerlink" title="Use Case"></a>Use Case</h3><p>Think of a cloud-based Point Of Sale application for restaurants, as owner it’s extremely important to be able to monitor different statistics related to sales, inventory, performance of different branches, and many other metrics. Let’s focus on one particular metric which is Product Sales, as a developer you want to build a dashboard where the restaurant owner can see live updates on what products have more sales throughout the day.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select SUM(order_products.price), products.name</span><br><span class="line">from order_products</span><br><span class="line">join products on order_products.product_id = products.id</span><br><span class="line">where DATE(order_products.created_at) = CURDATE()</span><br><span class="line">where order_products.status = <span class="string">"done"</span></span><br></pre></td></tr></table></figure>
+<p>The sql query above will bring you a list with the sales each product made throughout the day, but it’s a relatively heavy query to run when the restaurant serves thousands of orders every day, simply put you can’t run this query in a live-updates dashboard that pulls for updates every 60 seconds or something, it’d be cool if you can cache the product sales every time an order is served and be able to read from the cache, something like:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Event::listen(<span class="string">'newOrder'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($order)</span> </span>&#123;</span><br><span class="line">    $order-&gt;products-&gt;each(<span class="function"><span class="keyword">function</span><span class="params">($product)</span></span>&#123;</span><br><span class="line">        SomeStorage::increment(<span class="string">"product:&#123;$product-&gt;id&#125;:sales:2017-05-22"</span>, $product-&gt;sales);</span><br><span class="line">    );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>So now on every new order we’ll increment the sales for each product, and we can simply read these numbers later like:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$sales = Product::all()-&gt;map(<span class="function"><span class="keyword">function</span><span class="params">($product)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> SomeStorage::get(<span class="string">"product:&#123;$product-&gt;id&#125;:sales:2017-05-22"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Replace SomeStorage with Redis and now you have today’s product sales living in your server’s memory, and it’s super fast to read from memory, so you don’t have to run that large query every time you need to update the analytics numbers in the live dashboard.</p>
+<h3 id="Another-Use-Case"><a href="#Another-Use-Case" class="headerlink" title="Another Use Case"></a>Another Use Case</h3><p>Now you want to know the number of unique visitors opening your website every day, we might store it in SQL having a table with user_id &amp; date fields, and later on we can just run a query like:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select COUNT(Distinct user_id) <span class="keyword">as</span> count from unique_visits where date = <span class="string">"2017-05-22"</span></span><br></pre></td></tr></table></figure>
+<p>So we just have to add a record in that database table every time a user visits the site. But still on a high traffic website adding this extra DB interaction might not be the best idea, wouldn’t it be cool if we can just do:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SomeStorage::addUnique(<span class="string">'unique_visits:2017-05-22'</span>, $user-&gt;id);</span><br></pre></td></tr></table></figure>
+<p>And later on we can do:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SomeStorage::count(<span class="string">'unique_visits:2017-05-22'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Storing this in memory is fast and reading the stored numbers from memory is super fast, that’s exactly what we need, so I hope by now you got a feel on when using Redis might be a good idea. And by the way the method names used in the above examples don’t exist in redis, I’m just trying to give you a feel about what you can achieve.</p>
+<h3 id="The-Atomic-nature-of-redis-operations"><a href="#The-Atomic-nature-of-redis-operations" class="headerlink" title="The Atomic nature of redis operations"></a>The Atomic nature of redis operations</h3><p>Individual commands in Redis are guaranteed to be atomic, that means nothing will change while executing a command, for example:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$monthSales = Redis::getSet(<span class="string">'monthSales'</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>This command gets the value of the monthSales key and then sets it to zero, it’s guaranteed that no other client can change the value or maybe rename the key between the get and set operations, that’s due to the single threaded nature of Redis in which a single system process serves all clients at the same time but can only perform 1 operation at a time, it’s similar to how you can listen to multiple client alterations on the project at the same time but can only work on 1 alteration at a given moment.</p>
+<p>There’s also a way to guarantee the atomicity of a group of commands using transactions, more on that later, but briefly let’s say you have 2 clients:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Client <span class="number">1</span> wants to increment the value</span><br><span class="line">Client <span class="number">1</span> wants to read that value</span><br><span class="line">Client <span class="number">2</span> wants to increment the value</span><br></pre></td></tr></table></figure>
+<p>These commands might run in the following order:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Client <span class="number">1</span>: Increment value</span><br><span class="line">Client <span class="number">2</span>: Increment value</span><br><span class="line">Client <span class="number">1</span>: read value</span><br></pre></td></tr></table></figure>
+<p>Which will result the read operation from Client 1 to give unexpected results since the value was altered in the middle, that’s when a transaction makes sense.</p>
+<blockquote>
+<p><a href="https://divinglaravel.com/redis/before-the-dive" target="_blank" rel="noopener">https://divinglaravel.com/redis/before-the-dive</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/07/laravel异常处理构建/" itemprop="url">
                   Laravel异常处理构建
                 </a>
@@ -779,114 +900,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/02/browser-sync文件监听失败的解决方案/" itemprop="url">
-                  browser-sync文件监听失败的解决方案
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-02T09:44:04+08:00" content="2018-06-02">
-              2018-06-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>两岸青山相对出，孤帆一片日边来<br></blockquote>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>为了方便实时预览前端开发过程中修改源码后的页面，推荐一个非常实用的工具，browser-sync。</p>
-<p>安装使用方式请自行到官网<a href="https://browsersync.io/参考文档，仓库地址在这里https://github.com/BrowserSync/browser-sync" target="_blank" rel="noopener">https://browsersync.io/参考文档，仓库地址在这里https://github.com/BrowserSync/browser-sync</a></p>
-<p>GetStart中官网给出的CLI示例命令为：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-sync start --server --files <span class="string">"css/*.css"</span></span><br></pre></td></tr></table></figure></p>
-<p>我将其写到到npm命令中，package.json 相关内容如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"dev"</span>: <span class="string">"browser-sync start --server --files 'css/*.css'"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"browser-sync"</span>: <span class="string">"^2.18.13"</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>接着执行 <code>npm run dev</code>，控制台输出一切正常。</p>
-<p>然而，当我修改 <code>css/style.css</code> 这个文件的时候，发现浏览器并没有刷新，这说明 <code>browser-sync</code> 并未成功监听 <code>css/*.css</code> 文件的修改。</p>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>为此，我翻了一遍 <code>browser-sync</code> 的<code>issue</code>，发现有人遇到相同的问题，也给出了解决方案。</p>
-<p>问题出在命令行参数上，仔细对比，我们也会发现：</p>
-<p>我写的CLI命令为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-sync start --server --files <span class="string">'css/*.css'</span></span><br></pre></td></tr></table></figure></p>
-<p>而官方CLI命令为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-sync start --server --files <span class="string">"css/*.css"</span></span><br></pre></td></tr></table></figure></p>
-<p>问题就出在分号的不同上（browser-sync没能解析单引号的内容）</p>
-<p>解决<br>因此，我将 npm命令 中的 ‘ 替换为 \” 即可解决问题。更改后的 package.json 内容如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"dev"</span>: <span class="string">"browser-sync start --server --files \"css/*.css\""</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"browser-sync"</span>: <span class="string">"^2.18.13"</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><a href="https://blog.csdn.net/pwc1996/article/details/76849876" target="_blank" rel="noopener">https://blog.csdn.net/pwc1996/article/details/76849876</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -930,7 +943,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

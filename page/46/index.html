@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/12/javascript中的事件冒泡理解/" itemprop="url">
+                  javascript中的事件冒泡理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-12T00:39:34+08:00" content="2017-08-12">
+              2017-08-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>　你必须很努力，才能看上去毫不费力<br></blockquote>
+
+<h3 id="事件冒泡"><a href="#事件冒泡" class="headerlink" title="事件冒泡"></a>事件冒泡</h3><p>点击一个div， 最终弹出 div<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>点我吧<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> div = <span class="built_in">document</span>.querySelector(<span class="string">"div"</span>);</span></span><br><span class="line"><span class="javascript">  div.onclick=<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'div'</span>);</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在div里的p元素同样也绑定一个点击事件， 那么会先弹出p， 然后再弹出div<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>点我吧<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> div = <span class="built_in">document</span>.querySelector(<span class="string">"div"</span>);</span></span><br><span class="line"><span class="javascript">  div.onclick=<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'div'</span>);</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> p = <span class="built_in">document</span>.querySelector(<span class="string">"p"</span>);</span></span><br><span class="line"><span class="javascript">  p.onclick=<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'p'</span>);</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>微软提出了名为事件冒泡(event bubbling)的事件流。事件冒泡可以形象地比喻为把一颗石头投入水中，泡泡会一直从水底冒出水面。也就是说，事件会从最内层的元素开始发生，一直向上传播，直到document对象。</p>
+<p>因此上面的例子在事件冒泡的概念下发生click事件的顺序应该是p -&gt; div -&gt; body -&gt; html -&gt; document</p>
+<h3 id="阻止事件冒泡"><a href="#阻止事件冒泡" class="headerlink" title="阻止事件冒泡"></a>阻止事件冒泡</h3><p>jquery</p>
+<p>这样就不再弹出div了<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>点我吧<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> div = <span class="built_in">document</span>.querySelector(<span class="string">"div"</span>);</span></span><br><span class="line"><span class="javascript">  div.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'div'</span>);</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> p = <span class="built_in">document</span>.querySelector(<span class="string">"p"</span>);</span></span><br><span class="line"><span class="javascript">  p.onclick=<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'p'</span>);</span></span><br><span class="line">      event.stopPropagation();</span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>js</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>点我吧<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> div = <span class="built_in">document</span>.querySelector(<span class="string">"div"</span>);</span></span><br><span class="line"><span class="javascript">  div.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'div'</span>);</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> p = <span class="built_in">document</span>.querySelector(<span class="string">"p"</span>);</span></span><br><span class="line"><span class="javascript">  p.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'p'</span>);</span></span><br><span class="line">      if ( e &amp;&amp; e.stopPropagation )</span><br><span class="line">          e.stopPropagation();</span><br><span class="line"><span class="javascript">      <span class="keyword">else</span></span></span><br><span class="line"><span class="javascript">          <span class="built_in">window</span>.event.cancelBubble = <span class="literal">true</span>;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="事件捕获"><a href="#事件捕获" class="headerlink" title="事件捕获"></a>事件捕获</h3><p>网景提出另一种事件流名为事件捕获(event capturing)。与事件冒泡相反，事件会从最外层开始发生，直到最具体的元素。</p>
+<p>上面的例子在事件捕获的概念下发生click事件的顺序应该是document -&gt; html -&gt; body -&gt; div -&gt; p</p>
+<p>addEventListener的第三个参数<br>第一个参数是需要绑定的事件，第二个参数是触发事件后要执行的函数。<br>而第三个参数默认值是false，表示在事件冒泡的阶段调用事件处理函数，如果参数为true，则表示在事件捕获阶段调用处理函数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">element.addEventListener(event, <span class="function"><span class="keyword">function</span>, <span class="title">useCapture</span>)</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="拓展浏览器的默认事件"><a href="#拓展浏览器的默认事件" class="headerlink" title="拓展浏览器的默认事件"></a>拓展浏览器的默认事件</h3><p>下面这段代码我们点击后超链链是会发送跳转的</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.google.com"</span>&gt;</span>点我吧<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> div = <span class="built_in">document</span>.querySelector(<span class="string">"div"</span>);</span></span><br><span class="line"><span class="javascript">  div.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'div'</span>);</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> p = <span class="built_in">document</span>.querySelector(<span class="string">"p"</span>);</span></span><br><span class="line"><span class="javascript">  p.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'p'</span>);</span></span><br><span class="line">      if ( e &amp;&amp; e.stopPropagation )</span><br><span class="line">          e.stopPropagation();</span><br><span class="line"><span class="javascript">      <span class="keyword">else</span></span></span><br><span class="line"><span class="javascript">          <span class="built_in">window</span>.event.cancelBubble = <span class="literal">true</span>;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果我们仅仅想点击，而不想让发送跳转呢？</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.google.com"</span>&gt;</span>点我吧<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> div = <span class="built_in">document</span>.querySelector(<span class="string">"div"</span>);</span></span><br><span class="line"><span class="javascript">  div.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'div'</span>);</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> a = <span class="built_in">document</span>.querySelector(<span class="string">"a"</span>);</span></span><br><span class="line"><span class="javascript">  a.onclick=<span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      alert(<span class="string">'a'</span>);</span></span><br><span class="line">      if ( e &amp;&amp; e.preventDefault )</span><br><span class="line">          e.preventDefault();</span><br><span class="line"><span class="javascript">      <span class="keyword">else</span></span></span><br><span class="line"><span class="javascript">          <span class="built_in">window</span>.event.returnValue = <span class="literal">false</span>;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/11/laravel队列使用注意问题/" itemprop="url">
                   laravel队列使用注意问题
                 </a>
@@ -691,118 +800,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/08/javascript中的函数预解析和变量提升/" itemprop="url">
-                  javascript中的函数预解析和变量提升
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-08T22:59:52+08:00" content="2017-08-08">
-              2017-08-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>小时候，向喜欢的姑娘展示快<br>长大后，向喜欢的姑娘展示慢<br></blockquote></p>
-<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>如果一个变量在函数体内部申明，则该变量的作用域为整个函数体，在函数体外不可引用该变量：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    x = x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">x = x + <span class="number">2</span>; <span class="comment">// ReferenceError! 无法在函数体外引用变量x</span></span><br></pre></td></tr></table></figure></p>
-<p>如果两个不同的函数各自申明了同一个变量，那么该变量只在各自的函数体内起作用。换句话说，不同函数内部的同名变量互相独立，互不影响：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    x = x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="string">'A'</span>;</span><br><span class="line">    x = x + <span class="string">'B'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>由于JavaScript的函数可以嵌套，此时，内部函数可以访问外部函数定义的变量，反过来则不行：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> y = x + <span class="number">1</span>; <span class="comment">// bar可以访问foo的变量x!</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> z = y + <span class="number">1</span>; <span class="comment">// ReferenceError! foo不可以访问bar的变量y!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果内部函数和外部函数的变量名重名怎么办？<br>JavaScript的函数在查找变量时从自身函数定义开始，从“内”向“外”查找。如果内部函数定义了与外部函数重名的变量，则内部函数的变量将“屏蔽”外部函数的变量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> x = <span class="string">'A'</span>;</span><br><span class="line">        alert(<span class="string">'x in bar() = '</span> + x); <span class="comment">// 'A'</span></span><br><span class="line">    &#125;</span><br><span class="line">    alert(<span class="string">'x in foo() = '</span> + x); <span class="comment">// 1</span></span><br><span class="line">    bar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>不在任何函数内定义的变量就具有全局作用域。实际上，JavaScript默认有一个全局对象window，全局作用域的变量实际上被绑定到window的一个属性：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> course = <span class="string">'Learn JavaScript'</span>;</span><br><span class="line">alert(course); <span class="comment">// 'Learn JavaScript'</span></span><br><span class="line">alert(<span class="built_in">window</span>.course); <span class="comment">// 'Learn JavaScript'</span></span><br></pre></td></tr></table></figure></p>
-<p>由于函数定义有两种方式，以变量方式var foo = function () {}定义的函数实际上也是一个全局变量，因此，顶层函数的定义也被视为一个全局变量，并绑定到window对象：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="string">'foo'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(); <span class="comment">// 直接调用foo()</span></span><br><span class="line"><span class="built_in">window</span>.foo(); <span class="comment">// 通过window.foo()调用</span></span><br></pre></td></tr></table></figure></p>
-<p>进一步大胆地猜测，我们每次直接调用的alert()函数其实也是window的一个变量：</p>
-<h3 id="变量提升"><a href="#变量提升" class="headerlink" title="变量提升"></a>变量提升</h3><p>JavaScript的函数定义有个特点，它会先扫描整个函数体的语句，把所有申明的变量“提升”到函数顶部,JavaScript引擎自动提升了变量y的声明，但不会提升变量y的赋值。</p>
-<p>考虑下面的代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myvar = <span class="string">'my value'</span>;</span><br><span class="line">alert(myvar); <span class="comment">// my value</span></span><br></pre></td></tr></table></figure></p>
-<p>Okay, 当然，弹出的结果肯定是”my value”，但是，跟着我，让我下面创建个方法，弹出相同的值：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myvar = <span class="string">'my value'</span>;</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  alert(myvar); <span class="comment">// my value</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
-<p>好吧，好吧，仍然很明显，我知道。现在，让我们加点猛的调料，在匿名函数内部创建一个同名的局部变量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myvar = <span class="string">'my value'</span>;</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  alert(myvar); <span class="comment">// undefined</span></span><br><span class="line">  <span class="keyword">var</span> myvar = <span class="string">'local value'</span>;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
-<p>在当前的作用域内，无论在哪里变量声明，在幕后，其都在顶部被“预解析”了。不过，仅声明被“预解析”。该变量即使初始化，其当前的值，在<code>作用域的顶部</code>，也会被设置成undefined。<br>恩，现在让我们好好的破译下这个“声明”和“初始化”，以var joe = ‘plumber’;为模特吧。<br>声明(Declaration)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> joe; <span class="comment">// the declaration</span></span><br></pre></td></tr></table></figure></p>
-<p>初始化(Initialization)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">joe = <span class="string">'plumber'</span>; <span class="comment">// the initialization</span></span><br></pre></td></tr></table></figure></p>
-<p>现在，我们知道了这些术语的意思，就可以更好的理解到底背地里都干了些什么勾当，请看下面的伪函数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">'a'</span>;</span><br><span class="line">  <span class="comment">// 一行代码</span></span><br><span class="line">  <span class="keyword">var</span> b = <span class="string">'b'</span>;</span><br><span class="line">  <span class="comment">// 更多行的代码</span></span><br><span class="line">  <span class="keyword">var</span> c= <span class="string">'c'</span>; <span class="comment">// antipattern</span></span><br><span class="line">  <span class="comment">// 最后一行脚本</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
-<p>需注意，上面的这做法是不太好的。但是，先不管这个，在程序的背后，这个变量声明无论在函数作用域的什么地方，都被置顶解析了，就像下面这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a, b, c; <span class="comment">// variables declared</span></span><br><span class="line">  a = <span class="string">'a'</span>;</span><br><span class="line">  <span class="comment">// 一行代码</span></span><br><span class="line">  b = <span class="string">'b'</span>; <span class="comment">// initialized</span></span><br><span class="line">  <span class="comment">// 更多行的代码</span></span><br><span class="line">  c= <span class="string">'c'</span>; <span class="comment">// initialized</span></span><br><span class="line">  <span class="comment">// 最后一行脚本</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://www.zhangxinxu.com/wordpress/2010/10/%E7%BF%BB%E8%AF%91-%E8%A7%A3%E9%87%8Ajavascript%E7%9A%84%E2%80%9C%E9%A2%84%E8%A7%A3%E6%9E%90%E7%BD%AE%E9%A1%B6%E8%A7%A3%E6%9E%90%E2%80%9D/" target="_blank" rel="noopener">http://www.zhangxinxu.com/wordpress/2010/10/%E7%BF%BB%E8%AF%91-%E8%A7%A3%E9%87%8Ajavascript%E7%9A%84%E2%80%9C%E9%A2%84%E8%A7%A3%E6%9E%90%E7%BD%AE%E9%A1%B6%E8%A7%A3%E6%9E%90%E2%80%9D/</a><br><a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014344993159773a464f34e1724700a6d5dd9e235ceb7c000" target="_blank" rel="noopener">https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014344993159773a464f34e1724700a6d5dd9e235ceb7c000</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -846,7 +843,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/25/ThinkPHP的数据验证设计/" itemprop="url">
+                  ThinkPHP的数据验证设计
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-25T20:46:07+08:00" content="2018-03-25">
+              2018-03-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>人活在世上，无非是面对两大世界，身外的大千世界和自己的内心世界。<br></blockquote>
+
+<h3 id="一般的验证方式"><a href="#一般的验证方式" class="headerlink" title="一般的验证方式"></a>一般的验证方式</h3><p>新建验证文件<br>tp5\application\api\validate\TestValidate.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestValidate</span> <span class="keyword">extends</span> <span class="title">Validate</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $rule = [</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'require|max:10'</span>,</span><br><span class="line">        <span class="string">'email'</span> =&gt; <span class="string">'email'</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>控制器中调用验证<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getBanner</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = [</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>,</span><br><span class="line">        <span class="string">'email'</span> =&gt; <span class="string">'yangzie@@.com'</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    $validate = <span class="keyword">new</span> TestValidate();</span><br><span class="line"></span><br><span class="line">    $result = $validate-&gt;batch()-&gt;check($data);  <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">    var_dump($validate-&gt;getError());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="控制器调用"><a href="#控制器调用" class="headerlink" title="控制器调用"></a>控制器调用</h3><p>这里需要验证传入的ID必须是一个正整数；<br>tp5\application\api\controller\v1\Products.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>\<span class="title">IDMustBePositiveInt</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getAllInCategory</span><span class="params">($id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    (<span class="keyword">new</span> IDMustBePositiveInt())-&gt;goCheck();</span><br><span class="line"></span><br><span class="line">    $res = Product::getProductsByCategoryID($id);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($res-&gt;isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ProductException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="验证基类"><a href="#验证基类" class="headerlink" title="验证基类"></a>验证基类</h3><p>这里包含了所有验证类需要调用的一些公共方法<br>tp5\application\api\validate\BaseValidate.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">lib</span>\<span class="title">exception</span>\<span class="title">ParameterException</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaseValidate</span> <span class="keyword">extends</span> <span class="title">Validate</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">goCheck</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $request = Request::instance();</span><br><span class="line">        $params = $request-&gt;param();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;batch()-&gt;check($params)) &#123;</span><br><span class="line"></span><br><span class="line">            $e = <span class="keyword">new</span> ParameterException([</span><br><span class="line">                <span class="string">'msg'</span> =&gt; is_array(<span class="keyword">$this</span>-&gt;error) ? implode(<span class="string">';'</span>, <span class="keyword">$this</span>-&gt;error) : <span class="keyword">$this</span>-&gt;error,</span><br><span class="line">            ]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">throw</span> $e;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">isPositiveInteger</span><span class="params">($value, $rule=<span class="string">''</span>, $data=<span class="string">''</span>, $field=<span class="string">''</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_numeric($value) &amp;&amp; is_int($value + <span class="number">0</span>) &amp;&amp; ($value + <span class="number">0</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">isNotEmpty</span><span class="params">($value, $rule=<span class="string">''</span>, $data=<span class="string">''</span>, $field=<span class="string">''</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>($value)) &#123;</span><br><span class="line">            <span class="keyword">return</span> $field . <span class="string">'不允许为空'</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDataByRule</span><span class="params">($arrays)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (array_key_exists(<span class="string">'user_id'</span>, $arrays) | array_key_exists(<span class="string">'uid'</span>, $arrays)) &#123;</span><br><span class="line">            <span class="comment">// 不允许包含user_id或者uid，防止恶意覆盖user_id外键</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ParameterException([</span><br><span class="line">                <span class="string">'msg'</span> =&gt; <span class="string">'参数中包含有非法的参数名user_id或者uid'</span></span><br><span class="line">            ]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $newArray = [];</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;rule <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">            $newArray[$key] = $arrays[$key];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $newArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">isMobile</span><span class="params">($value)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $rule = <span class="string">'^1(3|4|5|7|8)[0-9]\d&#123;8&#125;$^'</span>;</span><br><span class="line">        $result = preg_match($rule, $value);</span><br><span class="line">        <span class="keyword">if</span> ($result) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="ID-验证类"><a href="#ID-验证类" class="headerlink" title="ID 验证类"></a>ID 验证类</h3><p>tp5\application\api\validate\IDMustBePositiveInt.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">validate</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IDMustBePositiveInt</span> <span class="keyword">extends</span> <span class="title">BaseValidate</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $rule = [</span><br><span class="line">        <span class="string">'id'</span> =&gt; <span class="string">'require|isPositiveInteger'</span>,</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $message = [</span><br><span class="line">        <span class="string">'id'</span> =&gt; <span class="string">'ID必须是正整数'</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/23/javascript的window对象/" itemprop="url">
                   javascript的window对象
                 </a>
@@ -826,109 +926,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/20/微信小程序登录实现/" itemprop="url">
-                  微信小程序登录实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-20T10:14:46+08:00" content="2018-03-20">
-              2018-03-20
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>嗯，对，你说得对。<br></blockquote>
-
-<h3 id="调用wx-login"><a href="#调用wx-login" class="headerlink" title="调用wx.login"></a>调用wx.login</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//app.js</span></span><br><span class="line">App(&#123;</span><br><span class="line">  onLaunch: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    wx.login(&#123;</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (res.code) &#123;</span><br><span class="line">          <span class="comment">//发起网络请求</span></span><br><span class="line">          wx.request(&#123;</span><br><span class="line">            url: <span class="string">'https://test.com/onLogin'</span>,</span><br><span class="line">            data: &#123;</span><br><span class="line">              code: res.code</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'登录失败！'</span> + res.errMsg)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h3 id="onLogin接口-php实现"><a href="#onLogin接口-php实现" class="headerlink" title="onLogin接口,php实现"></a>onLogin接口,php实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$APPID = <span class="string">'wxf007410...'</span>;</span><br><span class="line">$SECRET = <span class="string">'1bb26d74f33910588ee....'</span>;</span><br><span class="line">$request = request();</span><br><span class="line">$code = $request-&gt;code;</span><br><span class="line">$url = <span class="string">'https://api.weixin.qq.com/sns/jscode2session?appid='</span>.$APPID.<span class="string">'&amp;secret='</span>.$SECRET.<span class="string">'&amp;js_code='</span>.$code.<span class="string">'&amp;grant_type=authorization_code'</span>;</span><br><span class="line">$client = <span class="keyword">new</span> \GuzzleHttp\Client();</span><br><span class="line">$response = $client-&gt;get($url)-&gt;getBody()-&gt;getContents();</span><br></pre></td></tr></table></figure>
-<p>返回数据<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"session_key"</span>:<span class="string">"VUNQTngHJYeceYRrQpj0cQ=="</span>,<span class="string">"openid"</span>:<span class="string">"o3CTb4kuzH674QgeFsKhyoipfPi4"</span>&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="登录成功后调用获取用户接口"><a href="#登录成功后调用获取用户接口" class="headerlink" title="登录成功后调用获取用户接口"></a>登录成功后调用获取用户接口</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">	  <span class="comment">// 登录成功</span></span><br><span class="line">	  <span class="built_in">console</span>.log(res.data)</span><br><span class="line">	  wx.getUserInfo(&#123;</span><br><span class="line">	    success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">	      <span class="keyword">var</span> userInfo = res.userInfo</span><br><span class="line">	      <span class="keyword">var</span> nickName = userInfo.nickName</span><br><span class="line">	      <span class="keyword">var</span> avatarUrl = userInfo.avatarUrl</span><br><span class="line">	      <span class="keyword">var</span> gender = userInfo.gender <span class="comment">//性别 0：未知、1：男、2：女</span></span><br><span class="line">	      <span class="keyword">var</span> province = userInfo.province</span><br><span class="line">	      <span class="keyword">var</span> city = userInfo.city</span><br><span class="line">	      <span class="keyword">var</span> country = userInfo.country</span><br><span class="line"></span><br><span class="line">	      <span class="built_in">console</span>.log(<span class="string">'获取用户信息返回'</span>)</span><br><span class="line">	      <span class="built_in">console</span>.log(res);</span><br><span class="line">	    &#125;</span><br><span class="line">	  &#125;)</span><br></pre></td></tr></table></figure>
-<p>在登录状态下返回的信息包含敏感数据，将这些敏感数据提交到服务器进行解密<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'获取用户信息返回'</span>);</span><br><span class="line">	  <span class="built_in">console</span>.log(res);</span><br><span class="line">	  wx.request(&#123;</span><br><span class="line">	    method: <span class="string">'POST'</span>,</span><br><span class="line">	    url: <span class="string">'https://vxndy.com/user'</span>, <span class="comment">//仅为示例，并非真实的接口地址</span></span><br><span class="line">	    data: &#123;</span><br><span class="line">	      rawData: res.rawData,</span><br><span class="line">	      signature: res.signature,</span><br><span class="line">	      encryptedData : res.encryptedData,</span><br><span class="line">	      iv : res.iv</span><br><span class="line">	    &#125;,</span><br><span class="line">	    header: &#123;</span><br><span class="line">	      <span class="string">'content-type'</span>: <span class="string">'application/json'</span> <span class="comment">// 默认值</span></span><br><span class="line">	    &#125;,</span><br><span class="line">	    success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">	      <span class="built_in">console</span>.log(<span class="string">'调用解密接口返回'</span>)</span><br><span class="line">	      <span class="built_in">console</span>.log(res)</span><br><span class="line">	    &#125;</span><br><span class="line">	  &#125;)</span><br></pre></td></tr></table></figure></p>
-<h3 id="user接口实现"><a href="#user接口实现" class="headerlink" title="user接口实现"></a>user接口实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$APPID = <span class="string">'wxf0074104e....'</span>;</span><br><span class="line">$request = request();</span><br><span class="line">$rawData = $request-&gt;rawData;</span><br><span class="line">$signature = $request-&gt;signature;</span><br><span class="line">$encryptedData = $request-&gt;encryptedData;</span><br><span class="line">$iv = $request-&gt;iv;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  解密数据</span></span><br><span class="line">$path = storage_path(<span class="string">'session_key'</span>);</span><br><span class="line">info(<span class="string">'从文件中获取session_key'</span>);</span><br><span class="line">$session_key = file_get_contents($path);</span><br><span class="line"></span><br><span class="line">$pc = <span class="keyword">new</span> \App\Wx\WXBizDataCrypt($APPID, $session_key);</span><br><span class="line">$errCode = $pc-&gt;decryptData($encryptedData, $iv, $data );</span><br><span class="line"><span class="keyword">if</span> ($errCode == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> response()-&gt;json($data);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    info(<span class="string">'错误'</span>);</span><br><span class="line">    info($errCode);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> response()-&gt;json([<span class="string">'status'</span> =&gt; <span class="number">200</span>]);</span><br></pre></td></tr></table></figure>
-<p>返回的数据包括 openId 和 用户其他信息</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>每次发起登录请求的时候应该先检测是否需要登录<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wx.checkSession(&#123;</span><br><span class="line">  success: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//session 未过期，并且在本生命周期一直有效</span></span><br><span class="line">  &#125;,</span><br><span class="line">  fail: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//登录态过期</span></span><br><span class="line">    wx.login() <span class="comment">//重新登录</span></span><br><span class="line">    ....</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -972,7 +969,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

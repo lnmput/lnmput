@@ -265,6 +265,118 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/14/laravel的服务提供者/" itemprop="url">
+                  laravel的服务提供者
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-14T10:07:23+08:00" content="2017-12-14">
+              2017-12-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>仓廪实而知礼节，衣食足而知荣辱<br></blockquote>
+
+<p>在依赖注入这一篇博客里, 我们在一个已有的AppServiceProvider(服务提供者)中做了一个简单的绑定<br>app\Providers\AppServiceProvider.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepository</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepositoryInterFace</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">$this</span>-&gt;app-&gt;bind(UserRepositoryInterFace::class, UserRepository::class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在我们创建一个自己的服务提供者</p>
+<h3 id="创建服务提供者"><a href="#创建服务提供者" class="headerlink" title="创建服务提供者"></a>创建服务提供者</h3><p><code>php artisan make:provider RepostiyServiceProvider</code><br>app\Providers\RepostiyServiceProvider.php</p>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>config\app.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">  ......</span><br><span class="line">  \App\Providers\RepostiyServiceProvider::class</span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
+<h3 id="接口和类的绑定"><a href="#接口和类的绑定" class="headerlink" title="接口和类的绑定"></a>接口和类的绑定</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepository</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepositoryInterFace</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">ServiceProvider</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RepostiyServiceProvider</span> <span class="keyword">extends</span> <span class="title">ServiceProvider</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  .....</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="keyword">$this</span>-&gt;app-&gt;bind(UserRepositoryInterFace::class, UserRepository::class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>同样实现了上一篇博客的依赖注入<br>还可以这样绑定<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//$this-&gt;app-&gt;bind(UserRepositoryInterFace::class, UserRepository::class);</span></span><br><span class="line">  <span class="keyword">$this</span>-&gt;app-&gt;bind(<span class="string">'App\Repositories\UserRepositoryInterFace'</span>,<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span>  UserRepository();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="绑定单例"><a href="#绑定单例" class="headerlink" title="绑定单例"></a>绑定单例</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepository</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//使用singleton绑定单例</span></span><br><span class="line">  <span class="keyword">$this</span>-&gt;app-&gt;singleton(<span class="string">'test'</span>,<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span>  UserRepository();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在HomeController.php中使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  $test = \App::make(<span class="string">'test'</span>);</span><br><span class="line">  $test-&gt;haha();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  $test = app(<span class="string">'test'</span>);</span><br><span class="line">  $test-&gt;haha();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="绑定一个普通类"><a href="#绑定一个普通类" class="headerlink" title="绑定一个普通类"></a>绑定一个普通类</h3><p>现在假设我们有一个特别功能的 FooService 类。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooService</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doSomething</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// Code for Something.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果我们要调用类的 doSomething 方法，我们可能会这样做 :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$fooService = <span class="keyword">new</span> \App\Services\FooService();</span><br><span class="line">$fooService-&gt;doSomething();</span><br></pre></td></tr></table></figure></p>
+<p>这看起来没有什么问题，但比较麻烦的是这儿的 ‘new’ 关键字，我的意思是虽然这样也很好，但是我们可以做的更优雅 (记住写代码要像 Laravel 一样，用优雅的方式)。</p>
+<p>如何绑定 ?<br>绑定简单得可以用一行代码完成<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;app-&gt;bind(<span class="string">'FooService'</span>, \App\Services\FooService::class);</span><br></pre></td></tr></table></figure></p>
+<p>使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用IoC 我们可以这么做</span></span><br><span class="line">$fooService = app()-&gt;make(<span class="string">'FooService'</span>);</span><br><span class="line">$fooService-&gt;doSomething();</span><br><span class="line"><span class="comment">// 也可以精简为一行代码</span></span><br><span class="line">app()-&gt;make(<span class="string">'FooService'</span>)-&gt;doSomething();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://laravel-china.org/topics/10273/laravel-service-container-must-know" target="_blank" rel="noopener">https://laravel-china.org/topics/10273/laravel-service-container-must-know</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/12/14/laravel依赖注入解读/" itemprop="url">
                   laravel依赖注入解读
                 </a>
@@ -663,109 +775,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/12/01/几条很有用的git命令/" itemprop="url">
-                  几条很有用的git命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-01T10:46:26+08:00" content="2017-12-01">
-              2017-12-01
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>上帝让好孩子成为好孩子，本身就是对好孩子的最佳奖赏<br></blockquote>
-
-<h4 id="导出最后一次提交修改过的文件"><a href="#导出最后一次提交修改过的文件" class="headerlink" title="导出最后一次提交修改过的文件"></a>导出最后一次提交修改过的文件</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive -o ../updated.zip HEAD $(git diff --name-only HEAD^)</span><br></pre></td></tr></table></figure>
-<h4 id="导出两次提交之间修改过的文件"><a href="#导出两次提交之间修改过的文件" class="headerlink" title="导出两次提交之间修改过的文件"></a>导出两次提交之间修改过的文件</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive -o ../latest.zip NEW_COMMIT_ID_HERE $(git diff --name-only OLD_COMMIT_ID_HERE NEW_COMMIT_ID_HERE)</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive -o ../latest.zip <span class="number">4</span>c1ed49e9be1223d6c22e65fa6fc10e5fbe46441 $(git diff --name-only <span class="number">192</span>f0de1dda8b194c8d75c1bd6c6cab3154de1ad <span class="number">4</span>c1ed49e9be1223d6c22e65fa6fc10e5fbe46441)</span><br></pre></td></tr></table></figure>
-<h4 id="克隆一个特定的远程分支"><a href="#克隆一个特定的远程分支" class="headerlink" title="克隆一个特定的远程分支"></a>克隆一个特定的远程分支</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git init </span><br><span class="line">git remote add -t BRANCH_NAME_HERE -f origin REMOTE_REPO_URL_PATH_HERE </span><br><span class="line">git checkout BRANCH_NAME_HERE</span><br></pre></td></tr></table></figure>
-<h4 id="启动一个无历史的新分支"><a href="#启动一个无历史的新分支" class="headerlink" title="启动一个无历史的新分支"></a>启动一个无历史的新分支</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout --orphan NEW_BRANCH_NAME_HERE</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://www.cnblogs.com/lhb25/p/10-useful-advanced-git-commands.html" target="_blank" rel="noopener">http://www.cnblogs.com/lhb25/p/10-useful-advanced-git-commands.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -809,7 +818,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

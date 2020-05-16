@@ -265,6 +265,109 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/01/几条很有用的git命令/" itemprop="url">
+                  几条很有用的git命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-01T10:46:26+08:00" content="2017-12-01">
+              2017-12-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>上帝让好孩子成为好孩子，本身就是对好孩子的最佳奖赏<br></blockquote>
+
+<h4 id="导出最后一次提交修改过的文件"><a href="#导出最后一次提交修改过的文件" class="headerlink" title="导出最后一次提交修改过的文件"></a>导出最后一次提交修改过的文件</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive -o ../updated.zip HEAD $(git diff --name-only HEAD^)</span><br></pre></td></tr></table></figure>
+<h4 id="导出两次提交之间修改过的文件"><a href="#导出两次提交之间修改过的文件" class="headerlink" title="导出两次提交之间修改过的文件"></a>导出两次提交之间修改过的文件</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive -o ../latest.zip NEW_COMMIT_ID_HERE $(git diff --name-only OLD_COMMIT_ID_HERE NEW_COMMIT_ID_HERE)</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive -o ../latest.zip <span class="number">4</span>c1ed49e9be1223d6c22e65fa6fc10e5fbe46441 $(git diff --name-only <span class="number">192</span>f0de1dda8b194c8d75c1bd6c6cab3154de1ad <span class="number">4</span>c1ed49e9be1223d6c22e65fa6fc10e5fbe46441)</span><br></pre></td></tr></table></figure>
+<h4 id="克隆一个特定的远程分支"><a href="#克隆一个特定的远程分支" class="headerlink" title="克隆一个特定的远程分支"></a>克隆一个特定的远程分支</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git init </span><br><span class="line">git remote add -t BRANCH_NAME_HERE -f origin REMOTE_REPO_URL_PATH_HERE </span><br><span class="line">git checkout BRANCH_NAME_HERE</span><br></pre></td></tr></table></figure>
+<h4 id="启动一个无历史的新分支"><a href="#启动一个无历史的新分支" class="headerlink" title="启动一个无历史的新分支"></a>启动一个无历史的新分支</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout --orphan NEW_BRANCH_NAME_HERE</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.cnblogs.com/lhb25/p/10-useful-advanced-git-commands.html" target="_blank" rel="noopener">http://www.cnblogs.com/lhb25/p/10-useful-advanced-git-commands.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/30/解决Fatal-error-Call-to-undefined-function-imagettftext-生成验证码错误/" itemprop="url">
                   解决Fatal-error-Call-to-undefined-function-imagettftext-生成验证码错误
                 </a>
@@ -640,108 +743,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/21/在Laravel中使用数据库事务/" itemprop="url">
-                  在Laravel中使用数据库事务
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-21T10:36:41+08:00" content="2017-11-21">
-              2017-11-21
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>不要盲目而残忍地成为，这世界恶意的一部分。<br></blockquote>
-
-<h3 id="使用闭包"><a href="#使用闭包" class="headerlink" title="使用闭包"></a>使用闭包</h3><p>在Laravel中要想在数据库事务中运行一组操作，则可以在 DB facade 中使用 transaction 方法。如果在事务的闭包内抛出异常，事务将会被自动还原。如果闭包运行成功，事务将被自动提交。你不需要担心在使用 transaction 方法时还需要亲自去手动还原或提交事务：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DB::transaction(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    DB::table(<span class="string">'users'</span>)-&gt;update([<span class="string">'votes'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    DB::table(<span class="string">'posts'</span>)-&gt;delete();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="手动创建事务"><a href="#手动创建事务" class="headerlink" title="手动创建事务"></a>手动创建事务</h3><p>如果你想手动处理事务并对还原或提交操作进行完全控制，则可以在 DB facade 使用 beginTransaction 方法：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DB::beginTransaction(); <span class="comment">//事务开始</span></span><br><span class="line"><span class="keyword">if</span>($somethingIsFailed)&#123;</span><br><span class="line">    DB::rollback(); <span class="comment">//事务失败 操作回滚</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">DB::commit();  <span class="comment">//事务成功 提交操作</span></span><br></pre></td></tr></table></figure></p>
-<p>注意： DB facade 的事务方法也可以用来控制 查询语句构造器 及 Eloquent ORM 的事务, 在事务中一定要定义回滚的条件, 可以用 try - catch 来捕获异常回滚, 或者是我们上面所写的这样, 根据一定的条件去判断回滚.事务的最终状态要么被提交, 要么回滚.</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>创建表的时候一定要使用InnoDB存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">up</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Schema::create(<span class="string">'fetch_taobao_billno_task_nos'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">        $table-&gt;engine = <span class="string">'InnoDB'</span>;</span><br><span class="line">        $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">        ......</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如何查看某一张表使用的存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show create table 表名;</span><br></pre></td></tr></table></figure></p>
-<p>修改某一张表的存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alter table bulk_tb_billnos engine=innodb</span><br><span class="line">alter table bulk_tb_billnos engine=myisam</span><br></pre></td></tr></table></figure></p>
-<p>看你的mysql当前默认的存储引擎<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like <span class="string">'%storage_engine%'</span>;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -785,7 +786,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,128 @@
             
               
                 
+                <a class="post-title-link" href="/2019/03/08/centos安装shadowsocks客户端实现联网/" itemprop="url">
+                  CentOS安装Shadowsocks客户端实现联网
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-03-08T21:57:25+08:00" content="2019-03-08">
+              2019-03-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你爱上小溪 是因为没有见过大海 我已见过银河 但我只爱一颗星<br></blockquote>
+
+<h3 id="安装-pip"><a href="#安装-pip" class="headerlink" title="安装 pip"></a>安装 pip</h3><p>Pip 是 Python 的包管理工具，这里我们用 pip 安装 shadowsocks。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置-shadowsocks"><a href="#配置-shadowsocks" class="headerlink" title="配置 shadowsocks"></a>配置 shadowsocks</h3><p>新建配置文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure></p>
+<p>填写以下内容:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "server":"your_server_ip",      #ss服务器IP</span><br><span class="line">    "server_port":your_server_port, #端口</span><br><span class="line">    "local_address": "127.0.0.1",   #本地ip</span><br><span class="line">    "local_port":1080,              #本地端口</span><br><span class="line">    "password":"your_server_passwd",#连接ss密码</span><br><span class="line">    "timeout":300,                  #等待超时</span><br><span class="line">    "method":"rc4-md5",             #加密方式</span><br><span class="line">    "fast_open": false,             # true 或 false。如果你的服务器 Linux 内核在3.7+，可以开启 fast_open 以降低延迟。开启方法： echo 3 &gt; /proc/sys/net/ipv4/tcp_fastopen 开启之后，将 fast_open 的配置设置为 true 即可</span><br><span class="line">    "workers": 1                    # 工作线程数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动shadowsocks服务"><a href="#启动shadowsocks服务" class="headerlink" title="启动shadowsocks服务"></a>启动shadowsocks服务</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line">nohup sslocal -c /etc/shadowsocks.json &amp;&gt;&gt; /<span class="keyword">var</span>/log/sslocal.log &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="设置shadowsocks开机自启"><a href="#设置shadowsocks开机自启" class="headerlink" title="设置shadowsocks开机自启"></a>设置shadowsocks开机自启</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure>
+<p>填写如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Client Service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
+<p>配置生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>运行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --socks5 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1080</span> http:<span class="comment">//httpbin.org/ip</span></span><br></pre></td></tr></table></figure></p>
+<p>如果返回你的 ss 服务器 ip 则测试成功：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"origin"</span>: <span class="string">"23.105.222.129"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装-Privoxy"><a href="#安装-Privoxy" class="headerlink" title="安装 Privoxy"></a>安装 Privoxy</h3><p>Shadowsocks 是一个 socket5 服务，因此我们需要使用 Privoxy 把流量转到 http/https 上。直接使用yum安装即可：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install privoxy</span><br></pre></td></tr></table></figure></p>
+<p>安装好后，修改一下配置：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/privoxy/config</span><br></pre></td></tr></table></figure></p>
+<p>搜索<code>forward-socks5t</code>将<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">forward-socks5t / <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9050</span> .</span><br></pre></td></tr></table></figure></p>
+<p>取消注释并修改为：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">forward-socks5t / <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1080</span> .</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动-privoxy"><a href="#启动-privoxy" class="headerlink" title="启动 privoxy"></a>启动 privoxy</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privoxy /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+<p>或以指定用户如www运行privoxy：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privoxy --user www /etc/privoxy/config</span><br></pre></td></tr></table></figure></p>
+<h3 id="设置privoxy开机自启"><a href="#设置privoxy开机自启" class="headerlink" title="设置privoxy开机自启"></a>设置privoxy开机自启</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /lib/systemd/system/privoxy.service</span><br></pre></td></tr></table></figure>
+<p>填写如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Privoxy Web Proxy With Advanced Filtering Capabilities</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">PIDFile=/run/privoxy.pid</span><br><span class="line">ExecStart=/usr/sbin/privoxy --pidfile /run/privoxy.pid /etc/privoxy/config</span><br></pre></td></tr></table></figure></p>
+<p>配置生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable /lib/systemd/system/privoxy.service</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置-etc-profile"><a href="#配置-etc-profile" class="headerlink" title="配置/etc/profile"></a>配置/etc/profile</h3><p>执行vim /etc/profile,添加如下代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy=http:<span class="comment">//127.0.0.1:8118</span></span><br><span class="line">export https_proxy=http:<span class="comment">//127.0.0.1:8118</span></span><br></pre></td></tr></table></figure></p>
+<p>修改后使配置生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure></p>
+<p>测试生效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl www.google.com</span><br></pre></td></tr></table></figure></p>
+<p>返回一大堆 HTML 则说明 shadowsocks 正常工作了。</p>
+<h3 id="简化使用"><a href="#简化使用" class="headerlink" title="简化使用"></a>简化使用</h3><p>进过上面的步骤我们的确代理成功了。。但是每次都要输入这么多命令太麻烦,这时我们可以利用 命令别名 来简化我们的操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias ssinit=<span class="string">'nohup sslocal -c /etc/shadowsocks.json &amp;&gt;&gt; /var/log/sslocal.log &amp;'</span></span><br><span class="line">alias sson=<span class="string">'export http_proxy=http://127.0.0.1:8118 &amp;&amp; export https_proxy=http://127.0.0.1:8118 &amp;&amp; systemctl start privoxy'</span></span><br><span class="line">alias ssoff=<span class="string">'unset http_proxy &amp;&amp; unset https_proxy &amp;&amp; systemctl stop privoxy &amp;&amp; pkill sslocal'</span></span><br></pre></td></tr></table></figure></p>
+<p>使用方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 开启ss代理</span></span><br><span class="line">ssinit</span><br><span class="line">sson</span><br><span class="line"><span class="comment">## 关闭ss代理</span></span><br><span class="line">ssoff</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://i.jakeyu.top/2017/03/16/centos%E4%BD%BF%E7%94%A8SS%E7%BF%BB%E5%A2%99/" target="_blank" rel="noopener">https://i.jakeyu.top/2017/03/16/centos%E4%BD%BF%E7%94%A8SS%E7%BF%BB%E5%A2%99/</a><br><a href="https://xeylon.com/server/140.html" target="_blank" rel="noopener">https://xeylon.com/server/140.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/01/17/git将当前分支上修改的东西转移到新建分支/" itemprop="url">
                   git将当前分支上修改的东西转移到新建分支
                 </a>
@@ -664,114 +786,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/09/08/laravel中eloquent事件中的updated和saved原來不一樣/" itemprop="url">
-                  Laravel中Eloquent事件中的Updated和Saved原來不一樣
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-08T14:44:20+08:00" content="2018-09-08">
-              2018-09-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>受任于败军之际，奉命于危难之间，尔来二十有一年矣。<br></blockquote>
-
-<p>當一個新模型初次被儲存，將會觸發 creating 以及 created 事件。如果一個模型已經存在於資料庫而且呼叫了 save 方法，將會觸發 updating 和 updated 事件。然而，在這兩個狀況下，都將會觸發 saving 和 saved 事件。</p>
-<p>Laravel 在資料更新的時候會觸發兩個事件：updated 和 saved。單從官方文件的說明，saved 看起來像是一個方便開發者統一管理新增/更新動作的事件，讓重複的程式碼可以不用被寫在兩個地方（created 和 updated），但是其實 saved 和 updated 的觸發時機是不一樣的。</p>
-<p>接來看一下 Laravel eloquent 的原始碼。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 495 行</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">(array $options = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;exists) &#123;</span><br><span class="line">        $saved = <span class="keyword">$this</span>-&gt;isDirty() ?</span><br><span class="line">                    <span class="keyword">$this</span>-&gt;performUpdate($query) : <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> ($saved) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;finishSave($options);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $saved;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 552 行</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">finishSave</span><span class="params">(array $options)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;fireModelEvent(<span class="string">'saved'</span>, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;syncOriginal();</span><br><span class="line">    <span class="keyword">if</span> (Arr::get($options, <span class="string">'touch'</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;touchOwners();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 569 行</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">performUpdate</span><span class="params">(Builder $query)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    $dirty = <span class="keyword">$this</span>-&gt;getDirty();</span><br><span class="line">    <span class="keyword">if</span> (count($dirty) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;setKeysForSaveQuery($query)-&gt;update($dirty);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;fireModelEvent(<span class="string">'updated'</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>應該盡量使用 updated 而不是 saved 來判斷資料是否更新<br>可以看到在觸發 updated 之前會先做一次 getDirty() 的檢查，其實就是在檢查這次更新的資料是不是真的有改動資料的值；相反的，saved 不管值有沒有改動都會觸發。如果沒注意到這個差別的話，這在實務上其實會造成一些問題。</p>
-<p>例如，我們通常會把資料的結果快取起來，以減少對資料庫的查詢次數。因此當資料有變動的時候，就會需要把對應的快取刪除。為了避免有漏刪的部分，會把刪除快取的動作綁定在 eloquent 事件中。認清 updated 和 saved 之後，就會知道這個動作應該是要綁在 updated；若是綁在 saved 上，就會造成多餘的快取動作，增加機器的成本。當快取數量一多，又有用到類似 redis scan 這種較耗時的功能來找出需要刪除的快取時，對於機器的效能影響更大。</p>
-<p>使用 updated 也仍會可能有漏網之魚</p>
-<p>但是，要注意的是，即使使用了 updated 也不能說完全避免這件事的發生。這時候又要再看一次 Larvel eloquent 的原始碼了。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3093 行</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDirty</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $dirty = [];</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;attributes <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! array_key_exists($key, <span class="keyword">$this</span>-&gt;original)) &#123;</span><br><span class="line">            $dirty[$key] = $value;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> ($value !== <span class="keyword">$this</span>-&gt;original[$key] &amp;&amp;</span><br><span class="line">                             ! <span class="keyword">$this</span>-&gt;originalIsNumericallyEquivalent($key)) &#123;</span><br><span class="line">            $dirty[$key] = $value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $dirty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以發現 Laravel 判斷值有沒有改動的比較依據來自於，我們一開始 select 出來的欄位，跟這次要變動的欄位。意思就是，如果我們只 select 了 A 欄位出來，但是更新的是 B 欄位時，即使更動後 B 欄位的值跟更動之前一模一樣，Laravel 仍會把此視為資料的值有所改動。</p>
-<p>不過這仍在可以接受的範圍之內。畢竟每個更新之前，若要為了拿到所有欄位而又再多查詢一次資料庫，可能會是一件更浪費資源的事情。</p>
-<blockquote>
-<p><a href="https://medium.com/@lynnlin827/laravel-eloquent-%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-updated-%E5%92%8C-saved-%E5%8E%9F%E4%BE%86%E4%B8%8D%E4%B8%80%E6%A8%A3-caa8ef0ddbc" target="_blank" rel="noopener">https://medium.com/@lynnlin827/laravel-eloquent-%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-updated-%E5%92%8C-saved-%E5%8E%9F%E4%BE%86%E4%B8%8D%E4%B8%80%E6%A8%A3-caa8ef0ddbc</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -815,7 +829,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

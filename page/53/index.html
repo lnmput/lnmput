@@ -265,6 +265,103 @@
             
               
                 
+                <a class="post-title-link" href="/2017/06/11/PHP-MySQL持久连接-mysql-pconnect/" itemprop="url">
+                  PHP-MySQL持久连接-mysql_pconnect
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-11T11:12:05+08:00" content="2017-06-11">
+              2017-06-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>别人说你变了，是因为你没有按照他的想法活罢了。。。<br></blockquote><br>先来一段 PHP 连接 MySQL 的经典代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$con = mysql_connect(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Could not connect: "</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// some code</span></span><br><span class="line">mysql_close($con);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="mysql-pconnect"><a href="#mysql-pconnect" class="headerlink" title="mysql_pconnect"></a>mysql_pconnect</h3><p>首先，当连接的时候本函数将先尝试寻找一个在同一个主机上用同样的用户名和密码已经打开的（持久）连接，如果找到，则返回此连接标识而不打开新连接。</p>
+<p>其次，当脚本执行完毕后到 SQL 服务器的连接不会被关闭，此连接将保持打开以备以后使用（mysql_close() 不会关闭由 mysql_pconnect() 建立的连接）。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// pconnect.php</span></span><br><span class="line">$con = mysql_pconnect(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="comment">// connect.php</span></span><br><span class="line"><span class="comment">// $con = mysql_connect("localhost","root","123456");</span></span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">  <span class="keyword">die</span>(<span class="string">'Could not connect: '</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line">sleep(<span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
+<p>注意，此种连接仅能用于模块版本的 PHP。(我用的是 Nginx+PHP-FPM 模式，而非 Apache+php_module 模式。 )</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/06/11/PHP魔术函数之-sleep和-wakeup/" itemprop="url">
                   PHP魔术函数之__sleep和__wakeup
                 </a>
@@ -633,107 +730,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/27/laravel自定义分页/" itemprop="url">
-                  laravel自定义分页
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-27T14:13:32+08:00" content="2017-05-27">
-              2017-05-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>当斧头来到树林里的时候，好多树都说，至少它的把手是我们自己人。<br></blockquote><br>Let’s say that you have an array of data, e.g results from a search query, and you want to paginate them.</p>
-<p>Laravel provides pagination for Eloquent results out of the box, but for custom data we need to do the pagination manually.</p>
-<p>Let see how in the next example:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Pagination</span>\<span class="title">LengthAwarePaginator</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Collection</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SearchController</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">search</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        .</span><br><span class="line">        .</span><br><span class="line">        .</span><br><span class="line"></span><br><span class="line">        $searchResults = [</span><br><span class="line">            <span class="string">'item1'</span>,</span><br><span class="line">            <span class="string">'item2'</span>,</span><br><span class="line">            <span class="string">'item3'</span>,</span><br><span class="line">            <span class="string">'item4'</span>,</span><br><span class="line">            <span class="string">'item5'</span>,</span><br><span class="line">            <span class="string">'item6'</span>,</span><br><span class="line">            <span class="string">'item7'</span>,</span><br><span class="line">            <span class="string">'item8'</span>,</span><br><span class="line">            <span class="string">'item9'</span>,</span><br><span class="line">            <span class="string">'item10'</span></span><br><span class="line">            ];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Get current page form url e.g. &amp;page=6</span></span><br><span class="line">        $currentPage = LengthAwarePaginator::resolveCurrentPage();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Create a new Laravel collection from the array data</span></span><br><span class="line">        $collection = <span class="keyword">new</span> Collection($searchResults);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Define how many items we want to be visible in each page</span></span><br><span class="line">        $perPage = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Slice the collection to get the items to display in current page</span></span><br><span class="line">        $currentPageSearchResults = $collection-&gt;slice($currentPage * $perPage, $perPage)-&gt;all();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Create our paginator and pass it to the view</span></span><br><span class="line">        $paginatedSearchResults= <span class="keyword">new</span> LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> view(<span class="string">'search'</span>, [<span class="string">'results'</span> =&gt; $paginatedSearchResults]);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>Now in the view add the following:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@foreach ($results as $result)</span><br><span class="line">   <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; $result &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">@endforeach</span><br><span class="line"></span><br><span class="line"><span class="php"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> $results-&gt;render(); <span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="http://psampaz.github.io/custom-data-pagination-with-laravel-5/" target="_blank" rel="noopener">http://psampaz.github.io/custom-data-pagination-with-laravel-5/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -777,7 +773,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

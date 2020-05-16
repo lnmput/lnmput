@@ -265,6 +265,103 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/31/php中的一些高级用法/" itemprop="url">
+                  php中的一些高级用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-31T10:34:30+08:00" content="2017-07-31">
+              2017-07-31
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br> 弱国无外交，人弱亦如此<br></blockquote></p>
+<h3 id="call-user-func-array"><a href="#call-user-func-array" class="headerlink" title="call_user_func_array"></a>call_user_func_array</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foobar</span><span class="params">($arg, $arg2)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="keyword">__FUNCTION__</span>, <span class="string">" got $arg and $arg2\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">foo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span><span class="params">($arg, $arg2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">__METHOD__</span>, <span class="string">" got $arg and $arg2\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Call the foobar() function with 2 arguments</span></span><br><span class="line">call_user_func_array(<span class="string">"foobar"</span>, <span class="keyword">array</span>(<span class="string">"one"</span>, <span class="string">"two"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Call the $foo-&gt;bar() method with 2 arguments</span></span><br><span class="line">$foo = <span class="keyword">new</span> foo;</span><br><span class="line">call_user_func_array(<span class="keyword">array</span>($foo, <span class="string">"bar"</span>), <span class="keyword">array</span>(<span class="string">"three"</span>, <span class="string">"four"</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="call-user-func"><a href="#call-user-func" class="headerlink" title="call_user_func"></a>call_user_func</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">increment</span><span class="params">($var)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $var++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="number">0</span>;</span><br><span class="line">call_user_func(<span class="string">'increment'</span>, $a);</span><br><span class="line"><span class="keyword">echo</span> $a.<span class="string">"\n"</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$class= <span class="keyword">new</span> \Jason\Ccshop\Models\Product();</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回对象的类名 命名空间</span></span><br><span class="line">dump(get_class($class));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回由类的方法名组成的数组</span></span><br><span class="line">dump(get_class_methods($class));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回由类的默认属性组成的数组</span></span><br><span class="line">dump(get_object_vars($class));</span><br><span class="line">dump(get_class_vars($class));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回对象或类的父类名</span></span><br><span class="line">dump(get_parent_class($class));</span><br><span class="line"></span><br><span class="line"><span class="comment">//检查类的方法是否存在</span></span><br><span class="line">dump(method_exists($class, <span class="string">'getMainThumb'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//以参数列表的数组，调用用户方法, 在php7 中被废弃</span></span><br><span class="line">call_user_method_array</span><br><span class="line"><span class="comment">//call_user_func_array 代替</span></span><br><span class="line"><span class="comment">//对特定对象调用用户方法 call_user_method 在php7 中被废弃</span></span><br><span class="line"><span class="comment">// call_user_func 代替</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/28/加密签名原理/" itemprop="url">
                   加密签名原理
                 </a>
@@ -641,127 +738,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/26/Mysql常用优化总结/" itemprop="url">
-                  Mysql常用优化总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-26T15:39:03+08:00" content="2017-07-26">
-              2017-07-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你这辈子只能靠自己。<br></blockquote>
-
-<h3 id="Like的参数以通配符开头时"><a href="#Like的参数以通配符开头时" class="headerlink" title="Like的参数以通配符开头时"></a>Like的参数以通配符开头时</h3><p>尽量避免Like的参数以通配符开头，否则数据库引擎会放弃使用索引而进行全表扫描。<br>以通配符开头的sql语句，例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid <span class="keyword">like</span> <span class="string">'%0'</span>\G;</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用！-或-lt-gt-操作符时"><a href="#使用！-或-lt-gt-操作符时" class="headerlink" title="使用！= 或 &lt;&gt; 操作符时"></a>使用！= 或 &lt;&gt; 操作符时</h3><p>尽量避免使用！= 或 &lt;&gt;操作符，否则数据库引擎会放弃使用索引而进行全表扫描。使用&gt;或&lt;会比较高效。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid != <span class="string">'2000000608201108010831508721'</span>\G;</span><br></pre></td></tr></table></figure></p>
-<h3 id="索引列参与计算"><a href="#索引列参与计算" class="headerlink" title="索引列参与计算"></a>索引列参与计算</h3><p>应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid +<span class="number">1</span> &gt; <span class="string">'2000000608201108010831508722'</span>\G;</span><br></pre></td></tr></table></figure></p>
-<h3 id="对字段进行null值判断"><a href="#对字段进行null值判断" class="headerlink" title="对字段进行null值判断"></a>对字段进行null值判断</h3><p>应尽量避免在where子句中对字段进行null值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：<br>低效：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid <span class="keyword">is</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure></p>
-<p>可以在Flistid上设置默认值0，确保表中Flistid列没有null值，然后这样查询：<br>高效：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid =<span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用or来连接条件"><a href="#使用or来连接条件" class="headerlink" title="使用or来连接条件"></a>使用or来连接条件</h3><p>应尽量避免在where子句中使用or来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，如：<br>低效：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t_credit_detail <span class="keyword">where</span> Flistid = <span class="string">'2000000608201108010831508721'</span> <span class="keyword">or</span> Flistid = <span class="string">'10000200001'</span>;</span><br></pre></td></tr></table></figure></p>
-<h3 id="避免select"><a href="#避免select" class="headerlink" title="避免select *"></a>避免select *</h3><p>在解析的过程中，会将<code>&#39;*&#39;</code> 依次转换成所有的列名，这个工作是通过查询数据字典完成的，这意味着将耗费更多的时间。<br>所以，应该养成一个需要什么就取什么的好习惯。</p>
-<h3 id="order-by-语句优化"><a href="#order-by-语句优化" class="headerlink" title="order by 语句优化"></a>order by 语句优化</h3><p>任何在Order by语句的非索引项或者有计算表达式都将降低查询速度。</p>
-<ul>
-<li>1.重写order by语句以使用索引；</li>
-<li>2.为所使用的列建立另外一个索引</li>
-<li>3.绝对避免在order by子句中使用表达式。</li>
-</ul>
-<h3 id="GROUP-BY语句优化"><a href="#GROUP-BY语句优化" class="headerlink" title="GROUP BY语句优化"></a>GROUP BY语句优化</h3><p>提高GROUP BY 语句的效率, 可以通过将不需要的记录在GROUP BY 之前过滤掉</p>
-<p>低效:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> JOB , <span class="keyword">AVG</span>(SAL)</span><br><span class="line"><span class="keyword">FROM</span> EMP</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">by</span> JOB</span><br><span class="line"><span class="keyword">HAVING</span> JOB = ‘PRESIDENT<span class="string">'</span></span><br><span class="line"><span class="string">OR JOB = ‘MANAGER'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>高效:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> JOB , <span class="keyword">AVG</span>(SAL)</span><br><span class="line"><span class="keyword">FROM</span> EMP</span><br><span class="line"><span class="keyword">WHERE</span> JOB = ‘PRESIDENT<span class="string">'</span></span><br><span class="line"><span class="string">OR JOB = ‘MANAGER'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">by</span> JOB;</span><br></pre></td></tr></table></figure></p>
-<h3 id="用-exists-代替-in"><a href="#用-exists-代替-in" class="headerlink" title="用 exists 代替 in"></a>用 exists 代替 in</h3><p>很多时候用 exists 代替 in 是一个好的选择：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">num</span> <span class="keyword">from</span> a <span class="keyword">where</span> <span class="keyword">num</span> <span class="keyword">in</span>(<span class="keyword">select</span> <span class="keyword">num</span> <span class="keyword">from</span> b);</span><br></pre></td></tr></table></figure></p>
-<p>用下面的语句替换：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">num</span> <span class="keyword">from</span> a <span class="keyword">where</span> <span class="keyword">exists</span>(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> b <span class="keyword">where</span> <span class="keyword">num</span>=a.num);</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用-varchar-nvarchar-代替-char-nchar"><a href="#使用-varchar-nvarchar-代替-char-nchar" class="headerlink" title="使用 varchar/nvarchar 代替 char/nchar"></a>使用 varchar/nvarchar 代替 char/nchar</h3><p>尽可能的使用 varchar/nvarchar 代替 char/nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。</p>
-<h3 id="能用DISTINCT的就不用GROUP-BY"><a href="#能用DISTINCT的就不用GROUP-BY" class="headerlink" title="能用DISTINCT的就不用GROUP BY"></a>能用DISTINCT的就不用GROUP BY</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> OrderID <span class="keyword">FROM</span> Details <span class="keyword">WHERE</span> UnitPrice &gt; <span class="number">10</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> OrderID;</span><br></pre></td></tr></table></figure>
-<p>可改为：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> OrderID <span class="keyword">FROM</span> Details <span class="keyword">WHERE</span> UnitPrice &gt; <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
-<h3 id="最左前缀匹配原则"><a href="#最左前缀匹配原则" class="headerlink" title="最左前缀匹配原则"></a>最左前缀匹配原则</h3><p>非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">有一个复合索引：INDEX(`a`, `b`, `c`);</span><br><span class="line"></span><br><span class="line">使用方式	                                        能否用上索引</span><br><span class="line">select * from users where a = <span class="number">1</span> <span class="keyword">and</span> b = <span class="number">2</span>	能用上a、b</span><br><span class="line">select * from users where b = <span class="number">2</span> <span class="keyword">and</span> a = <span class="number">1</span>	能用上a、b（有MySQL查询优化器）</span><br><span class="line">select * from users where a = <span class="number">2</span> <span class="keyword">and</span> c = <span class="number">1</span>	能用上a</span><br><span class="line">select * from users where b = <span class="number">2</span> <span class="keyword">and</span> c = <span class="number">1</span>	不能</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://cloud.tencent.com/community/article/382852" target="_blank" rel="noopener">https://cloud.tencent.com/community/article/382852</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -805,7 +781,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">361</span>
+              <span class="site-state-item-count">362</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
