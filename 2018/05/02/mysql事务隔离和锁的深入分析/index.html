@@ -88,17 +88,17 @@
 <meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql事务隔离和锁的深入分析">
-<meta property="og:url" content="https://swoole.app/2018/05/02/mysql事务隔离和锁的深入分析/index.html">
+<meta property="og:url" content="https://e-yu.me/2018/05/02/mysql事务隔离和锁的深入分析/index.html">
 <meta property="og:site_name" content="杨子鳄鱼 ● 外贸电商从业者">
 <meta property="og:description" content="我现在这样子，你看，还有机会吗？最近在做项目中遇到了锁表的问题, 页面迟迟不能响应, 直到超时, 一开始想到到是慢查询, 所以叫运维去查看, 发现并没有慢查询的日志, 当时并没有注意到会是MySql表锁的问题, 特此纪念; 我们都知道事务的几种性质，数据库为了维护这些性质，尤其是一致性和隔离性，一般使用加锁这种方式。同时数据库又是个高并发的应用，同一时间会有大量的并发访问，如果加锁过度，会极大的降">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://swoole.app/images/database1.png">
-<meta property="og:image" content="https://swoole.app/images/database2.png">
+<meta property="og:image" content="https://e-yu.me/images/database1.png">
+<meta property="og:image" content="https://e-yu.me/images/database2.png">
 <meta property="og:updated_time" content="2018-08-03T03:29:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql事务隔离和锁的深入分析">
 <meta name="twitter:description" content="我现在这样子，你看，还有机会吗？最近在做项目中遇到了锁表的问题, 页面迟迟不能响应, 直到超时, 一开始想到到是慢查询, 所以叫运维去查看, 发现并没有慢查询的日志, 当时并没有注意到会是MySql表锁的问题, 特此纪念; 我们都知道事务的几种性质，数据库为了维护这些性质，尤其是一致性和隔离性，一般使用加锁这种方式。同时数据库又是个高并发的应用，同一时间会有大量的并发访问，如果加锁过度，会极大的降">
-<meta name="twitter:image" content="https://swoole.app/images/database1.png">
+<meta name="twitter:image" content="https://e-yu.me/images/database1.png">
 
 
 
@@ -492,7 +492,7 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lnmput@gmail.com">
           <p class="site-author-name" itemprop="name">lnmput@gmail.com</p>
-          <p class="site-description motion-element" itemprop="description">一个记录PHP, Laravel, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
+          <p class="site-description motion-element" itemprop="description">一个记录PHP, Go, MySQL, Linux, Redis, ElasticSearch等web开发实践经验的博客</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
