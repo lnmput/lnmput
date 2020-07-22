@@ -265,6 +265,121 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/18/创建一个支持本地化的api/" itemprop="url">
+                  创建一个支持本地化的API
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-18T15:37:46+08:00" content="2018-07-18">
+              2018-07-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>青青子衿，悠悠我心。但为君故，沉吟至今。<br></blockquote>
+
+<ul>
+<li><p>create a middleware</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Closure</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Application</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Class Localization</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>  Mahmoud Zalt  &lt;mahmoud<span class="doctag">@zalt</span>.me&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Localization</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Localization constructor.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> \Illuminate\Foundation\Application $app</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Application $app)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;app = $app;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Handle an incoming request.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Http\Request $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Closure                 $next</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// read the language from the request header</span></span><br><span class="line">        $locale = $request-&gt;header(<span class="string">'Content-Language'</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// if the header is missed</span></span><br><span class="line">        <span class="keyword">if</span>(!$locale)&#123;</span><br><span class="line">            <span class="comment">// take the default local language</span></span><br><span class="line">            $locale = <span class="keyword">$this</span>-&gt;app-&gt;config-&gt;get(<span class="string">'app.locale'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// check the languages defined is supported</span></span><br><span class="line">        <span class="keyword">if</span> (!array_key_exists($locale, <span class="keyword">$this</span>-&gt;app-&gt;config-&gt;get(<span class="string">'app.supported_languages'</span>))) &#123;</span><br><span class="line">            <span class="comment">// respond with error</span></span><br><span class="line">            <span class="keyword">return</span> abort(<span class="number">403</span>, <span class="string">'Language not supported.'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// set the local language</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;app-&gt;setLocale($locale);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// get the response after the request is done</span></span><br><span class="line">        $response = $next($request);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// set Content Languages header in the response</span></span><br><span class="line">        $response-&gt;headers-&gt;set(<span class="string">'Content-Language'</span>, $locale);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// return the response</span></span><br><span class="line">        <span class="keyword">return</span> $response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Register the middleware in the Middlewares</p>
+</li>
+<li><p>add this to the app.php config file</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'supported_languages'</span> =&gt; [<span class="string">'en'</span> =&gt; <span class="string">'English'</span>, <span class="string">'ru'</span> =&gt; <span class="string">'Russian'</span>],</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>create language folder in the lang folder “resources/lang” for your language  (in this case it is [ru] next to [en]) and of course set your files there.</p>
+</li>
+<li><p>create sample route to test this: {you need to use the <code>trans</code> function}</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'welcome'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> trans(<span class="string">'messages.welcome'</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>call the endpoint “<a href="http://api.xxxxx.dev/welcome/“" target="_blank" rel="noopener">http://api.xxxxx.dev/welcome/“</a> and set the header “Content-Language” in your request to ([en] or [ru]).</p>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://laravel-tricks.com/tricks/create-api-that-supports-localization" target="_blank" rel="noopener">https://laravel-tricks.com/tricks/create-api-that-supports-localization</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/10/在unix-shell中生成一个随机文件名/" itemprop="url">
                   在unix-shell中生成一个随机文件名
                 </a>
@@ -690,113 +805,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/08/shell中的特殊变量/" itemprop="url">
-                  shell中的特殊变量
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-08T12:17:27+08:00" content="2018-07-08">
-              2018-07-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>兄弟，这世上就一种病，你永远也治不了，那就是穷病<br></blockquote>
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前进程ID</span></span><br><span class="line"><span class="keyword">echo</span> $$</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前脚本文件名</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="number">0</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的参数,n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2。</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="number">1</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的参数个数</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="comment">#</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的所有参数</span></span><br><span class="line"><span class="keyword">echo</span> $*</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的所有参数。被双引号(" ")包含时，与 $* 稍有不同</span></span><br><span class="line"><span class="keyword">echo</span> $@</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $*和S@的差别</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\$*=$*"</span></span><br><span class="line"><span class="keyword">echo</span> --------------------------</span><br><span class="line"><span class="keyword">for</span> n in <span class="string">"$*"</span>;<span class="keyword">do</span> <span class="keyword">echo</span> $n;done</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\$@=$@"</span></span><br><span class="line"><span class="keyword">echo</span> --------------------------</span><br><span class="line"><span class="keyword">for</span> n in <span class="string">"$@"</span>;<span class="keyword">do</span> <span class="keyword">echo</span> $n;done</span><br></pre></td></tr></table></figure>
-<p>结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$*=<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line">--------------------------</span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line"></span><br><span class="line">$@=<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line">--------------------------</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line">asdf $asdfasdf</span><br></pre></td></tr></table></figure></p>
-<p>从上面结果可以看到：<br><code>$*</code>将所有位置参数当做一个字符串输出；<br><code>$@</code>将每个位置参数当做独立的元素处理，带空格的参数也当做一个整体。</p>
-<blockquote>
-<p><a href="http://xstarcd.github.io/wiki/shell/shell_special_variables.html" target="_blank" rel="noopener">http://xstarcd.github.io/wiki/shell/shell_special_variables.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -840,7 +848,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -850,7 +858,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

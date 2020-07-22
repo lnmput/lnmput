@@ -265,6 +265,118 @@
             
               
                 
+                <a class="post-title-link" href="/2020/02/21/how-to-add-a-panel-to-chrome-dev-tools/" itemprop="url">
+                  How-to-add-a-panel-to-Chrome-Dev-Tools
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-02-21T11:26:16+08:00" content="2020-02-21">
+              2020-02-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>她曾那么可爱。然后一切都变了。<br></blockquote>
+
+<p>I’m a big fan of the Chrome Extension API. It is a simple (and cool) way to extend my favorite browser using HTML and JavaScript. One of the features I’ve been excited about for a while now is the DevTools API. This has been in “experimental” status for a while but is now (mostly) available in the main release.</p>
+<p>The DevTools API allows you to integrate extensions directly into your DevTools. There are multiple samples of this API. But there aren’t any samples that detail how to create panels. There is documentation for creating panels, but it wasn’t clear how to use that API in a real extension. I dug at it for a while and finally figured it out. What follows is what I had to do to make panel creation work. It may not be the right way, but it worked. First, you must set a devtools_page value in your manifest.json. Here is my sample manifest.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"ColdFire"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.2"</span>,</span><br><span class="line">  <span class="attr">"manifest_version"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">"Adds ColdFire support."</span>,</span><br><span class="line">  <span class="attr">"devtools_page"</span>: <span class="string">"devtools.html"</span>,</span><br><span class="line">  <span class="attr">"permissions"</span>: [</span><br><span class="line">    <span class="string">"tabs"</span>,</span><br><span class="line">    <span class="string">"http://*/*"</span>,</span><br><span class="line">    <span class="string">"https://*/*"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>the critical part here is devtools_page. You specify a HTML file that will be executed every time the devtools UI is opened. Here is my HTML file:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"devtools.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Not much, right? As far as I can tell, the actual HTML for this file is never going to be rendered - anywhere. Instead, the entire point of this file is to load a JavaScript script. If so, it would be nice if Google would let us simply point devtools_page to a JavaScript script instead. Now let’s look at the script.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"hello from devtools"</span>);</span><br><span class="line">chrome.devtools.panels.create(<span class="string">"ColdFire"</span>,</span><br><span class="line">                              <span class="string">"coldfusion10.png"</span>,</span><br><span class="line">                              <span class="string">"panel.html"</span>,</span><br><span class="line">                              <span class="function"><span class="keyword">function</span>(<span class="params">panel</span>) </span>&#123; <span class="built_in">console</span>.log(<span class="string">"hello from callback"</span>); &#125;);</span><br></pre></td></tr></table></figure>
+<p>The main part of this script - for now - is just one line. It runs the panels.create API to define a new panel. The first argument is the title. The second is the icon. The third is the HTML file for the panel. Finally, the last argument is a callback to execute when the panel is created. There is no documentation on what size the icon should be. It seems to be 32x32.</p>
+<p>Now let’s look at panel.html. I’ve only just begun development so for right now it is pretty simple.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"panel.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>ColdFire<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>And last but not least, the JavaScript file loaded by the panel:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"panel.js"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>So - what about all those console messages? As I tried to get things working, I used console messages all over the place so I could - hopefully - see what was going on. I had very little luck with this. I’ve blogged before about how to use console with Chrome Extensions, but that tip only works when you have a background script. My test extension did not. What finally worked was this:</p>
+<p>Click the button that detaches Chrome Dev Tools<br>With the Chrome Dev Tools in its own window and currently focused, use the keyboard combo to open Chrome Dev Tools<br>This opens a second Chrome Dev Tools and I could see all my log messages there.</p>
+<p>I hope this helps. As I said, I just got this working so I probably have a lot more to learn.</p>
+<blockquote>
+<p><a href="https://www.raymondcamden.com/2012/07/15/How-to-add-a-panel-to-Chrome-Dev-Tools" target="_blank" rel="noopener">https://www.raymondcamden.com/2012/07/15/How-to-add-a-panel-to-Chrome-Dev-Tools</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/01/17/golang创建一个简单的restfulapi/" itemprop="url">
                   golang创建一个简单的restfulapi
                 </a>
@@ -710,107 +822,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/01/06/wsl开机启动mysql等服务/" itemprop="url">
-                  WSL开机启动mysql等服务
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-01-06T11:32:36+08:00" content="2020-01-06">
-              2020-01-06
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>命运是什么？命是弱者借口，运乃强者谦词<br></blockquote>
-
-<h3 id="WIN10设置"><a href="#WIN10设置" class="headerlink" title="WIN10设置"></a>WIN10设置</h3><p>进入windows开机启动目录,先在运行&gt;命令(win+r)中输入shell:startup打开启动文件夹<br>新建vbs文件start-wsl.vbs:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Set ws = WScript.CreateObject(<span class="string">"WScript.Shell"</span>)</span><br><span class="line">cmd = <span class="string">"C:\Windows\System32\bash.exe -c "</span><span class="string">"bash /home/init.sh"</span><span class="string">""</span></span><br><span class="line">ws.Run cmd, <span class="number">0</span>, <span class="keyword">false</span></span><br><span class="line">Set ws = Nothing</span><br><span class="line">WScript.quit</span><br></pre></td></tr></table></figure></p>
-<h3 id="WSL设置"><a href="#WSL设置" class="headerlink" title="WSL设置"></a>WSL设置</h3><p>在WSL系统里创建/home/init.sh<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动输入sudo密码</span></span><br><span class="line">sudo -S service ssh start &lt;&lt; EOF</span><br><span class="line"><span class="number">123456</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sudo bt start</span><br><span class="line">sudo service ssh --full-restart</span><br><span class="line">sudo service nginx restart</span><br><span class="line">sudo service mysqld restart</span><br><span class="line">sudo service redis restart</span><br><span class="line">sudo service php-fpm<span class="number">-73</span> restart</span><br><span class="line">sudo service cron start</span><br><span class="line">sudo supervisord</span><br><span class="line">sudo supervisorctl start all</span><br><span class="line"><span class="comment"># 运行bash.exe不退出</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    sleep <span class="number">600</span></span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
-<p>赋予执行权限<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x init.sh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://tech1024.com/original/3006" target="_blank" rel="noopener">https://tech1024.com/original/3006</a><br><a href="https://www.jianshu.com/p/0a102c4bb3a2" target="_blank" rel="noopener">https://www.jianshu.com/p/0a102c4bb3a2</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -854,7 +865,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -864,7 +875,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

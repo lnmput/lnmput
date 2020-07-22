@@ -265,6 +265,146 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/14/laravel中使用redis基本命令/" itemprop="url">
+                  laravel中使用redis基本命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-14T14:37:25+08:00" content="2018-06-14">
+              2018-06-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>The wealth of the mind is the only wealth.<br></blockquote>
+
+<p>Let’s store our product sales in a key:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'product:1:sales'</span>, <span class="number">1000</span>)</span><br><span class="line">Redis::set(<span class="string">'product:1:count'</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Now to read it we use:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::get(<span class="string">'product:1:sales'</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="Incrementing-and-Decrementing-counters"><a href="#Incrementing-and-Decrementing-counters" class="headerlink" title="Incrementing and Decrementing counters"></a>Incrementing and Decrementing counters</h3><p>A new purchase was made, let’s increment the sales:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Redis::incrby(<span class="string">'product:1:sales'</span>, <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">Redis::incr(<span class="string">'product:1:count'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Here we increment the sales key by 100, and increment the count key by 1.</p>
+<p>We can also decrement in the same way:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Redis::decrby(<span class="string">'product:1:sales'</span>, <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">Redis::decr(<span class="string">'product:1:count'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>But when it comes to dealing with floating point numbers we need to use a special command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Redis::incrbyfloat(<span class="string">'product:1:sales'</span>, <span class="number">15.5</span>)</span><br><span class="line"></span><br><span class="line">Redis::incrbyfloat(<span class="string">'product:1:sales'</span>, - <span class="number">30.2</span>)</span><br></pre></td></tr></table></figure></p>
+<p>There’s no decrbyfloat command, but we can pass a negative value to the incrbyfloat command to have the same effect.</p>
+<blockquote>
+<p>The incrby, incr, decrby, decr, and incrbyfloat return the value after the operation as a response</p>
+</blockquote>
+<h3 id="Retrieve-and-update"><a href="#Retrieve-and-update" class="headerlink" title="Retrieve and update"></a>Retrieve and update</h3><p>Now we want to read the latest sales number and reset the counters to zero, maybe we do that at the end of each day:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$value = Redis::getset(<span class="string">'product:1:sales'</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Here $value will hold the 1000 value, if we read the value of that key after this operation it’ll be 0.</p>
+<h3 id="Keys-Expiration"><a href="#Keys-Expiration" class="headerlink" title="Keys Expiration"></a>Keys Expiration</h3><p>Let’s say we want to send a notification to the owner when inventory is low, but we only want to send that notification once every 1 hour instead of sending it every time a new purchase is made, so maybe we set a flag once and only send the notification when that flag doesn’t exist:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'user:1:notified'</span>, <span class="number">1</span>, <span class="string">'EX'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Now this key will expire after 3600 seconds (1 hour), we can check if the key exists before attempting to set it and send the notification:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(Redis::get(<span class="string">'user:1:notified'</span>))&#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Redis::set(<span class="string">'user:1:notified'</span>, <span class="number">1</span>, <span class="string">'EX'</span>, <span class="number">3600</span>);</span><br><span class="line"></span><br><span class="line">Notifications::send();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Notice: There’s no guarantee that the value of user:1:notified won’t change between the get and set operations, we’ll discuss atomic command groups later, but this example is enough for you to understand how every individual command works.</p>
+</blockquote>
+<p>We can set the expiration of a key in milliseconds as well using:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'user:1:notified'</span>, <span class="number">1</span>, <span class="string">'PX'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
+<p>And you may also use the expire command and provide the timeout in seconds:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::expire(<span class="string">'user:1:notified'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Or in milliseconds:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::pexpire(<span class="string">'user:1:notified'</span>, <span class="number">3600</span>);</span><br></pre></td></tr></table></figure></p>
+<p>And if you want the keys to expire at a specific time you can use expireat and provide a Unix timestamp:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::expireat(<span class="string">'user:1:notified'</span>, <span class="string">'1495469730'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Is there a way I can check when a key should expire?<br>You can use the ttl command (Time To Live), which will return the number of seconds remaining until the key expires.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::ttl(<span class="string">'user:1:notified'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>That command may return -2 if the key doesn’t exist, or -1 if the key has no expiration set.</p>
+<p>You can also use the pttl command to get the TTL in milliseconds.</p>
+<p>What if I want to cancel expiration?<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::persist(<span class="string">'user:1:notified'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>This will remove the expiration from your key, it’ll return 1 if OK or 0 if key doesn’t exist or originally had no expiration set.</p>
+<h3 id="Keys-Existence"><a href="#Keys-Existence" class="headerlink" title="Keys Existence"></a>Keys Existence</h3><p>Let’s say there’s only 1 laracon ticket available and we need to close purchasing once that ticket is sold, we can do:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'ticket:sold'</span>, $user-&gt;id, <span class="string">'NX'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>This will only set the key if it doesn’t exist, the next script that tries to set the key wll receive null as a response from Redis which means that the key wasn’t set.</p>
+<p>You can also instruct Redis to set the key only if it exists:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::set(<span class="string">'ticket:sold'</span>, $user-&gt;id, <span class="string">'XX'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>If you want to simply check if a key exists, you can use the exists command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::exists(<span class="string">'ticket:sold'</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="Reading-multiple-keys-in-one-go"><a href="#Reading-multiple-keys-in-one-go" class="headerlink" title="Reading multiple keys in one go"></a>Reading multiple keys in one go</h3><p>Sometimes you might need to read multiple keys in one go, you can do this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::mget(<span class="string">'product:1:sales'</span>, <span class="string">'product:2:sales'</span>, <span class="string">'non_existing_key'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>The response of this command is an array with the same size of the given keys, if a key doesn’t exist its value is going to be null.</p>
+<p>As we discussed before, Redis executes individual command atomically, that means nothing can change the value of any in the keys once the operation started, so it’s guaranteed that the values returned are not altered in between reading the value of the first key and the last key.</p>
+<blockquote>
+<p>Using mget is better that firing multiple get commands to reduce the RTT (round trip time), which is the time each individual command takes to travel from client to the server and then carry the response back to the client. More on that later.</p>
+</blockquote>
+<h3 id="Deleting-Keys"><a href="#Deleting-Keys" class="headerlink" title="Deleting Keys"></a>Deleting Keys</h3><p>You can also delete multiple keys at once using the del command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::del(<span class="string">'previous:sales'</span>, <span class="string">'previous:return'</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Renaming-Keys"><a href="#Renaming-Keys" class="headerlink" title="Renaming Keys"></a>Renaming Keys</h3><p>You can rename a key using the rename command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::rename(<span class="string">'current:sales'</span>, <span class="string">'previous:sales'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>An error is returned if the original key doesn’t exist, and it overrides the second key if it already exists.</p>
+<p>Renaming keys is usually a fast operation unless a key with the desired name exists, in that case Redis will try to delete that existing key first before renaming this one, deleting a key that holds a very big value might be a bit slow.</p>
+<p>So I have to check first if the second key exists to prevent overriding?<br>Yeah you can use exists to check if the second key exists… OR:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::renamenx(<span class="string">'current:sales'</span>, <span class="string">'previous:sales'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>This will check first if the second key exists, if yes it just returns 0 without doing anything, so it only renames the key if the second key does not exist.</p>
+<blockquote>
+<p><a href="https://divinglaravel.com/redis/redis-commands" target="_blank" rel="noopener">https://divinglaravel.com/redis/redis-commands</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/14/在laravel中使用redis/" itemprop="url">
                   在laravel中使用redis
                 </a>
@@ -796,110 +936,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/02/laravel中使用多个数据库操作数据/" itemprop="url">
-                  Laravel中使用多个数据库操作数据
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-02T12:50:34+08:00" content="2018-06-02">
-              2018-06-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>人人尽说江南好，游人只合江南老。春水碧于天，画船听雨眠。<br>垆边人似月，皓腕凝霜雪。未老莫还乡，还乡须断肠。<br></blockquote>
-
-<h3 id="定义连接"><a href="#定义连接" class="headerlink" title="定义连接"></a>定义连接</h3><p>在你的数据库配置文件<code>app/config/ database.php</code>你可以定义任何类型的多个数据库连接。事实上，你可以定义尽可能多的连接，只要你愿意。例如，如果你的应用程序有2个 MySQL数据库中提取数据，则可以分别定义他们两个。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">array</span>(</span><br><span class="line"></span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'mysql'</span>,</span><br><span class="line"></span><br><span class="line">    <span class="string">'connections'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 主数据库连接</span></span><br><span class="line">        <span class="string">'mysql'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'driver'</span>    =&gt; <span class="string">'mysql'</span>,</span><br><span class="line">            <span class="string">'host'</span>      =&gt; <span class="string">'host1'</span>,</span><br><span class="line">            <span class="string">'database'</span>  =&gt; <span class="string">'database1'</span>,</span><br><span class="line">            <span class="string">'username'</span>  =&gt; <span class="string">'user1'</span>,</span><br><span class="line">            <span class="string">'password'</span>  =&gt; <span class="string">'pass1'</span></span><br><span class="line">            <span class="string">'charset'</span>   =&gt; <span class="string">'utf8'</span>,</span><br><span class="line">            <span class="string">'collation'</span> =&gt; <span class="string">'utf8_unicode_ci'</span>,</span><br><span class="line">            <span class="string">'prefix'</span>    =&gt; <span class="string">''</span>,</span><br><span class="line">        ),</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 次数据连接</span></span><br><span class="line">        <span class="string">'mysql2'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'driver'</span>    =&gt; <span class="string">'mysql'</span>,</span><br><span class="line">            <span class="string">'host'</span>      =&gt; <span class="string">'host2'</span>,</span><br><span class="line">            <span class="string">'database'</span>  =&gt; <span class="string">'database2'</span>,</span><br><span class="line">            <span class="string">'username'</span>  =&gt; <span class="string">'user2'</span>,</span><br><span class="line">            <span class="string">'password'</span>  =&gt; <span class="string">'pass2'</span></span><br><span class="line">            <span class="string">'charset'</span>   =&gt; <span class="string">'utf8'</span>,</span><br><span class="line">            <span class="string">'collation'</span> =&gt; <span class="string">'utf8_unicode_ci'</span>,</span><br><span class="line">            <span class="string">'prefix'</span>    =&gt; <span class="string">''</span>,</span><br><span class="line">        ),</span><br><span class="line">    ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
-<p>我们默认的连接(default)仍设置为 mysql,这意味着，除非我们特别指定，应用程序将继续使用 mysql 连接.</p>
-<h3 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Schema::connection(<span class="string">'mysql2'</span>)-&gt;create(<span class="string">'lp_table'</span>, <span class="function"><span class="keyword">function</span><span class="params">($table)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>):</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="DB类"><a href="#DB类" class="headerlink" title="DB类"></a>DB类</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::connection(<span class="string">'mysql2'</span>)-&gt;table(<span class="string">'article'</span>)-&gt;where...</span><br></pre></td></tr></table></figure>
-<h3 id="Eloquent"><a href="#Eloquent" class="headerlink" title="Eloquent"></a>Eloquent</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeModel</span> <span class="keyword">extends</span> <span class="title">Eloquent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $connection = <span class="string">'mysql2'</span>;</span><br><span class="line">    .......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>或者<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeController</span> <span class="keyword">extends</span> <span class="title">BaseController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">someMethod</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $someModel = <span class="keyword">new</span> SomeModel;</span><br><span class="line"></span><br><span class="line">        $someModel-&gt;setConnection(<span class="string">'mysql2'</span>);</span><br><span class="line"></span><br><span class="line">        $something = $someModel-&gt;find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $something;</span><br><span class="line">    &#125;</span><br><span class="line">    .......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://www.itlipeng.cn/2015/12/24/%E5%9C%A8-laravel-%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE/" target="_blank" rel="noopener">https://www.itlipeng.cn/2015/12/24/%E5%9C%A8-laravel-%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -943,7 +979,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -953,7 +989,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

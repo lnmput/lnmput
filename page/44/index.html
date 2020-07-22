@@ -265,6 +265,128 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/24/在centos下创建ftp用户/" itemprop="url">
+                  在centos下创建ftp用户
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-24T11:01:01+08:00" content="2017-08-24">
+              2017-08-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>没有捷径，逼迫自己！推掉不必要的社交，戒掉浪费时间的爱好，让自己感受到孤独和清醒，一把枪指着头，三个月内必须达到预想的目标，一件事，一件可以让自己更上一个台阶的事，会比无数看似有趣的生活妙招更让你喜欢自己！<br></blockquote>
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><blockquote>
+<p>说明本教程基于centos6.5配置</p>
+</blockquote>
+<p>安装:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum <span class="keyword">list</span> |grep vsftp</span><br><span class="line">yum install vsftpd.x86_64 -y</span><br></pre></td></tr></table></figure></p>
+<p>检查开机自启:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig vsftpd on</span><br></pre></td></tr></table></figure></p>
+<p>vsftpd             0:off    1:off    2:off    3:off    4:off    5:off    6:off<br>这里的0-6 指的是系统的启动级别,意思是 当 系统在 3 ,命令行界面的方式下会自动开启<br>设置自启动:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig vsftpd on</span><br></pre></td></tr></table></figure></p>
+<p>启动:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service vsftpd start</span><br></pre></td></tr></table></figure></p>
+<p>配置文件路径:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/vsftpd/</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd ftpuser</span><br><span class="line">passwd ftpuser</span><br></pre></td></tr></table></figure>
+<p>这样新创建的用户可以通过ssh 直接登录到我们的系统<br>禁止用户访问22端口</p>
+<h3 id="ssh-配置"><a href="#ssh-配置" class="headerlink" title="ssh 配置"></a>ssh 配置</h3><p>配置文件路径 <code>/etc/ssh</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure></p>
+<p>添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DenyUsers ftpuser</span><br></pre></td></tr></table></figure></p>
+<p>这样 ftpuser 这个用户就无法通过ssh远程登录服务器了</p>
+<p>同样我们可以在创建用户的时候就指定该用户不可以通过shh登录<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd myftp -s /sbin/nologin</span><br></pre></td></tr></table></figure></p>
+<h3 id="限制ftpuser的登录目录"><a href="#限制ftpuser的登录目录" class="headerlink" title="限制ftpuser的登录目录"></a>限制ftpuser的登录目录</h3><p>我们使用刚才创建的帐号通过类似 winscp 这样的工具可以方便的登录到我们的ftp服务器,登录以后默认的目录是改用户的家目录, 但是该ftp用户可以切换到任何一目录, 非常的不安全, 我们就需要限制改ftp的访问目录, 比如我们限制的我们的网站跟目录下 <code>/var/www/alidayu/</code>:<br>修改用户默认登入时的目录:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod -d /<span class="keyword">var</span>/www/alidayu myftp</span><br></pre></td></tr></table></figure></p>
+<p>修改<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/vsftpd.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chroot_local_user=YES</span><br></pre></td></tr></table></figure>
+<p>重启<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service vsftpd restart</span><br></pre></td></tr></table></figure></p>
+<p>这样用户就被限制到自己的默认目录;</p>
+<h3 id="修改默认端口"><a href="#修改默认端口" class="headerlink" title="修改默认端口"></a>修改默认端口</h3><p>ftp服务的默认端口: 21</p>
+<p>编辑 /etc/vsftpd/vsftpd.conf 文件，在该配置文件中添加此行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen_port=<span class="number">801</span></span><br></pre></td></tr></table></figure></p>
+<p>编辑 /etc/services 文件，将其中的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ftp <span class="number">21</span>/tcp 改为 ftp <span class="number">801</span>/tcp</span><br><span class="line">ftp <span class="number">21</span>/udp 改为 ftp <span class="number">801</span>/udp</span><br></pre></td></tr></table></figure></p>
+<p>执行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/vsftpd restart </span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line">service vsftpd restart</span><br></pre></td></tr></table></figure></p>
+<p>重新启动 vsftpd 服务</p>
+<h3 id="在centos-7-x-上的配置"><a href="#在centos-7-x-上的配置" class="headerlink" title="在centos 7.x 上的配置"></a>在centos 7.x 上的配置</h3><h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum install -y vsftpd</span><br><span class="line"><span class="comment">#安装vsftpd</span></span><br><span class="line">yum install -y psmisc net-tools systemd-devel libdb-devel perl-DBI</span><br><span class="line"><span class="comment">#安装vsftpd虚拟用户配置依赖包</span></span><br><span class="line">systemctl start vsftpd.service</span><br><span class="line"><span class="comment">#启动</span></span><br><span class="line">systemctl enable vsftpd.service</span><br><span class="line"><span class="comment">#设置vsftpd开机启动</span></span><br></pre></td></tr></table></figure>
+<h4 id="错误无法启动"><a href="#错误无法启动" class="headerlink" title="错误无法启动"></a>错误无法启动</h4><p>由于centos7中vsftp的配置文件默认将 listen_ipv6=YES 这一行没有注释掉，而我们目前的网络环境还不支持ipv6，从而导致出现错误无法启动，所以解决方法是将 listen_ipv6=YES更改为：listen_ipv6=NO，或将这一行注释掉</p>
+<p>按上面的方法注释掉 listen_ipv6=YES后，成功启动vsftp</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/23/uv和pv的区别/" itemprop="url">
                   uv和pv的区别
                 </a>
@@ -647,109 +769,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/18/php如何获得用户真实IP/" itemprop="url">
-                  php如何获得用户真实IP
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-18T09:24:01+08:00" content="2017-08-18">
-              2017-08-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你心中的完美爱情是怎么样的？<br>可以有不完美。<br></blockquote></p>
-<h3 id="任何从客户端获得的资料都是不可信任的"><a href="#任何从客户端获得的资料都是不可信任的" class="headerlink" title="任何从客户端获得的资料都是不可信任的"></a>任何从客户端获得的资料都是不可信任的</h3><p><code>$_SERVER[&#39;HTTP_CLIENT_IP&#39;]</code>这个头是有的，但是很少，不一定服务器都实现了。客户端可以伪造。<br><code>$_SERVER[&#39;HTTP_X_FORWARDED_FOR&#39;]</code> 是有标准定义，用来识别经过HTTP代理后的客户端IP地址, 客户端可以伪造。<br><code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code> 是可靠的， 它是最后一个跟你的服务器握手的IP，可能是用户的代理服务器，也可能是自己的反向代理。客户端不能伪造。</p>
-<h3 id="获取用户真实ip"><a href="#获取用户真实ip" class="headerlink" title="获取用户真实ip"></a>获取用户真实ip</h3><p>没有套CDN，用户直连我们的PHP服务器<br>这种情况下用tcp层握手的ip，<code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code><br>自建集群用nginx实现负载均衡的时候<br>这种情况下，PHP应用服务器不能对外暴露，我们在nginx中实现获取真实IP再换发给PHP服务器。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location /&#123;</span><br><span class="line">   proxy_set_header client-real-ip $remote_addr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><code>client-real-ip</code> 可以随意自己命名，我们将tcp层中跟nginx握手的ip转发给PHP。<br>使用CDN，从PHP服务器取源的时候<br>CDN会转发客户端的握手ip过来，各家策略有差异，具体去查CDN的文档。<br>当然我们也可以把需要严格核查的业务绑一个二级域名，单独走我们自己的nginx服务器，避开CDN。</p>
-<h3 id="宽松获取用户ip"><a href="#宽松获取用户ip" class="headerlink" title="宽松获取用户ip"></a>宽松获取用户ip</h3><p>种情况比较简单，也是大部分开源程序使用的方式，因为他们要适应最广泛的部署环境，<br>依次获取和过滤，<code>$_SERVER[&#39;HTTP_CLIENT_IP&#39;]</code>，<code>$_SERVER[&#39;HTTP_X_FORWARDED_FOR&#39;]</code>的第一个ip，<code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code>，谁先有值先用谁。注意这种方式，客户端可以提交假ip来欺骗服务器。</p>
-<p>PHP如何验证和过滤客户端提交过来的ip#</p>
-<p>推荐使用PHP自带的过滤器，<a href="http://php.net/manual/zh/function.filter-var.php" target="_blank" rel="noopener">http://php.net/manual/zh/function.filter-var.php</a></p>
-<p>$ip = filter_var($originIp, FILTER_VALIDATE_IP)</p>
-<h3 id="ip地址库"><a href="#ip地址库" class="headerlink" title="ip地址库"></a>ip地址库</h3><p>淘宝：<br><a href="http://ip.taobao.com/instructions.php" target="_blank" rel="noopener">http://ip.taobao.com/instructions.php</a></p>
-<p>国外：<br><a href="http://freegeoip.net/json/&#39;.$ip" target="_blank" rel="noopener">http://freegeoip.net/json/&#39;.$ip</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -793,7 +812,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -803,7 +822,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

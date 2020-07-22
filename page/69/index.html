@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/22/深入理解PHP原理之foreach/" itemprop="url">
+                  深入理解PHP原理之foreach
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-22T10:17:37+08:00" content="2016-08-22">
+              2016-08-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我们走得太快，灵魂都跟不上了 …<br></blockquote><br>今天偶然看到鸟哥(php)的博客‘ 深入理解PHP原理之foreach’，可惜自己功力尚欠，内部的机理看不明白，但也稍微记录一下，毕竟这个问题自己以前从来没有考虑过。</p>
+<h4 id="以下内容摘自鸟哥的博客"><a href="#以下内容摘自鸟哥的博客" class="headerlink" title="以下内容摘自鸟哥的博客"></a>以下内容摘自鸟哥的博客</h4><p>经常会有人问我, PHP的数组, 如果用foreach来访问, 遍历的顺序是固定的么? 以什么顺序遍历呢?<br>比如:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$arr[<span class="string">'laruence'</span>] = <span class="string">'huixinchen'</span>;</span><br><span class="line">$arr[<span class="string">'yahoo'</span>]    = <span class="number">2007</span>;</span><br><span class="line">$arr[<span class="string">'baidu'</span>]    = <span class="number">2008</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($arr <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line"><span class="comment">//结果是什么?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果：<br>huixinchen20072008</p>
+<p>又比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$arr[<span class="number">2</span>] = <span class="string">'huixinchen'</span>;</span><br><span class="line">$arr[<span class="number">1</span>]  = <span class="number">2007</span>;</span><br><span class="line">$arr[<span class="number">0</span>]  = <span class="number">2008</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($arr <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line"><span class="comment">//现在结果又是什么?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果：<br>huixinchen 2007 2008</p>
+<p>要完全了解清楚这个问题, 我想首先应该要大家了解PHP数组的内部实现结构………<br>在PHP中, 数组是用一种HASH结构(HashTable)来实现的, PHP使用了一些机制, 使得可以在O(1)的时间复杂度下实现数组的增删, 并同时支持线性遍历和随机访问.</p>
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>PHP中遍历数组的顺序, 是和元素的添加先后相关的；<br>所以, 如果你想在数字索引的数组中按照索引大小遍历, 那么你就应该使用for, 而不是foreach<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>($i=<span class="number">0</span>,$l=count($arr); $i&lt;$l; $i++) &#123;</span><br><span class="line"> <span class="comment">//这个时候,不能认为是顺序遍历(线性遍历)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/18/laravel-session的使用/" itemprop="url">
                   laravel-session的使用
                 </a>
@@ -686,103 +786,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/git-stash的用法/" itemprop="url">
-                  git-stash的用法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-11T23:50:19+08:00" content="2016-08-11">
-              2016-08-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>生活总是有很多出人意料的事情，比如，你以为我要举个例子。<br></blockquote>
-
-<h3 id="应用前提"><a href="#应用前提" class="headerlink" title="应用前提"></a>应用前提</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">分支里面的代码如果没有提交commit ，那么切换到其他分支下还是可以看</span><br><span class="line">到(git status)这个分支下的代码.</span><br><span class="line"></span><br><span class="line">但是如果我们现在想要切换到别的分支但是同时又不想提交commit我们的代码</span><br><span class="line">该如何处理？</span><br></pre></td></tr></table></figure>
-<h3 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在你切换分支前，运行：git stash 就可以了</span><br><span class="line">当你在其他分支改好了代码并切换回当前分支的时候，请git stash pop</span><br></pre></td></tr></table></figure>
-<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br><span class="line">保存当前的工作进度。会分别对暂存区和工作区的状态进行保存</span><br><span class="line"></span><br><span class="line">git stash save <span class="string">"message..."</span></span><br><span class="line">这条命令实际上是第一条 git stash 命令的完整版</span><br><span class="line"></span><br><span class="line">git stash <span class="keyword">list</span></span><br><span class="line">显示进度列表。此命令显然暗示了git stash 可以多次保存工作进度，并用在恢复时候进行选择</span><br><span class="line"></span><br><span class="line">git stash pop [--index] [&lt;stash&gt;]</span><br><span class="line">如果不使用任何参数，会恢复最新保存的工作进度，</span><br><span class="line">并将恢复的工作进度从存储的工作进度列表中清除。</span><br><span class="line">如果提供参数（来自 git stash <span class="keyword">list</span> 显示的列表），则从该 &lt;stash&gt; 中恢复。恢复完毕也将从进度列表中删除 &lt;stash&gt;。</span><br><span class="line">选项--index 除了恢复工作区的文件外，还尝试恢复暂存区。</span><br><span class="line"></span><br><span class="line">git stash apply [--index] [&lt;stash&gt;]</span><br><span class="line">除了不删除恢复的进度之外，其余和 git stash pop 命令一样</span><br><span class="line"></span><br><span class="line">git stash clear</span><br><span class="line">删除所有存储的进度</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -826,7 +829,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -836,7 +839,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

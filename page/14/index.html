@@ -265,6 +265,144 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/27/阿里云ecs服务器挂载磁盘/" itemprop="url">
+                  阿里云ECS服务器挂载磁盘
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-27T13:44:26+08:00" content="2018-06-27">
+              2018-06-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不要到处宣扬自己的内心，这世上不止你一个人有故事<br></blockquote>
+
+<p>使用阿里云ECS服务器， 购买的40G高效云盘已经不够用， 所以又购买了一块云盘， 但是仅仅通过控制台操作并不能将磁盘挂载到系统， 接下来记录我的挂载流程； 为了安全起见， 建议先去做一个磁盘快照</p>
+<ul>
+<li><p>检查磁盘现在的情况</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail <span class="keyword">Use</span>% <span class="title">Mounted</span> <span class="title">on</span></span><br><span class="line">/<span class="title">dev</span>/<span class="title">vda1</span>        40<span class="title">G</span>   35<span class="title">G</span>  3.2<span class="title">G</span>  92% /</span><br><span class="line"><span class="title">devtmpfs</span>        3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span>/<span class="title">shm</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>  632<span class="title">K</span>  3.9<span class="title">G</span>   1% /<span class="title">run</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">sys</span>/<span class="title">fs</span>/<span class="title">cgroup</span></span><br><span class="line"><span class="title">tmpfs</span>           783<span class="title">M</span>     0  783<span class="title">M</span>   0% /<span class="title">run</span>/<span class="title">user</span>/0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看硬盘个数及分区 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/vda: <span class="number">42.9</span> GB, <span class="number">42949672960</span> bytes, <span class="number">83886080</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x0008d73a</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83884031</span>    <span class="number">41940992</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">21.5</span> GB, <span class="number">21474836480</span> bytes, <span class="number">41943040</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br></pre></td></tr></table></figure>
+<p>我们可以看到那块20GB的磁盘：/dev/xdb</p>
+</li>
+<li><p>对这块硬盘进行分区<br><img style="margin-left: 0;" src="/images/20160103150446502.png"></p>
+</li>
+<li><p>查看</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/vda: <span class="number">42.9</span> GB, <span class="number">42949672960</span> bytes, <span class="number">83886080</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x0008d73a</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83884031</span>    <span class="number">41940992</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">21.5</span> GB, <span class="number">21474836480</span> bytes, <span class="number">41943040</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x7a2b9a92</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vdb1            <span class="number">2048</span>    <span class="number">41943039</span>    <span class="number">20970496</span>   <span class="number">83</span>  Linux</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>格式化新分区</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext3 /dev/vdb1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建挂载目录<br>建议挂载到mnt目录， 也可以自己创建新的目录</p>
+</li>
+<li><p>挂载分区到目录</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/vdb1 /mnt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail <span class="keyword">Use</span>% <span class="title">Mounted</span> <span class="title">on</span></span><br><span class="line">/<span class="title">dev</span>/<span class="title">vda1</span>        40<span class="title">G</span>   35<span class="title">G</span>  3.1<span class="title">G</span>  92% /</span><br><span class="line"><span class="title">devtmpfs</span>        3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span>/<span class="title">shm</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>  636<span class="title">K</span>  3.9<span class="title">G</span>   1% /<span class="title">run</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">sys</span>/<span class="title">fs</span>/<span class="title">cgroup</span></span><br><span class="line"><span class="title">tmpfs</span>           783<span class="title">M</span>     0  783<span class="title">M</span>   0% /<span class="title">run</span>/<span class="title">user</span>/0</span><br><span class="line">/<span class="title">dev</span>/<span class="title">vdb1</span>        20<span class="title">G</span>   45<span class="title">M</span>   19<span class="title">G</span>   1% /<span class="title">mnt</span></span><br><span class="line">```  </span><br><span class="line">- 设置开机自动挂载 </span><br><span class="line">```<span class="title">php</span></span><br><span class="line"><span class="title">cat</span> /<span class="title">etc</span>/<span class="title">fstab</span></span><br><span class="line">#</span><br><span class="line"># /<span class="title">etc</span>/<span class="title">fstab</span></span><br><span class="line"># <span class="title">Created</span> <span class="title">by</span> <span class="title">anaconda</span> <span class="title">on</span> <span class="title">Sun</span> <span class="title">Oct</span> 15 15:19:00 2017</span><br><span class="line">#</span><br><span class="line"># <span class="title">Accessible</span> <span class="title">filesystems</span>, <span class="title">by</span> <span class="title">reference</span>, <span class="title">are</span> <span class="title">maintained</span> <span class="title">under</span> '/<span class="title">dev</span>/<span class="title">disk</span>'</span><br><span class="line"># <span class="title">See</span> <span class="title">man</span> <span class="title">pages</span> <span class="title">fstab</span>(5), <span class="title">findfs</span>(8), <span class="title">mount</span>(8) <span class="title">and</span>/<span class="title">or</span> <span class="title">blkid</span>(8) <span class="title">for</span> <span class="title">more</span> <span class="title">info</span></span><br><span class="line">#</span><br><span class="line"><span class="title">UUID</span>=<span class="title">eb448abb</span>-3012-4<span class="title">d8d</span>-<span class="title">bcde</span>-94434<span class="title">d586a31</span> /                       <span class="title">ext4</span>    <span class="title">defaults</span>        1 1</span><br></pre></td></tr></table></figure>
+<p>修改</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># /etc/fstab</span></span><br><span class="line"><span class="comment"># Created by anaconda on Sun Oct 15 15:19:00 2017</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Accessible filesystems, by reference, are maintained under '/dev/disk'</span></span><br><span class="line"><span class="comment"># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">UUID=eb448abb<span class="number">-3012</span><span class="number">-4</span>d8d-bcde<span class="number">-94434</span>d586a31 /                       ext4    defaults        <span class="number">1</span> <span class="number">1</span></span><br><span class="line">/dev/vdb1                                 /mnt                    ext3    defaults        <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启</p>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://help.aliyun.com/document_detail/25426.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/25426.html</a><br><a href="https://blog.csdn.net/wyzhangchengjin123/article/details/50451065" target="_blank" rel="noopener">https://blog.csdn.net/wyzhangchengjin123/article/details/50451065</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/27/linux磁盘空间分析/" itemprop="url">
                   linux磁盘空间分析
                 </a>
@@ -693,144 +831,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/20/在mysql中使用json数据类型/" itemprop="url">
-                  在mysql中使用json数据类型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-20T10:25:23+08:00" content="2018-06-20">
-              2018-06-20
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>You are my today and all of my tomorrows.<br></blockquote>
-
-<p>In my article SQL vs NoSQL: The Differences, I mentioned the line between SQL and NoSQL databases has become increasingly blurred with each camp adopting features from the other. MySQL 5.7 InnoDB and PostgreSQL 9.4 databases both directly support JSON document types in a single field. In this article, we’ll examine MySQL’s JSON implementation in more detail.</p>
-<p>(PostgreSQL supported JSON before version 9.4 and any database will accept JSON documents as a single string blob. However, MySQL and PostgreSQL now directly support validated JSON data in real key/value pairs rather than a basic string.)</p>
-<h3 id="Just-Because-You-Can-Store-JSON-…"><a href="#Just-Because-You-Can-Store-JSON-…" class="headerlink" title="Just Because You Can Store JSON …"></a>Just Because You Can Store JSON …</h3><p>… it doesn’t follow you should.</p>
-<p>Normalization is a technique used to optimize the database structure. The First Normal Form (1NF) rule governs that every column should hold a single value — which is broken by storing multi-value JSON documents.</p>
-<p>If you have clear relational data requirements, use appropriate single-value fields. JSON should be used sparingly as a last resort. JSON value fields cannot be indexed, so avoid using it on columns which are updated or searched regularly. In addition, fewer client applications support JSON, and the technology is newer and possibly less stable than other types.</p>
-<p>That said, there are good JSON use-cases for sparsely-populated data or custom attributes.</p>
-<h3 id="Create-a-Table-with-a-JSON-Field"><a href="#Create-a-Table-with-a-JSON-Field" class="headerlink" title="Create a Table with a JSON Field"></a>Create a Table with a JSON Field</h3><p>Consider a shop selling books. A book table will have an ID, ISBN, title, publisher, number of pages and other relational data which applies to all books. Presume we want to add any number of category tags to any book. We could achieve this in SQL using:</p>
-<ul>
-<li>a tag table which stored each tag name against a unique ID, and</li>
-<li>a tagmap table with many-to-many records mapping book IDs to tag IDs</li>
-</ul>
-<p>It’ll work, but it’s cumbersome and considerable effort for a minor feature. Therefore, we’ll define a tags JSON field in our MySQL database’s book table:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`book`</span> (</span><br><span class="line">  <span class="string">`id`</span> mediumint(<span class="number">8</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`title`</span> <span class="built_in">varchar</span>(<span class="number">200</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`tags`</span> <span class="keyword">json</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span>;</span><br></pre></td></tr></table></figure>
-<p>Note that JSON columns cannot have a default value, be used as a primary key, be referenced as a foreign key or have an index. You can create secondary indexes on generated virtual columns, but it’s possibly easier to retain an indexed value in a separate field.</p>
-<h3 id="Adding-JSON-Data"><a href="#Adding-JSON-Data" class="headerlink" title="Adding JSON Data"></a>Adding JSON Data</h3><p>Whole JSON documents can be passed in INSERT or UPDATE statements. For example, our book tags can be passed as an array:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`book`</span> (<span class="string">`title`</span>, <span class="string">`tags`</span>)</span><br><span class="line"><span class="keyword">VALUES</span> (</span><br><span class="line">  <span class="string">'ECMAScript 2015: A SitePoint Anthology'</span>,</span><br><span class="line">  <span class="string">'["JavaScript", "ES2015", "JSON"]'</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<p>JSON can also be created with the:</p>
-<ul>
-<li><p>JSON_ARRAY() function which creates arrays, e.g.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns [1, 2, "abc"]:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_ARRAY(<span class="number">1</span>, <span class="number">2</span>, <span class="string">'abc'</span>);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>JSON_OBJECT() function which creates objects, e.g.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns &#123;"a": 1, "b": 2&#125;:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_OBJECT(<span class="string">'a'</span>, <span class="number">1</span>, <span class="string">'b'</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>JSON_MERGE() function to merge documents, e.g.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns ["a", 1, &#123;"key": "value"&#125;]:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_MERGE(<span class="string">'["a", 1]'</span>, <span class="string">'&#123;"key": "value"&#125;'</span>);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>or you can (CAST anyValue AS JSON).</p>
-</li>
-</ul>
-<p>The JSON_TYPE() function allows you to check JSON value types. It should return OBJECT, ARRAY or an error, e.g.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns ARRAY:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'[1, 2, "abc"]'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns OBJECT:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2&#125;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns an error:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2'</span>);</span><br></pre></td></tr></table></figure>
-<p>Similarly, the JSON_VALID() function returns 1 when the JSON is valid:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns 1:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'[1, 2, "abc"]'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns 1:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2&#125;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- returns 0:</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_TYPE(<span class="string">'&#123;"a": 1, "b": 2'</span>);</span><br></pre></td></tr></table></figure>
-<p>Attempting to insert an invalid JSON document will raise an error, and the whole record will not be inserted/updated.</p>
-<h3 id="Searching-JSON-Data"><a href="#Searching-JSON-Data" class="headerlink" title="Searching JSON Data"></a>Searching JSON Data</h3><p>The JSON_CONTAINS() function accepts the JSON document being searched and another to compare against. It returns 1 when a match is found, e.g.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- all books with the 'JavaScript' tag:</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`book`</span> </span><br><span class="line"><span class="keyword">WHERE</span> JSON_CONTAINS(tags, <span class="string">'["JavaScript"]'</span>);</span><br></pre></td></tr></table></figure>
-<p>The similar JSON_SEARCH() function returns the path to the given match or NULL when there’s no match. It is passed the JSON document being searched, ‘one’ to find the first match or ‘all’ to find all matches, and a search string, e.g.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- all books with tags starting 'Java':</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`book`</span> </span><br><span class="line"><span class="keyword">WHERE</span> JSON_SEARCH(tags, <span class="string">'one'</span>, <span class="string">'Java%'</span>) <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="JSON-Paths"><a href="#JSON-Paths" class="headerlink" title="JSON Paths"></a>JSON Paths</h3><p>A JSON path targets values and can be used to extract or modify parts of a document. The JSON_EXTRACT() function demonstrates this by extracting one or more values:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- returns "SitePoint":</span></span><br><span class="line"><span class="keyword">SELECT</span> JSON_EXTRACT(</span><br><span class="line">  <span class="string">'&#123;"id": 1, "website": "SitePoint"&#125;'</span>, </span><br><span class="line">  <span class="string">'$.website'</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://www.sitepoint.com/use-json-data-fields-mysql-databases/" target="_blank" rel="noopener">https://www.sitepoint.com/use-json-data-fields-mysql-databases/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -874,7 +874,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -884,7 +884,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

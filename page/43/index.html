@@ -265,6 +265,120 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/30/PHP中的Traits详解/" itemprop="url">
+                  PHP中的Traits详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-30T11:27:17+08:00" content="2017-08-30">
+              2017-08-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>醉后不知天在水，满船清梦压星河<br></blockquote><br>PHP是单继承的语言，在PHP 5.4 Traits出现之前，PHP的类无法同时从两个基类继承属性或方法。php的Traits和Go语言的组合功能类似，通过在类中使用use关键字声明要组合的Trait名称，而具体某个Trait的声明使用trait关键词，Trait不能直接实例化<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Drive &#123;</span><br><span class="line">    <span class="keyword">public</span> $carName = <span class="string">'trait'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">driving</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"driving &#123;$this-&gt;carName&#125;\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"eat\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Drive</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">study</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"study\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$student = <span class="keyword">new</span> Student();</span><br><span class="line">$student-&gt;study();</span><br><span class="line">$student-&gt;eat();</span><br><span class="line">$student-&gt;driving();</span><br></pre></td></tr></table></figure></p>
+<p>输出结果:<br>study<br>eat<br>driving trait<br>上面的例子中，Student类通过继承Person，有了eat方法，通过组合Drive，有了driving方法和属性carName。</p>
+<p>如果Trait、基类和本类中都存在某个同名的属性或者方法，最终会保留哪一个呢？通过下面的代码测试一下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">trait</span> Drive &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"hello drive\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">driving</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"driving from drive\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"hello person\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">driving</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"driving from person\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Drive</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"hello student\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$student = <span class="keyword">new</span> Student();</span><br><span class="line">$student-&gt;hello();</span><br><span class="line">$student-&gt;driving()</span><br></pre></td></tr></table></figure></p>
+<p>输出结果如下：</p>
+<p>hello student<br>driving from drive</p>
+<p>因此得出结论：当方法或属性同名时，当前类中的方法会覆盖 trait的 方法，而 trait 的方法又覆盖了基类中的方法。</p>
+<p>如果要组合多个Trait，通过逗号分隔 Trait名称：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span>;</span><br></pre></td></tr></table></figure></p>
+<p>如果多个Trait中包含同名方法或者属性时，会怎样呢？答案是当组合的多个Trait包含同名属性或者方法时，需要明确声明解决冲突，否则会产生一个致命错误。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Trait1 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">trait</span> Trait2 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Class1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果:</p>
+<p>PHP Fatal error:  Trait method hello has not been applied, because there are collisions with other trait methods on Class1 in ~/php54/trait_3.php on line 20</p>
+<p>使用insteadof和as操作符来解决冲突，insteadof是使用某个方法替代另一个，而as是给方法取一个别名，具体用法请看代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Trait1 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait1::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">trait</span> Trait2 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Trait2::hi\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Class1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span> &#123;</span><br><span class="line">        <span class="title">Trait2</span>::<span class="title">hello</span> <span class="title">insteadof</span> <span class="title">Trait1</span>;</span><br><span class="line">        Trait1::hi <span class="keyword">insteadof</span> Trait2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Class2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Trait1</span>, <span class="title">Trait2</span> &#123;</span><br><span class="line">        <span class="title">Trait2</span>::<span class="title">hello</span> <span class="title">insteadof</span> <span class="title">Trait1</span>;</span><br><span class="line">        Trait1::hi <span class="keyword">insteadof</span> Trait2;</span><br><span class="line">        Trait2::hi <span class="keyword">as</span> hei;</span><br><span class="line">        Trait1::hello <span class="keyword">as</span> hehe;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$Obj1 = <span class="keyword">new</span> Class1();</span><br><span class="line">$Obj1-&gt;hello();</span><br><span class="line">$Obj1-&gt;hi();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\n"</span>;</span><br><span class="line">$Obj2 = <span class="keyword">new</span> Class2();</span><br><span class="line">$Obj2-&gt;hello();</span><br><span class="line">$Obj2-&gt;hi();</span><br><span class="line">$Obj2-&gt;hei();</span><br><span class="line">$Obj2-&gt;hehe();</span><br></pre></td></tr></table></figure></p>
+<p>输出结果如下：</p>
+<p>Trait2::hello<br>Trait1::hi</p>
+<p>Trait2::hello<br>Trait1::hi<br>Trait2::hi<br>Trait1::hello</p>
+<p>as关键词还有另外一个用途，那就是修改方法的访问控制：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">trait</span> Hello &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"hello,trait\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Class1</span> </span>&#123;</span><br><span class="line">        <span class="keyword">use</span> <span class="title">Hello</span> &#123;</span><br><span class="line">            <span class="title">hello</span> <span class="title">as</span> <span class="title">protected</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Class2</span> </span>&#123;</span><br><span class="line">        <span class="keyword">use</span> <span class="title">Hello</span> &#123;</span><br><span class="line">            <span class="title">Hello</span>::<span class="title">hello</span> <span class="title">as</span> <span class="title">private</span> <span class="title">hi</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $Obj1 = <span class="keyword">new</span> Class1();</span><br><span class="line">    $Obj1-&gt;hello(); <span class="comment"># 报致命错误，因为hello方法被修改成受保护的</span></span><br><span class="line">    $Obj2 = <span class="keyword">new</span> Class2();</span><br><span class="line">    $Obj2-&gt;hello(); <span class="comment"># 原来的hello方法仍然是公共的</span></span><br><span class="line">    $Obj2-&gt;hi();  <span class="comment"># 报致命错误，因为别名hi方法被修改成私有的</span></span><br></pre></td></tr></table></figure></p>
+<p>Trait 也能组合Trait，Trait中支持抽象方法、静态属性及静态方法，测试代码如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">trait</span> Hello &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Hello\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">trait</span> World &#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Hello</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sayWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"World\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWorld</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> $c = <span class="number">0</span>;</span><br><span class="line">        $c = $c + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"$c\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Doing something\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">World</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'get World'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$Obj = <span class="keyword">new</span> HelloWorld();</span><br><span class="line">$Obj-&gt;sayHello();</span><br><span class="line">$Obj-&gt;sayWorld();</span><br><span class="line"><span class="keyword">echo</span> $Obj-&gt;getWorld() . <span class="string">"\n"</span>;</span><br><span class="line">HelloWorld::doSomething();\</span><br><span class="line">$Obj-&gt;inc();</span><br><span class="line">$Obj-&gt;inc();</span><br></pre></td></tr></table></figure></p>
+<p>输出结果如下：</p>
+<p>Hello<br>World<br>get World<br>Doing something<br>1<br>2</p>
+<blockquote>
+<p><a href="http://tabalt.net/blog/php-traits/" target="_blank" rel="noopener">http://tabalt.net/blog/php-traits/</a><br><a href="https://stackoverflow.com/questions/47269922/php-traits-how-to-circumvenient-constructors-or-force-them-to-be-called" target="_blank" rel="noopener">https://stackoverflow.com/questions/47269922/php-traits-how-to-circumvenient-constructors-or-force-them-to-be-called</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/29/Laravel下使用Guzzle编写多线程爬虫实战/" itemprop="url">
                   Laravel下使用Guzzle编写多线程爬虫实战
                 </a>
@@ -645,128 +759,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/24/在centos下创建ftp用户/" itemprop="url">
-                  在centos下创建ftp用户
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-24T11:01:01+08:00" content="2017-08-24">
-              2017-08-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>没有捷径，逼迫自己！推掉不必要的社交，戒掉浪费时间的爱好，让自己感受到孤独和清醒，一把枪指着头，三个月内必须达到预想的目标，一件事，一件可以让自己更上一个台阶的事，会比无数看似有趣的生活妙招更让你喜欢自己！<br></blockquote>
-
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><blockquote>
-<p>说明本教程基于centos6.5配置</p>
-</blockquote>
-<p>安装:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum <span class="keyword">list</span> |grep vsftp</span><br><span class="line">yum install vsftpd.x86_64 -y</span><br></pre></td></tr></table></figure></p>
-<p>检查开机自启:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig vsftpd on</span><br></pre></td></tr></table></figure></p>
-<p>vsftpd             0:off    1:off    2:off    3:off    4:off    5:off    6:off<br>这里的0-6 指的是系统的启动级别,意思是 当 系统在 3 ,命令行界面的方式下会自动开启<br>设置自启动:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig vsftpd on</span><br></pre></td></tr></table></figure></p>
-<p>启动:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service vsftpd start</span><br></pre></td></tr></table></figure></p>
-<p>配置文件路径:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/vsftpd/</span><br></pre></td></tr></table></figure></p>
-<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd ftpuser</span><br><span class="line">passwd ftpuser</span><br></pre></td></tr></table></figure>
-<p>这样新创建的用户可以通过ssh 直接登录到我们的系统<br>禁止用户访问22端口</p>
-<h3 id="ssh-配置"><a href="#ssh-配置" class="headerlink" title="ssh 配置"></a>ssh 配置</h3><p>配置文件路径 <code>/etc/ssh</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure></p>
-<p>添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DenyUsers ftpuser</span><br></pre></td></tr></table></figure></p>
-<p>这样 ftpuser 这个用户就无法通过ssh远程登录服务器了</p>
-<p>同样我们可以在创建用户的时候就指定该用户不可以通过shh登录<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd myftp -s /sbin/nologin</span><br></pre></td></tr></table></figure></p>
-<h3 id="限制ftpuser的登录目录"><a href="#限制ftpuser的登录目录" class="headerlink" title="限制ftpuser的登录目录"></a>限制ftpuser的登录目录</h3><p>我们使用刚才创建的帐号通过类似 winscp 这样的工具可以方便的登录到我们的ftp服务器,登录以后默认的目录是改用户的家目录, 但是该ftp用户可以切换到任何一目录, 非常的不安全, 我们就需要限制改ftp的访问目录, 比如我们限制的我们的网站跟目录下 <code>/var/www/alidayu/</code>:<br>修改用户默认登入时的目录:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod -d /<span class="keyword">var</span>/www/alidayu myftp</span><br></pre></td></tr></table></figure></p>
-<p>修改<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/vsftpd.conf</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chroot_local_user=YES</span><br></pre></td></tr></table></figure>
-<p>重启<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service vsftpd restart</span><br></pre></td></tr></table></figure></p>
-<p>这样用户就被限制到自己的默认目录;</p>
-<h3 id="修改默认端口"><a href="#修改默认端口" class="headerlink" title="修改默认端口"></a>修改默认端口</h3><p>ftp服务的默认端口: 21</p>
-<p>编辑 /etc/vsftpd/vsftpd.conf 文件，在该配置文件中添加此行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen_port=<span class="number">801</span></span><br></pre></td></tr></table></figure></p>
-<p>编辑 /etc/services 文件，将其中的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ftp <span class="number">21</span>/tcp 改为 ftp <span class="number">801</span>/tcp</span><br><span class="line">ftp <span class="number">21</span>/udp 改为 ftp <span class="number">801</span>/udp</span><br></pre></td></tr></table></figure></p>
-<p>执行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/vsftpd restart </span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line">service vsftpd restart</span><br></pre></td></tr></table></figure></p>
-<p>重新启动 vsftpd 服务</p>
-<h3 id="在centos-7-x-上的配置"><a href="#在centos-7-x-上的配置" class="headerlink" title="在centos 7.x 上的配置"></a>在centos 7.x 上的配置</h3><h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum install -y vsftpd</span><br><span class="line"><span class="comment">#安装vsftpd</span></span><br><span class="line">yum install -y psmisc net-tools systemd-devel libdb-devel perl-DBI</span><br><span class="line"><span class="comment">#安装vsftpd虚拟用户配置依赖包</span></span><br><span class="line">systemctl start vsftpd.service</span><br><span class="line"><span class="comment">#启动</span></span><br><span class="line">systemctl enable vsftpd.service</span><br><span class="line"><span class="comment">#设置vsftpd开机启动</span></span><br></pre></td></tr></table></figure>
-<h4 id="错误无法启动"><a href="#错误无法启动" class="headerlink" title="错误无法启动"></a>错误无法启动</h4><p>由于centos7中vsftp的配置文件默认将 listen_ipv6=YES 这一行没有注释掉，而我们目前的网络环境还不支持ipv6，从而导致出现错误无法启动，所以解决方法是将 listen_ipv6=YES更改为：listen_ipv6=NO，或将这一行注释掉</p>
-<p>按上面的方法注释掉 listen_ipv6=YES后，成功启动vsftp</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -810,7 +802,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -820,7 +812,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

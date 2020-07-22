@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/24/MYSQL静态表-动态表-压缩表/" itemprop="url">
+                  MYSQL静态表-动态表-压缩表
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-24T15:26:52+08:00" content="2017-01-24">
+              2017-01-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我是主角，我不能死。<br></blockquote><br>mysql在创建表的时候定义表的性质（也叫表的类型），共有三种：静态表，动态表，压缩表。默认是静态表，如果存在varchar、blob、text字段，表类型就是动态了。</p>
+<h3 id="静态表"><a href="#静态表" class="headerlink" title="静态表"></a>静态表</h3><p>字段有固定长度，例如：char(20)。如果使用gbk字符集存储中文username，将占用40byte，如果username的实际内容没有达到 40byte，将会填充空格，以达到40byte。速度很快，因为mysql知道username总是从第41个字节开始，容易缓存，出现问题后也容易恢 复（mysql知道记录的确切位置），需要更多的硬盘空间（如果有三个上面的字段，一条记录就会占120字节，即使实际只用了其中一部分）</p>
+<h3 id="动态表"><a href="#动态表" class="headerlink" title="动态表"></a>动态表</h3><p>字 段不定长（变长），这种表格式比较节省空间，但是复杂度更高，每条记录都有一个header，作用就是表明该记录有多长，所有的字符串列都是动态的（除非 小于4个字节，这种情况下，节省的空间可以忽略不计，增加的复杂度会反而会导致性能丢失），通常占用比静态表少的多地空间，但是必须经常维护（避免碎 片），例如：更新了用户名somebody为somebodyt，t不能立刻就出现在y的后面，因为空间被其他记录占用，对于出现碎片的列，每个新连接会 损失6个字节。而且出现问题后不容易重建（前面我说的静态表正好相反），如果碎片严重，有可能出现库爆炸（^_^）.</p>
+<p>不包括连接的动态记录的空间消耗可以用下面的公式计算：<br>3+(列数+7)/8+（字符列数）+数字列的打包尺寸+字符串长度+（空列的数量+7）/8</p>
+<p>每条记录的header可以表明那个字符串列是空的，那个数字列包含0（非空），在那种情况下不向磁盘存储，非空字符串包含一个长度字节加上字符串内容。</p>
+<h3 id="压缩表"><a href="#压缩表" class="headerlink" title="压缩表"></a>压缩表</h3><p>只读，使用很少的空间，用myisampack工具创建，表要少得多，每条记录分开压缩，所以不能同时访问，可以压缩静态表和动态表。<br>创建方法：myisampack [options] filename</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/23/安装phpRedisAdmin/" itemprop="url">
                   安装phpRedisAdmin
                 </a>
@@ -647,126 +746,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/28/php-cli的使用/" itemprop="url">
-                  php-cli的使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-28T09:22:49+08:00" content="2016-12-28">
-              2016-12-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>关山难越，谁悲失路之人？<br>萍水相逢，尽是他乡之客。<br></blockquote><br>HP作为一门web开发语言，通常情况下我们都是在Web Server中运行PHP，使用浏览器访问，因此很少关注其命令行操作以及相关参数的使用，但是，特别是在类Unix操作系统上，PHP可以作为一门脚本语言执行与shell类似的处理任务。</p>
-<blockquote>
-<p>运行时间：php-cli默认运行时间是无穷，而网页php默认设置是30s。</p>
-</blockquote>
-<h3 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h3><ul>
-<li><p>运行指定php文件</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php my_script.php</span><br><span class="line"> </span><br><span class="line">php -f  <span class="string">"my_script.php"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行php代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php -r <span class="string">"print_r(get_defined_constants());"</span></span><br><span class="line"><span class="comment">// laravel安装时的一条命令</span></span><br><span class="line">php -r <span class="string">"file_exists('.env') || copy('.env.example', '.env');"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>语法检查</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -l index.php</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看版本信息</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -v</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示配置文件</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php --ini</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>接收参数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'命令行参数个数: '</span> . $argc . <span class="string">"\n"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"命令行参数:\n"</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($argv <span class="keyword">as</span> $index =&gt; $arg) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"    &#123;$index&#125; : &#123;$arg&#125;\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 执行命令</span></span><br><span class="line">php console.php hello world</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>开启服务器</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在指定目录下运行该命令，通过url访问http://localhost:8000/hello.php</span></span><br><span class="line">php -S localhost:<span class="number">8000</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -810,7 +789,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -820,7 +799,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,113 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/08/shell中的特殊变量/" itemprop="url">
+                  shell中的特殊变量
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-08T12:17:27+08:00" content="2018-07-08">
+              2018-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>兄弟，这世上就一种病，你永远也治不了，那就是穷病<br></blockquote>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前进程ID</span></span><br><span class="line"><span class="keyword">echo</span> $$</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前脚本文件名</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的参数,n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2。</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的参数个数</span></span><br><span class="line"><span class="keyword">echo</span> $<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的所有参数</span></span><br><span class="line"><span class="keyword">echo</span> $*</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传递给脚本或函数的所有参数。被双引号(" ")包含时，与 $* 稍有不同</span></span><br><span class="line"><span class="keyword">echo</span> $@</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $*和S@的差别</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\$*=$*"</span></span><br><span class="line"><span class="keyword">echo</span> --------------------------</span><br><span class="line"><span class="keyword">for</span> n in <span class="string">"$*"</span>;<span class="keyword">do</span> <span class="keyword">echo</span> $n;done</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"\$@=$@"</span></span><br><span class="line"><span class="keyword">echo</span> --------------------------</span><br><span class="line"><span class="keyword">for</span> n in <span class="string">"$@"</span>;<span class="keyword">do</span> <span class="keyword">echo</span> $n;done</span><br></pre></td></tr></table></figure>
+<p>结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$*=<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line">--------------------------</span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line"></span><br><span class="line">$@=<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> asdf $asdfasdf</span><br><span class="line">--------------------------</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line">asdf $asdfasdf</span><br></pre></td></tr></table></figure></p>
+<p>从上面结果可以看到：<br><code>$*</code>将所有位置参数当做一个字符串输出；<br><code>$@</code>将每个位置参数当做独立的元素处理，带空格的参数也当做一个整体。</p>
+<blockquote>
+<p><a href="http://xstarcd.github.io/wiki/shell/shell_special_variables.html" target="_blank" rel="noopener">http://xstarcd.github.io/wiki/shell/shell_special_variables.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/08/curl命令详解/" itemprop="url">
                   curl命令详解
                 </a>
@@ -662,144 +769,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/27/阿里云ecs服务器挂载磁盘/" itemprop="url">
-                  阿里云ECS服务器挂载磁盘
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-27T13:44:26+08:00" content="2018-06-27">
-              2018-06-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>不要到处宣扬自己的内心，这世上不止你一个人有故事<br></blockquote>
-
-<p>使用阿里云ECS服务器， 购买的40G高效云盘已经不够用， 所以又购买了一块云盘， 但是仅仅通过控制台操作并不能将磁盘挂载到系统， 接下来记录我的挂载流程； 为了安全起见， 建议先去做一个磁盘快照</p>
-<ul>
-<li><p>检查磁盘现在的情况</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail <span class="keyword">Use</span>% <span class="title">Mounted</span> <span class="title">on</span></span><br><span class="line">/<span class="title">dev</span>/<span class="title">vda1</span>        40<span class="title">G</span>   35<span class="title">G</span>  3.2<span class="title">G</span>  92% /</span><br><span class="line"><span class="title">devtmpfs</span>        3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span>/<span class="title">shm</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>  632<span class="title">K</span>  3.9<span class="title">G</span>   1% /<span class="title">run</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">sys</span>/<span class="title">fs</span>/<span class="title">cgroup</span></span><br><span class="line"><span class="title">tmpfs</span>           783<span class="title">M</span>     0  783<span class="title">M</span>   0% /<span class="title">run</span>/<span class="title">user</span>/0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看硬盘个数及分区 </p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/vda: <span class="number">42.9</span> GB, <span class="number">42949672960</span> bytes, <span class="number">83886080</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x0008d73a</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83884031</span>    <span class="number">41940992</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">21.5</span> GB, <span class="number">21474836480</span> bytes, <span class="number">41943040</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br></pre></td></tr></table></figure>
-<p>我们可以看到那块20GB的磁盘：/dev/xdb</p>
-</li>
-<li><p>对这块硬盘进行分区<br><img style="margin-left: 0;" src="/images/20160103150446502.png"></p>
-</li>
-<li><p>查看</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/vda: <span class="number">42.9</span> GB, <span class="number">42949672960</span> bytes, <span class="number">83886080</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x0008d73a</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83884031</span>    <span class="number">41940992</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">21.5</span> GB, <span class="number">21474836480</span> bytes, <span class="number">41943040</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: <span class="number">0x7a2b9a92</span></span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vdb1            <span class="number">2048</span>    <span class="number">41943039</span>    <span class="number">20970496</span>   <span class="number">83</span>  Linux</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>格式化新分区</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext3 /dev/vdb1</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建挂载目录<br>建议挂载到mnt目录， 也可以自己创建新的目录</p>
-</li>
-<li><p>挂载分区到目录</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/vdb1 /mnt</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail <span class="keyword">Use</span>% <span class="title">Mounted</span> <span class="title">on</span></span><br><span class="line">/<span class="title">dev</span>/<span class="title">vda1</span>        40<span class="title">G</span>   35<span class="title">G</span>  3.1<span class="title">G</span>  92% /</span><br><span class="line"><span class="title">devtmpfs</span>        3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">dev</span>/<span class="title">shm</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>  636<span class="title">K</span>  3.9<span class="title">G</span>   1% /<span class="title">run</span></span><br><span class="line"><span class="title">tmpfs</span>           3.9<span class="title">G</span>     0  3.9<span class="title">G</span>   0% /<span class="title">sys</span>/<span class="title">fs</span>/<span class="title">cgroup</span></span><br><span class="line"><span class="title">tmpfs</span>           783<span class="title">M</span>     0  783<span class="title">M</span>   0% /<span class="title">run</span>/<span class="title">user</span>/0</span><br><span class="line">/<span class="title">dev</span>/<span class="title">vdb1</span>        20<span class="title">G</span>   45<span class="title">M</span>   19<span class="title">G</span>   1% /<span class="title">mnt</span></span><br><span class="line">```  </span><br><span class="line">- 设置开机自动挂载 </span><br><span class="line">```<span class="title">php</span></span><br><span class="line"><span class="title">cat</span> /<span class="title">etc</span>/<span class="title">fstab</span></span><br><span class="line">#</span><br><span class="line"># /<span class="title">etc</span>/<span class="title">fstab</span></span><br><span class="line"># <span class="title">Created</span> <span class="title">by</span> <span class="title">anaconda</span> <span class="title">on</span> <span class="title">Sun</span> <span class="title">Oct</span> 15 15:19:00 2017</span><br><span class="line">#</span><br><span class="line"># <span class="title">Accessible</span> <span class="title">filesystems</span>, <span class="title">by</span> <span class="title">reference</span>, <span class="title">are</span> <span class="title">maintained</span> <span class="title">under</span> '/<span class="title">dev</span>/<span class="title">disk</span>'</span><br><span class="line"># <span class="title">See</span> <span class="title">man</span> <span class="title">pages</span> <span class="title">fstab</span>(5), <span class="title">findfs</span>(8), <span class="title">mount</span>(8) <span class="title">and</span>/<span class="title">or</span> <span class="title">blkid</span>(8) <span class="title">for</span> <span class="title">more</span> <span class="title">info</span></span><br><span class="line">#</span><br><span class="line"><span class="title">UUID</span>=<span class="title">eb448abb</span>-3012-4<span class="title">d8d</span>-<span class="title">bcde</span>-94434<span class="title">d586a31</span> /                       <span class="title">ext4</span>    <span class="title">defaults</span>        1 1</span><br></pre></td></tr></table></figure>
-<p>修改</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/fstab</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># /etc/fstab</span></span><br><span class="line"><span class="comment"># Created by anaconda on Sun Oct 15 15:19:00 2017</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Accessible filesystems, by reference, are maintained under '/dev/disk'</span></span><br><span class="line"><span class="comment"># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">UUID=eb448abb<span class="number">-3012</span><span class="number">-4</span>d8d-bcde<span class="number">-94434</span>d586a31 /                       ext4    defaults        <span class="number">1</span> <span class="number">1</span></span><br><span class="line">/dev/vdb1                                 /mnt                    ext3    defaults        <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启</p>
-</li>
-</ul>
-<blockquote>
-<p><a href="https://help.aliyun.com/document_detail/25426.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/25426.html</a><br><a href="https://blog.csdn.net/wyzhangchengjin123/article/details/50451065" target="_blank" rel="noopener">https://blog.csdn.net/wyzhangchengjin123/article/details/50451065</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -843,7 +812,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">362</span>
+              <span class="site-state-item-count">363</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -853,7 +822,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
