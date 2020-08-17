@@ -265,6 +265,150 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/11/使用supervisor管理laravel队列进程/" itemprop="url">
+                  使用Supervisor管理Laravel队列进程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-11T18:24:02+08:00" content="2018-04-11">
+              2018-04-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你看了一千个正确答案，还是要一秒一秒的等时间<br></blockquote>
+
+<p>Supervisor 是一个 Python 写的进程管理工具，有时一个进程需要在后台运行，并且意外挂掉后能够自动重启，就需要这么一个管理进程的工具。在 Laravel 开发中，也经常使用到队列监听，可以配合 Supervisor 来管理 Laravel 队列进程。</p>
+<h3 id="Supervisor的安装"><a href="#Supervisor的安装" class="headerlink" title="Supervisor的安装"></a>Supervisor的安装</h3><ul>
+<li><p>使用 pip 工具进行安装：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br><span class="line">sudo yum -y install  python-pip</span><br><span class="line">sudo pip install supervisor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Ubuntu 系统使用 apt-get</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install supervisor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>还有其他的安装方式，请见官网（<a href="http://supervisord.org/）" target="_blank" rel="noopener">http://supervisord.org/）</a></p>
+</li>
+</ul>
+<h3 id="Supervisor的配置"><a href="#Supervisor的配置" class="headerlink" title="Supervisor的配置"></a>Supervisor的配置</h3><p>一般配置文件在<code>/etc/supervisor/conf.d</code> 目录下<br>也可以运行这个命令可以生成一个默认的配置文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>生成成功后，打开编辑这个文件，把最后的 include 块的注释打开，并修改如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[include]</span><br><span class="line">files = /etc/supervisor/*.conf</span><br></pre></td></tr></table></figure></p>
+<p>新增的 Supervisor 配置文件放在 /etc/supervisor 目录下，并且以 conf 结尾。</p>
+<p>这时我们使用新的配置文件来启动 Supervisor：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>如果提示已经有进程在运行，那么先 kill 掉它。</p>
+<h3 id="使用Supervisor管理Laravel队列进程"><a href="#使用Supervisor管理Laravel队列进程" class="headerlink" title="使用Supervisor管理Laravel队列进程"></a>使用Supervisor管理Laravel队列进程</h3><p>我们使用 Laravel 队列，会用到 php artisan queue:work 命令，让它监听队列，我们可以通过 nohup 方式让它在后台运行，但是进程如果意外中断是不会自动重启的，所以使用 Supervisor 来监控进程是个很好的方式。</p>
+<p>首先在 /etc/supervisor 目录下新增一个 Supervisor 的配置文件，如下：<br>文件名<code>erp2-worker.conf</code>,和配置文件中指定的program保持一致<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[program:erp2-worker]</span><br><span class="line">process_name=%(program_name)s_%(process_num)<span class="number">02</span>d</span><br><span class="line">command=/usr/bin/php7 /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">autostart=<span class="keyword">true</span></span><br><span class="line">autorestart=<span class="keyword">true</span></span><br><span class="line">user=vagrant</span><br><span class="line">numprocs=<span class="number">8</span></span><br><span class="line">redirect_stderr=<span class="keyword">true</span></span><br><span class="line">stdout_logfile=/<span class="keyword">var</span>/log/supervisor/laravel-queue.log</span><br></pre></td></tr></table></figure></p>
+<p>这里 user 填写网站运行进程的用户，如 vagrant，numprocs 表示启动多少个进程来监听 Laravel 队列。<br>一切就绪后，我们使用如下命令就可以启动队列进程的监听了：</p>
+<blockquote>
+<p>注意: 修改了配置文件以后都要进行 reload 和 update<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">supervisord <span class="comment"># 先执行</span></span><br><span class="line"></span><br><span class="line">sudo supervisorctl reload</span><br><span class="line"></span><br><span class="line">sudo supervisorctl update</span><br><span class="line"></span><br><span class="line">sudo supervisorctl start erp2-worker:*</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者</span></span><br><span class="line">sudo supervisorctl start all</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>但是在这一步，发生了错误，提示如下：</p>
+<blockquote>
+<p>laravel-worker:laravel-worker_00: ERROR (spawn error)<br>laravel-worker:laravel-worker_01: ERROR (spawn error)<br>laravel-worker:laravel-worker_02: ERROR (spawn error)<br>laravel-worker:laravel-worker_03: ERROR (spawn error)<br>laravel-worker:laravel-worker_04: ERROR (spawn error)<br>laravel-worker:laravel-worker_05: ERROR (spawn error)<br>laravel-worker:laravel-worker_06: ERROR (spawn error)<br>laravel-worker:laravel-worker_07: ERROR (spawn error)</p>
+</blockquote>
+<p>经过一番折腾，解决方法是，把 Supervisor 的日志文件，和新增的队列配置文件中的日志文件，用 chown 把用户和组设置为正确的，如本例是 chown vagrant:vagrant file_name，另外把日志文件权限设置为 777.</p>
+<p>再次经过上述步骤，成功开启进程管理：</p>
+<blockquote>
+<p>laravel-worker:laravel-worker_00: started<br>laravel-worker:laravel-worker_01: started<br>laravel-worker:laravel-worker_02: started<br>laravel-worker:laravel-worker_03: started<br>laravel-worker:laravel-worker_04: started<br>laravel-worker:laravel-worker_05: started<br>laravel-worker:laravel-worker_06: started<br>laravel-worker:laravel-worker_07: started</p>
+</blockquote>
+<p>可以看到 Laravel 队列开始正常运行了，这里值得注意的是，如果 Laravel 处理队列的代码更改了，需要重启 Supervisor 的队列管理才能生效。</p>
+<p>查看运行情况:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep <span class="string">'queue:work'</span></span><br></pre></td></tr></table></figure></p>
+<p>结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vagrant   <span class="number">4899</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4900</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4901</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4902</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4903</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4904</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4905</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4906</span>  <span class="number">1407</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">10</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/php /home/vagrant/code/ccerp-v2/artisan queue:work --tries=<span class="number">3</span></span><br><span class="line">vagrant   <span class="number">4978</span>  <span class="number">2575</span>  <span class="number">0</span> <span class="number">03</span>:<span class="number">11</span> pts/<span class="number">0</span>    <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> grep --color=auto queue:work</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个错误"><a href="#一个错误" class="headerlink" title="一个错误"></a>一个错误</h3><p>使用<code>supervisorctl reload</code>却得到报错提示：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: &lt;class 'socket.error'&gt;, [Errno 2] No such file or directory: file: /usr/lib/python2.7/socket.py line: 228</span><br></pre></td></tr></table></figure></p>
+<p>在运行 reload 命令前，先运行如下两个命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisord -c /etc/supervisor/supervisord.conf  </span><br><span class="line">sudo supervisorctl -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>或者直接<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisord</span><br></pre></td></tr></table></figure></p>
+<p>即可解决</p>
+<h3 id="Horizon"><a href="#Horizon" class="headerlink" title="Horizon"></a>Horizon</h3><p><code>Horizon</code>为 Laravel 官方出品的 Redis 队列提供了一个可以通过代码进行配置、并且非常漂亮的仪表盘，并且能够轻松监控队列的任务吞吐量、执行时间以及任务失败情况等关键指标。</p>
+<p>队列执行者的所有配置项都存放在一个简单的配置文件中，所以团队可以通过版本控制进行协作维护。</p>
+<p>生产环境中，我们需要配置一个进程管理工具来监控 php artisan horizon 命令的执行，以便在其意外退出时自动重启。当服务器部署新代码时，需要终止当前 Horizon 主进程，然后通过进程管理工具来重启，从而使用最新的代码。</p>
+<p>使用 Artisan 命令 <code>horizon:terminate</code> 来正常停止系统中的 <code>Horizon</code> 主进程，此命令执行时，<code>Horizon</code> 当前执行中的任务会被正常完成，然后 Horizon 执行结束：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan horizon:terminate</span><br></pre></td></tr></table></figure></p>
+<p>Supervisor 配置<br>可以使用进程管理工具 Supervisor 来管理 horizon 进程，下面配置文件就已够用：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[program:horizon]</span><br><span class="line">process_name=%(program_name)</span><br><span class="line">command=php /home/forge/app.com/artisan horizon</span><br><span class="line">autostart=<span class="keyword">true</span></span><br><span class="line">autorestart=<span class="keyword">true</span></span><br><span class="line">user=forge</span><br><span class="line">redirect_stderr=<span class="keyword">true</span></span><br><span class="line">stdout_logfile=/home/forge/app.com/horizon.log</span><br></pre></td></tr></table></figure></p>
+<p>注意Horizon仅仅支持redis, 不支持database等其他队列引擎;</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>配置说明:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">; 设置进程的名称，使用 supervisorctl 来管理进程时需要使用该进程名</span><br><span class="line">[program:foo] </span><br><span class="line">; 可以在 command 这里用 python 表达式传递不同的参数给每个进程</span><br><span class="line">command=python server.py --port=<span class="number">90</span>%(process_num)<span class="number">02</span>d</span><br><span class="line">directory=/home/python/tornado_server ; 执行 command 之前，先切换到工作目录</span><br><span class="line">; 若 numprocs 不为<span class="number">1</span>，process_name 的表达式中一定要包含 process_num 来区分不同的进程</span><br><span class="line">numprocs=<span class="number">2</span>                   </span><br><span class="line">process_name=%(program_name)s_%(process_num)<span class="number">02</span>d; </span><br><span class="line">user=oxygen                 ; 使用 oxygen 用户来启动该进程</span><br><span class="line">autorestart=<span class="keyword">true</span>            ; 程序崩溃时自动重启</span><br><span class="line">redirect_stderr=<span class="keyword">true</span>        ; 重定向输出的日志</span><br><span class="line">stdout_logfile = /<span class="keyword">var</span>/log/supervisor/tornado_server.log</span><br><span class="line">loglevel=info</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子会启动两个进程，process_name 分别为 foo:foo_01 和 foo:foo_02。通过这样一种方式，就可以用一个 [program:x] 配置项，来启动一组非常类似的进程。</p>
+<blockquote>
+<p><a href="https://laravel-china.org/topics/3592/using-supervisor-to-manage-laravel-queue-processes" target="_blank" rel="noopener">https://laravel-china.org/topics/3592/using-supervisor-to-manage-laravel-queue-processes</a><br><a href="https://laravel-china.org/docs/laravel/5.5/horizon" target="_blank" rel="noopener">https://laravel-china.org/docs/laravel/5.5/horizon</a><br><a href="https://www.restran.net/2015/10/04/supervisord-tutorial/" target="_blank" rel="noopener">https://www.restran.net/2015/10/04/supervisord-tutorial/</a><br><a href="http://weidwonder.leanote.com/post/Untitled-55faa25638f4111167000067-6" target="_blank" rel="noopener">http://weidwonder.leanote.com/post/Untitled-55faa25638f4111167000067-6</a><br><a href="https://linuxize.com/post/how-to-install-pip-on-centos-7/" target="_blank" rel="noopener">https://linuxize.com/post/how-to-install-pip-on-centos-7/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/11/laravel使用自定义异常类/" itemprop="url">
                   Laravel使用自定义异常类
                 </a>
@@ -689,112 +833,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/08/面向对象的微信小程序/" itemprop="url">
-                  面向对象的微信小程序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-08T10:54:06+08:00" content="2018-04-08">
-              2018-04-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>若是眼睛不喜欢，心也会拒绝。<br></blockquote>
-
-<p>现在我们就以我们的home页面为例, 说一下使用面向对象的方式如何开发微信小程序;</p>
-<h3 id="文件目录结构"><a href="#文件目录结构" class="headerlink" title="文件目录结构"></a>文件目录结构</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- pages</span><br><span class="line">-- home</span><br><span class="line">--- home-model.js</span><br><span class="line">--- home.js</span><br><span class="line">--- home.wxml</span><br><span class="line">--- home.wxss</span><br><span class="line">--- home.json</span><br></pre></td></tr></table></figure>
-<p>我们新建一个model类, 用来处理一些复杂的逻辑， 以使我们的代码变得整洁;</p>
-<h3 id="home-model-js"><a href="#home-model-js" class="headerlink" title="home-model.js"></a>home-model.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Home</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="comment">// 构造函数</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 根据banner获取id</span></span><br><span class="line">  getBannerData(id)&#123;</span><br><span class="line">    wx.request(&#123;</span><br><span class="line">      url: <span class="string">'http://tp5.me/api/v1/banner/'</span>+id,</span><br><span class="line">      method: <span class="string">'GET'</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Home&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="home-js"><a href="#home-js" class="headerlink" title="home.js"></a>home.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Home &#125; <span class="keyword">from</span> <span class="string">'home-model.js'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> home = <span class="keyword">new</span> Home();</span><br><span class="line"></span><br><span class="line"><span class="comment">// pages/home.js</span></span><br><span class="line">Page(&#123;</span><br><span class="line"></span><br><span class="line">  data: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  onLoad: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'home on load'</span>);</span><br><span class="line">    <span class="keyword">this</span>._loadData();</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定义一个私有方法</span></span><br><span class="line">  _loadData: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> id = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">var</span> data = home.getBannerData(id)</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h3 id="接收异步返回值"><a href="#接收异步返回值" class="headerlink" title="接收异步返回值"></a>接收异步返回值</h3><p>因为API返回的数据是异步的， 所以我们无法通过调用直接拿到返回值， 但是我们可以通过设置一个回调函数拿到他的返回值<br>home.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个私有方法</span></span><br><span class="line">_loadData: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> id = <span class="number">1</span>;</span><br><span class="line">  home.getBannerData(id, <span class="keyword">this</span>.callback);</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">callback: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'回调返回'</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>home-model.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">getBannerData(id, callback)&#123;</span><br><span class="line">    wx.request(&#123;</span><br><span class="line">      url: <span class="string">'http://tp5.me/api/v1/banner/'</span>+id,</span><br><span class="line">      method: <span class="string">'GET'</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">        callback(res);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="构造基类"><a href="#构造基类" class="headerlink" title="构造基类"></a>构造基类</h3><p>目录结构<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- pages</span><br><span class="line">- utils</span><br><span class="line">-- base.js</span><br><span class="line">-- util.js</span><br><span class="line">-- config.js</span><br><span class="line">- app.js</span><br><span class="line">- app.json</span><br><span class="line">- app.wxss</span><br></pre></td></tr></table></figure></p>
-<h4 id="构造配置类"><a href="#构造配置类" class="headerlink" title="构造配置类"></a>构造配置类</h4><p>config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Config.restUrl = <span class="string">'http://tp5.me/api/v1/'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Config&#125;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="构造基类-1"><a href="#构造基类-1" class="headerlink" title="构造基类"></a>构造基类</h4><p>base.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Config &#125; <span class="keyword">from</span> <span class="string">'../utils/config.js'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="keyword">this</span>.baseRequestUrl = Config.restUrl;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  request(params)&#123;</span><br><span class="line">    <span class="keyword">var</span> url = <span class="keyword">this</span>.baseRequestUrl + params.url;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!params.type) &#123;</span><br><span class="line">      params.type = <span class="string">'GET'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    wx.request(&#123;</span><br><span class="line">      url: url,</span><br><span class="line">      data: params.type,</span><br><span class="line">      header: &#123;</span><br><span class="line">        <span class="string">'content-type'</span>: <span class="string">'application/json'</span>,</span><br><span class="line">        <span class="string">'token'</span>: wx.getStorageInfoSync(<span class="string">'token'</span>)</span><br><span class="line">      &#125;,</span><br><span class="line">      method: params.type,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        params.callback &amp;&amp; params.callback(res.data);</span><br><span class="line">      &#125;,</span><br><span class="line">      fail: <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(error);</span><br><span class="line">      &#125;,</span><br><span class="line">      complete: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        </span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Base&#125;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h4><p>home-model.js</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Base &#125; <span class="keyword">from</span> <span class="string">'../../utils/base.js'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Home</span> <span class="keyword">extends</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="comment">// 如果继承了某个类， 则必须要调用 super</span></span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getBannerData(id, callback)&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> params = &#123;</span><br><span class="line">      url: <span class="string">'banner/'</span>+id,</span><br><span class="line">      callback:<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">        callback &amp;&amp; callback(res.items)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>.request(params);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;Home&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -838,7 +876,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">363</span>
+              <span class="site-state-item-count">364</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

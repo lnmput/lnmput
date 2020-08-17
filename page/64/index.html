@@ -265,6 +265,100 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/06/一个简单的下载图片的爬虫/" itemprop="url">
+                  一个简单的下载图片的爬虫
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-06T22:37:05+08:00" content="2016-12-06">
+              2016-12-06
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>你为什么从事喜剧行业？人们总是嘲笑我，所以我想，去他妈的，干脆收他们点儿钱！<br></blockquote><br>一个简单的下载图片的爬虫<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">headers = &#123;<span class="string">'User-Agent'</span>:<span class="string">"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"</span>&#125;</span><br><span class="line">all_url = <span class="string">'http://www.mzitu.com/all'</span></span><br><span class="line">start_html = requests.get(all_url,  headers=headers)</span><br><span class="line">Soup = BeautifulSoup(start_html.text, <span class="string">'lxml'</span>)</span><br><span class="line"></span><br><span class="line">all_a = Soup.find(<span class="string">'div'</span>, class_=<span class="string">'all'</span>).find_all(<span class="string">'a'</span>)</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> all_a:</span><br><span class="line">    title = a.get_text()</span><br><span class="line">    href = a.get(<span class="string">'href'</span>)</span><br><span class="line">    html = requests.get(href, headers=headers)</span><br><span class="line">    html_Soup = BeautifulSoup(html.text, <span class="string">'lxml'</span>)</span><br><span class="line">    max_span = html_Soup.findAll(<span class="string">'span'</span>)[<span class="number">10</span>].get_text()</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1</span>, int(max_span) + <span class="number">1</span>):</span><br><span class="line">        page_url = href + <span class="string">'/'</span> + str(page)</span><br><span class="line">        img_html = requests.get(page_url, headers=headers)</span><br><span class="line">        img_Soup = BeautifulSoup(img_html.text, <span class="string">'lxml'</span>)</span><br><span class="line">        img_url = img_Soup.find(<span class="string">'div'</span>, class_=<span class="string">'main-image'</span>).find(<span class="string">'img'</span>)[<span class="string">'src'</span>]</span><br><span class="line">        name = img_url[<span class="number">-9</span>:<span class="number">-4</span>]</span><br><span class="line">        img = requests.get(img_url, headers=headers)</span><br><span class="line">        f = open(name + <span class="string">'.jpg'</span>, <span class="string">'ab'</span>)</span><br><span class="line">        f.write(img.content)</span><br><span class="line">        f.close()</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/04/laravel5-2使用JWT/" itemprop="url">
                   laravel5.2使用JWT
                 </a>
@@ -686,104 +780,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/30/chrome消息传递实例/" itemprop="url">
-                  chrome消息传递实例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-30T16:22:13+08:00" content="2016-11-30">
-              2016-11-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>不管我本人多么平庸，我总觉得对你的爱很美。<br></blockquote>
-
-<h3 id="manifest-json"><a href="#manifest-json" class="headerlink" title="manifest.json"></a>manifest.json</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"name"</span>: <span class="string">"消息传递"</span>,</span><br><span class="line"><span class="attr">"version"</span>: <span class="string">"1.0"</span>,</span><br><span class="line"><span class="attr">"manifest_version"</span>: <span class="number">2</span>,</span><br><span class="line"><span class="attr">"description"</span>: <span class="string">"各个页面JS之间事件的触发和消息的传递"</span>,</span><br><span class="line"><span class="attr">"browser_action"</span>: &#123;</span><br><span class="line"><span class="attr">"default_icon"</span>: <span class="string">"images/icon38.png"</span>,</span><br><span class="line"><span class="attr">"default_popup"</span>: <span class="string">"popup.html"</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="attr">"background"</span>: &#123;</span><br><span class="line"><span class="attr">"scripts"</span>: [<span class="string">"js/background.js"</span>,<span class="string">"js/jquery.min.js"</span>],</span><br><span class="line"><span class="attr">"persistent"</span>: <span class="literal">false</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="attr">"permissions"</span>: [<span class="string">"tabs"</span>, <span class="string">"&lt;all_urls&gt;"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="popup-html"><a href="#popup-html" class="headerlink" title="popup.html"></a>popup.html</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"js/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"js/content.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"newtab"</span> &gt;</span>new tab<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="content-js"><a href="#content-js" class="headerlink" title="content.js"></a>content.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">$(<span class="string">"#newtab"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">chrome.runtime.sendMessage(&#123;<span class="attr">action</span>:<span class="string">"new_tab"</span>&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="background-js"><a href="#background-js" class="headerlink" title="background.js"></a>background.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">chrome.runtime.onMessage.addListener(<span class="function"><span class="keyword">function</span> (<span class="params">request, sender, sendResponse</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(request.action != <span class="string">'new_tab'</span>)&#123;</span><br><span class="line"><span class="keyword">var</span> newURL = <span class="string">"http://stackoverflow.com/"</span>;</span><br><span class="line">chrome.tabs.create(&#123; <span class="attr">url</span>: newURL &#125;);</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line"><span class="keyword">var</span> newURL = <span class="string">"http://www.baidu.com/"</span>;</span><br><span class="line">chrome.tabs.create(&#123; <span class="attr">url</span>: newURL &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -827,7 +823,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">363</span>
+              <span class="site-state-item-count">364</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

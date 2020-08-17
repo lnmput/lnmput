@@ -265,6 +265,103 @@
             
               
                 
+                <a class="post-title-link" href="/2017/04/13/php中如何使用引用/" itemprop="url">
+                  php中如何使用引用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-13T09:29:20+08:00" content="2017-04-13">
+              2017-04-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>一想到时光匆匆，竟经不起半点挥霍，我就会对时间吝啬起来，因为此刻已过，便永不复还。<br></blockquote>
+
+<h3 id="实例一"><a href="#实例一" class="headerlink" title="实例一"></a>实例一</h3><p>使用foreach修改数组<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">packedData</span><span class="params">($data, $key, $type = <span class="string">'delete'</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 删除data中的必要数据</span></span><br><span class="line">        <span class="keyword">if</span> ($type == <span class="string">'update'</span>) &#123;</span><br><span class="line">            <span class="keyword">foreach</span> ($data <span class="keyword">as</span> &amp;$order) &#123;</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'useragent'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'ad_id'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'ad_channel'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'ad_url'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'ad_referer'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'ad_referer_host'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'ad_url_param'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'utm_source'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'utm_medium'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'utm_term'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'utm_content'</span>]);</span><br><span class="line">                <span class="keyword">unset</span>($order[<span class="string">'utm_campaign'</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">'key'</span> =&gt; $key,</span><br><span class="line">            <span class="string">'data'</span> =&gt; $data</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="实例二"><a href="#实例二" class="headerlink" title="实例二"></a>实例二</h3><p>在没有返回值的情况下修改数组中的值<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $datas = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>];</span><br><span class="line">    haha($datas);</span><br><span class="line">    dump($datas);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">haha</span><span class="params">(&amp;$datas)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> ($datas <span class="keyword">as</span> $data) &#123;</span><br><span class="line">        $data = $data * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $datas;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/12/Http协议浏览器缓存缓存机制/" itemprop="url">
                   Http协议浏览器缓存缓存机制
                 </a>
@@ -691,103 +788,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/06/Laravel开发记录sql/" itemprop="url">
-                  Laravel开发记录sql
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-06T17:09:54+08:00" content="2017-04-06">
-              2017-04-06
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>啊 这瞌睡 这瞌睡像十除以三<br></blockquote>
-
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trace_sql</span><span class="params">($dump = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DB::listen(<span class="function"><span class="keyword">function</span> <span class="params">($event)</span> <span class="title">use</span><span class="params">($dump)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($dump) &#123;</span><br><span class="line">            dump($event-&gt;sql);</span><br><span class="line">            dump($event-&gt;bindings);</span><br><span class="line">        &#125;</span><br><span class="line">        Log::info($event-&gt;sql);</span><br><span class="line">        Log::info($event-&gt;bindings);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    trace_sql();</span><br><span class="line">    $query = Order::query();</span><br><span class="line">    <span class="comment">//$query-&gt;whereBetween('updated_at',[Carbon::today(), Carbon::tomorrow()]);</span></span><br><span class="line">    $query-&gt;whereHas(<span class="string">'incomeExpenditure'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">       $query-&gt;whereBetween(<span class="string">'created_at'</span>,[Carbon::today(), Carbon::tomorrow()])-&gt;where(<span class="string">'value'</span>, <span class="string">'&gt;'</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    $orders = $query-&gt;where(<span class="string">'status'</span>, <span class="string">'paid'</span>)-&gt;with(<span class="string">'products'</span>)-&gt;orderBy(<span class="string">'updated_at'</span>, <span class="string">'desc'</span>)-&gt;paginate(<span class="number">1000</span>);</span><br><span class="line">    $datas = <span class="keyword">$this</span>-&gt;todayStatistics();</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'home.index'</span>, [<span class="string">'orders'</span> =&gt; $orders, <span class="string">'datas'</span> =&gt; $datas]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -831,7 +831,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">363</span>
+              <span class="site-state-item-count">364</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

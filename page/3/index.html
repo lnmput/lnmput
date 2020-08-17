@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2020/03/22/go语言将interface变量转换为固定类型的参数/" itemprop="url">
+                  go语言将interface变量转换为固定类型的参数
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-03-22T23:35:53+08:00" content="2020-03-22">
+              2020-03-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>终有一天 我有属于我的天<br></blockquote>
+
+<p>Goのプログラミングでは、どんな型の引数でも受け取れる関数を作るのにinterface{}を使います。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">v</span><span class="params">(x <span class="keyword">interface</span>&#123;&#125;)</span></span>&#123;</span><br><span class="line">  fmt.Println(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// v(1)     =&gt; 1</span></span><br><span class="line"><span class="comment">// v("abc") =&gt; abc</span></span><br></pre></td></tr></table></figure></p>
+<p>しかし、interface{}型な変数を、たとえばintを引数にとる関数に渡すと、エラーになります。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">var</span> x <span class="keyword">interface</span>&#123;&#125; = <span class="number">1</span></span><br><span class="line">  fmt.Println( add2(x) )</span><br><span class="line">  <span class="comment">//=&gt; cannot use x (type interface &#123;&#125;) as type int in argument to add2: need type assertion</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add2</span><span class="params">(n <span class="keyword">int</span>)</span> <span class="title">int</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> n + <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>このようなことをしたい場合は、castするか、switch式を使うことで、型を変換して関数に渡すことができます。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">var</span> x <span class="keyword">interface</span>&#123;&#125; = <span class="number">1</span></span><br><span class="line">  <span class="keyword">var</span> y <span class="keyword">interface</span>&#123;&#125; = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// cast</span></span><br><span class="line">  <span class="keyword">if</span> xi, ok := x.(<span class="keyword">int</span>); ok&#123;</span><br><span class="line">    fmt.Println( add2(xi) ) <span class="comment">//=&gt; 3</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//switch</span></span><br><span class="line">  <span class="keyword">switch</span> yi := y.(<span class="keyword">type</span>)&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="keyword">int</span>:</span><br><span class="line">    <span class="comment">// ここに入ってきた時は、yiの型はintとして扱われる</span></span><br><span class="line">    fmt.Println( add2(yi) ) <span class="comment">//=&gt; 5</span></span><br><span class="line">  <span class="keyword">case</span> <span class="keyword">int64</span>, <span class="keyword">int32</span>, <span class="keyword">int8</span>:</span><br><span class="line">    <span class="comment">// ここに入ってきた時は、yiの型はint64, int32, int8のうち適切な型が選ばれている</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add2</span><span class="params">(n <span class="keyword">int</span>)</span> <span class="title">int</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> n + <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>パッケージ的なものを自作していると、</p>
+<ul>
+<li>どんな型の変数も渡せる</li>
+<li>特定の型の関数を渡せる</li>
+</ul>
+<p>ような関数が欲しくなることがあります。具体的には以下のように使える関数です</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">exec</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  v <span class="keyword">interface</span>&#123;&#125;, // value</span></span></span><br><span class="line"><span class="function"><span class="params">  f <span class="keyword">interface</span>&#123;&#125;, // valueを引数に実行する<span class="keyword">func</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">  fv := reflect.ValueOf(f)</span><br><span class="line">  <span class="keyword">if</span> fv.Kind() != reflect.Func&#123;</span><br><span class="line">    <span class="built_in">panic</span>(<span class="string">"2'nd argument is not func."</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  rv := reflect.ValueOf(v)</span><br><span class="line">  <span class="keyword">return</span> fv.Call([]reflect.Value&#123;rv&#125;)[<span class="number">0</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//　以下のように使える</span></span><br><span class="line">exec(<span class="number">5</span>, <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>)</span> <span class="title">int</span></span>&#123; <span class="keyword">return</span> i * ( i + <span class="number">1</span>) &#125;)</span><br><span class="line">exec(<span class="string">"Tom"</span>, <span class="function"><span class="keyword">func</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">string</span></span>&#123; <span class="keyword">return</span> <span class="string">"hello! "</span> + s &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一引数と、第二引数の引数の型が違うと、buildはできるが実行時にエラーが起きる</span></span><br><span class="line">exec(<span class="string">"Tom"</span>, <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>)</span> <span class="title">int</span></span>&#123; <span class="keyword">return</span> i * ( i + <span class="number">1</span>) &#125;)</span><br></pre></td></tr></table></figure>
+<p>build時に、エラーを出してほしいのですが、なかなかそうもいかない…</p>
+<blockquote>
+<p><a href="https://qiita.com/umanoda/items/07887d33ef1155b26ed2" target="_blank" rel="noopener">https://qiita.com/umanoda/items/07887d33ef1155b26ed2</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/03/22/golang字符串相关处理/" itemprop="url">
                   golang字符串相关处理
                 </a>
@@ -727,113 +836,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/03/01/go如何进行交叉编译/" itemprop="url">
-                  go如何进行交叉编译
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-03-01T11:04:33+08:00" content="2020-03-01">
-              2020-03-01
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你爱上小溪 是因为没有见过大海 我已见过银河 但我只爱一颗星<br></blockquote>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>golang如何在一个平台编译另外一个平台可以执行的文件。比如在mac上编译Windows和linux可以执行的文件。那么我们的问题就设定成：如何在mac上编译64位linux的可执行文件。</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>golang的交叉编译要保证golang版本在1.5以上，本解决方案实例代码1.9版本执行的。</p>
-<p>hello.go<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"hello, world\n"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在mac上编译64位linux的命令编译命令<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GOOS=linux GOARCH=amd64 <span class="keyword">go</span> build hello.<span class="keyword">go</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h3><p>这里用到了两个变量：</p>
-<ul>
-<li>GOOS：目标操作系统</li>
-<li>GOARCH：目标操作系统的架构</li>
-</ul>
-<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p>在网络上的诸多教程中可能会看到下面的编译命令<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGO_ENABLED=<span class="number">0</span> GOOS=linux GOARCH=amd64 <span class="keyword">go</span> build hello.<span class="keyword">go</span></span><br></pre></td></tr></table></figure></p>
-<p>其中CGO_ENABLED=0的意思是使用C语言版本的GO编译器，参数配置为0的时候就关闭C语言版本的编译器了。自从golang1.5以后go就使用go语言编译器进行编译了。在golang1.9当中没有使用CGO_ENABLED参数发现依然可以正常编译。当然使用了也可以正常编译。比如把CGO_ENABLED参数设置成1，即在编译的过程当中使用CGO编译器，我发现依然是可以正常编译的。</p>
-<p>实际上如果在go当中使用了C的库，比如import “C”默认使用go build的时候就会启动CGO编译器，当然我们可以使用CGO_ENABLED=0来控制go build是否使用CGO编译器。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -877,7 +879,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">363</span>
+              <span class="site-state-item-count">364</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

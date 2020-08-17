@@ -265,6 +265,109 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/12/使用javascript生成条形码/" itemprop="url">
+                  使用javascript生成条形码
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-12T19:06:03+08:00" content="2017-12-12">
+              2017-12-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>疼痛是不能见人的<br></blockquote>
+
+<h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>注意要引入在页面底部<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"JsBarcode.all.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">id</span>=<span class="string">"barcode"</span>&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JsBarcode(<span class="string">"#barcode"</span>, <span class="string">"Hi world!"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="简单配置"><a href="#简单配置" class="headerlink" title="简单配置"></a>简单配置</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Option  	         Default value   	        Type</span><br><span class="line">format			 <span class="string">"auto"</span> (CODE128)	        <span class="built_in">String</span></span><br><span class="line">width	   		 <span class="number">2</span>			        <span class="built_in">Number</span></span><br><span class="line">height	  		 <span class="number">100</span>				<span class="built_in">Number</span></span><br><span class="line">displayValue	         <span class="literal">true</span>				<span class="built_in">Boolean</span></span><br><span class="line">fontOptions		 <span class="string">""</span>			        <span class="built_in">String</span></span><br><span class="line">font			 <span class="string">"monospace"</span>	         	<span class="built_in">String</span></span><br><span class="line">textAlign		 <span class="string">"center"</span>			<span class="built_in">String</span></span><br><span class="line">textPosition	         <span class="string">"bottom"</span>			<span class="built_in">String</span></span><br><span class="line">textMargin		 <span class="number">2</span>		                <span class="built_in">Number</span></span><br><span class="line">fontSize		 <span class="number">20</span>		                <span class="built_in">Number</span></span><br><span class="line">background		 <span class="string">"#ffffff"</span>			<span class="built_in">String</span> (CSS color)</span><br><span class="line">lineColor		 <span class="string">"#000000"</span>			<span class="built_in">String</span> (CSS color)</span><br><span class="line">margin		         <span class="number">10</span>				<span class="built_in">Number</span></span><br><span class="line">marginTop		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">marginBottom		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">marginLeft		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">marginRight		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">valid			 <span class="function"><span class="keyword">function</span>(<span class="params">valid</span>)</span>&#123;&#125;	        <span class="built_in">Function</span></span><br></pre></td></tr></table></figure>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">@foreach($qrcodes as $qrcode)</span><br><span class="line">    <span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"barcode"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-format</span>=<span class="string">"code128"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-value</span>=<span class="string">"&#123;&#123; $qrcode[1] &#125;&#125;"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-textmargin</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-fontoptions</span>=<span class="string">"bold"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br><span class="line">@endforeach</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    JsBarcode(<span class="string">".barcode"</span>).init();</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://lindell.me/JsBarcode/" target="_blank" rel="noopener">http://lindell.me/JsBarcode/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/12/05/laravel在发生异常错误时如何发送邮件通知/" itemprop="url">
                   laravel在发生异常错误时如何发送邮件通知
                 </a>
@@ -648,110 +751,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/23/blade模板引擎的-prepend指令/" itemprop="url">
-                  blade模板引擎的@prepend指令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-23T09:18:36+08:00" content="2017-11-23">
-              2017-11-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>有一天,我看了四十四次日落<br></blockquote><br>在laravel5.4的版本中,新增了一个新的命令可以简化在构建页面时重复使用元素.</p>
-<p>我们假设你有一个布局文件<code>layout.blade.php</code>,包含了下面这个内容:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">"sidebar"</span>&gt;</span><br><span class="line">    @stack(<span class="string">'sidebar'</span>)</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
-<p>当你想要在部件中插入元素, 你可以这样:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@push(<span class="string">'sidebar'</span>)</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">@endpush</span><br></pre></td></tr></table></figure></p>
-<p>这样浏览器将会渲染出一个无序的列表:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">"sidebar"</span>&gt;</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
-<p>自从laravel 5.4.10 的版本中, laravel提供了一个新的<code>prepend</code>命令, 这个命令运行你增加你的项目内容在浏览器渲染之前</p>
-<p>例如:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@push(<span class="string">'sidebar'</span>)</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">@endpush</span><br><span class="line"></span><br><span class="line">@prepend(<span class="string">'sidebar'</span>)</span><br><span class="line">    &lt;li&gt;First Sidebar Item&lt;/li&gt;</span><br><span class="line">@endprepend</span><br></pre></td></tr></table></figure></p>
-<p>现在, 结果将会变成这样<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">"sidebar"</span>&gt;</span><br><span class="line">    &lt;li&gt;First Sidebar Item&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这将会是非常有用的, 当你需要把你的项目内容放到最前面.</p>
-<blockquote>
-<p><a href="https://laravel-news.com/blade-prepend" target="_blank" rel="noopener">https://laravel-news.com/blade-prepend</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -795,7 +794,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">363</span>
+              <span class="site-state-item-count">364</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
