@@ -265,6 +265,111 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/03/laravel中的锁/" itemprop="url">
+                  Laravel中的锁
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-03T10:56:40+08:00" content="2018-08-03">
+              2018-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>昔日寒山问拾得曰：世间有人谤我、欺我、辱我、笑我、轻我、贱我、恶我、骗我、如何处治乎？拾得曰：只要忍他、让他、由他、避他、耐他、敬他、不要理他，再待几年你且看他。<br></blockquote>
+
+<p>查询构造器也包含一些可以帮助你在 select 语法上实现 「悲观锁定」的函数。</p>
+<h3 id="sharedLock"><a href="#sharedLock" class="headerlink" title="sharedLock"></a>sharedLock</h3><p>共享锁可防止选中的数据列被篡改，直到事务被提交为止<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'votes'</span>, <span class="string">'&gt;'</span>, <span class="number">100</span>)-&gt;sharedLock()-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="lockForUpdate"><a href="#lockForUpdate" class="headerlink" title="lockForUpdate"></a>lockForUpdate</h3><p>使用「更新」锁可避免行被其它共享锁修改或选取<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'votes'</span>, <span class="string">'&gt;'</span>, <span class="number">100</span>)-&gt;lockForUpdate()-&gt;get();</span><br></pre></td></tr></table></figure></p>
+<h3 id="相同和不同"><a href="#相同和不同" class="headerlink" title="相同和不同"></a>相同和不同</h3><ul>
+<li>相同的地方是都能避免同一行数据被其他 transaction 进行 update。</li>
+<li>不同的地方是：<br>sharedLock 不会阻止其他 transaction 读取同一行<br>lockForUpdate 会阻止其他 transaction 读取同一行（需要特别注意的是，普通的非锁定读取读取依然可以读取到该行，只有 sharedLock 和 lockForUpdate 的读取会被阻止。）</li>
+</ul>
+<h3 id="试验"><a href="#试验" class="headerlink" title="试验"></a>试验</h3><p>事务本身并不会锁表或者锁行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// </span></span><br><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// hehe的查询操作并不会受到影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 更新也没有任何影响</span></span><br></pre></td></tr></table></figure></p>
+<p>使用共享锁<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sharedLock</span></span><br><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通的查询没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 同样使用共享锁的查询没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 使用lockForUpdate的查询会有影响</span></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;lockForUpdate()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>使用排他锁<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;lockForUpdate()-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//普通的查询并没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用了共享锁或者排他锁的查询才会有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 对更新有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/30/解决redis内存不够的问题/" itemprop="url">
                   解决redis内存不够的问题
                 </a>
@@ -684,124 +789,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/25/教你如何快速构建api查询/" itemprop="url">
-                  教你如何快速构建API查询
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-25T08:35:47+08:00" content="2018-07-25">
-              2018-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>很多东西如果不是怕别人捡去，我们一定会扔掉。<br></blockquote>
-
-<p>Laravel Query Builder is a package by Alex Vanderbist and the folks at Spatie, to quickly build Eloquent queries from API requests. This package makes creating complex API queries with Laravel incredibly simple. While you may have already heard of this package (or used it), I wanted to make sure everyone is aware of this one!</p>
-<p>I highly recommend you take Query Builder for a spin and read through the README to learn what it’s capable of doing. It makes creating API filters and other query-related tasks so easy, you might feel like you’re cheating.</p>
-<p>A few basic examples of what you can do include filtering an API request, including related models, incorporating it with existing queries, sorting an API request.</p>
-<h3 id="Basic-usage"><a href="#Basic-usage" class="headerlink" title="Basic usage"></a>Basic usage</h3><ul>
-<li><p>Filtering an API request: /users?filter[name]=John:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Spatie</span>\<span class="title">QueryBuilder</span>\<span class="title">QueryBuilder</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">$users = QueryBuilder::for(User::class)</span><br><span class="line">    -&gt;allowedFilters(<span class="string">'name'</span>)</span><br><span class="line">    -&gt;get();</span><br><span class="line"><span class="comment">// all `User`s that contain the string "John" in their name</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Requesting relations from an API request: /users?include=posts:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$users = QueryBuilder::for(User::class)</span><br><span class="line">    -&gt;allowedIncludes(<span class="string">'posts'</span>)</span><br><span class="line">    -&gt;get();</span><br><span class="line"><span class="comment">// all `User`s with their `posts` loaded</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Works together nicely with existing queries:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$query = User::where(<span class="string">'active'</span>, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">$user = QueryBuilder::for($query)</span><br><span class="line">    -&gt;allowedIncludes(<span class="string">'posts'</span>, <span class="string">'permissions'</span>)</span><br><span class="line">    -&gt;where(<span class="string">'score'</span>, <span class="string">'&gt;'</span>, <span class="number">42</span>) <span class="comment">// chain on any of Laravel's query builder methods</span></span><br><span class="line">    -&gt;first();</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Sorting an API request: /users?sort=name:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$users = QueryBuilder::for(User::class)-&gt;get();</span><br><span class="line"><span class="comment">// all `User`s sorted by name</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>You can install the package via composer:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> spatie/laravel-query-builder</span><br></pre></td></tr></table></figure></p>
-<p>You can optionally publish the config file with:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish --provider=<span class="string">"Spatie\QueryBuilder\QueryBuilderServiceProvider"</span> --tag=<span class="string">"config"</span></span><br></pre></td></tr></table></figure></p>
-<p>This is the contents of the published config file:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * By default the package will use the `include`, `filter`, `sort` and `fields` query parameters.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Here you can customize those names.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="string">'parameters'</span> =&gt; [</span><br><span class="line">        <span class="string">'include'</span> =&gt; <span class="string">'include'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'filter'</span> =&gt; <span class="string">'filter'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'sort'</span> =&gt; <span class="string">'sort'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'fields'</span> =&gt; <span class="string">'fields'</span>,</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://laravel-news.com/laravel-query-builder" target="_blank" rel="noopener">https://laravel-news.com/laravel-query-builder</a><br><a href="https://packagist.org/packages/spatie/laravel-query-builder" target="_blank" rel="noopener">https://packagist.org/packages/spatie/laravel-query-builder</a><br><a href="https://github.com/spatie/laravel-query-builder" target="_blank" rel="noopener">https://github.com/spatie/laravel-query-builder</a><br><a href="https://spatie.be/en/opensource/laravel" target="_blank" rel="noopener">https://spatie.be/en/opensource/laravel</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -845,7 +832,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

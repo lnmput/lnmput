@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/08/谈谈redis的setnx/" itemprop="url">
+                  谈谈Redis的SETNX
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-08T13:38:29+08:00" content="2018-08-08">
+              2018-08-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我愿意舍弃一切，以想念你终此一生。<br></blockquote>
+
+<p>在 Redis 里，所谓 SETNX，是「SET if Not eXists」的缩写，也就是只有不存在的时候才设置，可以利用它来实现锁的效果，不过很多人没有意识到 SETNX 有陷阱！</p>
+<p>比如说：某个查询数据库的接口，因为调用量比较大，所以加了缓存，并设定缓存过期后刷新，问题是当并发量比较大的时候，如果没有锁机制，那么缓存过期的瞬间，大量并发请求会穿透缓存直接查询数据库，造成雪崩效应，如果有锁机制，那么就可以控制只有一个请求去更新缓存，其它的请求视情况要么等待，要么使用过期的缓存。</p>
+<p>下面以目前 PHP 社区里最流行的 PHPRedis 扩展为例，实现一段演示代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$ok = $redis-&gt;setNX($key, $value);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($ok) &#123;</span><br><span class="line">    $cache-&gt;update();</span><br><span class="line">    $redis-&gt;del($key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>缓存过期时，通过 SetNX  获取锁，如果成功了，那么更新缓存，然后删除锁。看上去逻辑非常简单，可惜有问题：如果请求执行因为某些原因意外退出了，导致创建了锁但是没有删除锁，那么这个锁将一直存在，以至于以后缓存再也得不到更新。于是乎我们需要给锁加一个过期时间以防不测：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$redis-&gt;multi();</span><br><span class="line">$redis-&gt;setNX($key, $value);</span><br><span class="line">$redis-&gt;expire($key, $ttl);</span><br><span class="line">$redis-&gt;exec();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>因为 SetNX 不具备设置过期时间的功能，所以我们需要借助 Expire 来设置，同时我们需要把两者用 Multi/Exec 包裹起来以确保请求的原子性，以免 SetNX 成功了 Expire 却失败了。 可惜还有问题：当多个请求到达时，虽然只有一个请求的 SetNX 可以成功，但是任何一个请求的 Expire 却都可以成功，如此就意味着即便获取不到锁，也可以刷新过期时间，如果请求比较密集的话，那么过期时间会一直被刷新，导致锁一直有效。于是乎我们需要在保证原子性的同时，有条件的执行 Expire，接着便有了如下 Lua 代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">local key   = KEYS[<span class="number">1</span>]</span><br><span class="line">local value = KEYS[<span class="number">2</span>]</span><br><span class="line">local ttl   = KEYS[<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">local ok = redis.call(<span class="string">'setnx'</span>, key, value)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> ok == <span class="number">1</span> then</span><br><span class="line">  redis.call(<span class="string">'expire'</span>, key, ttl)</span><br><span class="line">end</span><br><span class="line"> </span><br><span class="line"><span class="keyword">return</span> ok</span><br></pre></td></tr></table></figure>
+<p>想到实现一个看起来很简单的功能还要用到 Lua 脚本，着实有些麻烦。其实 Redis 已经考虑到了大家的疾苦，从 2.6.12 起，SET 涵盖了 SETEX 的功能，并且 SET 本身已经包含了设置过期时间的功能，也就是说，我们前面需要的功能只用 SET 就可以实现。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$ok = $redis-&gt;set($key, $value, <span class="keyword">array</span>(<span class="string">'nx'</span>, <span class="string">'ex'</span> =&gt; $ttl));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($ok) &#123;</span><br><span class="line">    $cache-&gt;update();</span><br><span class="line">    $redis-&gt;del($key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如上代码是完美的吗？答案是还差一点！设想一下，如果一个请求更新缓存的时间比较长，甚至比锁的有效期还要长，导致在缓存更新过程中，锁就失效了，此时另一个请求会获取锁，但前一个请求在缓存更新完毕的时候，如果不加以判断直接删除锁，就会出现误删除其它请求创建的锁的情况，所以我们在创建锁的时候需要引入一个随机值：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment"># 这个方法我自己没有试验通过， 会报错</span></span><br><span class="line">$ok = $redis-&gt;set($key, $random, <span class="keyword">array</span>(<span class="string">'nx'</span>, <span class="string">'ex'</span> =&gt; $ttl));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($ok) &#123;</span><br><span class="line">    $cache-&gt;update();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($redis-&gt;get($key) == $random) &#123;</span><br><span class="line">        $redis-&gt;del($key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>补充：本文在删除锁的时候，实际上是有问题的，没有考虑到 GC pause 之类的问题造成的影响，比如 A 请求在 DEL 之前卡住了，然后锁过期了，这时候 B 请求又成功获取到了锁，此时 A 请求缓过来了，就会 DEL 掉 B 请求创建的锁，此问题远比想象的要复杂，具体解决方案参见本文最后关于锁的若干个参考链接。</p>
+<blockquote>
+<p><a href="https://huoding.com/2015/09/14/463" target="_blank" rel="noopener">https://huoding.com/2015/09/14/463</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/08/07/websocket常见问题/" itemprop="url">
                   websocket常见问题
                 </a>
@@ -680,111 +789,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/08/03/laravel中的锁/" itemprop="url">
-                  Laravel中的锁
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-08-03T10:56:40+08:00" content="2018-08-03">
-              2018-08-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>昔日寒山问拾得曰：世间有人谤我、欺我、辱我、笑我、轻我、贱我、恶我、骗我、如何处治乎？拾得曰：只要忍他、让他、由他、避他、耐他、敬他、不要理他，再待几年你且看他。<br></blockquote>
-
-<p>查询构造器也包含一些可以帮助你在 select 语法上实现 「悲观锁定」的函数。</p>
-<h3 id="sharedLock"><a href="#sharedLock" class="headerlink" title="sharedLock"></a>sharedLock</h3><p>共享锁可防止选中的数据列被篡改，直到事务被提交为止<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'votes'</span>, <span class="string">'&gt;'</span>, <span class="number">100</span>)-&gt;sharedLock()-&gt;get();</span><br></pre></td></tr></table></figure></p>
-<h3 id="lockForUpdate"><a href="#lockForUpdate" class="headerlink" title="lockForUpdate"></a>lockForUpdate</h3><p>使用「更新」锁可避免行被其它共享锁修改或选取<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'votes'</span>, <span class="string">'&gt;'</span>, <span class="number">100</span>)-&gt;lockForUpdate()-&gt;get();</span><br></pre></td></tr></table></figure></p>
-<h3 id="相同和不同"><a href="#相同和不同" class="headerlink" title="相同和不同"></a>相同和不同</h3><ul>
-<li>相同的地方是都能避免同一行数据被其他 transaction 进行 update。</li>
-<li>不同的地方是：<br>sharedLock 不会阻止其他 transaction 读取同一行<br>lockForUpdate 会阻止其他 transaction 读取同一行（需要特别注意的是，普通的非锁定读取读取依然可以读取到该行，只有 sharedLock 和 lockForUpdate 的读取会被阻止。）</li>
-</ul>
-<h3 id="试验"><a href="#试验" class="headerlink" title="试验"></a>试验</h3><p>事务本身并不会锁表或者锁行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// </span></span><br><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// hehe的查询操作并不会受到影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 更新也没有任何影响</span></span><br></pre></td></tr></table></figure></p>
-<p>使用共享锁<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sharedLock</span></span><br><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通的查询没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 同样使用共享锁的查询没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 使用lockForUpdate的查询会有影响</span></span><br><span class="line"></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;lockForUpdate()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>使用排他锁<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'/haha'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    \DB::beginTransaction();</span><br><span class="line">    \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;lockForUpdate()-&gt;first();</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    \DB::commit();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//普通的查询并没有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用了共享锁或者排他锁的查询才会有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;sharedLock()-&gt;first();</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 对更新有影响</span></span><br><span class="line">Route::get(<span class="string">'/hehe'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $user = \App\Models\User::query()-&gt;where(<span class="string">'id'</span>, <span class="number">13</span>)-&gt;update([<span class="string">'name'</span> =&gt; <span class="string">'yangzie'</span>]);</span><br><span class="line">    <span class="keyword">return</span> $user;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -828,7 +832,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

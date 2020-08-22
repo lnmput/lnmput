@@ -265,6 +265,121 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/04/php实现商品秒杀技术/" itemprop="url">
+                  php实现商品秒杀技术
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-04T13:06:24+08:00" content="2017-11-04">
+              2017-11-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你做过最坑爹的事情是什么？小时候总要和我妈睡<br></blockquote>
+
+<h3 id="技术点"><a href="#技术点" class="headerlink" title="技术点"></a>技术点</h3><ul>
+<li>redis缓存</li>
+<li>智能DNS </li>
+<li>分布式缓存</li>
+<li>分布式session </li>
+<li>多线路接入</li>
+<li>负载均衡 lvs</li>
+<li>mysql主从</li>
+<li>单例模式</li>
+<li>页面静态化</li>
+<li>gzip压缩</li>
+<li>减少http请求     </li>
+<li>压缩js，css文件 </li>
+<li>分离原站部署</li>
+<li>监控</li>
+<li>队列，排队处理</li>
+<li>异步操作</li>
+<li>抢购资质</li>
+</ul>
+<h3 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h3><p><img src="/images/ms2.png" alt><br><img src="/images/ms1.png" alt><br><img src="/images/ms3.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/10/30/centos升级python/" itemprop="url">
                   centos升级python
                 </a>
@@ -654,114 +769,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/10/17/laravel使用Websocket推送通知/" itemprop="url">
-                  laravel使用Websocket推送通知
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-10-17T16:25:08+08:00" content="2017-10-17">
-              2017-10-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>成功只有一种，那就是用自己喜欢的方式度过一生<br></blockquote>
-
-<h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>系统开发中，实时消息推送是一个很常见的需求。整体过程而言也没有那么复杂,如果不考虑实时性和性能这些，更简单，客户端轮询服务器的消息表即可。建立Web实时通信和传统通信不同的是，因为浏览器和http服务器之间不能进行双向通信，所以需要借助Websocket这么一个桥梁来连接两者。用户的应用产生消息之后，首先发送给Websocket服务器，Websocket服务器收到消息，再发送给已经建立连接的客户端。<br>整个过程可以简化为:</p>
-<ul>
-<li>前端页面初始化，连接到Websocket服务器</li>
-<li>应用程序产生通知，连接Websocket服务器，发送消息</li>
-<li>Websocket服务器接收到应用程序发送的消息，转发给浏览器</li>
-<li>浏览器接收到通知，进行页面响应</li>
-</ul>
-<h3 id="Websocket服务器"><a href="#Websocket服务器" class="headerlink" title="Websocket服务器"></a>Websocket服务器</h3><p>这里使用swoole来编写Websocket服务器。swoole是一个高性能的PHP网络通信扩展。很强大。 这里，建立一个Laravel自定义命令，来管理server。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ php artisan make:command SwooleServer</span><br></pre></td></tr></table></figure></p>
-<p>服务器端值得注意的是，需要用到一个全局的数据结构来管理用户，和用户的连接，当用户刷新浏览器之后，需要更新一下用户key绑定的连接符。这样，当消息再次到达时，能够准确的发送出去。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$server = <span class="keyword">new</span> Server(<span class="string">'0.0.0.0'</span>, <span class="number">9501</span>);</span><br><span class="line"></span><br><span class="line">$table = <span class="keyword">new</span> Table(<span class="number">1024</span>);</span><br><span class="line">$table-&gt;column(<span class="string">'uid'</span>, Table::TYPE_INT);</span><br><span class="line">$table-&gt;column(<span class="string">'fd'</span>, Table::TYPE_INT);</span><br><span class="line">$table-&gt;create();</span><br><span class="line"></span><br><span class="line">$server-&gt;table = $table;</span><br><span class="line"></span><br><span class="line">$server-&gt;on(<span class="string">'open'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Server $server, $request)</span></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"connected\n"</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($request-&gt;get[<span class="string">'uid'</span>])) &#123;</span><br><span class="line">        $uid = $request-&gt;get[<span class="string">'uid'</span>];</span><br><span class="line">        $server-&gt;table-&gt;set($uid, [<span class="string">'uid'</span> =&gt; $uid, <span class="string">'fd'</span> =&gt; $request-&gt;fd]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$server-&gt;on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span><span class="params">(Server $server, $frame)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"received from &#123;$frame-&gt;fd&#125;:&#123;$frame-&gt;data&#125;\n"</span>;</span><br><span class="line">    $msg = json_decode($frame-&gt;data, <span class="keyword">true</span>);</span><br><span class="line">    $user = $server-&gt;table-&gt;get($msg[<span class="string">'user_id'</span>]);</span><br><span class="line">    <span class="keyword">if</span> ($user) &#123;</span><br><span class="line">        $server-&gt;push($user[<span class="string">'fd'</span>], $frame-&gt;data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$server-&gt;on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span><span class="params">($server, $fd)</span></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"client &#123;$fd&#125; closed\n"</span>;</span><br><span class="line">    $server-&gt;table-&gt;del(<span class="keyword">$this</span>-&gt;user);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$server-&gt;start();</span><br></pre></td></tr></table></figure></p>
-<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>客户端只需要在页面加载时，连接Websocket服务器，然后，在接收到消息时，更新页面：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// client.js</span><br><span class="line">var socket = new WebSocket('ws://localhost:9501/?uid=1');</span><br><span class="line">socket.onopen = function(event) &#123;</span><br><span class="line">    var badge = document.getElementById('msg-cnt');</span><br><span class="line">    badge.innerHTML = 0;</span><br><span class="line">    console.log('Connected: ' + event);</span><br><span class="line">&#125;</span><br><span class="line">socket.onmessage = function(event) &#123;</span><br><span class="line">    var badge = document.getElementById('msg-cnt');</span><br><span class="line">    var data = JSON.parse(event.data);</span><br><span class="line">    badge.innerHTML = data.cnt;</span><br><span class="line"></span><br><span class="line">    console.log("Received: " + data);</span><br><span class="line">&#125;</span><br><span class="line">socket.onclose = function(event) &#123;</span><br><span class="line">    console.log("Closed..");</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="PHP应用程序"><a href="#PHP应用程序" class="headerlink" title="PHP应用程序"></a>PHP应用程序</h3><p>PHP应用程序产生消息之后，需要发送给Websocket服务器。这里说个插曲，之前关于这块，看的是网上的例子，使用Redis来连接应用程序和WS服务器通信。但是他们的WS服务器使用的是Node。我在使用Redis和Swoole这个干时，错误了。因为Redis的订阅操作是阻塞的，所以Swoole不能这么干。</p>
-<p>PHP发送消息需要用到PHP的Websocket客户端库来连接，发送消息。有些实现很简单，这里我使用的是这个库<code>websocket-php</code>。发送消息代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$cli = <span class="keyword">new</span> WebsocketClient(<span class="string">'ws://localhost:9501'</span>);</span><br><span class="line"><span class="keyword">if</span> (!$cli) &#123;<span class="keyword">echo</span> <span class="string">'Connect Error!'</span>;<span class="keyword">exit</span>;&#125;</span><br><span class="line">$cli-&gt;send(json_encode($msg-&gt;toArray(), JSON_UNESCAPED_UNICODE));</span><br></pre></td></tr></table></figure></p>
-<p><a href="http://memosa.cn/web/2016/04/23/ws-notification.html" target="_blank" rel="noopener">http://memosa.cn/web/2016/04/23/ws-notification.html</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -805,7 +812,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

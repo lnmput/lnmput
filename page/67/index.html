@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/25/python的一些抽象理解/" itemprop="url">
+                  python的一些抽象理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-25T09:02:11+08:00" content="2016-10-25">
+              2016-10-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>除了现实中的蝇营狗苟，我的心中还住着星辰大海<br></blockquote></p>
+<h3 id="关于导入"><a href="#关于导入" class="headerlink" title="关于导入"></a>关于导入</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="comment"># 在urllib库里查找request模块，只导入一个urlopen函数</span></span><br></pre></td></tr></table></figure>
+<h3 id="range用法"><a href="#range用法" class="headerlink" title="range用法"></a>range用法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#代表从1到5(不包含5)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment">#代表从1到5，间隔2(不包含5)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>,<span class="number">2</span>):</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment">#代表从0到5(不包含5)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<h3 id="时间的用法"><a href="#时间的用法" class="headerlink" title="时间的用法"></a>时间的用法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 格式化当前时间</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">print</span> (time.strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>, time.localtime()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 休息间隔2秒</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前时间戳</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">print(time.time())</span><br></pre></td></tr></table></figure>
+<h3 id="format-格式化"><a href="#format-格式化" class="headerlink" title="format 格式化"></a>format 格式化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links_from</span><span class="params">(channel,pages)</span>:</span></span><br><span class="line">    list_view = <span class="string">'&#123;&#125;/pn&#123;&#125;'</span>.format(channel,str(pages))</span><br><span class="line">    wb_data = requests.get(list_view)</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    soup = BeautifulSoup(wb_data.text,<span class="string">'lxml'</span>)</span><br><span class="line">    <span class="keyword">if</span> soup.find(<span class="string">'td'</span>,<span class="string">'t'</span>):</span><br><span class="line">        <span class="keyword">for</span> link <span class="keyword">in</span> soup.select(<span class="string">'td.t &gt; a.t'</span>):</span><br><span class="line">            item_link = link.get(<span class="string">'href'</span>).split(<span class="string">'?'</span>)[<span class="number">0</span>]</span><br><span class="line">            tb58.insert_one(item_link)</span><br><span class="line">            print(item_link)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<h3 id="if-else-结构"><a href="#if-else-结构" class="headerlink" title="if else 结构"></a>if else 结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">number = <span class="number">23</span></span><br><span class="line">guess = int(input(<span class="string">'请输入一个整数：'</span>))      <span class="comment">#等待输入整数</span></span><br><span class="line"><span class="keyword">if</span> guess == number:</span><br><span class="line">    print(<span class="string">'恭喜，你猜对了。'</span>)    <span class="comment"># 新块从这里开始</span></span><br><span class="line">    print(<span class="string">'(但你没有获得任何奖品！)'</span>)    <span class="comment"># 新块在这里结束</span></span><br><span class="line"><span class="keyword">elif</span> guess &lt; number:</span><br><span class="line">    print(<span class="string">'不对，你猜的有点儿小'</span>)    <span class="comment"># 另一个块</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">'不对，你猜的有点大'</span>)</span><br><span class="line">print(<span class="string">'完成'</span>)</span><br><span class="line"><span class="comment"># if语句执行完后，最后的语句总是被执行</span></span><br></pre></td></tr></table></figure>
+<h3 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1、空语句 do nothing</span></span><br><span class="line"><span class="comment">#2、保证格式完整</span></span><br><span class="line"><span class="comment">#3、保证语义完整</span></span><br><span class="line">以<span class="keyword">if</span>语句为例，在c或c++/java中：</span><br><span class="line"><span class="keyword">if</span>(true)  </span><br><span class="line">;//do nothing  </span><br><span class="line"><span class="keyword">else</span>  </span><br><span class="line">&#123;  </span><br><span class="line">//do something  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment"># 而在python中</span></span><br><span class="line"><span class="keyword">if</span> true:  </span><br><span class="line"><span class="keyword">pass</span> <span class="comment">#do nothing  </span></span><br><span class="line"><span class="keyword">else</span>:  </span><br><span class="line"><span class="comment">#do something</span></span><br></pre></td></tr></table></figure>
+<h3 id="map函数"><a href="#map函数" class="headerlink" title="map函数"></a>map函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># map()函数接收两个参数，一个是函数，一个是序列，map将传入的函数依次作</span></span><br><span class="line"><span class="comment">#用到序列的每个元素并把结果作为新的list返回。</span></span><br><span class="line"><span class="comment">#在python3里面，map()的返回值已经不再是list,而是iterators</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x * x</span><br><span class="line">a = map(f, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>])</span><br><span class="line">print(list(a))</span><br></pre></td></tr></table></figure>
+<h3 id="导入函数和变量"><a href="#导入函数和变量" class="headerlink" title="导入函数和变量"></a>导入函数和变量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 位于同一个文件夹下两个py文件</span></span><br><span class="line"><span class="comment"># demo.py,定义一个函数和变量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">haha</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'haha'</span>)</span><br><span class="line">list = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># test.py,调用这个函数和变量</span></span><br><span class="line"><span class="keyword">import</span> demo</span><br><span class="line">test.haha()</span><br><span class="line">print(test.list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以选择仅仅导入函数或者变量</span></span><br><span class="line"><span class="keyword">from</span> test <span class="keyword">import</span> haha</span><br><span class="line">haha()</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/24/BeautifulSoup的一写用法/" itemprop="url">
                   BeautifulSoup的一写用法
                 </a>
@@ -645,103 +746,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/17/python小实例/" itemprop="url">
-                  python小实例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-17T14:46:25+08:00" content="2016-10-17">
-              2016-10-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>自此无心爱良夜，任他明月下西楼。<br></blockquote>
-
-<h3 id="按逗号分隔列表"><a href="#按逗号分隔列表" class="headerlink" title="按逗号分隔列表"></a>按逗号分隔列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">L = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line">s1 = <span class="string">','</span>.join(str(n) <span class="keyword">for</span> n <span class="keyword">in</span> L)</span><br><span class="line"><span class="keyword">print</span> s1</span><br></pre></td></tr></table></figure>
-<h3 id="有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？"><a href="#有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？" class="headerlink" title="有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？"></a>有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">            <span class="keyword">if</span>( i != k ) <span class="keyword">and</span> (i != j) <span class="keyword">and</span> (j != k):</span><br><span class="line">                <span class="keyword">print</span> i,j,k</span><br></pre></td></tr></table></figure>
-<h3 id="交换两个变量"><a href="#交换两个变量" class="headerlink" title="交换两个变量"></a>交换两个变量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exchange</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    a,b = b,a</span><br><span class="line">    <span class="keyword">return</span> (a,b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    x = <span class="number">10</span></span><br><span class="line">    y = <span class="number">20</span></span><br><span class="line">print(<span class="string">'x = %d,y = %d'</span> % (x,y))</span><br><span class="line"></span><br><span class="line">x,y = exchange(x,y)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'x = %d,y = %d'</span> % (x,y))</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -785,7 +789,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,109 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/04/nginx使用lua-redis限制ip的访问频率/" itemprop="url">
+                  Nginx使用Lua+Redis限制IP的访问频率
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-04T09:23:22+08:00" content="2018-06-04">
+              2018-06-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不登高山，不知天之高也；不临深溪，不知地之厚也。<br></blockquote>
+
+<h3 id="添加访问控制的Lua脚本"><a href="#添加访问控制的Lua脚本" class="headerlink" title="添加访问控制的Lua脚本"></a>添加访问控制的Lua脚本</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hbase31 ~]<span class="comment"># vim /usr/local/openresty/nginx/conf/lua/access.lua</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> ip_block_time=<span class="number">300</span> <span class="comment">--封禁IP时间（秒）</span></span><br><span class="line"><span class="keyword">local</span> ip_time_out=<span class="number">30</span>    <span class="comment">--指定ip访问频率时间段（秒）</span></span><br><span class="line"><span class="keyword">local</span> ip_max_count=<span class="number">20</span> <span class="comment">--指定ip访问频率计数最大值（秒）</span></span><br><span class="line"><span class="keyword">local</span> BUSINESS = ngx.var.business <span class="comment">--nginx的location中定义的业务标识符</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">--连接redis</span></span><br><span class="line"><span class="keyword">local</span> redis = <span class="built_in">require</span> <span class="string">"resty.redis"</span>  </span><br><span class="line"><span class="keyword">local</span> conn = redis:new()  </span><br><span class="line">ok, err = conn:connect(<span class="string">"192.168.1.30"</span>, <span class="number">6379</span>)  </span><br><span class="line">conn:set_timeout(<span class="number">2000</span>) <span class="comment">--超时时间2秒</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">--如果连接失败，跳转到脚本结尾</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> ok <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">goto</span> FLAG</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">--查询ip是否被禁止访问，如果存在则返回403错误代码</span></span><br><span class="line">is_block, err = conn:get(BUSINESS..<span class="string">"-BLOCK-"</span>..ngx.var.remote_addr)  </span><br><span class="line"><span class="keyword">if</span> is_block == <span class="string">'1'</span> <span class="keyword">then</span></span><br><span class="line">    ngx.<span class="built_in">exit</span>(<span class="number">403</span>)</span><br><span class="line">    <span class="keyword">goto</span> FLAG</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">--查询redis中保存的ip的计数器</span></span><br><span class="line">ip_count, err = conn:get(BUSINESS..<span class="string">"-COUNT-"</span>..ngx.var.remote_addr)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> ip_count == ngx.null <span class="keyword">then</span> <span class="comment">--如果不存在，则将该IP存入redis，并将计数器设置为1、该KEY的超时时间为ip_time_out</span></span><br><span class="line">    res, err = conn:set(BUSINESS..<span class="string">"-COUNT-"</span>..ngx.var.remote_addr, <span class="number">1</span>)</span><br><span class="line">    res, err = conn:expire(BUSINESS..<span class="string">"-COUNT-"</span>..ngx.var.remote_addr, ip_time_out)</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    ip_count = ip_count + <span class="number">1</span> <span class="comment">--存在则将单位时间内的访问次数加1</span></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> ip_count &gt;= ip_max_count <span class="keyword">then</span> <span class="comment">--如果超过单位时间限制的访问次数，则添加限制访问标识，限制时间为ip_block_time</span></span><br><span class="line">        res, err = conn:set(BUSINESS..<span class="string">"-BLOCK-"</span>..ngx.var.remote_addr, <span class="number">1</span>)</span><br><span class="line">        res, err = conn:expire(BUSINESS..<span class="string">"-BLOCK-"</span>..ngx.var.remote_addr, ip_block_time)</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        res, err = conn:set(BUSINESS..<span class="string">"-COUNT-"</span>..ngx.var.remote_addr,ip_count)</span><br><span class="line">        res, err = conn:expire(BUSINESS..<span class="string">"-COUNT-"</span>..ngx.var.remote_addr, ip_time_out)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 结束标记</span></span><br><span class="line">::FLAG::</span><br><span class="line"><span class="keyword">local</span> ok, err = conn:<span class="built_in">close</span>()</span><br></pre></td></tr></table></figure>
+<p>这个脚本的目的很简单：一个IP如果在30秒内其访问次数达到20次则表明该IP访问频率太快了，因此将该IP封禁5分钟。同时由于计数的KEY在Redis中的超时时间设置成了30秒，所以如果两次访问间隔时间大于30秒将会重新开始计数</p>
+<h3 id="在Nginx需要限速的location中引用上述脚本"><a href="#在Nginx需要限速的location中引用上述脚本" class="headerlink" title="在Nginx需要限速的location中引用上述脚本"></a>在Nginx需要限速的location中引用上述脚本</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location /user/ &#123;</span><br><span class="line">    set $business <span class="string">"USER"</span>;</span><br><span class="line">    access_by_lua_file /usr/local/openresty/nginx/conf/lua/access.lua;</span><br><span class="line">        proxy_redirect off;</span><br><span class="line">        proxy_set_header        Host $host;</span><br><span class="line">        proxy_set_header        X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header        X-Forwarded-<span class="keyword">For</span> $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_pass http:<span class="comment">//user_224/user/;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>注：对于有大量静态资源文件（如：js、css、图片等）的前端页面可以设置只有指定格式的请求才进行访问限速，示例代码如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">location /h5 &#123;</span><br><span class="line">        <span class="keyword">if</span> ($request_uri ~ .*\.(html|htm|jsp|json)) &#123;</span><br><span class="line">            set $business <span class="string">"H5"</span>;</span><br><span class="line">            access_by_lua_file /usr/local/openresty/nginx/conf/lua/access.lua;</span><br><span class="line">        &#125;</span><br><span class="line">        proxy_redirect off;</span><br><span class="line">        proxy_set_header        Host $host;</span><br><span class="line">        proxy_set_header        X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header        X-Forwarded-<span class="keyword">For</span> $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_pass http:<span class="comment">//h5_224/h5;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://juejin.im/entry/5a45a9b8f265da431f4b62d5" target="_blank" rel="noopener">https://juejin.im/entry/5a45a9b8f265da431f4b62d5</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/02/laravel最佳实践/" itemprop="url">
                   laravel最佳实践
                 </a>
@@ -712,128 +815,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/31/laravel之开发测试和生产环境区分/" itemprop="url">
-                  Laravel之开发测试和生产环境区分
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-31T11:48:11+08:00" content="2018-05-31">
-              2018-05-31
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>不做动机揣测，少做价值判断<br></blockquote>
-
-<p>Laravel环境检测的方法是很容易的，因为大家都知道Laravel中使用了Dotenv来做文件配置，这就牵扯到了我们的都很熟悉的.env。</p>
-<p>比如一个典型的.env是:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=local</span><br><span class="line">APP_DEBUG=<span class="keyword">true</span></span><br><span class="line">APP_KEY=base64:<span class="number">3</span>csTuw5O1me1PF4j9xErbUR+seyH1xdf6uRfvjuQ22Q=</span><br><span class="line">APP_URL=http:<span class="comment">//localhost</span></span><br><span class="line"></span><br><span class="line">DB_CONNECTION=mysql</span><br><span class="line">DB_HOST=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">DB_PORT=<span class="number">3306</span></span><br><span class="line">DB_DATABASE=db_name</span><br><span class="line">DB_USERNAME=db_user</span><br><span class="line">DB_PASSWORD=db_pass</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
-<p>今天我的这篇分享主要介绍两种区分不同环境的方法。</p>
-<h3 id="不同环境维护自己的-env文件"><a href="#不同环境维护自己的-env文件" class="headerlink" title="不同环境维护自己的.env文件"></a>不同环境维护自己的.env文件</h3><p>这种办法也是Laravel默认的办法，也就是开发环境、测试环境和生产环境各自维护自己的.env文件，也就是说.env不要加到版本控制系统中，通过不同的配置可以做到环境的区分，比如:</p>
-<p>开发环境<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=dev</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
-<p>测试环境<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=staging</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
-<p>生产环境<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=production</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
-<p>这样，在我们的代码中即可以通过判断APP_ENV来判断是哪种环境。但是这种办法我个人是不太喜欢的，原因有以下几点:</p>
-<ul>
-<li>环境的判断过多的写到代码里面，维护起来很麻烦</li>
-<li>如果某次上线需要修改配置文件，则每次上线代码还需要到线上机器修改.env文件，部署起来很麻烦</li>
-</ul>
-<h3 id="不同环境加载自己的-env-文件"><a href="#不同环境加载自己的-env-文件" class="headerlink" title="不同环境加载自己的.env.文件"></a>不同环境加载自己的.env.文件</h3><p>这里面的.env.文件延伸开来就是.env.dev、.env.test和.env.prod，比如开发环境会自动加载.env.dev，依此类推，那么如果是这样的话，不同环境的机器又怎么知道加载哪个文件呢？其实这里面还是耍了点小聪明，别忘了我们有php.ini</p>
-<ul>
-<li><p>1.在php.ini中追加一行配置<br>当然开发、测试和生产环境中env所对应的值也需要不一样</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//开发环境</span></span><br><span class="line">env=dev</span><br><span class="line"><span class="comment">//测试环境</span></span><br><span class="line">env=staging</span><br><span class="line"><span class="comment">//生产环境</span></span><br><span class="line">env=production</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>2.加载不同的配置文件<br>在bootstrap/app.php文件中添加如下判断，在这里将通过获取php.ini中的env的值，然后从而加载不同的配置文件。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//...省略</span></span><br><span class="line">$env = get_cfg_var(<span class="string">'env'</span>);</span><br><span class="line">$env = !<span class="keyword">empty</span>($env) ? $env : <span class="string">'production'</span>;</span><br><span class="line"><span class="keyword">if</span>(!defined(<span class="string">'APP_MODE'</span>))&#123;</span><br><span class="line">    define(<span class="string">'APP_MODE'</span>, $env);</span><br><span class="line">&#125;</span><br><span class="line">$app-&gt;loadEnvironmentFrom(<span class="string">'.env.'</span>.$env);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> $app;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>3.新建.env.dev、.env.staging和.env.production</p>
-</li>
-</ul>
-<p>好，就到此为止了，当然虽然我非常喜欢第二种办法，但第二种毕竟需要对线上机器做一次大的改动，需要运维同学支持下。但是也需要具体情况具体来选择吧。</p>
-<blockquote>
-<p><a href="http://xuwenzhi.com/2016/07/31/laravel%E4%B9%8B%E5%BC%80%E5%8F%91%E3%80%81%E6%B5%8B%E8%AF%95%E5%92%8C%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%8C%BA%E5%88%86/" target="_blank" rel="noopener">http://xuwenzhi.com/2016/07/31/laravel%E4%B9%8B%E5%BC%80%E5%8F%91%E3%80%81%E6%B5%8B%E8%AF%95%E5%92%8C%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%8C%BA%E5%88%86/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -877,7 +858,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

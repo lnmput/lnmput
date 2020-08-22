@@ -265,6 +265,119 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/12/php的arrayaccess接口应用/" itemprop="url">
+                  PHP的ArrayAccess接口应用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-12T17:06:25+08:00" content="2018-04-12">
+              2018-04-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>花无人戴，酒无人劝，醉也无人管。<br></blockquote>
+
+<h3 id="引起问题"><a href="#引起问题" class="headerlink" title="引起问题"></a>引起问题</h3><p>在Laravel下, 我们可以通过两种方式访问模型中的属性</p>
+<ul>
+<li><p>对象的方式</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line">dump($user-&gt;name);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数组的方式</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line">dump($user[<span class="string">'name'</span>]);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>同样我们也可以通过这两种方式达到修改模型属性值的效果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$user = \App\Models\User::query()-&gt;find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">$user[<span class="string">'name'</span>] = <span class="string">'杨国奇'</span>;</span><br><span class="line">$user-&gt;save();</span><br></pre></td></tr></table></figure></p>
+<p>这是什么原理呢?</p>
+<h3 id="一探究竟"><a href="#一探究竟" class="headerlink" title="一探究竟"></a>一探究竟</h3><p>我们通过查看<code>User</code>模型的源码, 发现了其中的奥秘<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Auth</span>\<span class="title">User</span> <span class="title">as</span> <span class="title">Authenticatable</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Authenticatable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	...</span><br></pre></td></tr></table></figure></p>
+<p>进一步查看<code>Authenticatable</code>类的源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span> <span class="keyword">implements</span></span></span><br><span class="line"><span class="class">    <span class="title">AuthenticatableContract</span>,</span></span><br><span class="line"><span class="class">    <span class="title">AuthorizableContract</span>,</span></span><br><span class="line"><span class="class">    <span class="title">CanResetPasswordContract</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Authenticatable</span>, <span class="title">Authorizable</span>, <span class="title">CanResetPassword</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再查看<code>Model</code>类的源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span> <span class="keyword">implements</span> <span class="title">ArrayAccess</span>, <span class="title">Arrayable</span>, <span class="title">Jsonable</span>, <span class="title">JsonSerializable</span>, <span class="title">QueueableEntity</span>, <span class="title">UrlRoutable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Concerns</span>\<span class="title">HasAttributes</span>,</span><br><span class="line">        <span class="title">Concerns</span>\<span class="title">HasEvents</span>,</span><br><span class="line">        <span class="title">Concerns</span>\<span class="title">HasGlobalScopes</span>,</span><br><span class="line">        <span class="title">Concerns</span>\<span class="title">HasRelationships</span>,</span><br><span class="line"></span><br><span class="line">        ...</span><br></pre></td></tr></table></figure></p>
+<p>发现了其中的奥秘, <code>Model</code>类实现了<code>ArrayAccess</code>接口</p>
+<h3 id="什么是ArrayAccess接口"><a href="#什么是ArrayAccess接口" class="headerlink" title="什么是ArrayAccess接口"></a>什么是ArrayAccess接口</h3><p>ArrayAccess（数组式访问）接口：提供像访问数组一样访问对象的能力的接口。</p>
+<p>实现改接口需要实现以下几个方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ArrayAccess &#123;</span><br><span class="line">    <span class="comment">//检查一个偏移位置是否存在</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> boolean offsetExists ( mixed $offset );</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取一个偏移位置的值</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> mixed offsetGet ( mixed $offset );</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置一个偏移位置的值</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> void offsetSet ( mixed $offset , mixed $value );</span><br><span class="line"></span><br><span class="line">    <span class="comment">//复位一个偏移位置的值</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> void offsetUnset ( mixed $offset );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们<code>Model</code>类的实现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">offsetExists</span><span class="params">($offset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ! is_null(<span class="keyword">$this</span>-&gt;getAttribute($offset));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Get the value for a given offset.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  mixed  $offset</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">offsetGet</span><span class="params">($offset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;getAttribute($offset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Set the value for a given offset.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  mixed  $offset</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  mixed  $value</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">offsetSet</span><span class="params">($offset, $value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;setAttribute($offset, $value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Unset the value for a given offset.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  mixed  $offset</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">offsetUnset</span><span class="params">($offset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unset</span>(<span class="keyword">$this</span>-&gt;attributes[$offset], <span class="keyword">$this</span>-&gt;relations[$offset]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/11/使用supervisor管理laravel队列进程/" itemprop="url">
                   使用Supervisor管理Laravel队列进程
                 </a>
@@ -733,106 +846,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/10/laravel仅允许单一会话存在实现/" itemprop="url">
-                  Laravel仅允许单一会话存在实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-10T15:53:58+08:00" content="2018-04-10">
-              2018-04-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>他说你任何为人称道的美丽 不及他第一次遇见你<br></blockquote><br>在Laravel 中, 如果要实现用户的单点登录, 即系统中同一个用户仅仅允许一个会话(session)存在, 实现起来相当简单, 下面的代码是我在Laravel 5.5.13中试验的, 并不保证在其他版本的Laravel中可以使用, 但是思想同样可以借鉴;</p>
-<h3 id="修改user表"><a href="#修改user表" class="headerlink" title="修改user表"></a>修改user表</h3><p>User模型对应的数据库表增加 <code>session_id</code> 字段, <code>string</code>类型;</p>
-<h3 id="修改登录控制器"><a href="#修改登录控制器" class="headerlink" title="修改登录控制器"></a>修改登录控制器</h3><p>/app/Http/Controllers/Auth/LoginController.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">authenticated</span><span class="params">(Request $request,User $user)</span></span>&#123;</span><br><span class="line">    $previous_session = $user-&gt;session_id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($previous_session) &#123;</span><br><span class="line">        \Session::getHandler()-&gt;destroy($previous_session);</span><br><span class="line">    &#125;</span><br><span class="line">    \Auth::user()-&gt;session_id = \Session::getId();</span><br><span class="line">    \Auth::user()-&gt;save();</span><br><span class="line">    <span class="keyword">return</span> redirect()-&gt;intended(<span class="keyword">$this</span>-&gt;redirectPath());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>我们分别在不同的浏览器去用同一帐号尝试去登录我们的应用, 发现, 如果帐号在一个浏览器登录, 那么另外一个浏览器的帐号就会自动退出;</p>
-<blockquote>
-<p><a href="https://tiicle.com/items/327/laravel-applications-a-user-is-only-allowed-a-single-session" target="_blank" rel="noopener">https://tiicle.com/items/327/laravel-applications-a-user-is-only-allowed-a-single-session</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -876,7 +889,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

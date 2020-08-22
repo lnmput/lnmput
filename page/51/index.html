@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/25/使用swoole异步发送邮件/" itemprop="url">
+                  使用swoole异步发送邮件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-25T14:42:39+08:00" content="2017-07-25">
+              2017-07-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>父母在时，人生尚有来处。<br>父母去时，人生只剩归途。<br></blockquote></p>
+<h3 id="安装swoole"><a href="#安装swoole" class="headerlink" title="安装swoole"></a>安装swoole</h3><p>pecl 安装:<br><code>pecl install swoole</code></p>
+<p>看命令行提示，如果它提示说没有写php.ini，则自己手动在PHP.ini后面加上：<br><code>extension = &quot;swoole.so&quot;</code></p>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $serv;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv = <span class="keyword">new</span> swoole_server(<span class="string">"0.0.0.0"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;set(<span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,   <span class="comment">//一般设置为服务器CPU数的1-4倍</span></span><br><span class="line">            <span class="string">'daemonize'</span> =&gt; <span class="number">1</span>,  <span class="comment">//以守护进程执行</span></span><br><span class="line">            <span class="string">'max_request'</span> =&gt; <span class="number">10000</span>,</span><br><span class="line">            <span class="string">'dispatch_mode'</span> =&gt; <span class="number">2</span>,</span><br><span class="line">            <span class="string">'task_worker_num'</span> =&gt; <span class="number">8</span>,  <span class="comment">//task进程的数量</span></span><br><span class="line">            <span class="string">"task_ipc_mode "</span> =&gt; <span class="number">3</span> ,  <span class="comment">//使用消息队列通信，并设置为争抢模式</span></span><br><span class="line">            <span class="comment">//"log_file" =&gt; "log/taskqueueu.log" ,//日志</span></span><br><span class="line">        ));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Receive'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onReceive'</span>));</span><br><span class="line">        <span class="comment">// bind callback</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Task'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onTask'</span>));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Finish'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onFinish'</span>));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">( swoole_server $serv, $fd, $from_id, $data )</span> </span>&#123;</span><br><span class="line">        <span class="comment">//echo "Get Message From Client &#123;$fd&#125;:&#123;$data&#125;n";</span></span><br><span class="line">        <span class="comment">// send a task to task worker.</span></span><br><span class="line">        $serv-&gt;task( $data );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onTask</span><span class="params">($serv,$task_id,$from_id, $data)</span> </span>&#123;</span><br><span class="line">        $array = json_decode( $data , <span class="keyword">true</span> );</span><br><span class="line">        <span class="keyword">if</span> ($array[<span class="string">'url'</span>]) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;httpGet( $array[<span class="string">'url'</span>] , $array[<span class="string">'param'</span>]  );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onFinish</span><span class="params">($serv,$task_id, $data)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//echo "Task &#123;$task_id&#125; finishn";</span></span><br><span class="line">        <span class="comment">//echo "Result: &#123;$data&#125;n";</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">httpGet</span><span class="params">($url,$data)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($data) &#123;</span><br><span class="line">            $url .=<span class="string">'?'</span>.http_build_query($data) ;</span><br><span class="line">        &#125;</span><br><span class="line">        $curlObj = curl_init();    <span class="comment">//初始化curl，</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_URL, $url);   <span class="comment">//设置网址</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);  <span class="comment">//将curl_exec的结果返回</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, <span class="keyword">FALSE</span>);</span><br><span class="line">        curl_setopt($curlObj, CURLOPT_SSL_VERIFYHOST, <span class="keyword">FALSE</span>);</span><br><span class="line">        curl_setopt($curlObj, CURLOPT_HEADER, <span class="number">0</span>);         <span class="comment">//是否输出返回头信息</span></span><br><span class="line">        $response = curl_exec($curlObj);   <span class="comment">//执行</span></span><br><span class="line">        curl_close($curlObj);          <span class="comment">//关闭会话</span></span><br><span class="line">        <span class="keyword">return</span> $response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">$server = <span class="keyword">new</span> Server();</span><br></pre></td></tr></table></figure>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Client</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $client;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>( !<span class="keyword">$this</span>-&gt;client-&gt;connect(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span> , <span class="number">1</span>) ) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"Connect Error"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $data = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">"url"</span> =&gt;  <span class="string">"http://192.168.10.19/send_mail"</span> ,</span><br><span class="line">            <span class="string">"param"</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">"username"</span>=&gt;<span class="string">'test'</span>,</span><br><span class="line">                <span class="string">"password"</span> =&gt; <span class="string">'test'</span></span><br><span class="line">            )</span><br><span class="line">        );</span><br><span class="line">        $json_data = json_encode($data);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client-&gt;send( $json_data );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> Client();</span><br><span class="line">$client-&gt;connect();</span><br></pre></td></tr></table></figure>
+<h3 id="查看与关闭"><a href="#查看与关闭" class="headerlink" title="查看与关闭"></a>查看与关闭</h3><p>swoole好像没有很便捷的关闭方式。所以只能直接通过关闭进程来关闭。<br>查看命令：<br><code>ps -ef | grep php</code></p>
+<p>结束单个进程：<br><code>kill -9 {进程号}</code></p>
+<p>结束所有进程的命令：<br><code>killall -9 php</code></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/24/PHP-cURL多线程模拟并发请求/" itemprop="url">
                   PHP-cURL多线程模拟并发请求
                 </a>
@@ -653,106 +754,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/16/Emoj简介/" itemprop="url">
-                  Emoj简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-16T10:36:11+08:00" content="2017-07-16">
-              2017-07-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我对你仍有爱意，我对自己无能为力。<br></blockquote><br>早期的 Emoji 是将一些特定的符号组合替换成图片。这种方法很难标准化，能够表达的范围也有限。<br>2010年，Unicode 开始为 Emoji 分配码点。也就是说，现在的 Emoji 符号就是一个文字，它会被渲染为图形。</p>
-<p>Unicode 只是规定了 Emoji 的码点和含义，并没有规定它的样式。举例来说，码点U+1F600表示一张微笑的脸，但是这张脸长什么样，则由各个系统自己实现。<br>因此，当我们输入这个 Emoji 的时候，并不能保证所有用户看到的都是同一张脸。如果用户的系统没有实现这个 Emoji 符号，用户就会看到一个没有内容的方框，因为系统无法渲染这个码点。</p>
-<p>Emoji 虽然是文字，但是无法书写，必须使用其他方法插入文档。</p>
-<p><img src="/images/emoji.png" alt></p>
-<blockquote>
-<p><a href="http://www.ruanyifeng.com/blog/2017/04/emoji.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2017/04/emoji.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -796,7 +797,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -265,6 +265,120 @@
             
               
                 
+                <a class="post-title-link" href="/2020/03/02/a-real-world-example-of-go-interfaces/" itemprop="url">
+                  A-Real-World-Example-of-Go-Interfaces
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-03-02T20:54:48+08:00" content="2020-03-02">
+              2020-03-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>孤独的孩子，悄悄在风中长大了。<br></blockquote>
+
+<p>Suppose I’m building a web app in Go. In my app, I want to send a message to my users. I can send a message to the users via email or SMS. This would be a perfect use case for interfaces.</p>
+<p>For this hypothetical web app, I create the following <code>main.go</code> file.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">	Email <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> UserNotifier <span class="keyword">interface</span> &#123;</span><br><span class="line">	SendMessage(user *User, message <span class="keyword">string</span>) error</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user := &amp;User&#123;<span class="string">"Dirk"</span>, <span class="string">"dirk@email.com"</span>&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Welcome %s\n"</span>, user.Name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The User struct represents a user.<br>You can see I created a UserNotifier of type interface that has a single function: <code>SendMessage()</code>.<br>To implement this interface, I have to create a struct that implements the <code>SendMessage()</code> function.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> EmailNotifier <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(notifier EmailNotifier)</span> <span class="title">SendMessage</span><span class="params">(user *User, message <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	_, err := fmt.Printf(<span class="string">"Sending email to %s with content %s\n"</span>, user.Name, message)</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>As you can see, I created a new EmailNotifier struct. Then I implemented the SendMessage() method on the struct. Note that in this example, the EmailNotifier simply prints a message. In the real world, you would probably call an email API such as Mailgun.</p>
+<p>And that’s it, the interface is now implemented.</p>
+<p>The next thing to do is send an email to the user using the UserNotifier interface.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user := User&#123;<span class="string">"Dirk"</span>, <span class="string">"dirk@email.com"</span>&#125;</span><br><span class="line">	fmt.Printf(<span class="string">"Welcome %s\n"</span>, user.Name)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> userNotifier UserNotifier</span><br><span class="line">	userNotifier = EmailNotifier&#123;&#125;</span><br><span class="line">	userNotifier.SendMessage(&amp;user, <span class="string">"Interfaces all the way!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>When running this program, the SendMessage() of the EmailNotifier is called correctly.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> build -o main main.<span class="keyword">go</span></span><br><span class="line">./main</span><br><span class="line">Welcome Dirk</span><br><span class="line">Sending email to Dirk with content Interfaces all the way!</span><br></pre></td></tr></table></figure>
+<p>Let’s implement an SMS interface as well.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> SmsNotifier <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(notifier SmsNotifier)</span> <span class="title">SendMessage</span><span class="params">(user *User, message <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	_, err := fmt.Printf(<span class="string">"Sending SMS to %s with content %s\n"</span>, user.Name, message)</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>One cool feature is we can store the notifier in the user struct. In this way, each user will have a personal notifier.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">	Email <span class="keyword">string</span></span><br><span class="line">	Notifier UserNotifier</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>You can then add a handy method to the User struct that notifies the user using the UserNotifier interface.<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(user *User)</span> <span class="title">notify</span><span class="params">(message <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> user.Notifier.SendMessage(user, message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Finally, I created two users in the main() function and called the notify() method.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user1 := User&#123;<span class="string">"Dirk"</span>, <span class="string">"dirk@email.com"</span>, EmailNotifier&#123;&#125;&#125;</span><br><span class="line">	user2 := User&#123;<span class="string">"Justin"</span>, <span class="string">"bieber@email.com"</span>, SmsNotifier&#123;&#125;&#125;</span><br><span class="line"></span><br><span class="line">	user1.notify(<span class="string">"Welcome Email user!"</span>)</span><br><span class="line">	user2.notify(<span class="string">"Welcome SMS user!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The final result worked as expected.<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> build -o main main.<span class="keyword">go</span></span><br><span class="line">./main</span><br><span class="line">Sending email to Dirk with content Welcome Email user!</span><br><span class="line">Sending SMS to Justin with content Welcome SMS user!</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/03/01/go如何进行交叉编译/" itemprop="url">
                   go如何进行交叉编译
                 </a>
@@ -718,119 +832,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/01/11/golang返回json等格式数据/" itemprop="url">
-                  golang返回json等格式数据
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-01-11T10:45:35+08:00" content="2020-01-11">
-              2020-01-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>知我者谓我心忧，不知我者谓我何求，悠悠苍天，此何人哉<br></blockquote>
-
-<h3 id="Sending-Headers-Only"><a href="#Sending-Headers-Only" class="headerlink" title="Sending Headers Only"></a>Sending Headers Only</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  w.Header().Set(<span class="string">"Server"</span>, <span class="string">"A Go Web Server"</span>)</span><br><span class="line">  w.WriteHeader(<span class="number">200</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Rendering-Plain-Text"><a href="#Rendering-Plain-Text" class="headerlink" title="Rendering Plain Text"></a>Rendering Plain Text</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  w.Write([]<span class="keyword">byte</span>(<span class="string">"OK"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Rendering-JSON"><a href="#Rendering-JSON" class="headerlink" title="Rendering JSON"></a>Rendering JSON</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"encoding/json"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  js, err := json.Marshal(profile)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  w.Header().Set(<span class="string">"Content-Type"</span>, <span class="string">"application/json"</span>)</span><br><span class="line">  w.Write(js)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Rendering-XML"><a href="#Rendering-XML" class="headerlink" title="Rendering XML"></a>Rendering XML</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"encoding/xml"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span> <span class="string">`xml:"Hobbies&gt;Hobby"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  x, err := xml.MarshalIndent(profile, <span class="string">""</span>, <span class="string">"  "</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  w.Header().Set(<span class="string">"Content-Type"</span>, <span class="string">"application/xml"</span>)</span><br><span class="line">  w.Write(x)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Serving-a-File"><a href="#Serving-a-File" class="headerlink" title="Serving a File"></a>Serving a File</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">  <span class="string">"path"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  <span class="comment">// Assuming you want to serve a photo at 'images/foo.png'</span></span><br><span class="line">  fp := path.Join(<span class="string">"images"</span>, <span class="string">"foo.png"</span>)</span><br><span class="line">  http.ServeFile(w, r, fp)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Important: http.ServeFile() does not automatically sanitize the file path. So if you’re constructing a file path from untrusted user input, you must sanitize the input with filepath.Clean() before using it to avoid directory traversal attacks.</p>
-</blockquote>
-<h3 id="Rendering-a-HTML-Template"><a href="#Rendering-a-HTML-Template" class="headerlink" title="Rendering a HTML Template"></a>Rendering a HTML Template</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">File: templates/index.html</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;Hello &#123;&#123; .Name &#125;&#125;&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;</span><br></pre></td></tr></table></figure>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"html/template"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">  <span class="string">"path"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  fp := path.Join(<span class="string">"templates"</span>, <span class="string">"index.html"</span>)</span><br><span class="line">  tmpl, err := template.ParseFiles(fp)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> err := tmpl.Execute(w, profile); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Rendering-a-HTML-Template-to-a-String"><a href="#Rendering-a-HTML-Template-to-a-String" class="headerlink" title="Rendering a HTML Template to a String"></a>Rendering a HTML Template to a String</h3><p>Instead of passing in the http.ResponseWriter when executing your template (like in the above snippet) use a buffer instead:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">buf := <span class="built_in">new</span>(bytes.Buffer)</span><br><span class="line"><span class="keyword">if</span> err := tmpl.Execute(buf, profile); err != <span class="literal">nil</span> &#123;</span><br><span class="line">  http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">&#125;</span><br><span class="line">templateString := buf.String()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<h3 id="Using-Layouts-and-Nested-Templates"><a href="#Using-Layouts-and-Nested-Templates" class="headerlink" title="Using Layouts and Nested Templates"></a>Using Layouts and Nested Templates</h3><p>File: templates/layout.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;&#123; template "title" . &#125;&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    &#123;&#123; template "content" . &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>File: templates/index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; define "title" &#125;&#125;An example layout&#123;&#123; end &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; define "content" &#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello &#123;&#123; .Name &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">&#123;&#123; end &#125;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>File: main.go<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"html/template"</span></span><br><span class="line">  <span class="string">"net/http"</span></span><br><span class="line">  <span class="string">"path"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name    <span class="keyword">string</span></span><br><span class="line">  Hobbies []<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  http.HandleFunc(<span class="string">"/"</span>, foo)</span><br><span class="line">  http.ListenAndServe(<span class="string">":3000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">  profile := Profile&#123;<span class="string">"Alex"</span>, []<span class="keyword">string</span>&#123;<span class="string">"snowboarding"</span>, <span class="string">"programming"</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">  lp := path.Join(<span class="string">"templates"</span>, <span class="string">"layout.html"</span>)</span><br><span class="line">  fp := path.Join(<span class="string">"templates"</span>, <span class="string">"index.html"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Note that the layout file must be the first parameter in ParseFiles</span></span><br><span class="line">  tmpl, err := template.ParseFiles(lp, fp)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> err := tmpl.Execute(w, profile); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://www.alexedwards.net/blog/golang-response-snippets" target="_blank" rel="noopener">https://www.alexedwards.net/blog/golang-response-snippets</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -874,7 +875,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

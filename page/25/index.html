@@ -265,6 +265,111 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/28/hexo的url大小写问题/" itemprop="url">
+                  hexo的url大小写问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-28T09:42:32+08:00" content="2018-03-28">
+              2018-03-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我自己说不出口的，总希望别人能问一问。<br></blockquote>
+
+<h3 id="相关配置"><a href="#相关配置" class="headerlink" title="相关配置"></a>相关配置</h3><ul>
+<li><p>根配置文件_config.yml</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename_case: 1  # url case</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git配置文件<br>进入到博客项目中 .deploy_git文件夹 .git 下的 config 文件</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ignorecase=false</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h3><p>删除博客项目中 .deploy_git 文件夹下的所有文件，并 push 到 Github 上, 这一步是清空你的 github.io 项目中所有文件。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm -rf *</span><br><span class="line">git commit -m <span class="string">'clean all file'</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure></p>
+<p>使用 Hexo 再次生成及部署<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">hexo clean</span><br><span class="line">hexo deploy -generate</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/26/ThinkPHP微信登录Token验证/" itemprop="url">
                   ThinkPHP微信登录Token验证
                 </a>
@@ -723,141 +828,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/22/setTimeout函数之循环和闭包/" itemprop="url">
-                  setTimeout函数之循环和闭包
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-22T17:46:47+08:00" content="2018-03-22">
-              2018-03-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>所有的时光都是被辜负被浪费后，才能从记忆里将某一段拎出来，拍拍上面沉积的灰尘，感叹它是最好的时光。<br></blockquote>
-
-<h3 id="代码片段一"><a href="#代码片段一" class="headerlink" title="代码片段一"></a>代码片段一</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下, 一秒后输出5个5, 没有时间间隔;</p>
-</blockquote>
-<p>分析:</p>
-<blockquote>
-<p>setTimeout的执行异步的, for 循环的执行是很快的, 当setTimeout开始执行的时候,for循环已经执行完毕, 此时的i变为5(for循环使用var申明的变量是全局的), 因为所有的都是延迟1S执行, 所以最后一起输出;</p>
-</blockquote>
-<h3 id="代码片段二"><a href="#代码片段二" class="headerlink" title="代码片段二"></a>代码片段二</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;, i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下, 每隔一秒输出一个5;</p>
-</blockquote>
-<p>分析:</p>
-<blockquote>
-<p>为什么是5, 上一个代码片段已经分析, 每一秒输出一个的原因就是for循环过程中调用setTimeout的时候,调用5次时间非常短可忽略不计, 调用依次给的延迟秒数是0s,1s,2s,3s,4s.所以我们再最后看到他执行的时候, 是每隔一秒出现一个;</p>
-</blockquote>
-<h3 id="代码片段三"><a href="#代码片段三" class="headerlink" title="代码片段三"></a>代码片段三</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(i);</span><br><span class="line">        &#125;, i*<span class="number">1000</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下, 每隔一秒输出一个5, 和代码片段二的结果一样;</p>
-</blockquote>
-<p>分析:<br>虽然加了闭包, 但是并没有影响结果</p>
-<h3 id="代码片段四"><a href="#代码片段四" class="headerlink" title="代码片段四"></a>代码片段四</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">	(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</span><br><span class="line">	    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	        <span class="built_in">console</span>.log(i);</span><br><span class="line">	    &#125;, i*<span class="number">1000</span>);</span><br><span class="line">	&#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下,每隔一秒依次输出0,1,2,3,4;</p>
-</blockquote>
-<p>分析:<br>此时setTimeout里面的参数是通过闭包传递的, 并没有受到全局i的影响</p>
-<h3 id="代码片段五"><a href="#代码片段五" class="headerlink" title="代码片段五"></a>代码片段五</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span> ; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(i);</span><br><span class="line">        &#125;, i*<span class="number">1000</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果:</p>
-<blockquote>
-<p>在控制台下,每隔一秒依次输出0,1,2,3,4;</p>
-</blockquote>
-<p>分析:</p>
-<blockquote>
-<p>使用let申明的变量是块级作用域, 当前的i只在本轮循环有效，所以每一次循环的i其实都是一个新的变量;</p>
-</blockquote>
-<p>更多关于let var 的区别, 请参考我的另外一篇文字: <a href="2017/08/08/var-let-const的区别/">var,let,const的区别</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -901,7 +871,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

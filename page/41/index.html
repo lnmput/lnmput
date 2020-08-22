@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/25/PHPstudy升级mysql5-7方法/" itemprop="url">
+                  PHPstudy升级mysql5.7方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-25T11:35:46+08:00" content="2017-09-25">
+              2017-09-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>当我站在瀑布前，觉得非常的难过，我总觉得，应该是两个人站在这里<br></blockquote></p>
+<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>1.在mysql官网下载压缩包，我选取的是最新版的5.7.17连接：<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/mysql/</a><br>2.趁着下载的时间可以把之前的数据库数据备份下，我把 phpStudy 中 MySQL 文件夹可以重命名下，备用<br>3.把下载的 MySQL 压缩文件解压至 phpStudy 下的 MySQL目录，复制my-default.ini ，重命名为 my.ini。<br>4.打开 my.ini，找到 #basedir 处编辑：（我的安装在了C盘，路径根据phpstudy的安装路径选择）<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">basedir = C:\phpStudy7\MySQL</span><br><span class="line">datadir = C:\phpStudy7\MySQL\data</span><br></pre></td></tr></table></figure></p>
+<p>5.在cmd下进入MySQL的bin目录（我的是 C:\phpStudy7\MySQL\bin），(初始化数据库：<code>mysqld --initialize</code>)</p>
+<h3 id="错误解决"><a href="#错误解决" class="headerlink" title="错误解决"></a>错误解决</h3><h4 id="错误一"><a href="#错误一" class="headerlink" title="错误一"></a>错误一</h4><p>如果是timestamp的错误，在<code>my.ini</code>中添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">explicit_defaults_for_timestamp=<span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="错误二"><a href="#错误二" class="headerlink" title="错误二"></a>错误二</h4><p>如果有[ERROR]mysqld:Error while setting value<br>‘’ONLY_FULL_GROUP_BY,NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,’to ‘sql_mode’<br>在my.ini中添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">sql_mode=<span class="string">'NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,PIPES_AS_CONCAT,ANSI_QUOTES'</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="错误三"><a href="#错误三" class="headerlink" title="错误三"></a>错误三</h4><p>如果是错误：initialize specified but the data directory has files in it.aborting<br>管理员身份运行cmd,然后cd至mysql下的bin，运行mysql install，然后就成功了<br>或者mysql中的data目录已经有数据了, 清空重新执行<br>执行完后，重启phpstudy</p>
+<h4 id="错误四"><a href="#错误四" class="headerlink" title="错误四"></a>错误四</h4><p>此时登入 MySQL 报错：#1045 无法登录 MySQL 服务器，<br>打开 my.ini，找到 [mysqld]，在下面添加：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">skip-grant-tables <span class="comment">#(此参数用于忘记mysql密码)并保存</span></span><br></pre></td></tr></table></figure></p>
+<p>此时使用 root 账号，密码处按回车即可登录。<br>如果想增加密码，在无密码的情况下进去mysql命令行，找到mysql数据库的user表：修改密码：<br>update user set authentication_string=’新密码’ where user=’root’ ;<br>此时仍然用root密码仍登录不进去的话，在phpstudy修改密码，原来的密码为空</p>
+<blockquote>
+<p><a href="http://www.jianshu.com/p/b238da2f9134" target="_blank" rel="noopener">http://www.jianshu.com/p/b238da2f9134</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/22/php实现跳转的一个坑/" itemprop="url">
                   php实现跳转的一个坑
                 </a>
@@ -642,107 +746,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/18/php编译参数详解/" itemprop="url">
-                  php编译参数详解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-18T14:26:46+08:00" content="2017-09-18">
-              2017-09-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你从未珍惜眼前，你活该失去所有。<br></blockquote>
-
-<h3 id="php各参数配置详解"><a href="#php各参数配置详解" class="headerlink" title="php各参数配置详解"></a>php各参数配置详解</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">--prefix=/usr/local/php                      <span class="comment">//指定 php 安装目录 </span></span><br><span class="line">--with-apxs2=/usr/local/apache/bin/apxs      <span class="comment">//整合apache，</span></span><br><span class="line">                        <span class="comment">//apxs功能是使用mod_so中的LoadModule指令，</span></span><br><span class="line">                       <span class="comment">//加载指定模块到 apache，要求 apache 要打开SO模块</span></span><br><span class="line">--with-config-file-path=/usr/local/php/etc    <span class="comment">//指定php.ini位置</span></span><br><span class="line">--with-MySQL=/usr/local/mysql                 <span class="comment">//mysql安装目录，对mysql的支持</span></span><br><span class="line">--with-mysqli=/usr/local/mysql/bin/mysql_config</span><br><span class="line">                      <span class="comment">//mysqli扩展技术不仅可以调用MySQL的存储过程、处理MySQL事务，</span></span><br><span class="line">                      <span class="comment">//而且还可以使访问数据库工作变得更加稳定。</span></span><br><span class="line">--enable-safe-mode    <span class="comment">//打开安全模式 </span></span><br><span class="line">--enable-ftp          <span class="comment">//打开ftp的支持 </span></span><br><span class="line">--enable-zip          <span class="comment">//打开对zip的支持 </span></span><br><span class="line"></span><br><span class="line">--with-bz2            <span class="comment">//打开对bz2文件的支持 </span></span><br><span class="line">--with-jpeg-dir       <span class="comment">//打开对jpeg图片的支持 </span></span><br><span class="line">--with-png-dir        <span class="comment">//打开对png图片的支持 </span></span><br><span class="line">--with-freetype-dir   <span class="comment">//打开对freetype字体库的支持 </span></span><br><span class="line">--without-iconv       <span class="comment">//关闭iconv函数，各种字符集间的转换 </span></span><br><span class="line">--with-libXML-dir     <span class="comment">//打开libxml2库的支持 </span></span><br><span class="line">--with-XMLrpc         <span class="comment">//打开xml-rpc的c语言 </span></span><br><span class="line">--with-zlib-dir       <span class="comment">//打开zlib库的支持 </span></span><br><span class="line">--with-gd             <span class="comment">//打开gd库的支持 </span></span><br><span class="line">--enable-gd-native-ttf <span class="comment">//支持TrueType字符串函数库 </span></span><br><span class="line">--with-curl            <span class="comment">//打开curl浏览工具的支持 </span></span><br><span class="line">--with-curlwrappers    <span class="comment">//运用curl工具打开url流 </span></span><br><span class="line">--with-ttf             <span class="comment">//打开freetype1.*的支持，可以不加了 </span></span><br><span class="line">--with-xsl             <span class="comment">//打开XSLT 文件支持，扩展了libXML2库 ，需要libxslt软件 </span></span><br><span class="line">--with-gettext         <span class="comment">//打开gnu 的gettext 支持，编码库用到 </span></span><br><span class="line">--with-pear            <span class="comment">//打开pear命令的支持，PHP扩展用的 </span></span><br><span class="line">--enable-calendar      <span class="comment">//打开日历扩展功能 </span></span><br><span class="line">--enable-mbstring      <span class="comment">//多字节，字符串的支持 </span></span><br><span class="line">--enable-bcmath        <span class="comment">//打开图片大小调整,用到zabbix监控的时候用到了这个模块</span></span><br><span class="line">--enable-sockets       <span class="comment">//打开 sockets 支持</span></span><br><span class="line">--enable-exif          <span class="comment">//图片的元数据支持 </span></span><br><span class="line">--enable-magic-quotes  <span class="comment">//魔术引用的支持 </span></span><br><span class="line">--disable-rpath        <span class="comment">//关闭额外的运行库文件 </span></span><br><span class="line">--disable-debug        <span class="comment">//关闭调试模式 </span></span><br><span class="line">--with-mime-magic=/usr/share/file/magic.mime  <span class="comment">//魔术头文件位置</span></span><br></pre></td></tr></table></figure>
-<h3 id="CGI方式安装才用的参数"><a href="#CGI方式安装才用的参数" class="headerlink" title="CGI方式安装才用的参数"></a>CGI方式安装才用的参数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">--enable-fpm                 <span class="comment">//打上PHP-fpm 补丁后才有这个参数，CGI方式安装的启动程序</span></span><br><span class="line">--enable-fastCGI             <span class="comment">//支持fastcgi方式启动PHP</span></span><br><span class="line">--enable-force-CGI-redirect  <span class="comment">//重定向方式启动PHP</span></span><br><span class="line">--with-ncurses         <span class="comment">//支持ncurses 屏幕绘制以及基于文本终端的图形互动功能的动态库</span></span><br><span class="line">--enable-pcntl         <span class="comment">//freeTDS需要用到的，可能是链接mssql 才用到</span></span><br><span class="line">--with-mcrypt          <span class="comment">//mcrypt算法的扩展</span></span><br><span class="line">--with-mhash           <span class="comment">//mhash算法的扩展</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//以上函数库需要安装</span></span><br><span class="line"></span><br><span class="line">--with-gmp                     <span class="comment">//应该是支持一种规范</span></span><br><span class="line">--enable-inline-optimization   <span class="comment">//优化线程</span></span><br><span class="line">--with-openssl                 <span class="comment">//openssl的支持，加密传输时用到的</span></span><br><span class="line">--enable-dbase                 <span class="comment">//建立DBA 作为共享模块</span></span><br><span class="line">--with-pcre-dir=/usr/local/bin/pcre-config       <span class="comment">//perl的正则库案安装位置</span></span><br><span class="line">--disable-dmalloc</span><br><span class="line">--with-gdbm            <span class="comment">//dba的gdbm支持</span></span><br><span class="line">--enable-sigchild</span><br><span class="line">--enable-sysvsem</span><br><span class="line">--enable-sysvshm</span><br><span class="line">--enable-zend-multibyte  <span class="comment">//支持zend的多字节</span></span><br><span class="line">--enable-mbregex</span><br><span class="line">--enable-wddx</span><br><span class="line">--enable-shmop</span><br><span class="line">--enable-soap</span><br></pre></td></tr></table></figure>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>指定了–with-apxs2=/usr/local/apache/bin/apxs以后，就不要再激活–enable-fpm和–enable-fastCGI，apxs是以php module的模式加载PHP的。</p>
-<blockquote>
-<p><a href="http://www.jianshu.com/p/0a79847c8151" target="_blank" rel="noopener">http://www.jianshu.com/p/0a79847c8151</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -786,7 +789,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">364</span>
+              <span class="site-state-item-count">365</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
