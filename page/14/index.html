@@ -265,6 +265,216 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/08/curl命令详解/" itemprop="url">
+                  curl命令详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-08T11:04:48+08:00" content="2018-07-08">
+              2018-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>他才二十岁，他就是想活命，他有什么罪！<br></blockquote>
+
+<p>curl 是一种命令行工具，作用是发出网络请求，然后获取数据，显示在”标准输出”（stdout）上面。它支持多种协议，下面列举其常用功能。</p>
+<h3 id="查看网页源码"><a href="#查看网页源码" class="headerlink" title="查看网页源码"></a>查看网页源码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl yangguoqi.me</span><br></pre></td></tr></table></figure>
+<p>这个网页我做了301跳转，所以我们看到的源码是这样<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>301 Moved Permanently<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">bgcolor</span>=<span class="string">"white"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">h1</span>&gt;</span>301 Moved Permanently<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">hr</span>&gt;</span><span class="tag">&lt;<span class="name">center</span>&gt;</span>nginx<span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="保存网页源码"><a href="#保存网页源码" class="headerlink" title="保存网页源码"></a>保存网页源码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o yang.txt yangguoqi.me</span><br></pre></td></tr></table></figure>
+<h3 id="自动跳转"><a href="#自动跳转" class="headerlink" title="自动跳转"></a>自动跳转</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L yangguoqi.me</span><br></pre></td></tr></table></figure>
+<p>这样的操作会跟随发生301跳转，获得跳转后的最终源码</p>
+<h3 id="显示头信息"><a href="#显示头信息" class="headerlink" title="显示头信息"></a>显示头信息</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -i yangguoqi.me <span class="comment"># 连同网页内容一起显示</span></span><br><span class="line">curl -I yangguoqi.me <span class="comment"># 仅仅显示头信息</span></span><br></pre></td></tr></table></figure>
+<h3 id="显示真个通信过程"><a href="#显示真个通信过程" class="headerlink" title="显示真个通信过程"></a>显示真个通信过程</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -v yangguoqi.me <span class="comment">#比较简略</span></span><br><span class="line">curl --trace output.txt yangguoqi.me</span><br></pre></td></tr></table></figure>
+<h3 id="允许连接到-SSL-站点，而不使用证书"><a href="#允许连接到-SSL-站点，而不使用证书" class="headerlink" title="允许连接到 SSL 站点，而不使用证书"></a>允许连接到 SSL 站点，而不使用证书</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -k https:<span class="comment">//swoole.app</span></span><br></pre></td></tr></table></figure>
+<h3 id="静音模式-不输出任务内容"><a href="#静音模式-不输出任务内容" class="headerlink" title="静音模式,不输出任务内容"></a>静音模式,不输出任务内容</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s https:<span class="comment">//swoole.app # 通常和-S 一起使用</span></span><br></pre></td></tr></table></figure>
+<h3 id="其他参数"><a href="#其他参数" class="headerlink" title="其他参数"></a>其他参数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><span class="line">在以下选项中，(H) 表示仅适用 HTTP/HTTPS ，(F) 表示仅适用于 FTP</span><br><span class="line">    --anyauth       选择 "any" 认证方法 (H)</span><br><span class="line">-a, --append        添加要上传的文件 (F/SFTP)</span><br><span class="line">    --basic         使用HTTP基础认证（Basic Authentication）(H)</span><br><span class="line">    --cacert FILE   CA 证书，用于每次请求认证 (SSL)</span><br><span class="line">    --capath DIR    CA 证书目录 (SSL)</span><br><span class="line">-E, --cert CERT[:PASSWD] 客户端证书文件及密码 (SSL)</span><br><span class="line">    --cert-type TYPE 证书文件类型 (DER/PEM/ENG) (SSL)</span><br><span class="line">    --ciphers LIST  SSL 秘钥 (SSL)</span><br><span class="line">    --compressed    请求压缩 (使用 deflate 或 gzip)</span><br><span class="line">-K, --config FILE   指定配置文件</span><br><span class="line">    --connect-timeout SECONDS  连接超时设置</span><br><span class="line">-C, --continue-at OFFSET  断点续转</span><br><span class="line">-b, --cookie STRING/FILE  Cookies字符串或读取Cookies的文件位置 (H)</span><br><span class="line">-c, --cookie-jar FILE  操作结束后，要写入 Cookies 的文件位置 (H)</span><br><span class="line">    --create-dirs   创建必要的本地目录层次结构</span><br><span class="line">    --crlf          在上传时将 LF 转写为 CRLF</span><br><span class="line">    --crlfile FILE  从指定的文件获得PEM格式CRL列表</span><br><span class="line">-d, --data DATA     HTTP POST 数据 (H)</span><br><span class="line">    --data-ascii DATA  ASCII 编码 HTTP POST 数据 (H)</span><br><span class="line">    --data-binary DATA  binary 编码 HTTP POST 数据 (H)</span><br><span class="line">    --data-urlencode DATA  url 编码 HTTP POST 数据 (H)</span><br><span class="line">    --delegation STRING GSS-API 委托权限</span><br><span class="line">    --digest        使用数字身份验证 (H)</span><br><span class="line">    --disable-eprt  禁止使用 EPRT 或 LPRT (F)</span><br><span class="line">    --disable-epsv  禁止使用 EPSV (F)</span><br><span class="line">-D, --dump-header FILE  将头信息写入指定的文件</span><br><span class="line">    --egd-file FILE  为随机数据设置EGD socket路径(SSL)</span><br><span class="line">    --engine ENGINGE  加密引擎 (SSL). "--engine list" 指定列表</span><br><span class="line">-f, --fail          连接失败时不显示HTTP错误信息 (H)</span><br><span class="line">-F, --form CONTENT  模拟 HTTP 表单数据提交（multipart POST） (H)</span><br><span class="line">    --form-string STRING  模拟 HTTP 表单数据提交 (H)</span><br><span class="line">    --ftp-account DATA  帐户数据提交 (F)</span><br><span class="line">    --ftp-alternative-to-user COMMAND  指定替换 "USER [name]" 的字符串 (F)</span><br><span class="line">    --ftp-create-dirs  如果不存在则创建远程目录 (F)</span><br><span class="line">    --ftp-method [MULTICWD/NOCWD/SINGLECWD] 控制 CWD (F)</span><br><span class="line">    --ftp-pasv      使用 PASV/EPSV 替换 PORT (F)</span><br><span class="line">-P, --ftp-port ADR  使用指定 PORT 及地址替换 PASV (F)</span><br><span class="line">    --ftp-skip-pasv-ip 跳过 PASV 的IP地址 (F)</span><br><span class="line">    --ftp-pret      在 PASV 之前发送 PRET (drftpd) (F)</span><br><span class="line">    --ftp-ssl-ccc   在认证之后发送 CCC (F)</span><br><span class="line">    --ftp-ssl-ccc-mode ACTIVE/PASSIVE  设置 CCC 模式 (F)</span><br><span class="line">    --ftp-ssl-control ftp 登录时需要 SSL/TLS (F)</span><br><span class="line">-G, --get           使用 HTTP GET 方法发送 -d 数据  (H)</span><br><span class="line">-g, --globoff       禁用的 URL 队列 及范围使用 &#123;&#125; 和 []</span><br><span class="line">-H, --header LINE   要发送到服务端的自定义请求头 (H)</span><br><span class="line">-I, --head          仅显示响应文档头</span><br><span class="line">-h, --help          显示帮助</span><br><span class="line">-0, --http1.0       使用 HTTP 1.0 (H)</span><br><span class="line">    --ignore-content-length  忽略 HTTP Content-Length 头</span><br><span class="line">-i, --include       在输出中包含协议头 (H/F)</span><br><span class="line">-k, --insecure      允许连接到 SSL 站点，而不使用证书 (H)</span><br><span class="line">    --interface INTERFACE  指定网络接口／地址</span><br><span class="line">-4, --ipv4          将域名解析为 IPv4 地址</span><br><span class="line">-6, --ipv6          将域名解析为 IPv6 地址</span><br><span class="line">-j, --junk-session-cookies 读取文件中但忽略会话cookie (H)</span><br><span class="line">    --keepalive-time SECONDS  keepalive 包间隔</span><br><span class="line">    --key KEY       私钥文件名 (SSL/SSH)</span><br><span class="line">    --key-type TYPE 私钥文件类型 (DER/PEM/ENG) (SSL)</span><br><span class="line">    --krb LEVEL     启用指定安全级别的 Kerberos (F)</span><br><span class="line">    --libcurl FILE  命令的libcurl等价代码</span><br><span class="line">    --limit-rate RATE  限制传输速度</span><br><span class="line">-l, --list-only    只列出FTP目录的名称 (F)</span><br><span class="line">    --local-port RANGE  强制使用的本地端口号</span><br><span class="line">-L, --location      跟踪重定向 (H)</span><br><span class="line">    --location-trusted 类似 --location 并发送验证信息到其它主机 (H)</span><br><span class="line">-M, --manual        显示全手动</span><br><span class="line">    --mail-from FROM  从这个地址发送邮件</span><br><span class="line">    --mail-rcpt TO  发送邮件到这个接收人(s)</span><br><span class="line">    --mail-auth AUTH  原始电子邮件的起始地址</span><br><span class="line">    --max-filesize BYTES  下载的最大文件大小 (H/F)</span><br><span class="line">    --max-redirs NUM  最大重定向数 (H)</span><br><span class="line">-m, --max-time SECONDS  允许的最多传输时间</span><br><span class="line">    --metalink      处理指定的URL上的XML文件</span><br><span class="line">    --negotiate     使用 HTTP Negotiate 认证 (H)</span><br><span class="line">-n, --netrc         必须从 .netrc 文件读取用户名和密码</span><br><span class="line">    --netrc-optional 使用 .netrc 或 URL; 将重写 -n 参数</span><br><span class="line">    --netrc-file FILE  设置要使用的 netrc 文件名</span><br><span class="line">-N, --no-buffer     禁用输出流的缓存</span><br><span class="line">    --no-keepalive  禁用 connection 的 keepalive</span><br><span class="line">    --no-sessionid  禁止重复使用 SSL session-ID (SSL)</span><br><span class="line">    --noproxy       不使用代理的主机列表</span><br><span class="line">    --ntlm          使用 HTTP NTLM 认证 (H)</span><br><span class="line">-o, --output FILE   将输出写入文件，而非 stdout</span><br><span class="line">    --pass PASS     传递给私钥的短语 (SSL/SSH)</span><br><span class="line">    --post301       在 301 重定向后不要切换为 GET 请求 (H)</span><br><span class="line">    --post302       在 302 重定向后不要切换为 GET 请求 (H)</span><br><span class="line">    --post303       在 303 重定向后不要切换为 GET 请求 (H)</span><br><span class="line"><span class="meta">-#</span>, --progress-bar  以进度条显示传输进度</span><br><span class="line">    --proto PROTOCOLS  启用/禁用 指定的协议</span><br><span class="line">    --proto-redir PROTOCOLS  在重定向上 启用/禁用 指定的协议</span><br><span class="line">-x, --proxy [PROTOCOL://]HOST[:PORT] 在指定的端口上使用代理</span><br><span class="line">    --proxy-anyauth 在代理上使用 "any" 认证方法 (H)</span><br><span class="line">    --proxy-basic   在代理上使用 Basic 认证  (H)</span><br><span class="line">    --proxy-digest  在代理上使用 Digest 认证 (H)</span><br><span class="line">    --proxy-negotiate 在代理上使用 Negotiate 认证 (H)</span><br><span class="line">    --proxy-ntlm    在代理上使用 NTLM 认证 (H)</span><br><span class="line">-U, --proxy-user USER[:PASSWORD]  代理用户名及密码</span><br><span class="line">     --proxy1.0 HOST[:PORT]  在指定的端口上使用 HTTP/1.0 代理</span><br><span class="line">-p, --proxytunnel   使用HTTP代理 (用于 CONNECT)</span><br><span class="line">    --pubkey KEY    公钥文件名 (SSH)</span><br><span class="line">-Q, --quote CMD     在传输开始前向服务器发送命令 (F/SFTP)</span><br><span class="line">    --random-file FILE  读取随机数据的文件 (SSL)</span><br><span class="line">-r, --range RANGE   仅检索范围内的字节</span><br><span class="line">    --raw           使用原始HTTP传输，而不使用编码 (H)</span><br><span class="line">-e, --referer       Referer URL (H)</span><br><span class="line">-J, --remote-header-name 从远程文件读取头信息 (H)</span><br><span class="line">-O, --remote-name   将输出写入远程文件</span><br><span class="line">    --remote-name-all 使用所有URL的远程文件名</span><br><span class="line">-R, --remote-time   将远程文件的时间设置在本地输出上</span><br><span class="line">-X, --request COMMAND  使用指定的请求命令</span><br><span class="line">    --resolve HOST:PORT:ADDRESS  将 HOST:PORT 强制解析到 ADDRESS</span><br><span class="line">    --retry NUM   出现问题时的重试次数</span><br><span class="line">    --retry-delay SECONDS 重试时的延时时长</span><br><span class="line">    --retry-max-time SECONDS  仅在指定时间段内重试</span><br><span class="line">-S, --show-error    显示错误. 在选项 -s 中，当 curl 出现错误时将显示</span><br><span class="line">-s, --silent        Silent模式。不输出任务内容</span><br><span class="line">    --socks4 HOST[:PORT]  在指定的 host + port 上使用 SOCKS4 代理</span><br><span class="line">    --socks4a HOST[:PORT]  在指定的 host + port 上使用 SOCKSa 代理</span><br><span class="line">    --socks5 HOST[:PORT]  在指定的 host + port 上使用 SOCKS5 代理</span><br><span class="line">    --socks5-hostname HOST[:PORT] SOCKS5 代理，指定用户名、密码</span><br><span class="line">    --socks5-gssapi-service NAME  为gssapi使用SOCKS5代理服务名称 </span><br><span class="line">    --socks5-gssapi-nec  与NEC Socks5服务器兼容</span><br><span class="line">-Y, --speed-limit RATE  在指定限速时间之后停止传输</span><br><span class="line">-y, --speed-time SECONDS  指定时间之后触发限速. 默认 30</span><br><span class="line">    --ssl           尝试 SSL/TLS (FTP, IMAP, POP3, SMTP)</span><br><span class="line">    --ssl-reqd      需要 SSL/TLS (FTP, IMAP, POP3, SMTP)</span><br><span class="line">-2, --sslv2         使用 SSLv2 (SSL)</span><br><span class="line">-3, --sslv3         使用 SSLv3 (SSL)</span><br><span class="line">    --ssl-allow-beast 允许的安全漏洞，提高互操作性(SSL)</span><br><span class="line">    --stderr FILE   重定向 stderr 的文件位置. - means stdout</span><br><span class="line">    --tcp-nodelay   使用 TCP_NODELAY 选项</span><br><span class="line">-t, --telnet-option OPT=VAL  设置 telnet 选项</span><br><span class="line">     --tftp-blksize VALUE  设备 TFTP BLKSIZE 选项 (必须 &gt;512)</span><br><span class="line">-z, --time-cond TIME  基于时间条件的传输</span><br><span class="line">-1, --tlsv1         使用 =&gt; TLSv1 (SSL)</span><br><span class="line">    --tlsv1.0       使用 TLSv1.0 (SSL)</span><br><span class="line">    --tlsv1.1       使用 TLSv1.1 (SSL)</span><br><span class="line">    --tlsv1.2       使用 TLSv1.2 (SSL)</span><br><span class="line">    --trace FILE    将 debug 信息写入指定的文件</span><br><span class="line">    --trace-ascii FILE  类似 --trace 但使用16进度输出</span><br><span class="line">    --trace-time    向 trace/verbose 输出添加时间戳</span><br><span class="line">    --tr-encoding   请求压缩传输编码 (H)</span><br><span class="line">-T, --upload-file FILE  将文件传输（上传）到指定位置</span><br><span class="line">    --url URL       指定所使用的 URL</span><br><span class="line">-B, --use-ascii     使用 ASCII/text 传输</span><br><span class="line">-u, --user USER[:PASSWORD]  指定服务器认证用户名、密码</span><br><span class="line">    --tlsuser USER  TLS 用户名</span><br><span class="line">    --tlspassword STRING TLS 密码</span><br><span class="line">    --tlsauthtype STRING  TLS 认证类型 (默认 SRP)</span><br><span class="line">    --unix-socket FILE    通过这个 UNIX socket 域连接</span><br><span class="line">-A, --user-agent STRING  要发送到服务器的 User-Agent (H)</span><br><span class="line">-v, --verbose       显示详细操作信息</span><br><span class="line">-V, --version       显示版本号并退出</span><br><span class="line">-w, --write-out FORMAT  完成后输出什么</span><br><span class="line">    --xattr        将元数据存储在扩展文件属性中</span><br><span class="line">-q                 .curlrc 如果作为第一个参数无效</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/05/golang中下划线使用方法/" itemprop="url">
+                  golang中下划线使用方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-05T11:46:29+08:00" content="2018-07-05">
+              2018-07-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我想有一间书房，不负光阴，静享慢乐<br></blockquote>
+
+<h3 id="用在import"><a href="#用在import" class="headerlink" title="用在import"></a>用在import</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	<span class="string">"database/sql"</span></span><br><span class="line">    _<span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>引入包，会先调用包中的初始化函数，这种使用方式仅让导入的包做初始化，而不使用包中其他功能</p>
+<h3 id="用在返回值"><a href="#用在返回值" class="headerlink" title="用在返回值"></a>用在返回值</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _,v := range Slice&#123;&#125;</span><br><span class="line"></span><br><span class="line">_,err := func()</span><br></pre></td></tr></table></figure>
+<p>表示忽略某个值。单函数有多个返回值，用来获取某个特定的值</p>
+<h3 id="用在变量"><a href="#用在变量" class="headerlink" title="用在变量"></a>用在变量</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type T struct&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> _ I = T&#123;&#125;</span><br><span class="line"></span><br><span class="line">其中 I为<span class="class"><span class="keyword">interface</span></span></span><br></pre></td></tr></table></figure>
+<p>上面用来判断 type T是否实现了I,用作类型断言，如果T没有实现借口I，则编译错误.</p>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/309f55a152db" target="_blank" rel="noopener">https://www.jianshu.com/p/309f55a152db</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/03/nginx的empty-gif模块/" itemprop="url">
                   nginx的empty_gif模块
                 </a>
@@ -590,245 +800,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/27/linux磁盘空间分析/" itemprop="url">
-                  linux磁盘空间分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-27T10:42:25+08:00" content="2018-06-27">
-              2018-06-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>珍贵的东西往往数目稀少，所以你要变得更强，才有力量去抢。<br></blockquote>
-
-<p>今天遇到了一个问题， 线上的ES服务突然挂了，重启无用， 查看日志后发现是本地磁盘爆了，开启了我的磁盘清理之路</p>
-<p>du(disk usage)命令可以计算文件或目录所占的磁盘空间。没有指定任何选项时，它会测量当前工作目录与其所有子目录，分别显示各个目录所占的快数，最后才显示工作目录所占总快数。</p>
-<ul>
-<li><p>查看</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -lh</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/dev/vda1        <span class="number">40</span>G   <span class="number">37</span>G  <span class="number">870</span>M  <span class="number">98</span>% /</span><br><span class="line">devtmpfs        <span class="number">3.9</span>G     <span class="number">0</span>  <span class="number">3.9</span>G   <span class="number">0</span>% /dev</span><br><span class="line">tmpfs           <span class="number">3.9</span>G     <span class="number">0</span>  <span class="number">3.9</span>G   <span class="number">0</span>% /dev/shm</span><br><span class="line">tmpfs           <span class="number">3.9</span>G  <span class="number">624</span>K  <span class="number">3.9</span>G   <span class="number">1</span>% /run</span><br><span class="line">tmpfs           <span class="number">3.9</span>G     <span class="number">0</span>  <span class="number">3.9</span>G   <span class="number">0</span>% /sys/fs/cgroup</span><br><span class="line">tmpfs           <span class="number">783</span>M     <span class="number">0</span>  <span class="number">783</span>M   <span class="number">0</span>% /run/user/<span class="number">0</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查找大文件</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sh * |grep G</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.1</span>G	root</span><br><span class="line"><span class="number">4.0</span>G	usr</span><br><span class="line"><span class="number">1.6</span>G	<span class="keyword">var</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>具体分析</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sh *</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">240</span>M	bin</span><br><span class="line"><span class="number">4.0</span>K	etc</span><br><span class="line"><span class="number">4.0</span>K	games</span><br><span class="line"><span class="number">37</span>M	<span class="keyword">include</span></span><br><span class="line"><span class="number">489</span>M	lib</span><br><span class="line"><span class="number">169</span>M	lib64</span><br><span class="line"><span class="number">54</span>M	libexec</span><br><span class="line"><span class="number">2.6</span>G	local</span><br><span class="line"><span class="number">43</span>M	sbin</span><br><span class="line"><span class="number">362</span>M	share</span><br><span class="line"><span class="number">71</span>M	src</span><br><span class="line"><span class="number">0</span>	tmp</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>以M显示文件大小</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -l --block-size=M</span><br></pre></td></tr></table></figure>
-<p>结果</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">total <span class="number">15326</span>M</span><br><span class="line">-rwxr-xr-x <span class="number">1</span> root root     <span class="number">1</span>M Mar <span class="number">13</span> <span class="number">19</span>:<span class="number">01</span> <span class="number">1.</span>sh</span><br><span class="line">-rwxr-xr-x <span class="number">1</span> root root    <span class="number">20</span>M Mar <span class="number">14</span> <span class="number">20</span>:<span class="number">47</span> <span class="number">2</span></span><br><span class="line">-rwxr-xr-x <span class="number">1</span> root root    <span class="number">20</span>M Mar <span class="number">15</span> <span class="number">17</span>:<span class="number">47</span> btoken-go</span><br><span class="line">-rw-rw---- <span class="number">1</span> root root   <span class="number">243</span>M Jun <span class="number">27</span> <span class="number">11</span>:<span class="number">11</span> btoken.log</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/22/alpine简介/" itemprop="url">
-                  Alpine简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-22T14:00:27+08:00" content="2018-06-22">
-              2018-06-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>让未来到来，让过去过去。<br></blockquote>
-
-<p>Alpine 操作系统是一个面向安全的轻型 Linux 发行版。它不同于通常 Linux 发行版，Alpine 采用了 musl libc 和 busybox 以减小系统的体积和运行时资源消耗，但功能上比 busybox 又完善的多，因此得到开源社区越来越多的青睐。在保持瘦身的同时，Alpine 还提供了自己的包管理工具 apk，可以通过 <a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">https://pkgs.alpinelinux.org/packages</a> 网站上查询包信息，也可以直接通过 apk 命令直接查询和安装各种软件。</p>
-<p>Alpine 由非商业组织维护的，支持广泛场景的 Linux发行版，它特别为资深/重度Linux用户而优化，关注安全，性能和资源效能。Alpine 镜像可以适用于更多常用场景，并且是一个优秀的可以适用于生产的基础系统/环境。</p>
-<p>Alpine Docker 镜像也继承了 Alpine Linux 发行版的这些优势。相比于其他 Docker 镜像，它的容量非常小，仅仅只有 5 MB 左右（对比 Ubuntu 系列镜像接近 200 MB），且拥有非常友好的包管理机制。官方镜像来自 docker-alpine 项目。</p>
-<p>目前 Docker 官方已开始推荐使用 Alpine 替代之前的 Ubuntu 做为基础镜像环境。这样会带来多个好处。包括镜像下载速度加快，镜像安全性提高，主机之间的切换更方便，占用更少磁盘空间等。</p>
-<h3 id="Docker下的运行"><a href="#Docker下的运行" class="headerlink" title="Docker下的运行"></a>Docker下的运行</h3><p>官方 Alpine 镜像的文档：<a href="http://gliderlabs.viewdocs.io/docker-alpine/" target="_blank" rel="noopener">http://gliderlabs.viewdocs.io/docker-alpine/</a></p>
-<p>可以使用Docker Toolbox，创建一台Docker虚拟主机，在该主机的Docker环境下运行alpine的 Docker容器。该容器就是一个Alpine Linux系统，<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull alpine</span><br><span class="line"></span><br><span class="line">docker run -it --name myalpine alpine</span><br></pre></td></tr></table></figure></p>
-<h3 id="作为Docker容器的基础镜像"><a href="#作为Docker容器的基础镜像" class="headerlink" title="作为Docker容器的基础镜像"></a>作为Docker容器的基础镜像</h3><p>以Alpine为基础镜像，创建一个MySQL容器，镜像大小只有36.5MB，<br>同样的方式使用Ubuntu系统作为基础镜像，镜像大小有184MB，<br>Dockerfile文件的内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:<span class="number">3.6</span></span><br><span class="line">RUN apk add --no-cache mysql-client</span><br><span class="line">ENTRYPOINT [<span class="string">"mysql"</span>]</span><br></pre></td></tr></table></figure></p>
-<p>创建一个test/mysqlclient:1.0镜像<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t test/mysqlclient:<span class="number">1.0</span> .</span><br></pre></td></tr></table></figure></p>
-<h3 id="Alpine的配置和使用"><a href="#Alpine的配置和使用" class="headerlink" title="Alpine的配置和使用"></a>Alpine的配置和使用</h3><h4 id="网络相关文件"><a href="#网络相关文件" class="headerlink" title="网络相关文件"></a>网络相关文件</h4><p>主机名文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hostname</span><br></pre></td></tr></table></figure></p>
-<p>主机IP和域名映射文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hosts</span><br></pre></td></tr></table></figure></p>
-<p>安装nginx<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add --update nginx</span><br></pre></td></tr></table></figure></p>
-<p>安装openssh-server服务器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add openssh-server</span><br></pre></td></tr></table></figure></p>
-<h3 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h3><ul>
-<li>Alpine 官网：<a href="http://alpinelinux.org/" target="_blank" rel="noopener">http://alpinelinux.org/</a></li>
-<li>Alpine 官方仓库：<a href="https://github.com/alpinelinux" target="_blank" rel="noopener">https://github.com/alpinelinux</a></li>
-<li>Alpine 官方镜像：<a href="https://hub.docker.com/_/alpine/" target="_blank" rel="noopener">https://hub.docker.com/_/alpine/</a></li>
-<li>Alpine 官方镜像仓库：<a href="https://github.com/gliderlabs/docker-alpine" target="_blank" rel="noopener">https://github.com/gliderlabs/docker-alpine</a></li>
-</ul>
-<blockquote>
-<p><a href="https://blog.csdn.net/CSDN_duomaomao/article/details/76152416" target="_blank" rel="noopener">https://blog.csdn.net/CSDN_duomaomao/article/details/76152416</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -867,7 +843,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">365</span>
+              <span class="site-state-item-count">367</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -877,7 +853,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

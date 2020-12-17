@@ -265,6 +265,222 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/26/惊艳的vuejs/" itemprop="url">
+                  惊艳的vuejs
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-26T18:10:54+08:00" content="2016-12-26">
+              2016-12-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>“大圣，此去欲何？”<br>“踏南天，碎凌霄。”<br>“若一去不回……”<br>“便一去不回！”<br></blockquote></p>
+<h3 id="双向数据绑定"><a href="#双向数据绑定" class="headerlink" title="双向数据绑定"></a>双向数据绑定</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"radio"</span> <span class="attr">id</span>=<span class="string">"one"</span> <span class="attr">value</span>=<span class="string">"face"</span> <span class="attr">v-model</span>=<span class="string">"className"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"radio"</span> <span class="attr">id</span>=<span class="string">"two"</span> <span class="attr">value</span>=<span class="string">"msg"</span> <span class="attr">v-model</span>=<span class="string">"className"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"&#123;&#123; className&#125;&#125;"</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123; textValue &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> dataList = &#123;</span><br><span class="line">		className : <span class="string">'app'</span>,</span><br><span class="line">		textValue : <span class="string">'你好'</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">new</span> Vue(&#123;</span><br><span class="line">		el:<span class="string">'#app'</span>,</span><br><span class="line">		data: dataList</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"&#123;&#123; className &#125;&#125;"</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><br><span class="line">	        a = &#123;&#123;a&#125;&#125;</span><br><span class="line">	        b = &#123;&#123;b&#125;&#125;</span><br><span class="line">	    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> dataList = &#123;</span><br><span class="line">		className : <span class="string">'app'</span>,</span><br><span class="line">		textValue : <span class="string">'&lt;i&gt;你好&lt;/i&gt;'</span>,</span><br><span class="line">		a: <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">		el:<span class="string">'#app'</span>,</span><br><span class="line">		data: dataList,</span><br><span class="line">		computed: &#123; <span class="attr">b</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.a + <span class="number">1</span>;</span><br><span class="line">	    &#125;&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	vm.a = <span class="number">4</span>;</span><br><span class="line">	&#125;, <span class="number">5000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="绑定class"><a href="#绑定class" class="headerlink" title="绑定class"></a>绑定class</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"&#123;&#123; className &#125;&#125;"</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"com"</span> <span class="attr">v-bind:class</span>=<span class="string">"&#123;'app': a, 'msg':b&#125;"</span>&gt;</span></span><br><span class="line">		&#123;&#123; fullName &#125;&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> dataList = &#123;</span><br><span class="line">		a : <span class="literal">true</span>,</span><br><span class="line">		b : <span class="literal">false</span>,</span><br><span class="line">		fullName: <span class="string">'yangguoqi'</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">		el:<span class="string">'#app'</span>,</span><br><span class="line">		data: dataList,</span><br><span class="line">	&#125;);</span><br><span class="line">	setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">		vm.a = <span class="literal">false</span>;</span><br><span class="line">		vm.b = <span class="literal">true</span>;</span><br><span class="line">	&#125;,<span class="number">5000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/20/跨域资源共享CORS/" itemprop="url">
+                  跨域资源共享CORS
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-20T14:08:08+08:00" content="2016-12-20">
+              2016-12-20
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我想，最好的感情是两个人都用力的活，一起体验人生的种种趣味，也能包容与鼓励对方。当对方为你打开新的世界，你就没有因为喜欢一个人而拒绝了整个世界。<br></blockquote>
+
+<p>CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。<br>它允许浏览器向跨源服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。<br>CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。<br>整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。<br>因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。</p>
+<h3 id="两种请求"><a href="#两种请求" class="headerlink" title="两种请求"></a>两种请求</h3><p>浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。<br>只要同时满足以下两大条件，就属于简单请求。<br>1.请求方法是以下三种方法之一：</p>
+<ul>
+<li>HEAD</li>
+<li>GET</li>
+<li>POST</li>
+</ul>
+<p>2.HTTP的头信息不超出以下几种字段：</p>
+<ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Last-Event-ID<br>Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain<br>凡是不同时满足上面两个条件，就属于非简单请求。<br>浏览器对这两种请求的处理，是不一样的。</li>
+</ul>
+<h3 id="预检请求"><a href="#预检请求" class="headerlink" title="预检请求"></a>预检请求</h3><p>非简单请求是那种对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json。<br>非简单请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为”预检”请求（preflight）。<br>浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。</p>
+<p>“预检”请求用的请求方法是<code>OPTIONS</code>，表示这个请求是用来询问的。头信息里面，关键字段是Origin，表示请求来自哪个源。<br>为防止浏览器预检发出 options 请求 时出现 404 错误， 我们可以直接将 options请求结束掉；<br>以下是ThinkPHP 5利用行为特性解决跨域问题；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">api</span>\<span class="title">behavior</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CORS</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">appInit</span><span class="params">(&amp;$params)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        header(<span class="string">'Access-Control-Allow-Origin: *'</span>);</span><br><span class="line">        header(<span class="string">"Access-Control-Allow-Headers: token,Origin, X-Requested-With, Content-Type, Accept"</span>);</span><br><span class="line">        header(<span class="string">'Access-Control-Allow-Methods: POST,GET'</span>);</span><br><span class="line">        <span class="keyword">if</span>(request()-&gt;isOptions())&#123;</span><br><span class="line">            <span class="keyword">exit</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><p>jquery 请求<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">        type:<span class="string">"POST"</span>,</span><br><span class="line">        url:<span class="string">"http://www.shop.dev/onValidateEmail"</span>,</span><br><span class="line">        data:&#123;<span class="attr">email</span>:<span class="string">"yangguoqi@olmailorg"</span>&#125;,</span><br><span class="line">        datatype: <span class="string">"json"</span>,</span><br><span class="line">        success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(data);</span><br><span class="line">        &#125;,</span><br><span class="line">        error: <span class="function"><span class="keyword">function</span>(<span class="params">msg</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>服务端响应<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Route::post(<span class="string">'/onValidateEmail'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    header(<span class="string">"Access-Control-Allow-Origin: *"</span>);</span><br><span class="line">    header(<span class="string">"Access-Control-Allow-Methods: *"</span>);</span><br><span class="line">    header(<span class="string">"Content-Type: application/json"</span>);</span><br><span class="line">    $email = post(<span class="string">'email'</span>,<span class="string">''</span>);</span><br><span class="line">    $count = \October\Rain\Auth\Models\User::where(<span class="string">'email'</span>,$email)-&gt;count();</span><br><span class="line">    <span class="keyword">return</span> Response::json([</span><br><span class="line">        <span class="string">'status'</span> =&gt; <span class="number">200</span>,</span><br><span class="line">        <span class="string">'data'</span> =&gt; $count</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="与JSONP的比较"><a href="#与JSONP的比较" class="headerlink" title="与JSONP的比较"></a>与JSONP的比较</h3><p>CORS与JSONP的使用目的相同，但是比JSONP更强大。<br>JSONP只支持GET请求，CORS支持所有类型的HTTP请求。JSONP的优势在于支持老式浏览器，以及可以向不支持CORS的网站请求数据。</p>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2016/04/cors.html</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/13/用matplotlib绘制精美的图表/" itemprop="url">
                   用matplotlib绘制精美的图表
                 </a>
@@ -557,221 +773,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/09/python投票和ip地址的伪造/" itemprop="url">
-                  python投票和ip地址的伪造
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-09T10:30:46+08:00" content="2016-12-09">
-              2016-12-09
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>全怪我们太穷了，又不认识人。<br></blockquote>
-
-<h3 id="项目说明"><a href="#项目说明" class="headerlink" title="项目说明"></a>项目说明</h3><ul>
-<li>投票地址：<a href="http://kepudasai.cdstm.cn/index.php?kepu-postvote" target="_blank" rel="noopener">http://kepudasai.cdstm.cn/index.php?kepu-postvote</a></li>
-<li>投票限制：IP，每个ip每天10票</li>
-<li>提交方式：post</li>
-<li>提交参数：{‘group’: ‘gaozhongzu’,’key’ : 10}</li>
-</ul>
-<h3 id="php获取IP问题"><a href="#php获取IP问题" class="headerlink" title="php获取IP问题"></a>php获取IP问题</h3><p>一般我们写的获取ip的方式：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetIP</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>];</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>];</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($_SERVER[<span class="string">"REMOTE_ADDR"</span>])) &#123;</span><br><span class="line">        $cip = $_SERVER[<span class="string">"REMOTE_ADDR"</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $cip = <span class="string">"0.0.0.0"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $cip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>其实这是有问题的，通过header我们可以轻易改变ip：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$curl = curl_init();    <span class="comment">//初始化一个curl对象  </span></span><br><span class="line">curl_setopt($curl, CURLOPT_URL, <span class="string">"127.0.0.1/server.php"</span>); </span><br><span class="line">$header = <span class="keyword">array</span>(        <span class="comment">//构造头部</span></span><br><span class="line">    <span class="string">'CLIENT-IP:58.68.44.61'</span>, </span><br><span class="line">    <span class="string">'X-FORWARDED-FOR:58.68.44.61'</span>, </span><br><span class="line">); </span><br><span class="line"></span><br><span class="line">curl_setopt($curl, CURLOPT_HTTPHEADER, $header); </span><br><span class="line">curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>); </span><br><span class="line"></span><br><span class="line">$str = curl_exec($curl);    <span class="comment">//执行请求  </span></span><br><span class="line">curl_close($curl);    <span class="comment">//关闭c</span></span><br><span class="line"><span class="keyword">echo</span> $str;    <span class="comment">//输出抓取的结果</span></span><br></pre></td></tr></table></figure></p>
-<p>解决方法：<br>在判断的时候以<code>$_SERVER[&quot;REMOTE_ADDR&quot;]</code>优先。</p>
-<h3 id="python脚本"><a href="#python脚本" class="headerlink" title="python脚本"></a>python脚本</h3><p>初学，不喜勿喷<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">'http://kepudasai.cdstm.cn/index.php?kepu-postvote'</span></span><br><span class="line"></span><br><span class="line">data = &#123;<span class="string">'group'</span>: <span class="string">'gaozhongzu'</span>,<span class="string">'key'</span> : <span class="number">10</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createHeader</span><span class="params">()</span>:</span></span><br><span class="line">    ip = socket.inet_ntoa(struct.pack(<span class="string">'&gt;I'</span>, random.randint(<span class="number">1</span>, <span class="number">0xffffffff</span>)))</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0'</span>,</span><br><span class="line">        <span class="string">'CLIENT-IP'</span>: ip,</span><br><span class="line">        <span class="string">'X-FORWARDED-FOR'</span>: ip</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> headers</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">toupiao</span><span class="params">()</span>:</span></span><br><span class="line">    index = <span class="number">0</span></span><br><span class="line">    headers = createHeader();</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        html = requests.post(url, data=data, headers=headers)</span><br><span class="line">        result = json.loads(html.text)</span><br><span class="line">        <span class="keyword">if</span>(result[<span class="string">'error'</span>] == <span class="number">1</span>):</span><br><span class="line">            time.sleep(random.randint(<span class="number">1</span>, <span class="number">3</span>))</span><br><span class="line">            headers = createHeader();</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span>(index == <span class="number">10000</span>):</span><br><span class="line">            <span class="keyword">print</span> index</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">toupiao()</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/08/关于http的一些知识/" itemprop="url">
-                  关于http的一些知识
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-08T15:35:42+08:00" content="2016-12-08">
-              2016-12-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>兴趣是最好的老师，其次是耻辱<br></blockquote>
-
-<h3 id="简要说明"><a href="#简要说明" class="headerlink" title="简要说明"></a>简要说明</h3><p>简言之，HTTP Referer是header的一部分，当浏览器向web服务器发送请求的时候，一般会带上Referer，告诉服务器我是从哪个页面链接过来的，服务器籍此可以获得一些信息用于处理。比如从我主页上链接到一个朋友那里，他的服务器就能够从HTTP Referer中统计出每天有多少用户点击我主页上的链接访问他的网站。</p>
-<p>从一个https页面上的链接访问到一个非加密的http页面的时候，在http页面上是检查不到HTTP Referer的，比如当我点击自己的https页面下面的w3c xhtml验证图标（网址为<a href="http://validator.w3.org/check?uri=referer），从来都无法完成校验，提示：" target="_blank" rel="noopener">http://validator.w3.org/check?uri=referer），从来都无法完成校验，提示：</a></p>
-<p>No Referer header found!<br>原来，在http协议的rfc文档中有定义：</p>
-<p>15.1.3 Encoding Sensitive Information in URI’s</p>
-<p>…</p>
-<p>   Clients SHOULD NOT include a Referer header field in a (non-secure)<br>   HTTP request if the referring page was transferred with a secure<br>   protocol.<br>这样是出于安全的考虑，访问非加密页时，如果来源是加密页，客户端不发送Referer，IE一直都是这样实现的，Firefox浏览器也不例外。但这并不影响从加密页到加密页的访问。</p>
-<h3 id="详细论述"><a href="#详细论述" class="headerlink" title="详细论述"></a>详细论述</h3><p>从一个https页面上的链接访问到一个非加密的http页面的时候，在http页面上是检查不到HTTP Referer的，但是这是在https中未做设置的情况下，如facebook，</p>
-<ul>
-<li><a href="http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how" target="_blank" rel="noopener">http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/62/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><span class="page-number current">63</span><a class="page-number" href="/page/64/">64</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/64/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/62/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><span class="page-number current">63</span><a class="page-number" href="/page/64/">64</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/64/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -810,7 +816,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">365</span>
+              <span class="site-state-item-count">367</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -820,7 +826,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

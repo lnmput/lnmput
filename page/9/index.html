@@ -265,6 +265,237 @@
             
               
                 
+                <a class="post-title-link" href="/2018/09/08/laravel中eloquent事件中的updated和saved原來不一樣/" itemprop="url">
+                  Laravel中Eloquent事件中的Updated和Saved原來不一樣
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-09-08T14:44:20+08:00" content="2018-09-08">
+              2018-09-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>受任于败军之际，奉命于危难之间，尔来二十有一年矣。<br></blockquote>
+
+<p>當一個新模型初次被儲存，將會觸發 creating 以及 created 事件。如果一個模型已經存在於資料庫而且呼叫了 save 方法，將會觸發 updating 和 updated 事件。然而，在這兩個狀況下，都將會觸發 saving 和 saved 事件。</p>
+<p>Laravel 在資料更新的時候會觸發兩個事件：updated 和 saved。單從官方文件的說明，saved 看起來像是一個方便開發者統一管理新增/更新動作的事件，讓重複的程式碼可以不用被寫在兩個地方（created 和 updated），但是其實 saved 和 updated 的觸發時機是不一樣的。</p>
+<p>接來看一下 Laravel eloquent 的原始碼。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 495 行</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">(array $options = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;exists) &#123;</span><br><span class="line">        $saved = <span class="keyword">$this</span>-&gt;isDirty() ?</span><br><span class="line">                    <span class="keyword">$this</span>-&gt;performUpdate($query) : <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> ($saved) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;finishSave($options);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $saved;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 552 行</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">finishSave</span><span class="params">(array $options)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;fireModelEvent(<span class="string">'saved'</span>, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;syncOriginal();</span><br><span class="line">    <span class="keyword">if</span> (Arr::get($options, <span class="string">'touch'</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;touchOwners();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 569 行</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">performUpdate</span><span class="params">(Builder $query)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    $dirty = <span class="keyword">$this</span>-&gt;getDirty();</span><br><span class="line">    <span class="keyword">if</span> (count($dirty) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;setKeysForSaveQuery($query)-&gt;update($dirty);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;fireModelEvent(<span class="string">'updated'</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>應該盡量使用 updated 而不是 saved 來判斷資料是否更新<br>可以看到在觸發 updated 之前會先做一次 getDirty() 的檢查，其實就是在檢查這次更新的資料是不是真的有改動資料的值；相反的，saved 不管值有沒有改動都會觸發。如果沒注意到這個差別的話，這在實務上其實會造成一些問題。</p>
+<p>例如，我們通常會把資料的結果快取起來，以減少對資料庫的查詢次數。因此當資料有變動的時候，就會需要把對應的快取刪除。為了避免有漏刪的部分，會把刪除快取的動作綁定在 eloquent 事件中。認清 updated 和 saved 之後，就會知道這個動作應該是要綁在 updated；若是綁在 saved 上，就會造成多餘的快取動作，增加機器的成本。當快取數量一多，又有用到類似 redis scan 這種較耗時的功能來找出需要刪除的快取時，對於機器的效能影響更大。</p>
+<p>使用 updated 也仍會可能有漏網之魚</p>
+<p>但是，要注意的是，即使使用了 updated 也不能說完全避免這件事的發生。這時候又要再看一次 Larvel eloquent 的原始碼了。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3093 行</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDirty</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $dirty = [];</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;attributes <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! array_key_exists($key, <span class="keyword">$this</span>-&gt;original)) &#123;</span><br><span class="line">            $dirty[$key] = $value;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> ($value !== <span class="keyword">$this</span>-&gt;original[$key] &amp;&amp;</span><br><span class="line">                             ! <span class="keyword">$this</span>-&gt;originalIsNumericallyEquivalent($key)) &#123;</span><br><span class="line">            $dirty[$key] = $value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $dirty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以發現 Laravel 判斷值有沒有改動的比較依據來自於，我們一開始 select 出來的欄位，跟這次要變動的欄位。意思就是，如果我們只 select 了 A 欄位出來，但是更新的是 B 欄位時，即使更動後 B 欄位的值跟更動之前一模一樣，Laravel 仍會把此視為資料的值有所改動。</p>
+<p>不過這仍在可以接受的範圍之內。畢竟每個更新之前，若要為了拿到所有欄位而又再多查詢一次資料庫，可能會是一件更浪費資源的事情。</p>
+<blockquote>
+<p><a href="https://medium.com/@lynnlin827/laravel-eloquent-%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-updated-%E5%92%8C-saved-%E5%8E%9F%E4%BE%86%E4%B8%8D%E4%B8%80%E6%A8%A3-caa8ef0ddbc" target="_blank" rel="noopener">https://medium.com/@lynnlin827/laravel-eloquent-%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-updated-%E5%92%8C-saved-%E5%8E%9F%E4%BE%86%E4%B8%8D%E4%B8%80%E6%A8%A3-caa8ef0ddbc</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/09/05/laravel使用ajax上传图片/" itemprop="url">
+                  Laravel使用Ajax上传图片
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-09-05T09:12:17+08:00" content="2018-09-05">
+              2018-09-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>You know some birds are not meant to be caged, their feathers are just too bright.<br></blockquote>
+
+<p>File uploads is one of the most important functions on the internet, and we have bigger files nowadays, which means it’s not enough to have simple input fields – we need AJAX and processing file upload “in the background”. Here I will show you a simple example of that in Laravel 5.</p>
+<p>Let’s say, we have a simple form to upload the product and many photos for it.</p>
+<p>And we want to upload photos and see upload progress immediately, only then submitting the form. For that we will use a jQuery-File-Upload library.</p>
+<h3 id="Step-1-Database-structure"><a href="#Step-1-Database-structure" class="headerlink" title="Step 1. Database structure"></a>Step 1. Database structure</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Schema::create(<span class="string">'products'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">    $table-&gt;string(<span class="string">'name'</span>);</span><br><span class="line">    $table-&gt;timestamps();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Schema::create(<span class="string">'product_photos'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Blueprint $table)</span> </span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>);</span><br><span class="line">    $table-&gt;integer(<span class="string">'product_id'</span>)-&gt;unsigned()-&gt;nullable();</span><br><span class="line">    $table-&gt;foreign(<span class="string">'product_id'</span>)-&gt;references(<span class="string">'id'</span>)-&gt;on(<span class="string">'products'</span>);</span><br><span class="line">    $table-&gt;string(<span class="string">'filename'</span>);</span><br><span class="line">    $table-&gt;timestamps();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>And then we have two simple models – app/Product.php and app/ProductPhoto.php.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Product</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'name'</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductPhoto</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $fillable = [<span class="string">'product_id'</span>, <span class="string">'filename'</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">product</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Product'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>As you can see, field <code>product_photos.product_id</code> is nullable – which means we can upload photos without saving product with them yet. We’ll show later why.</p>
+<h3 id="Step-2-Routes-and-MVC"><a href="#Step-2-Routes-and-MVC" class="headerlink" title="Step 2. Routes and MVC"></a>Step 2. Routes and MVC</h3><p>First, let’s decide our URLs. In routes/web.php we will have this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Route::get(<span class="string">'/'</span>, <span class="string">'UploadController@uploadForm'</span>);</span><br><span class="line">Route::post(<span class="string">'/upload'</span>, <span class="string">'UploadController@uploadSubmit'</span>);</span><br><span class="line">Route::post(<span class="string">'/product'</span>, <span class="string">'UploadController@postProduct'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>Basically, homepage for the form, then /upload for AJAX file submit, and /product for submitting the whole product with photos.</p>
+<p>Then we have app/Http/Controllers/UploadController.php with these methods:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadForm</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> view(<span class="string">'upload_form'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadSubmit</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// This method will cover file upload</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postProduct</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// This method will cover whole product submit</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Step-3-Building-the-form"><a href="#Step-3-Building-the-form" class="headerlink" title="Step 3. Building the form"></a>Step 3. Building the form</h3><p>Our resources/views/upload_form.blade.php will look like this:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/product"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    &#123;&#123; csrf_field() &#125;&#125;</span><br><span class="line">    Product name:</span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    Product photos (can add more than one):</span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">id</span>=<span class="string">"fileupload"</span> <span class="attr">name</span>=<span class="string">"photos[]"</span> <span class="attr">data-url</span>=<span class="string">"/upload"</span> <span class="attr">multiple</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"files_list"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"loading"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"file_ids"</span> <span class="attr">id</span>=<span class="string">"file_ids"</span> <span class="attr">value</span>=<span class="string">""</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"Upload"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Step-4-Processing-the-upload-and-submit"><a href="#Step-4-Processing-the-upload-and-submit" class="headerlink" title="Step 4. Processing the upload and submit"></a>Step 4. Processing the upload and submit</h3><p>Now, let’s download jQuery-File-Upload library and put its /js contents into our /public/js. And then we can use it like this – in the end of our upload_form.blade.php:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/vendor/jquery.ui.widget.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/jquery.iframe-transport.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">"/js/jquery.fileupload.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    $(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        $(<span class="string">'#fileupload'</span>).fileupload(&#123;</span><br><span class="line">            dataType: <span class="string">'json'</span>,</span><br><span class="line">            add: <span class="function"><span class="keyword">function</span> <span class="params">(e, data)</span> </span>&#123;</span><br><span class="line">                $(<span class="string">'#loading'</span>).text(<span class="string">'Uploading...'</span>);</span><br><span class="line">                data.submit();</span><br><span class="line">            &#125;,</span><br><span class="line">            done: <span class="function"><span class="keyword">function</span> <span class="params">(e, data)</span> </span>&#123;</span><br><span class="line">                $.each(data.result.files, <span class="function"><span class="keyword">function</span> <span class="params">(index, file)</span> </span>&#123;</span><br><span class="line">                    $(<span class="string">'&lt;p/&gt;'</span>).html(file.name + <span class="string">' ('</span> + file.size + <span class="string">' KB)'</span>).appendTo($(<span class="string">'#files_list'</span>));</span><br><span class="line">                    <span class="keyword">if</span> ($(<span class="string">'#file_ids'</span>).val() != <span class="string">''</span>) &#123;</span><br><span class="line">                        $(<span class="string">'#file_ids'</span>).val($(<span class="string">'#file_ids'</span>).val() + <span class="string">','</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    $(<span class="string">'#file_ids'</span>).val($(<span class="string">'#file_ids'</span>).val() + file.fileID);</span><br><span class="line">                &#125;);</span><br><span class="line">                $(<span class="string">'#loading'</span>).text(<span class="string">''</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>To be honest, I’m not a strong front-ender, so the syntax was written according to jQuery-File-Upload library examples. But basically, it works like this:</p>
+<ul>
+<li>fileupload() method is attached to input field and takes two important parameters – name=”photos[]” data-url=”/upload”;</li>
+<li>Those parameters are passed via AJAX request to /upload URL – meaning UploadController and method uploadSubmit();</li>
+<li>uploadSubmit() physically uploads the file, stores information in the database but doesn’t store product_photos.product_id because we don’t have ID yet. After upload it returns JSON with array of file results;</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">uploadSubmit</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $photos = [];</span><br><span class="line">    <span class="keyword">foreach</span> ($request-&gt;photos <span class="keyword">as</span> $photo) &#123;</span><br><span class="line">        $filename = $photo-&gt;store(<span class="string">'photos'</span>);</span><br><span class="line">        $product_photo = ProductPhoto::create([</span><br><span class="line">            <span class="string">'filename'</span> =&gt; $filename</span><br><span class="line">        ]);</span><br><span class="line"></span><br><span class="line">        $photo_object = <span class="keyword">new</span> \stdClass();</span><br><span class="line">        $photo_object-&gt;name = str_replace(<span class="string">'photos/'</span>, <span class="string">''</span>,$photo-&gt;getClientOriginalName());</span><br><span class="line">        $photo_object-&gt;size = round(Storage::size($filename) / <span class="number">1024</span>, <span class="number">2</span>);</span><br><span class="line">        $photo_object-&gt;fileID = $product_photo-&gt;id;</span><br><span class="line">        $photos[] = $photo_object;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> response()-&gt;json(<span class="keyword">array</span>(<span class="string">'files'</span> =&gt; $photos), <span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Those results are shown to the user in the file list (filename and size) and also in the hidden field file_ids which stores values from product_photos.id column;</li>
+</ul>
+<p>We can upload more files like this, and our files list will grow bigger and bigger. As soon as we hit the main submit – the data will be posted and UploadController method postProduct() will save the data into products DB table, and also assign new product ID to product_photos entries:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postProduct</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $product = Product::create($request-&gt;all());</span><br><span class="line">    ProductPhoto::whereIn(<span class="string">'id'</span>, explode(<span class="string">","</span>, $request-&gt;file_ids))</span><br><span class="line">        -&gt;update([<span class="string">'product_id'</span> =&gt; $product-&gt;id]);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Product saved successfully'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://laraveldaily.com/laravel-ajax-file-upload-blueimp-jquery-library/" target="_blank" rel="noopener">https://laraveldaily.com/laravel-ajax-file-upload-blueimp-jquery-library/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/09/05/laravel集合中的when方法/" itemprop="url">
                   Laravel集合中的when方法
                 </a>
@@ -593,272 +824,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/08/10/swoole异步task邮件案例/" itemprop="url">
-                  swoole异步task邮件案例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-08-10T07:41:05+08:00" content="2018-08-10">
-              2018-08-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>有人住高楼，有人在深沟，有人光万丈，有人一身锈。世人万千种，浮云莫去求，斯人若彩虹，遇上方知有。<br></blockquote>
-
-<p>我们在写代码的过程中应该注意的问题：</p>
-<ul>
-<li>开启数量适中的Worker进程和Task进程</li>
-<li>守护进程化</li>
-<li>配置运行时日志</li>
-<li>平滑重启</li>
-<li>避免内存泄漏</li>
-<li>避免粘包问题</li>
-</ul>
-<p>除此之外，跟swoole打交道，我们还应该注意下面这些问题：</p>
-<ul>
-<li>为了避免Worker阻塞，避免使用sleep等睡眠函数</li>
-<li>不要使用die或者exit函数，即使在你调试的时候</li>
-<li>保持良好的代码风格，try/catch捕获异常</li>
-<li>如果Worker进程无法预料会发生异常退出，虽然Manager进程会重新拉起新的Worker进程，但是我们可以通过register_shutdown_function方法在进程退出前“善后”</li>
-</ul>
-<h3 id="邮件案例"><a href="#邮件案例" class="headerlink" title="邮件案例"></a>邮件案例</h3><p>首先发送邮件，我们借助第三方类库 swiftmailer。有些框架可能集成了swiftmailer，比如yii2,本来准备在yii2的基础之上来讲，考虑部分人可能对这个框架不熟悉，我们这里直接根据swiftmailer代码操作，框架中一样可以使用，无任何影响。</p>
-<p>我们执行下面的命令，把swiftmailer下载到本地，下载好之后swiftmailer会被下载到一个叫vendor文件夹的目录里面<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> <span class="string">"swiftmailer/swiftmailer:^6.0"</span></span><br></pre></td></tr></table></figure></p>
-<p>然后我们封装一个简单的邮件类Mailer.php,同vendor目录同级，用于发送邮件，该类后期可自行完善，比如增加批量发送邮件或者增加发送模版邮件等操作。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span> <span class="keyword">__DIR__</span> . <span class="string">'/vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mailer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $transport;</span><br><span class="line">    <span class="keyword">public</span> $mailer;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送邮件类 参数 $data 需要三个必填项 包括 邮件主题`$data['subject']`、接收邮件的人`$data['to']`和邮件内容 `$data['content']`</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> Array $data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> bool $result 发送成功 or 失败</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;transport = (<span class="keyword">new</span> Swift_SmtpTransport(<span class="string">'smtp.qq.com'</span>, <span class="number">25</span>))</span><br><span class="line">            -&gt;setEncryption(<span class="string">'tls'</span>)</span><br><span class="line">            -&gt;setUsername(<span class="string">'bailangzhan@qq.com'</span>)</span><br><span class="line">            -&gt;setPassword(<span class="string">'xxxxxx'</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mailer = <span class="keyword">new</span> Swift_Mailer(<span class="keyword">$this</span>-&gt;transport);</span><br><span class="line"></span><br><span class="line">        $message = (<span class="keyword">new</span> Swift_Message($data[<span class="string">'subject'</span>]))</span><br><span class="line">            -&gt;setFrom(<span class="keyword">array</span>(<span class="string">'bailangzhan@qq.com'</span> =&gt; <span class="string">'白狼栈'</span>))</span><br><span class="line">            -&gt;setTo(<span class="keyword">array</span>($data[<span class="string">'to'</span>]))</span><br><span class="line">            -&gt;setBody($data[<span class="string">'content'</span>]);</span><br><span class="line">            </span><br><span class="line">        $result = <span class="keyword">$this</span>-&gt;mailer-&gt;send($message);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;destroy();</span><br><span class="line">        <span class="keyword">return</span> $result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">destroy</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;transport = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mailer = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在这段代码中，你需要修改的地方包括 Host、Post、Encryption、Username、Password和From。</p>
-<p>Mailer类简单的封装好之后，我们写几行代码测试下你的邮件类是否可以正确的使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require_once</span> <span class="keyword">__DIR__</span> . <span class="string">"/task/Mailer.php"</span>;</span><br><span class="line">$data = [</span><br><span class="line">    <span class="string">'to'</span> =&gt; <span class="string">'422744***@qq.com'</span>,</span><br><span class="line">    <span class="string">'subject'</span> =&gt; <span class="string">'just a test'</span>,</span><br><span class="line">    <span class="string">'content'</span> =&gt; <span class="string">'This is just a test.'</span>,</span><br><span class="line">];</span><br><span class="line">$mailer = <span class="keyword">new</span> Mailer;</span><br><span class="line">$mailer-&gt;send($data);</span><br></pre></td></tr></table></figure></p>
-<p>to是要发送给谁，subject邮件标题，content邮件内容。</p>
-<p>如果不可以正常发送，请检查swiftmailer相关类正确引入并且保证Mailer类的配置可用。</p>
-<p>邮件类准备好之后，我们正式开始写swoole server，主要代码如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskServer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_serv;</span><br><span class="line">    <span class="keyword">private</span> $_run;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * init</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv = <span class="keyword">new</span> Swoole\Server(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">2</span>,</span><br><span class="line">            <span class="string">'daemonize'</span> =&gt; <span class="keyword">false</span>,</span><br><span class="line">            <span class="string">'log_file'</span> =&gt; <span class="keyword">__DIR__</span> . <span class="string">'/server.log'</span>,</span><br><span class="line">            <span class="string">'task_worker_num'</span> =&gt; <span class="number">2</span>,</span><br><span class="line">            <span class="string">'max_request'</span> =&gt; <span class="number">5000</span>,</span><br><span class="line">            <span class="string">'task_max_request'</span> =&gt; <span class="number">5000</span>,</span><br><span class="line">            <span class="string">'open_eof_check'</span> =&gt; <span class="keyword">true</span>, <span class="comment">//打开EOF检测</span></span><br><span class="line">            <span class="string">'package_eof'</span> =&gt; <span class="string">"\r\n"</span>, <span class="comment">//设置EOF</span></span><br><span class="line">            <span class="string">'open_eof_split'</span> =&gt; <span class="keyword">true</span>, <span class="comment">// 自动分包</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Connect'</span>, [<span class="keyword">$this</span>, <span class="string">'onConnect'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'WorkerStart'</span>, [<span class="keyword">$this</span>, <span class="string">'onWorkerStart'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Task'</span>, [<span class="keyword">$this</span>, <span class="string">'onTask'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Finish'</span>, [<span class="keyword">$this</span>, <span class="string">'onFinish'</span>]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Close'</span>, [<span class="keyword">$this</span>, <span class="string">'onClose'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onConnect</span><span class="params">($serv, $fd, $fromId)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onWorkerStart</span><span class="params">($serv, $workerId)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">require_once</span> <span class="keyword">__DIR__</span> . <span class="string">"/TaskRun.php"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_run = <span class="keyword">new</span> TaskRun;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = <span class="keyword">$this</span>-&gt;unpack($data);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_run-&gt;receive($serv, $fd, $fromId, $data);</span><br><span class="line">        <span class="comment">// 投递一个任务到task进程中</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>($data[<span class="string">'event'</span>])) &#123;</span><br><span class="line">            $serv-&gt;task(array_merge($data , [<span class="string">'fd'</span> =&gt; $fd]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onTask</span><span class="params">($serv, $taskId, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_run-&gt;task($serv, $taskId, $fromId, $data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onFinish</span><span class="params">($serv, $taskId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_run-&gt;finish($serv, $taskId, $data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onClose</span><span class="params">($serv, $fd, $fromId)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 对数据包单独处理，数据包经过`json_decode`处理之后，只能是数组</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> $data</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> bool|mixed</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">unpack</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = str_replace(<span class="string">"\r\n"</span>, <span class="string">''</span>, $data);</span><br><span class="line">        <span class="keyword">if</span> (!$data) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $data = json_decode($data, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">if</span> (!$data || !is_array($data)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">start</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$reload = <span class="keyword">new</span> TaskServer;</span><br><span class="line">$reload-&gt;start();</span><br></pre></td></tr></table></figure></p>
-<p>简单分析下:</p>
-<ul>
-<li>在onWorkerStart回调内，我们引入了实际处理业务逻辑的类TaskRun.php，为什么这么说呢？因为我们在onReceive\onTask\onFinish回调内均把数据交给了TaskRun对象去处理了</li>
-<li>我们约定，每个数据包都必须带有EOF标记<code>\r\n</code>，在server端为了更好的处理数据，onReceive回调内我们把数据包丢给了unpack方法处理，该方法的目的就是把数据包的EOF标记去掉，还原真实的数据包。我们还约定，server收到的数据包经过unpack处理之后只能是数组，非数组在unpack中就被直接处理掉了。</li>
-<li>onReceive回调内，我们看到，只有数据包含有<code>event</code>项才会被投递给Task进程，这样做的原因是Task进程可能要处理各种任务，增加<code>event</code>项是为了表明投递过来的任务是要做什么的。</li>
-</ul>
-<p>我们看TaskRun的实现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span> (<span class="string">'./TaskClient.php'</span>);</span><br><span class="line"><span class="keyword">require_once</span> (<span class="string">'./Mailer.php'</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskRun</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">receive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">task</span><span class="params">($serv, $taskId, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">switch</span> ($data[<span class="string">'event'</span>]) &#123;</span><br><span class="line">                <span class="keyword">case</span> TaskClient::EVENT_TYPE_SEND_MAIL:</span><br><span class="line">                    $mailer = <span class="keyword">new</span> Mailer;</span><br><span class="line">                    $result = $mailer-&gt;send($data);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> $result;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (\<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> \<span class="keyword">Exception</span>(<span class="string">'task exception :'</span> . $e-&gt;getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">finish</span><span class="params">($serv, $taskId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>目前，我们主要就一个业务，“发送邮件”，所以TaskRun类的实现现在看来非常简单。</p>
-<p>因为发邮件是一件比较耗时的任务，所以我们这里完善的是task回调。我们根据投递给Task进程的数据类型，判断投递过来的数据是要做什么。比如我们这里有一项event，等于TaskClient::EVENT_TYPE_SEND_MAIL,这一项就是发送邮件的标识，如果要投递的任务的event项等于TaskClient::EVENT_TYPE_SEND_MAIL，就表明这个任务是邮件任务，程序上就可以通过switch去处理邮件了。</p>
-<p>TaskClient是什么呢？这是一个封装好的客户端处理类，我们来看下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskClient</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $client;</span><br><span class="line">    <span class="keyword">const</span> EVENT_TYPE_SEND_MAIL = <span class="string">'send-mail'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span> <span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = <span class="keyword">new</span> Swoole\Client(SWOOLE_SOCK_TCP);</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;client-&gt;connect(<span class="string">'127.0.0.1'</span>, <span class="number">9501</span>)) &#123;</span><br><span class="line">            $msg = <span class="string">'swoole client connect failed.'</span>;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> \<span class="keyword">Exception</span>(<span class="string">"Error: &#123;$msg&#125;."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $data Array</span></span><br><span class="line"><span class="comment">     * send data</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sendData</span> <span class="params">($data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = <span class="keyword">$this</span>-&gt;togetherDataByEof($data);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client-&gt;send($data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据末尾拼接EOF标记</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> Array $data 要处理的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> String json_encode($data) . EOF</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">togetherDataByEof</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!is_array($data)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> json_encode($data) . <span class="string">"\r\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/08/09/swoole之粘包问题/" itemprop="url">
-                  swoole之粘包问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-08-09T22:51:16+08:00" content="2018-08-09">
-              2018-08-09
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>人不知道要守住多少秘密才能安度一生。<br></blockquote>
-
-<p>什么是粘包问题，为什么我们要讲这个看起来比较奇怪的问题呢？<br>不着急解释，我们先看一个例子<br>创建一个server，server端代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TcpBufferServer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_serv;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * init</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv = <span class="keyword">new</span> Swoole\Server(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Server received data: &#123;$data&#125;"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * start server</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">start</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$reload = <span class="keyword">new</span> TcpBufferServer;</span><br><span class="line">$reload-&gt;start();</span><br></pre></td></tr></table></figure></p>
-<p>server的代码很简单，仅仅是在收到客户端代码后，标准输出一句话而已，client的代码需要注意了，我们写了一个for循环，连续向server send三条信息，代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_SYNC);</span><br><span class="line">$client-&gt;connect(<span class="string">'127.0.0.1'</span>, <span class="number">9501</span>) || <span class="keyword">exit</span>(<span class="string">"connect failed. Error: &#123;$client-&gt;errCode&#125;\n"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 向服务端发送数据</span></span><br><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">3</span>; $i++) &#123;</span><br><span class="line">    $client-&gt;send(<span class="string">"Just a test.\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line">$client-&gt;close();</span><br></pre></td></tr></table></figure></p>
-<p>在未运行测试的情况下，我们期望server所在终端输出的结果应该是这样的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Server received data: Just a test.</span><br><span class="line">Server received data: Just a test.</span><br><span class="line">Server received data: Just a test.</span><br></pre></td></tr></table></figure></p>
-<p>注意哦，我们期望的结果是server被回调了3次，才有上述期望的结果值<br>实际运行的结果呢?<br><img src="/images/sw11.png" alt><br>上图左边是server输出的信息。<br>我们看到，左侧显示的结果是server一次性输出的结果，按理论来说，client发起了3次请求，server应该跟我们期望的结果一致，会执行3次呀，这怎么回事呢？<br>这个问题，便是我们今天要说的粘包问题。<br>为了说清楚这个问题，我们先来看下client/server之间数据传递的过程</p>
-<ul>
-<li>客户端-&gt;发送数据</li>
-<li>服务端-&gt;接收数据</li>
-</ul>
-<p>通常我们直觉性的认为，客户端直接向网络中传输数据，对端从网络中读取数据，但是这是不正确的。<br>socket有缓冲区buffer的概念，每个TCP socket在内核中都有一个发送缓冲区和一个接收缓冲区。客户端send操作仅仅是把数据拷贝到buffer中，也就是说send完成了，数据并不代表已经发送到服务端了，之后才由TCP协议从buffer中发送到服务端。此时服务端的接收缓冲区被TCP缓存网络上来的数据，而后server才从buffer中读取数据。<br>所以，在onReceive中我们拿到的数据并没有办法保证数据包的完整性，swoole_server可能会同时收到多个请求包，也可能只收到一个请求包的一部分数据。<br>这就是一个大问题呀，如此TCP协议不行呀，这货虽然能保证我们能正确的接收到数据但是数据不对呀，这麻烦不容小觑。<br>既然是个问题，那我们自然也就有解决问题的方法，不然我下面说啥呢，对吧。</p>
-<p>swoole给我们提供了两种解决方案:</p>
-<h4 id="EOF结束协议"><a href="#EOF结束协议" class="headerlink" title="EOF结束协议"></a>EOF结束协议</h4><p>EOF，end of file，意思是我们在每一个数据包的结尾加一个eof标记，表示这就是一个完整的数据包，但是如果你的数据本身含有EOF标记，那就会造成收到的数据包不完整，所以开启EOF支持后，应避免数据中含有EOF标记。</p>
-<p>在swoole_server中，我们可以配置open_eof_check为true，打开EOF检测，配置package_eof来指定EOF标记。</p>
-<p>swoole_server收到一个数据包时，会检测数据包的结尾是否是我们设置的EOF标记，如果不是就会一直拼接数据包，直到超出buffer或者超时才会终止，一旦认定是一个完整的数据包，就会投递给Worker进程，这时候我们才可以在回调内处理数据。</p>
-<p>这样server就能保证接收到一个完整的数据包了？不能保证，这样只能保证server能收到一个或者多个完整的数据包。</p>
-<p>为啥是多个呢？</p>
-<p>我们说了开启EOF检测，即open_eof_check设置为true，server只会检测数据包的末尾是否有EOF标记，如果向我们开篇的案例连发3个EOF的数据，server可能还是会一次性收到，这样我们只能在回调内对数据包进行拆分处理。</p>
-<p>我们拿开篇的案例为例</p>
-<p>server开启eof检测并指定eof标记是\r\n，代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;_serv-&gt;set([ </span><br><span class="line">    <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>, </span><br><span class="line">    <span class="string">'open_eof_check'</span> =&gt; <span class="keyword">true</span>, <span class="comment">//打开EOF检测 </span></span><br><span class="line">    <span class="string">'package_eof'</span> =&gt; <span class="string">"\r\n"</span>, <span class="comment">//设置EOF </span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
-<p>客户端设置发送的数据末尾是\r\n符号，代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">3</span>; $i++) &#123; </span><br><span class="line">    $client-&gt;send(<span class="string">"Just a test.\r\n"</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>按照我们刚才的分析，server的效果可能会一次性收到多个完整的包，我们运行看看结果<br><img src="/images/sw12.png" alt></p>
-<p>因此我们还需要在onReceive回调内对收到的数据进行拆分处理<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// echo "Server received data: &#123;$data&#125;" . PHP_EOL;</span></span><br><span class="line"></span><br><span class="line">    $datas = explode(<span class="string">"\r\n"</span>, $data);</span><br><span class="line">    <span class="keyword">foreach</span> ($datas <span class="keyword">as</span> $data)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!$data)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Server received data: &#123;$data&#125;"</span> . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>此时我们再看下运行结果<br><img src="/images/sw13.png" alt></p>
-<p>自行分包的效果便实现了，考虑到自行分包稍微麻烦，swoole提供了open_eof_split配置参数，启用该参数后，server会从左到右对数据进行逐字节对比，查找数据中的EOF标记进行分包，效果跟我们刚刚自行拆包是一样的，性能较差。<br>在案例的基础上我们看看open_eof_split配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">    <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">    <span class="string">'open_eof_check'</span> =&gt; <span class="keyword">true</span>, <span class="comment">//打开EOF检测</span></span><br><span class="line">    <span class="string">'package_eof'</span> =&gt; <span class="string">"\r\n"</span>, <span class="comment">//设置EOF</span></span><br><span class="line">    <span class="string">'open_eof_split'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure></p>
-<p>onReceive的回调，我们不需要自行拆包<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="keyword">echo</span> <span class="string">"Server received data: &#123;$data&#125;"</span> . PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>client的测试代码使用\r\n（同server端package_eof标记一致），我们看下运行效果<br><img src="/images/sw14.png" alt><br>EOF标记解决粘包就说这么多，下面我们再看看另一种解决方案</p>
-<h4 id="固定包头-包体协议"><a href="#固定包头-包体协议" class="headerlink" title="固定包头+包体协议"></a>固定包头+包体协议</h4><p>下面我们要说的，对于部分同学可能有点难度，对于不理解的，建议多看多操作多问多查，不躲避不畏惧，这样才能有所提高。<br>固定包头是一种非常通用的协议，它的含义就是在你要发送的数据包的前面，添加一段信息，这段信息了包含了你要发送的数据包的长度，长度一般是2个或者4个字节的整数。<br>在这种协议下，我们的数据包的组成就是包头+包体。其中包头就是包体长度的二进制形式。比如我们本来想向服务端发送一段数据 “Just a test.” 共12个字符，现在我们要发送的数据就应该是这样的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pack(<span class="string">'N'</span>, strlen(<span class="string">"Just a test."</span>)) . <span class="string">"Just a test."</span></span><br></pre></td></tr></table></figure></p>
-<p>其中php的pack函数是把数据打包成二进制字符串。<br>为什么这样就能保证Worker进程收到的是一个完整的数据包呢？我来解释一下：<br>当server收到一个数据包（可能是多个完整的数据包）之后，会先解出包头指定的数据长度，然后按照这个长度取出后面的数据，如果一次性收到多个数据包，依次循环，如此就能保证Worker进程可以一次性收到一个完整的数据包。<br>估计好多人都看蒙了，这都是神马玩意？我们以案例来分析<br>server代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ServerPack</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_serv;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * init</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv = <span class="keyword">new</span> Swoole\Server(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;set([</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">            <span class="string">'open_length_check'</span>     =&gt; <span class="keyword">true</span>,      <span class="comment">// 开启协议解析</span></span><br><span class="line">            <span class="string">'package_length_type'</span>   =&gt; <span class="string">'N'</span>,     <span class="comment">// 长度字段的类型</span></span><br><span class="line">            <span class="string">'package_length_offset'</span> =&gt; <span class="number">0</span>,       <span class="comment">//第几个字节是包长度的值</span></span><br><span class="line">            <span class="string">'package_body_offset'</span>   =&gt; <span class="number">4</span>,       <span class="comment">//第几个字节开始计算长度</span></span><br><span class="line">            <span class="string">'package_max_length'</span>    =&gt; <span class="number">81920</span>,  <span class="comment">//协议最大长度</span></span><br><span class="line">        ]);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;on(<span class="string">'Receive'</span>, [<span class="keyword">$this</span>, <span class="string">'onReceive'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">($serv, $fd, $fromId, $data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $info = unpack(<span class="string">'N'</span>, $data);</span><br><span class="line">        $len = $info[<span class="number">1</span>];</span><br><span class="line">        $body = substr($data, - $len);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"server received data: &#123;$body&#125;\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * start server</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">start</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$reload = <span class="keyword">new</span> ServerPack;</span><br><span class="line">$reload-&gt;start();</span><br></pre></td></tr></table></figure></p>
-<p>客户端的代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_SYNC);</span><br><span class="line">$client-&gt;connect(<span class="string">'127.0.0.1'</span>, <span class="number">9501</span>) || <span class="keyword">exit</span>(<span class="string">"connect failed. Error: &#123;$client-&gt;errCode&#125;\n"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 向服务端发送数据</span></span><br><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">3</span>; $i++) &#123;</span><br><span class="line">    $data = <span class="string">"Just a test."</span>;</span><br><span class="line">    $data = pack(<span class="string">'N'</span>, strlen($data)) . $data;</span><br><span class="line">    $client-&gt;send($data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$client-&gt;close();</span><br></pre></td></tr></table></figure></p>
-<p>运行的结果<br><img src="/images/sw15.png" alt><br>结果没错，是我们期望的结果。</p>
-<p>我们来分析下这是为什么</p>
-<p>1、首先，在server端我们配置了open_length_check，该参数表明我们要开启固定包头协议解析</p>
-<p>2、package_length_type配置，表明包头长度的类型，这个类型跟客户端使用pack打包包头的类型一致，一般设置为N或者n，N表示4个字节，n表示2个字节</p>
-<p>3、我们看下客户端的代码 pack(‘N’, strlen($data)) . $data，这句话就是包头+包体的意思，包头是pack函数打包的二进制数据，内容便是真实数据的长度 strlen($data)。</p>
-<p>在内存中，整数一般占用4个字节，所以我们看到，在这段数据中0-4字节表示的是包头，剩余的就是真实的数据。但是server不知道呀，怎么告诉server这一事实呢？</p>
-<p>看配置package_length_offset和package_body_offset，前者就是告诉server，从第几个字节开始是长度，后者就是从第几个字节开始计算长度。</p>
-<p>4、既然如此，我们就可以在onReceive回调对数据解包，然后从包头中取出包体长度，再从接收到的数据中截取真正的包体。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$info = unpack(<span class="string">'N'</span>, $data);</span><br><span class="line">$len = $info[<span class="number">1</span>];</span><br><span class="line">$body = substr($data, - $len);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"server received data: &#123;$body&#125;\n"</span>;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/73/">73</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -897,7 +867,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">365</span>
+              <span class="site-state-item-count">367</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -907,7 +877,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">142</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
