@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2017/04/12/Http协议浏览器缓存缓存机制/" itemprop="url">
+                  Http协议浏览器缓存缓存机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-12T14:51:08+08:00" content="2017-04-12">
+              2017-04-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>山家除夕无他事，插了梅花便过年<br></blockquote><br>http缓存一直有在用，也听前辈讲过，今天打算自己总结一下，把不同情况都试了一遍，发现网上有些内容并不全对。</p>
+<p>首先，我们知道，浏览器缓存后，在浏览器的network中看到的状态码分两种情况，304和200 OK from cache</p>
+<h3 id="304"><a href="#304" class="headerlink" title="304"></a>304</h3><p>304是协商缓存，表示请求了服务器，但是内容没有变化，从浏览器本地缓存取数据</p>
+<p>304 是通过按浏览器上的刷新按钮或者按F5刷新得到的状态码</p>
+<p>从下图可以看到，headers中有etag属性，etag是资源的唯一标识，如果内容变了，etag会改变</p>
+<p>Last-Modified 也是用于协商缓存的Last-Modified的值表示内容最后修改时间</p>
+<p>浏览器请求已经缓存的资源时，会把etag和Last-Modified发送给服务器，服务器对比，如果浏览器发送来的和服务器的值相等，说明内容没有变化，服务器返回304给浏览器，浏览器从缓存读取数据</p>
+<h3 id="200-OK-from-cache"><a href="#200-OK-from-cache" class="headerlink" title="200 OK from cache"></a>200 OK from cache</h3><p>200 OK from cache 表示浏览器没有发出网络请求，直接取的本地缓存</p>
+<p>200 OK from cache 是通过在地址栏回车得到的状态码</p>
+<p>如下图，没有etag属性。etag是服务器计算出来的唯一值，因为没有请求服务器，所以也不会有etag标识</p>
+<h3 id="expires、Cache-Control"><a href="#expires、Cache-Control" class="headerlink" title="expires、Cache-Control"></a>expires、Cache-Control</h3><p>expires 表示过期日期，是绝对值。适用于http1.0协议</p>
+<p>Cache-Control 表示缓存的时间，是相对值，比如3600，表示3600秒后失效。适用于http1.1及以上</p>
+<p>如有expires和Cache-Control 同时存在，Cache-Control优先级更高</p>
+<p>Cache-Control: no-cache：这个很容易让人产生误解，使人误以为是响应不被缓存。实际上Cache-Control: no-cache是会被缓存的，只不过每次在向客户端（浏览器）提供响应数据时，缓存都要向服务器评估缓存响应的有效性。</p>
+<p>Cache-Control: no-store：这个才是响应不被缓存的意思。</p>
+<p>Pragma: no-cache：跟Cache-Control: no-cache相同，Pragma: no-cache兼容http 1.0 ，Cache-Control: no-cache是http 1.1提供的。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/10/mysql的sql-mode合理设置/" itemprop="url">
                   mysql的sql_mode合理设置
                 </a>
@@ -679,106 +788,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/27/nginx的反向代理和负载均衡实践/" itemprop="url">
-                  nginx的反向代理和负载均衡实践
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-27T08:58:36+08:00" content="2017-03-27">
-              2017-03-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>有些人让你对明天充满期许，却再也没有出现在你的明天里。<br></blockquote></p>
-<h3 id="apache的配置"><a href="#apache的配置" class="headerlink" title="apache的配置"></a>apache的配置</h3><p>使用 Apache 模拟出两个站点,分别使用8081和8082端口<br>访问:<br><a href="http://121.42.176.99:8081/" target="_blank" rel="noopener">http://121.42.176.99:8081/</a><br><a href="http://121.42.176.99:8082/" target="_blank" rel="noopener">http://121.42.176.99:8082/</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Listen <span class="number">8081</span></span><br><span class="line">&lt;VirtualHost *:<span class="number">8081</span>&gt;</span><br><span class="line">    ServerAdmin webmaster@dummy-host2.example.com</span><br><span class="line">    DocumentRoot <span class="string">"/usr/local/httpd/htdocs/test"</span></span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">    ServerName <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    ErrorLog <span class="string">"logs/dummy-host2.example.com-error_log"</span></span><br><span class="line">    CustomLog <span class="string">"logs/dummy-host2.example.com-access_log"</span> common</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;Directory <span class="string">"/usr/local/httpd/htdocs/test"</span>&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride  all</span><br><span class="line">    allow from all</span><br><span class="line">    <span class="keyword">Require</span> all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">Listen <span class="number">8082</span></span><br><span class="line">&lt;VirtualHost *:<span class="number">8082</span>&gt;</span><br><span class="line">    ServerAdmin webmaster@dummy-host2.example.com</span><br><span class="line">    DocumentRoot <span class="string">"/usr/local/httpd/htdocs/test1"</span></span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">    ServerName <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    ErrorLog <span class="string">"logs/dummy-host2.example.com-error_log"</span></span><br><span class="line">    CustomLog <span class="string">"logs/dummy-host2.example.com-access_log"</span> common</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;Directory <span class="string">"/usr/local/httpd/htdocs/test"</span>&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride  all</span><br><span class="line">    allow from all</span><br><span class="line">    <span class="keyword">Require</span> all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure></p>
-<p>网站的内容index.php 打印出服务器变量: var_export($_SERVER);</p>
-<h3 id="反向代理nginx"><a href="#反向代理nginx" class="headerlink" title="反向代理nginx"></a>反向代理nginx</h3><p>nginx 默认使用80端口,<a href="http://121.42.176.99/" target="_blank" rel="noopener">http://121.42.176.99/</a><br>配置:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_passs http:<span class="comment">//localhost:8081</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后重启nginx<br>这时候访问<a href="http://121.42.176.99/,就会访问的是apache的8081端口" target="_blank" rel="noopener">http://121.42.176.99/,就会访问的是apache的8081端口</a></p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>我们发现获取到的服务器信息不正确:<br> 1、HTTP_HOST:localhost:8081<br> 2、REMOTE_ADDR：127.0.0.1 (客户端的IP）<br>这会对我们的开发造成“迷茫”，因此要在nginx配置里加入<br>1、proxy_set_header Host $host;<br>2、proxy_set_header  X-Real-IP $remote_addr;</p>
-<p>其他的一些设置请google;</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -822,7 +831,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -832,7 +841,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/04/关于PHP迭代器的一道笔试题/" itemprop="url">
+                  关于PHP迭代器的一道笔试题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-04T20:17:45+08:00" content="2016-08-04">
+              2016-08-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我做事三分钟热度，却也爱你那么久。<br></blockquote></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使对象可以像数组一样进行<span class="keyword">foreach</span>循环，要求属性必须是私有。</span><br></pre></td></tr></table></figure>
+<h3 id="鸟哥给出的答案"><a href="#鸟哥给出的答案" class="headerlink" title="鸟哥给出的答案"></a>鸟哥给出的答案</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sample</span> <span class="keyword">implements</span> <span class="title">Iterator</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_items = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ;<span class="comment">//void</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        reset(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> current(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> key(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> next(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ( <span class="keyword">$this</span>-&gt;current() !== <span class="keyword">false</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$sa = <span class="keyword">new</span> sample();</span><br><span class="line"><span class="keyword">foreach</span>($sa <span class="keyword">as</span> $key =&gt; $val)&#123;</span><br><span class="line">    <span class="keyword">print</span> $key . <span class="string">"=&gt;"</span> .$val.<span class="string">'&lt;br&gt;'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="拓展说明"><a href="#拓展说明" class="headerlink" title="拓展说明"></a>拓展说明</h3><p>使用foreach只可以循环出数组的public属性，protected和private属性无法得到<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $a = <span class="string">'tom'</span>;</span><br><span class="line">    <span class="keyword">protected</span>  $b = <span class="string">'lilei'</span>;</span><br><span class="line">    <span class="keyword">private</span>  $c = <span class="string">'hanmeimei'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="keyword">new</span> User() <span class="keyword">as</span> $user)&#123;</span><br><span class="line">    <span class="keyword">echo</span> $user.<span class="string">'&lt;br&gt;'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是在类的内部可以<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $a = <span class="string">'tom'</span>;</span><br><span class="line">    <span class="keyword">protected</span>  $b = <span class="string">'lilei'</span>;</span><br><span class="line">    <span class="keyword">private</span>  $c = <span class="string">'hanmeimei'</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">do_something</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">$this</span> <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"$key =&gt; $value\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$user = <span class="keyword">new</span> User();</span><br><span class="line">$user-&gt;do_something();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://www.laruence.com/2008/10/31/574.html" target="_blank" rel="noopener">http://www.laruence.com/2008/10/31/574.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/04/在laravel中使用twig模板引擎/" itemprop="url">
                   在laravel中使用twig模板引擎
                 </a>
@@ -674,107 +775,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/27/Mysql性能优化/" itemprop="url">
-                  Mysql性能优化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-27T22:17:13+08:00" content="2016-07-27">
-              2016-07-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>想戴上最美的面具，又想卸下所有的伪装。<br></blockquote></p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ul>
-<li><p>连接数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">如果是root帐号，你能看到所有用户的当前连接</span><br><span class="line">如果是其它普通帐号，只能看到自己占用的连接</span><br><span class="line">show processlist; 列出前<span class="number">100</span>条</span><br><span class="line">show full processlist; 全部列出</span><br><span class="line">show <span class="keyword">global</span> variables like <span class="string">'%connections%'</span>; 查看整个MySQL实例的最大连接数限制</span><br><span class="line">max_connections 就是整个MySQL实例的最大连接数限制</span><br><span class="line">max_user_connections 是单个用户的最大连接数，这里未指明是哪个用户，是任意一个用户</span><br><span class="line"></span><br><span class="line">查看某个用户的最大连接数，<span class="number">0</span>表示不限制：</span><br><span class="line">select user,max_user_connections from mysql.user where user=<span class="string">'root'</span>;</span><br><span class="line">通过设置这个值，防止某个指定用户使用过多的连接资源。默认是<span class="number">0</span>，不限制。</span><br><span class="line"> </span><br><span class="line">上面<span class="number">3</span>个参数的关系是：</span><br><span class="line">max_user_connections &lt; 实例 max_user_connections &lt; max_connections</span><br><span class="line"> </span><br><span class="line">整个MySQL实例，曾经同时最大连接数，包括很多用户连接数之和：</span><br><span class="line">show <span class="keyword">global</span> status like <span class="string">'%max_used_connections%'</span>;</span><br><span class="line"></span><br><span class="line">修改mysql最大连接数：</span><br><span class="line">打开my.ini，修改max_connections=<span class="number">100</span>(默认为<span class="number">100</span>)。</span><br><span class="line"></span><br><span class="line">使用连接池减少mysql的连接数</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看状态</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -818,7 +818,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -828,7 +828,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

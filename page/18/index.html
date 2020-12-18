@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/02/laravel中使用多个数据库操作数据/" itemprop="url">
+                  Laravel中使用多个数据库操作数据
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-02T12:50:34+08:00" content="2018-06-02">
+              2018-06-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>人人尽说江南好，游人只合江南老。春水碧于天，画船听雨眠。<br>垆边人似月，皓腕凝霜雪。未老莫还乡，还乡须断肠。<br></blockquote>
+
+<h3 id="定义连接"><a href="#定义连接" class="headerlink" title="定义连接"></a>定义连接</h3><p>在你的数据库配置文件<code>app/config/ database.php</code>你可以定义任何类型的多个数据库连接。事实上，你可以定义尽可能多的连接，只要你愿意。例如，如果你的应用程序有2个 MySQL数据库中提取数据，则可以分别定义他们两个。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">array</span>(</span><br><span class="line"></span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'mysql'</span>,</span><br><span class="line"></span><br><span class="line">    <span class="string">'connections'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 主数据库连接</span></span><br><span class="line">        <span class="string">'mysql'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'driver'</span>    =&gt; <span class="string">'mysql'</span>,</span><br><span class="line">            <span class="string">'host'</span>      =&gt; <span class="string">'host1'</span>,</span><br><span class="line">            <span class="string">'database'</span>  =&gt; <span class="string">'database1'</span>,</span><br><span class="line">            <span class="string">'username'</span>  =&gt; <span class="string">'user1'</span>,</span><br><span class="line">            <span class="string">'password'</span>  =&gt; <span class="string">'pass1'</span></span><br><span class="line">            <span class="string">'charset'</span>   =&gt; <span class="string">'utf8'</span>,</span><br><span class="line">            <span class="string">'collation'</span> =&gt; <span class="string">'utf8_unicode_ci'</span>,</span><br><span class="line">            <span class="string">'prefix'</span>    =&gt; <span class="string">''</span>,</span><br><span class="line">        ),</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 次数据连接</span></span><br><span class="line">        <span class="string">'mysql2'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'driver'</span>    =&gt; <span class="string">'mysql'</span>,</span><br><span class="line">            <span class="string">'host'</span>      =&gt; <span class="string">'host2'</span>,</span><br><span class="line">            <span class="string">'database'</span>  =&gt; <span class="string">'database2'</span>,</span><br><span class="line">            <span class="string">'username'</span>  =&gt; <span class="string">'user2'</span>,</span><br><span class="line">            <span class="string">'password'</span>  =&gt; <span class="string">'pass2'</span></span><br><span class="line">            <span class="string">'charset'</span>   =&gt; <span class="string">'utf8'</span>,</span><br><span class="line">            <span class="string">'collation'</span> =&gt; <span class="string">'utf8_unicode_ci'</span>,</span><br><span class="line">            <span class="string">'prefix'</span>    =&gt; <span class="string">''</span>,</span><br><span class="line">        ),</span><br><span class="line">    ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>我们默认的连接(default)仍设置为 mysql,这意味着，除非我们特别指定，应用程序将继续使用 mysql 连接.</p>
+<h3 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Schema::connection(<span class="string">'mysql2'</span>)-&gt;create(<span class="string">'lp_table'</span>, <span class="function"><span class="keyword">function</span><span class="params">($table)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $table-&gt;increments(<span class="string">'id'</span>):</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="DB类"><a href="#DB类" class="headerlink" title="DB类"></a>DB类</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::connection(<span class="string">'mysql2'</span>)-&gt;table(<span class="string">'article'</span>)-&gt;where...</span><br></pre></td></tr></table></figure>
+<h3 id="Eloquent"><a href="#Eloquent" class="headerlink" title="Eloquent"></a>Eloquent</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeModel</span> <span class="keyword">extends</span> <span class="title">Eloquent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $connection = <span class="string">'mysql2'</span>;</span><br><span class="line">    .......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>或者<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeController</span> <span class="keyword">extends</span> <span class="title">BaseController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">someMethod</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $someModel = <span class="keyword">new</span> SomeModel;</span><br><span class="line"></span><br><span class="line">        $someModel-&gt;setConnection(<span class="string">'mysql2'</span>);</span><br><span class="line"></span><br><span class="line">        $something = $someModel-&gt;find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $something;</span><br><span class="line">    &#125;</span><br><span class="line">    .......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://www.itlipeng.cn/2015/12/24/%E5%9C%A8-laravel-%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE/" target="_blank" rel="noopener">https://www.itlipeng.cn/2015/12/24/%E5%9C%A8-laravel-%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/02/browser-sync文件监听失败的解决方案/" itemprop="url">
                   browser-sync文件监听失败的解决方案
                 </a>
@@ -724,114 +828,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/30/如何更好的组织你的laravel模型/" itemprop="url">
-                  如何更好的组织你的Laravel模型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-30T16:40:55+08:00" content="2018-05-30">
-              2018-05-30
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>做你害怕做的事情。<br></blockquote><br>我经常发现自己希望在Laravel应用程序中获得更多关于模型的结构。</p>
-<p>默认情况下，模型位于 App 命名空间内，如果你正在处理大型应用程序，这可能会变得非常难以理解。所以我决定在 App\Models 命名空间内组织我的模型。</p>
-<h3 id="更新用户模型"><a href="#更新用户模型" class="headerlink" title="更新用户模型"></a>更新用户模型</h3><p>要做到这一点，你需要做的第一件事就是将 User 模型移动到 app/Models 目录并相应地更新命名空间。</p>
-<p>这要求你更新引用 App\User 类的所有文件。</p>
-<p>第一个是 config/auth.php：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">    <span class="string">'users'</span> =&gt; [</span><br><span class="line">        <span class="string">'driver'</span> =&gt; <span class="string">'eloquent'</span>,</span><br><span class="line">        <span class="string">'model'</span> =&gt; App\Models\User::class, <span class="comment">// 修改这里</span></span><br><span class="line">    ],</span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
-<p>第二个是 config/services.php 文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'stripe'</span> =&gt; [</span><br><span class="line">    <span class="string">'model'</span> =&gt; App\Models\User::class, <span class="comment">// 修改这里</span></span><br><span class="line">    <span class="string">'key'</span> =&gt; env(<span class="string">'STRIPE_KEY'</span>),</span><br><span class="line">    <span class="string">'secret'</span> =&gt; env(<span class="string">'STRIPE_SECRET'</span>),</span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
-<p>最后，修改 database/factories/UserFactory.php 文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$factory-&gt;define(App\Models\User::class, <span class="function"><span class="keyword">function</span> <span class="params">(Faker $faker)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="生成模型"><a href="#生成模型" class="headerlink" title="生成模型"></a>生成模型</h3><p>现在我们已经改变了 User 模型的命名空间，但是如何生成新的模型。正如我们所知，默认情况下它们将被放置在 App 命名空间下。</p>
-<p>为了解决这个问题，我们可以扩展默认的 ModelMakeCommand ：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Console</span>\<span class="title">Commands</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Console</span>\<span class="title">ModelMakeCommand</span> <span class="title">as</span> <span class="title">Command</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelMakeCommand</span> <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get the default namespace for the class.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  string  $rootNamespace</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getDefaultNamespace</span><span class="params">($rootNamespace)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"&#123;$rootNamespace&#125;\Models"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>并通过将以下内容添加到 AppServiceProvider 中来覆盖服务容器中的现有绑定：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Providers</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">ServiceProvider</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Console</span>\<span class="title">Commands</span>\<span class="title">ModelMakeCommand</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppServiceProvider</span> <span class="keyword">extends</span> <span class="title">ServiceProvider</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Bootstrap any application services.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Register any application services.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;app-&gt;extend(<span class="string">'command.model.make'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($command, $app)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ModelMakeCommand($app[<span class="string">'files'</span>]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>以上就是需要修改的。现在我们可以继续生成模型，就像我们在我们的终端中使用的一样：<code>php artisan make:model Order</code>，它们将位于 <code>App\Models</code> 命名空间中。</p>
-<p>希望你能使用它！</p>
-<blockquote>
-<p><a href="https://phpcasts.org/posts/how-to-organize-your-laravel-models" target="_blank" rel="noopener">https://phpcasts.org/posts/how-to-organize-your-laravel-models</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -875,7 +871,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -885,7 +881,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

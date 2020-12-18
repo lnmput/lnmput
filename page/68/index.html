@@ -265,6 +265,108 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/24/python字符串操作/" itemprop="url">
+                  python字符串操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-24T21:48:09+08:00" content="2016-10-24">
+              2016-10-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>你那能叫活着么？你那只能叫没死。<br></blockquote></p>
+<h3 id="去空格"><a href="#去空格" class="headerlink" title="去空格"></a>去空格</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#strip 同时去掉左右两边的空格</span></span><br><span class="line"><span class="comment">#lstrip 去掉左边的空格</span></span><br><span class="line"><span class="comment">#rstrip 去掉右边的空格</span></span><br><span class="line">s = <span class="string">'  yang guo qi   '</span></span><br><span class="line">s= s.strip()</span><br><span class="line">print(s)</span><br></pre></td></tr></table></figure>
+<h3 id="去一些特殊符号"><a href="#去一些特殊符号" class="headerlink" title="去一些特殊符号"></a>去一些特殊符号</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'  yang guo qi  , '</span></span><br><span class="line">s= s.strip().strip(<span class="string">','</span>)</span><br><span class="line">print(s)</span><br></pre></td></tr></table></figure>
+<h3 id="计算长度"><a href="#计算长度" class="headerlink" title="计算长度"></a>计算长度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'  yang guo qi  , '</span></span><br><span class="line">s= len(s)</span><br><span class="line">print(s)</span><br></pre></td></tr></table></figure>
+<h3 id="大小写转换"><a href="#大小写转换" class="headerlink" title="大小写转换"></a>大小写转换</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'  yang guo qi  , '</span></span><br><span class="line">s= s.upper()</span><br><span class="line">print(s)</span><br><span class="line"></span><br><span class="line">s = <span class="string">'  Yang guo qi  , '</span></span><br><span class="line">s= s.lower()</span><br><span class="line">print(s)</span><br></pre></td></tr></table></figure>
+<h3 id="反转字符串"><a href="#反转字符串" class="headerlink" title="反转字符串"></a>反转字符串</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'  Yang guo qi  , '</span></span><br><span class="line">s= s[::<span class="number">-1</span>]</span><br><span class="line">print(s)</span><br></pre></td></tr></table></figure>
+<h3 id="查找字符串"><a href="#查找字符串" class="headerlink" title="查找字符串"></a>查找字符串</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'  Yang guo qi  , '</span></span><br><span class="line">d = <span class="string">'qi'</span></span><br><span class="line">print(s.find(d))</span><br><span class="line"><span class="comment"># 返回位置</span></span><br></pre></td></tr></table></figure>
+<h3 id="字符串截取"><a href="#字符串截取" class="headerlink" title="字符串截取"></a>字符串截取</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">str = ’<span class="number">0123456789</span>′</span><br><span class="line"><span class="keyword">print</span> (str[<span class="number">0</span>:<span class="number">3</span>]) <span class="comment">#截取第一位到第三位的字符</span></span><br><span class="line"><span class="keyword">print</span> (str[:]) <span class="comment">#截取字符串的全部字符</span></span><br><span class="line"><span class="keyword">print</span> (str[<span class="number">6</span>:]) <span class="comment">#截取第七个字符到结尾</span></span><br><span class="line"><span class="keyword">print</span> (str[:<span class="number">-3</span>]) <span class="comment">#截取从头开始到倒数第三个字符之前</span></span><br><span class="line"><span class="keyword">print</span> (str[<span class="number">2</span>]) <span class="comment">#截取第三个字符</span></span><br><span class="line"><span class="keyword">print</span> (str[<span class="number">-1</span>]) <span class="comment">#截取倒数第一个字符</span></span><br><span class="line"><span class="keyword">print</span> (str[::<span class="number">-1</span>]) <span class="comment">#创造一个与原字符串顺序相反的字符串</span></span><br><span class="line"><span class="keyword">print</span> (str[<span class="number">-3</span>:<span class="number">-1</span>]) <span class="comment">#截取倒数第三位与倒数第一位之前的字符</span></span><br><span class="line"><span class="keyword">print</span> (str[<span class="number">-3</span>:]) <span class="comment">#截取倒数第三位到结尾</span></span><br><span class="line"><span class="keyword">print</span> (str[:<span class="number">-5</span>:<span class="number">-3</span>]) <span class="comment">#逆序截取，具体啥意思没搞明白？</span></span><br></pre></td></tr></table></figure>
+<h3 id="分割字符串"><a href="#分割字符串" class="headerlink" title="分割字符串"></a>分割字符串</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'Yang,guo qi'</span></span><br><span class="line">d = s.split(<span class="string">','</span>)</span><br><span class="line">print(d)</span><br><span class="line"></span><br><span class="line">sStr1 = <span class="string">'ab,cde,fgh,ijk'</span></span><br><span class="line">sStr2 = <span class="string">','</span></span><br><span class="line">sStr1 = sStr1[sStr1.find(sStr2) + <span class="number">1</span>:]</span><br><span class="line">print(sStr1)</span><br></pre></td></tr></table></figure>
+<h3 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span></span><br><span class="line">s = <span class="string">'this is my &#123;&#125;'</span>.format(<span class="string">'dog'</span>)</span><br><span class="line">print(s)</span><br><span class="line"><span class="number">2.</span></span><br><span class="line">s = <span class="string">'this is my &#123;&#125; and &#123;&#125;'</span>.format(<span class="string">'dog'</span>,<span class="string">'cat'</span>)</span><br><span class="line">print(s)</span><br><span class="line"><span class="number">3.</span> 语法求解释</span><br><span class="line">urls = [<span class="string">'oa&#123;&#125;-New_York'</span>.format(str(i)) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>,<span class="number">930</span>,<span class="number">30</span>)]</span><br><span class="line">print(urls)</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/24/python爬虫第一周/" itemprop="url">
                   python爬虫第一周
                 </a>
@@ -662,112 +764,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/31/深入理解PHP原理之Opcodes/" itemprop="url">
-                  深入理解PHP原理之Opcodes
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-31T09:49:23+08:00" content="2016-08-31">
-              2016-08-31
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>低头要有勇气，抬头要有底气<br></blockquote><br>Opcode是一种PHP脚本编译后的中间语言，就像Java的ByteCode,或者.NET的MSL，举个例子，比如你写下了如下的PHP代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">   <span class="keyword">echo</span> <span class="string">"Hello World"</span>;</span><br><span class="line">   $a = <span class="number">1</span> + <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">echo</span> $a;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>PHP执行这段代码会经过如下4个步骤(确切的来说，应该是PHP的语言引擎Zend)</p>
-<ul>
-<li>1.Scanning(Lexing) ,将PHP代码转换为语言片段(Tokens)</li>
-<li>2.Parsing, 将Tokens转换成简单而有意义的表达式</li>
-<li>3.Compilation, 将表达式编译成Opocdes</li>
-<li>4.Execution, 顺次执行Opcodes，每次一条，从而实现PHP脚本的功能。</li>
-</ul>
-<p>题外话:现在有的Cache比如APC,可以使得PHP缓存住Opcodes，这样，每次有请求来临的时候，就不需要重复执行前面3步，从而能大幅的提高PHP的执行速度。</p>
-<p>那什么是Lexing? 学过编译原理的同学都应该对编译原理中的词法分析步骤有所了解，Lex就是一个词法分析的依据表。 Zend/zend_language_scanner.c会根据Zend/zend_language_scanner.l(Lex文件),来输入的 PHP代码进行词法分析，从而得到一个一个的“词”，PHP4.2开始提供了一个函数叫token_get_all,这个函数就可以讲一段PHP代码 Scanning成Tokens；</p>
-<blockquote>
-<p><a href="http://www.laruence.com/2008/06/18/221.html" target="_blank" rel="noopener">http://www.laruence.com/2008/06/18/221.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -811,7 +807,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -821,7 +817,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

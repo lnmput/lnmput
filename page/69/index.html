@@ -265,6 +265,112 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/31/深入理解PHP原理之Opcodes/" itemprop="url">
+                  深入理解PHP原理之Opcodes
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-31T09:49:23+08:00" content="2016-08-31">
+              2016-08-31
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>低头要有勇气，抬头要有底气<br></blockquote><br>Opcode是一种PHP脚本编译后的中间语言，就像Java的ByteCode,或者.NET的MSL，举个例子，比如你写下了如下的PHP代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">   <span class="keyword">echo</span> <span class="string">"Hello World"</span>;</span><br><span class="line">   $a = <span class="number">1</span> + <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">echo</span> $a;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>PHP执行这段代码会经过如下4个步骤(确切的来说，应该是PHP的语言引擎Zend)</p>
+<ul>
+<li>1.Scanning(Lexing) ,将PHP代码转换为语言片段(Tokens)</li>
+<li>2.Parsing, 将Tokens转换成简单而有意义的表达式</li>
+<li>3.Compilation, 将表达式编译成Opocdes</li>
+<li>4.Execution, 顺次执行Opcodes，每次一条，从而实现PHP脚本的功能。</li>
+</ul>
+<p>题外话:现在有的Cache比如APC,可以使得PHP缓存住Opcodes，这样，每次有请求来临的时候，就不需要重复执行前面3步，从而能大幅的提高PHP的执行速度。</p>
+<p>那什么是Lexing? 学过编译原理的同学都应该对编译原理中的词法分析步骤有所了解，Lex就是一个词法分析的依据表。 Zend/zend_language_scanner.c会根据Zend/zend_language_scanner.l(Lex文件),来输入的 PHP代码进行词法分析，从而得到一个一个的“词”，PHP4.2开始提供了一个函数叫token_get_all,这个函数就可以讲一段PHP代码 Scanning成Tokens；</p>
+<blockquote>
+<p><a href="http://www.laruence.com/2008/06/18/221.html" target="_blank" rel="noopener">http://www.laruence.com/2008/06/18/221.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/24/PHP反射类ReflectionClass/" itemprop="url">
                   PHP反射类ReflectionClass
                 </a>
@@ -665,106 +771,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/22/深入理解PHP原理之foreach/" itemprop="url">
-                  深入理解PHP原理之foreach
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-22T10:17:37+08:00" content="2016-08-22">
-              2016-08-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我们走得太快，灵魂都跟不上了 …<br></blockquote><br>今天偶然看到鸟哥(php)的博客‘ 深入理解PHP原理之foreach’，可惜自己功力尚欠，内部的机理看不明白，但也稍微记录一下，毕竟这个问题自己以前从来没有考虑过。</p>
-<h4 id="以下内容摘自鸟哥的博客"><a href="#以下内容摘自鸟哥的博客" class="headerlink" title="以下内容摘自鸟哥的博客"></a>以下内容摘自鸟哥的博客</h4><p>经常会有人问我, PHP的数组, 如果用foreach来访问, 遍历的顺序是固定的么? 以什么顺序遍历呢?<br>比如:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$arr[<span class="string">'laruence'</span>] = <span class="string">'huixinchen'</span>;</span><br><span class="line">$arr[<span class="string">'yahoo'</span>]    = <span class="number">2007</span>;</span><br><span class="line">$arr[<span class="string">'baidu'</span>]    = <span class="number">2008</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($arr <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line"><span class="comment">//结果是什么?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>结果：<br>huixinchen20072008</p>
-<p>又比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$arr[<span class="number">2</span>] = <span class="string">'huixinchen'</span>;</span><br><span class="line">$arr[<span class="number">1</span>]  = <span class="number">2007</span>;</span><br><span class="line">$arr[<span class="number">0</span>]  = <span class="number">2008</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($arr <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line"><span class="comment">//现在结果又是什么?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>结果：<br>huixinchen 2007 2008</p>
-<p>要完全了解清楚这个问题, 我想首先应该要大家了解PHP数组的内部实现结构………<br>在PHP中, 数组是用一种HASH结构(HashTable)来实现的, PHP使用了一些机制, 使得可以在O(1)的时间复杂度下实现数组的增删, 并同时支持线性遍历和随机访问.</p>
-<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>PHP中遍历数组的顺序, 是和元素的添加先后相关的；<br>所以, 如果你想在数字索引的数组中按照索引大小遍历, 那么你就应该使用for, 而不是foreach<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>($i=<span class="number">0</span>,$l=count($arr); $i&lt;$l; $i++) &#123;</span><br><span class="line"> <span class="comment">//这个时候,不能认为是顺序遍历(线性遍历)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -808,7 +814,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -818,7 +824,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

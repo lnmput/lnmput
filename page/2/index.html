@@ -265,6 +265,104 @@
             
               
                 
+                <a class="post-title-link" href="/2020/07/22/nginx使用了cloudflare的cdn后如何显示真实的ip/" itemprop="url">
+                  nginx使用了cloudflare的cdn后如何显示真实的IP
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-07-22T13:50:13+08:00" content="2020-07-22">
+              2020-07-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>心有猛虎，细嗅蔷薇。<br></blockquote>
+
+<h3 id="查看ngnix是否安装了http-real-ip模块"><a href="#查看ngnix是否安装了http-real-ip模块" class="headerlink" title="查看ngnix是否安装了http-real-ip模块"></a>查看ngnix是否安装了http-real-ip模块</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -V</span><br></pre></td></tr></table></figure>
+<h3 id="创建文件cloudflare"><a href="#创建文件cloudflare" class="headerlink" title="创建文件cloudflare"></a>创建文件cloudflare</h3><p><a href="https://www.cloudflare.com/ips/" target="_blank" rel="noopener">https://www.cloudflare.com/ips/</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/nginx/cloudflare;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#Cloudflare ip addresses</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># - IPv4</span></span><br><span class="line">set_real_ip_from <span class="number">103.21</span><span class="number">.244</span><span class="number">.0</span>/<span class="number">22</span>;</span><br><span class="line">set_real_ip_from <span class="number">103.22</span><span class="number">.200</span><span class="number">.0</span>/<span class="number">22</span>;</span><br><span class="line">set_real_ip_from <span class="number">103.31</span><span class="number">.4</span><span class="number">.0</span>/<span class="number">22</span>;</span><br><span class="line">set_real_ip_from <span class="number">104.16</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">12</span>;</span><br><span class="line">set_real_ip_from <span class="number">108.162</span><span class="number">.192</span><span class="number">.0</span>/<span class="number">18</span>;</span><br><span class="line">set_real_ip_from <span class="number">131.0</span><span class="number">.72</span><span class="number">.0</span>/<span class="number">22</span>;</span><br><span class="line">set_real_ip_from <span class="number">141.101</span><span class="number">.64</span><span class="number">.0</span>/<span class="number">18</span>;</span><br><span class="line">set_real_ip_from <span class="number">162.158</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">15</span>;</span><br><span class="line">set_real_ip_from <span class="number">172.64</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">13</span>;</span><br><span class="line">set_real_ip_from <span class="number">173.245</span><span class="number">.48</span><span class="number">.0</span>/<span class="number">20</span>;</span><br><span class="line">set_real_ip_from <span class="number">188.114</span><span class="number">.96</span><span class="number">.0</span>/<span class="number">20</span>;</span><br><span class="line">set_real_ip_from <span class="number">190.93</span><span class="number">.240</span><span class="number">.0</span>/<span class="number">20</span>;</span><br><span class="line">set_real_ip_from <span class="number">197.234</span><span class="number">.240</span><span class="number">.0</span>/<span class="number">22</span>;</span><br><span class="line">set_real_ip_from <span class="number">198.41</span><span class="number">.128</span><span class="number">.0</span>/<span class="number">17</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># - IPv6</span></span><br><span class="line">set_real_ip_from <span class="number">2400</span>:cb00::/<span class="number">32</span>;</span><br><span class="line">set_real_ip_from <span class="number">2405</span>:<span class="number">8100</span>::/<span class="number">32</span>;</span><br><span class="line">set_real_ip_from <span class="number">2405</span>:b500::/<span class="number">32</span>;</span><br><span class="line">set_real_ip_from <span class="number">2606</span>:<span class="number">4700</span>::/<span class="number">32</span>;</span><br><span class="line">set_real_ip_from <span class="number">2803</span>:f800::/<span class="number">32</span>;</span><br><span class="line">set_real_ip_from <span class="number">2</span>c0f:f248::/<span class="number">32</span>;</span><br><span class="line">set_real_ip_from <span class="number">2</span>a06:<span class="number">98</span>c0::/<span class="number">29</span>;</span><br><span class="line"></span><br><span class="line">real_ip_header CF-Connecting-IP;</span><br></pre></td></tr></table></figure></p>
+<h3 id="修改-etc-nginx-nginx-conf"><a href="#修改-etc-nginx-nginx-conf" class="headerlink" title="修改 /etc/nginx/nginx.conf"></a>修改 /etc/nginx/nginx.conf</h3><p>Open “/etc/nginx/nginx.conf” file with your favorite text editor and just add the following lines to your nginx.conf inside http{….} block.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">include</span> /etc/nginx/cloudflare;</span><br></pre></td></tr></table></figure></p>
+<h3 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/05/16/nginx如何防止圖片被盜連hotlinkprotection/" itemprop="url">
                   Nginx如何防止圖片被盜連HotlinkProtection
                 </a>
@@ -731,107 +829,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/04/10/php实现自动添加或者替换内容的img标签的alt属性/" itemprop="url">
-                  php实现自动添加或者替换内容的IMG标签的alt属性
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-04-10T19:04:20+08:00" content="2020-04-10">
-              2020-04-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>すぐ目（め）の前（まえ）にあっても、手（て）に入れる事（こと）が出来（でき）ないものがある<br></blockquote>
-
-<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>在cms 开发中，SEO优化 一般需要把文章标题 设置为 img 的alt title 属性，那么内容多个 img 时，手动过于繁琐。</p>
-<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>根据以上需求，那么使用正则找内容的 img 标签 ，进行添加或者替换即可</p>
-<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$str =<span class="string">'&lt;div class="wkBody"&gt;</span></span><br><span class="line"><span class="string">                        &lt;div id="panelSummary" class="abstract"&gt;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">                            &lt;span class="font28"&gt;摘要：&lt;/span&gt;</span></span><br><span class="line"><span class="string">                            作为阿根廷种植面积第二大的红葡萄品种，伯纳达的发展潜力越来越大，逐渐成为阿根廷的希望之星。</span></span><br><span class="line"><span class="string">                            &lt;div id="pnlSummaryEN" class="abs-en"&gt;</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">                                &lt;span class="font28"&gt;ABSTRACT：&lt;/span&gt;</span></span><br><span class="line"><span class="string">                                Bonarda is Argentina’s second most widely planted red grape, which may make a big splash in the coming years.</span></span><br><span class="line"><span class="string">                            </span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">                        </span></span><br><span class="line"><span class="string">&lt;/div&gt;</span></span><br><span class="line"><span class="string">                        &lt;p&gt;</span></span><br><span class="line"><span class="string">    说到阿根廷葡萄酒，大家最先想到的可能是著名的&lt;a href="http://www.wine-world.com/s/grape?q=马尔贝克&amp;amp;token=ba782698-e5be-44f8-8e54-09eac16f02a9&amp;amp;from=user" target="_blank"&gt;马尔贝克&lt;/a&gt;（Malbec），毫无疑问，这个品种在阿根廷占据着绝对的主导地位。但是，除了马尔贝克以外，阿根廷还有一个发展潜力巨大的葡萄品种，它是阿根廷的希望之星——阿根廷种植面积第二大的葡萄品种伯纳达（Bonarda）。&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    　&lt;strong&gt;　1. 特征&lt;/strong&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;p style="text-align: center;"&gt;</span></span><br><span class="line"><span class="string">    &lt;strong&gt;&lt;a target="_blank" href="/culture/pic/22571cf7-ee6b-4176-8efb-e02e4e9dd947/0"&gt;&lt;img alt="除了马尔贝克，阿根廷还有伯纳达" title="除了马尔贝克，阿根廷还有伯纳达" src="/UserFiles/images/01-bonarda-161114.jpg" style="width: 375px; height: 500px;"&gt;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;p style="text-align: center;"&gt;</span></span><br><span class="line"><span class="string">    &lt;span style="font-size:12px;"&gt;图片来源：Wine Folly&lt;/span&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;p&gt;</span></span><br><span class="line"><span class="string">    伯纳达葡萄酒初闻时果香扑鼻，带有糖渍黑樱桃、新鲜蓝莓和李子的香气。紧接着，香气变得更加复杂，散发出紫罗兰、五香、多香果和牡丹的气息。最后，经过橡木桶的酒还会有轻微的雪茄盒、甜无花果和巧克力等烟熏气息。入口时，伯纳达葡萄酒最先表现的也是果味，酒体中等，鲜酸多汁，单宁较低，余味顺滑，十分易饮。&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    　　伯纳达与马尔贝克一样拥有饱满的颜色，但伯纳达的单宁含量更低，酸度更高、更多汁。如果你不喜欢使用橡木桶的葡萄酒，那你可能会青睐伯纳达葡萄酒，因为大多数伯纳达葡萄酒少用甚至不用橡木桶。另外，伯纳达葡萄酒的酒精度很少超过13.5%。&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    　&lt;strong&gt;　2. 配餐&lt;/strong&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;p style="text-align: center;"&gt;</span></span><br><span class="line"><span class="string">    &lt;strong&gt;&lt;a target="_blank" href="/culture/pic/22571cf7-ee6b-4176-8efb-e02e4e9dd947/1"&gt;&lt;img alt="除了马尔贝克，阿根廷还有伯纳达" title="除了马尔贝克，阿根廷还有伯纳达" src="/UserFiles/images/02-cedar-plank-salmon-161115.jpg" style="width: 550px; height: 333px;"&gt;&lt;/a&gt;&lt;div style="width: 550px;" class="addivstyle"&gt;&lt;div id="testdiv" style="width: 550px;" class="adseconddiv"&gt;&lt;a href="http://mall.wine-world.com/activity/activitypromotion10" target="_blank"&gt;&lt;img src="http://images.wine-world.com/images/wineworldlogo.jpg" style="left:2px;top:2px;width:102px;position: absolute;border: none;background: none;"&gt;&lt;span style="position: absolute;left:120px;right:85px;top:10px;color: #FFF;text-align:left;"&gt;开抢50元代金券，醉惠中级庄盛宴&lt;br&gt;30款中级庄美酒任君挑选，领券后下单直减50元！&lt;/span&gt;&lt;span class="qukankanstyle" style="top: 20px;"&gt;去看看&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/strong&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;p style="text-align: center;"&gt;</span></span><br><span class="line"><span class="string">    &lt;span style="font-size:12px;"&gt;图片来源：Wine Folly&lt;/span&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;p&gt;</span></span><br><span class="line"><span class="string">    伯纳达葡萄酒低单宁、高酸的特点使其可以与多种食物搭配，如鸡肉、牛肉、猪肉和鱼排等；而酒中轻微的棕色香料的风味也可以与菠萝、芒果、照烧汁等完美结合。&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;strong&gt;　　3. 此伯纳达非彼伯纳达&lt;/strong&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    　　阿根廷的伯纳达与其它地方的伯纳达很可能并不是同一个葡萄品种，也许阿根廷的伯纳达本不该被称为“伯纳达”。DNA检测表明阿根廷的伯纳达与法国萨瓦（Savoie）产区一种叫“Deuce Noir”的稀有葡萄是同一品种，跟纳帕谷（Napa Valley）古老葡萄园中的沙帮乐（Charbono）也是相同的品种。&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    　　实际上，真正的伯纳达葡萄指的是一组意大利葡萄，至少分为6种，其中最出名的是皮埃蒙特伯纳达（Bonarda Piemontese）。更容易引起混淆的是，意大利伦巴第（Lombardy）的奥尔特莱伯·帕韦斯（Oltrepo Pavese）产区所产的标有“伯纳达”的葡萄酒实际上是用科罗帝纳（Croatina）酿制而成的；&lt;a href="http://www.wine-world.com/s/area?q=皮埃蒙特&amp;amp;token=36d3dd49-745b-43f8-8bce-1b90ce3118b0&amp;amp;from=user" target="_blank"&gt;皮埃蒙特&lt;/a&gt;（Piedmont）有些酿酒师酿制的标有“伯纳达”的葡萄酒其实是用一种叫茹拉（Uva Rara）的葡萄酿制的。&lt;br&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    　　所以，如果下次有人纠正你对阿根廷伯纳达的叫法时，不妨问问他们以上这两种标有“伯纳达”的葡萄酒为什么是用别的葡萄酿制的，他们最好能说出它们之间的联系。&lt;span style="font-size:12px;"&gt;（文/Christina）&lt;/span&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">                        </span></span><br><span class="line"><span class="string">                        &lt;div id="pnlWineVersion2"&gt;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">                              &lt;p&gt;声明：本文版权属于“红酒世界网”，转载请保留版权信息。关注微信号“wine-world”，随时随地了解最新红酒资讯。&lt;/p&gt;</span></span><br><span class="line"><span class="string">                        </span></span><br><span class="line"><span class="string">&lt;/div&gt;</span></span><br><span class="line"><span class="string">                    &lt;/div&gt;'</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$preg = <span class="string">"/&lt;img.*?src=[\"|\'](.*?)[\"|\'].*?&gt;/"</span>;</span><br><span class="line">$alt = <span class="string">"1234"</span>;</span><br><span class="line">$title = <span class="string">"123456"</span>;</span><br><span class="line">$img = <span class="string">'&lt;img src="$1" alt="'</span>.$alt.<span class="string">'"title="'</span>.$title.<span class="string">'"&gt;'</span>;</span><br><span class="line">$data = preg_replace($preg,$img,$str);</span><br><span class="line">var_dump($data);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://segmentfault.com/a/1190000007505546" target="_blank" rel="noopener">https://segmentfault.com/a/1190000007505546</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -875,7 +872,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -885,7 +882,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,109 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/27/websocket的自动重连实现/" itemprop="url">
+                  websocket的自动重连实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-27T13:59:54+08:00" content="2018-07-27">
+              2018-07-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>小巷 又弯又长 没有门 没有窗 我拿把旧钥匙 敲着厚厚的墙 —— 顾城《小巷》<br></blockquote><br>在websocket实例化的时候，我们会绑定一些事件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(url);</span><br><span class="line">ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">ws.onopen = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="comment">//something</span></span><br><span class="line">&#125;;</span><br><span class="line">ws.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">   <span class="comment">//something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果希望websocket连接一直保持，我们会在close或者error上绑定重新连接方法。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ws.onclose = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    reconnect();</span><br><span class="line">&#125;;</span><br><span class="line">ws.onerror = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    reconnect();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这样一般正常情况下失去连接时，触发onclose方法，我们就能执行重连了。</p>
+<h3 id="stackoverflow上的一种做法"><a href="#stackoverflow上的一种做法" class="headerlink" title="stackoverflow上的一种做法"></a>stackoverflow上的一种做法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">'ws://localhost:8080'</span>);</span><br><span class="line">  ws.onopen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// subscribe to some channels</span></span><br><span class="line">    ws.send(<span class="built_in">JSON</span>.stringify(&#123;</span><br><span class="line">        <span class="comment">//.... some message the I must send when I connect ....</span></span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Message:'</span>, e.data);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onclose = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Socket is closed. Reconnect will be attempted in 1 second.'</span>, e.reason);</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      connect();</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ws.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'Socket encountered error: '</span>, err.message, <span class="string">'Closing socket'</span>);</span><br><span class="line">    ws.close();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">connect();</span><br></pre></td></tr></table></figure>
+<h3 id="使用第三方包-reconnecting-websocket"><a href="#使用第三方包-reconnecting-websocket" class="headerlink" title="使用第三方包 reconnecting-websocket"></a>使用第三方包 reconnecting-websocket</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> ReconnectingWebSocket(<span class="string">'ws://....'</span>);</span><br></pre></td></tr></table></figure>
+<p>一些选项<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(url, <span class="literal">null</span>, &#123;<span class="attr">debug</span>: <span class="literal">true</span>, <span class="attr">reconnectInterval</span>: <span class="number">3000</span>&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(url);</span><br><span class="line">socket.debug = <span class="literal">true</span>;</span><br><span class="line">socket.timeoutInterval = <span class="number">5400</span>;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/22431751/websocket-how-to-automatically-reconnect-after-it-dies" target="_blank" rel="noopener">https://stackoverflow.com/questions/22431751/websocket-how-to-automatically-reconnect-after-it-dies</a><br><a href="https://www.jianshu.com/p/dfde99d46ef4" target="_blank" rel="noopener">https://www.jianshu.com/p/dfde99d46ef4</a><br><a href="https://github.com/joewalnes/reconnecting-websocket" target="_blank" rel="noopener">https://github.com/joewalnes/reconnecting-websocket</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/25/crontab计划任务指定执行用户/" itemprop="url">
                   crontab计划任务指定执行用户
                 </a>
@@ -684,121 +787,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/18/创建一个支持本地化的api/" itemprop="url">
-                  创建一个支持本地化的API
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-18T15:37:46+08:00" content="2018-07-18">
-              2018-07-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>青青子衿，悠悠我心。但为君故，沉吟至今。<br></blockquote>
-
-<ul>
-<li><p>create a middleware</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Closure</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Application</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Class Localization</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>  Mahmoud Zalt  &lt;mahmoud<span class="doctag">@zalt</span>.me&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Localization</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Localization constructor.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> \Illuminate\Foundation\Application $app</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Application $app)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;app = $app;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Handle an incoming request.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Http\Request $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Closure                 $next</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// read the language from the request header</span></span><br><span class="line">        $locale = $request-&gt;header(<span class="string">'Content-Language'</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// if the header is missed</span></span><br><span class="line">        <span class="keyword">if</span>(!$locale)&#123;</span><br><span class="line">            <span class="comment">// take the default local language</span></span><br><span class="line">            $locale = <span class="keyword">$this</span>-&gt;app-&gt;config-&gt;get(<span class="string">'app.locale'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// check the languages defined is supported</span></span><br><span class="line">        <span class="keyword">if</span> (!array_key_exists($locale, <span class="keyword">$this</span>-&gt;app-&gt;config-&gt;get(<span class="string">'app.supported_languages'</span>))) &#123;</span><br><span class="line">            <span class="comment">// respond with error</span></span><br><span class="line">            <span class="keyword">return</span> abort(<span class="number">403</span>, <span class="string">'Language not supported.'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// set the local language</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;app-&gt;setLocale($locale);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// get the response after the request is done</span></span><br><span class="line">        $response = $next($request);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// set Content Languages header in the response</span></span><br><span class="line">        $response-&gt;headers-&gt;set(<span class="string">'Content-Language'</span>, $locale);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// return the response</span></span><br><span class="line">        <span class="keyword">return</span> $response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Register the middleware in the Middlewares</p>
-</li>
-<li><p>add this to the app.php config file</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'supported_languages'</span> =&gt; [<span class="string">'en'</span> =&gt; <span class="string">'English'</span>, <span class="string">'ru'</span> =&gt; <span class="string">'Russian'</span>],</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>create language folder in the lang folder “resources/lang” for your language  (in this case it is [ru] next to [en]) and of course set your files there.</p>
-</li>
-<li><p>create sample route to test this: {you need to use the <code>trans</code> function}</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'welcome'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> trans(<span class="string">'messages.welcome'</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>call the endpoint “<a href="http://api.xxxxx.dev/welcome/“" target="_blank" rel="noopener">http://api.xxxxx.dev/welcome/“</a> and set the header “Content-Language” in your request to ([en] or [ru]).</p>
-</li>
-</ul>
-<blockquote>
-<p><a href="https://laravel-tricks.com/tricks/create-api-that-supports-localization" target="_blank" rel="noopener">https://laravel-tricks.com/tricks/create-api-that-supports-localization</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -842,7 +830,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -852,7 +840,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

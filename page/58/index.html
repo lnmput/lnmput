@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2017/03/27/nginx的反向代理和负载均衡实践/" itemprop="url">
+                  nginx的反向代理和负载均衡实践
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-27T08:58:36+08:00" content="2017-03-27">
+              2017-03-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>有些人让你对明天充满期许，却再也没有出现在你的明天里。<br></blockquote></p>
+<h3 id="apache的配置"><a href="#apache的配置" class="headerlink" title="apache的配置"></a>apache的配置</h3><p>使用 Apache 模拟出两个站点,分别使用8081和8082端口<br>访问:<br><a href="http://121.42.176.99:8081/" target="_blank" rel="noopener">http://121.42.176.99:8081/</a><br><a href="http://121.42.176.99:8082/" target="_blank" rel="noopener">http://121.42.176.99:8082/</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Listen <span class="number">8081</span></span><br><span class="line">&lt;VirtualHost *:<span class="number">8081</span>&gt;</span><br><span class="line">    ServerAdmin webmaster@dummy-host2.example.com</span><br><span class="line">    DocumentRoot <span class="string">"/usr/local/httpd/htdocs/test"</span></span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">    ServerName <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    ErrorLog <span class="string">"logs/dummy-host2.example.com-error_log"</span></span><br><span class="line">    CustomLog <span class="string">"logs/dummy-host2.example.com-access_log"</span> common</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;Directory <span class="string">"/usr/local/httpd/htdocs/test"</span>&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride  all</span><br><span class="line">    allow from all</span><br><span class="line">    <span class="keyword">Require</span> all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">Listen <span class="number">8082</span></span><br><span class="line">&lt;VirtualHost *:<span class="number">8082</span>&gt;</span><br><span class="line">    ServerAdmin webmaster@dummy-host2.example.com</span><br><span class="line">    DocumentRoot <span class="string">"/usr/local/httpd/htdocs/test1"</span></span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">    ServerName <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    ErrorLog <span class="string">"logs/dummy-host2.example.com-error_log"</span></span><br><span class="line">    CustomLog <span class="string">"logs/dummy-host2.example.com-access_log"</span> common</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;Directory <span class="string">"/usr/local/httpd/htdocs/test"</span>&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride  all</span><br><span class="line">    allow from all</span><br><span class="line">    <span class="keyword">Require</span> all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure></p>
+<p>网站的内容index.php 打印出服务器变量: var_export($_SERVER);</p>
+<h3 id="反向代理nginx"><a href="#反向代理nginx" class="headerlink" title="反向代理nginx"></a>反向代理nginx</h3><p>nginx 默认使用80端口,<a href="http://121.42.176.99/" target="_blank" rel="noopener">http://121.42.176.99/</a><br>配置:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_passs http:<span class="comment">//localhost:8081</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后重启nginx<br>这时候访问<a href="http://121.42.176.99/,就会访问的是apache的8081端口" target="_blank" rel="noopener">http://121.42.176.99/,就会访问的是apache的8081端口</a></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>我们发现获取到的服务器信息不正确:<br> 1、HTTP_HOST:localhost:8081<br> 2、REMOTE_ADDR：127.0.0.1 (客户端的IP）<br>这会对我们的开发造成“迷茫”，因此要在nginx配置里加入<br>1、proxy_set_header Host $host;<br>2、proxy_set_header  X-Real-IP $remote_addr;</p>
+<p>其他的一些设置请google;</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/03/22/编译安装mysql/" itemprop="url">
                   编译安装mysql
                 </a>
@@ -733,120 +833,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/08/如何优雅地使用StackOverflow/" itemprop="url">
-                  如何优雅地使用StackOverflow
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-08T13:56:57+08:00" content="2017-03-08">
-              2017-03-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我先起，你再睡一会儿。<br></blockquote><br>一:提问前一定要搜索，先在 Google 搜索，然后在 StackOverFlow 上搜索，当实在找不到答案后再提问。    对于那些靠搜索就能得到答案的问题，StackOverFlow 上的广大群众是毫不留情的，反对票数量蹭蹭得往上加啊。<br>二:学习一些典型的提问/回答习惯，我做了一些笔记。</p>
-<p>提问：</p>
-<ul>
-<li>1，In my limited experience with ..    谦虚表达自己在某方面的经验</li>
-<li>2， I am searching for a long time on net. But no use. Please help or try to give some ideas how to achieve this.   找了很久未果，求助攻</li>
-<li>3，after searching around for a decent XX solution and found that everything out there was difficult to use.  找了N种方法都发现太TM难了。</li>
-<li>4，I’ ve looked around and apparently I’ve got the choice between these libraries/ solutions:   说明自己是努力搜索过的，然后目前有了哪几种方案</li>
-<li>5，which seems it’s a promising solution.  看起来是一个好解决方案</li>
-<li>6，Ive tried multiple variations of this, but none of them seem to work. Any ideas? 试了很多种方法都无效，求助</li>
-<li>7，Wanted to know if it’s good practice to do that and what would be the best way to do that? 我的做法是否正确，是否有更好的法子？</li>
-<li>8，Thanks in advance.  </li>
-</ul>
-<p> 先行谢过回答问题：</p>
-<ul>
-<li>1，If I understand you correctly, you want to xxx      如果我没理解错，你想。</li>
-<li>2，Can you provided more details about your use case ? Can you provide more xml and code setting the url ? </li>
-</ul>
-<p>提供更详细当别人回答你的问题后，你对回答的评论：</p>
-<ul>
-<li>1，thank you for your answer sincerely 感谢回答blabla这些感觉就差不多了，其他说来说去也都是这些套路，回答问题或者提问时多看看别人的表达习惯，也可以做记录，好记性不如烂笔头嘛。说明一下，上面的中文不是翻译，只是一个说明，方便我快速定位的。</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -890,7 +876,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -900,7 +886,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

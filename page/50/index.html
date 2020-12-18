@@ -265,6 +265,103 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/31/elasticsearch的一些批量操作/" itemprop="url">
+                  elasticsearch的一些批量操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-31T14:46:43+08:00" content="2017-07-31">
+              2017-07-31
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>为了看起来毫不费力<br></blockquote></p>
+<h3 id="批量插入"><a href="#批量插入" class="headerlink" title="批量插入"></a>批量插入</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /shop/product/_bulk</span><br><span class="line">&#123; <span class="attr">"index"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"1"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="attr">"name"</span> : <span class="string">"apple"</span>, <span class="attr">"price"</span>:<span class="number">15.15</span> &#125;</span><br><span class="line">&#123; <span class="attr">"index"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"2"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="attr">"name"</span> : <span class="string">"pear"</span>, <span class="attr">"price"</span>:<span class="number">16.00</span> &#125;</span><br><span class="line">&#123; <span class="attr">"index"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"3"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="attr">"name"</span> : <span class="string">"orange"</span>, <span class="attr">"price"</span>:<span class="number">15.09</span> &#125;</span><br><span class="line">&#123; <span class="attr">"index"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"4"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="attr">"name"</span> : <span class="string">"bnanan"</span>, <span class="attr">"price"</span>:<span class="number">3.00</span> &#125;</span><br><span class="line">&#123; <span class="attr">"index"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"5"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="attr">"name"</span> : <span class="string">"pototo"</span>, <span class="attr">"price"</span>:<span class="number">9.15</span> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="批量修改"><a href="#批量修改" class="headerlink" title="批量修改"></a>批量修改</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /shop/product/_bulk</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"1"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"name"</span> : <span class="string">"apple iphone"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"2"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"name"</span> : <span class="string">"pear yoyo"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"3"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"name"</span> : <span class="string">"orange milk"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"4"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"name"</span> : <span class="string">"bnanan egg"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"5"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"name"</span> : <span class="string">"pototo chips"</span>&#125; &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="批量添加新的字段"><a href="#批量添加新的字段" class="headerlink" title="批量添加新的字段"></a>批量添加新的字段</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /shop/product/_bulk</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"1"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"desc"</span> : <span class="string">"this is a apple iphone"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"2"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"desc"</span> : <span class="string">"the price is low"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"3"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"desc"</span> : <span class="string">"the frieight is free"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"4"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"desc"</span> : <span class="string">"buy one and a free one"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"update"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"5"</span>&#125; &#125;</span><br><span class="line">&#123; <span class="attr">"doc"</span> : &#123;<span class="attr">"desc"</span> : <span class="string">"you lost it"</span>&#125; &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="批量删除"><a href="#批量删除" class="headerlink" title="批量删除"></a>批量删除</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">POST /shop/product/_bulk</span><br><span class="line">&#123; <span class="attr">"delete"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"2"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="attr">"delete"</span> : &#123;<span class="attr">"_id"</span> : <span class="string">"3"</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/31/php中的一些高级用法/" itemprop="url">
                   php中的一些高级用法
                 </a>
@@ -643,101 +740,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/27/Mysql索引理解/" itemprop="url">
-                  Mysql索引理解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-27T09:17:30+08:00" content="2017-07-27">
-              2017-07-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我们这么努力 也不过是为了成为一个普通人<br></blockquote></p>
-<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>MySQL官方对索引的定义为：索引（Index）是帮助MySQL高效获取数据的数据结构。提取句子主干，就可以得到索引的本质：<code>索引是数据结构</code>。<br>我们知道，数据库查询是数据库的最主要功能之一。我们都希望查询数据的速度能尽可能的快，因此数据库系统的设计者会从查询算法的角度进行优化。最基本的查询算法当然是顺序查找（linear search），这种复杂度为O(n)的算法在数据量很大时显然是糟糕的，好在计算机科学的发展提供了很多更优秀的查找算法，例如二分查找（binary search）、二叉树查找（binary tree search）等。如果稍微分析一下会发现，每种查找算法都只能应用于特定的数据结构之上，例如二分查找要求被检索数据有序，而二叉树查找只能应用于二叉查找树上，但是数据本身的组织结构不可能完全满足各种数据结构（例如，理论上不可能同时将两列都按顺序进行组织），所以，在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用（指向）数据，这样就可以在这些数据结构上实现高级查找算法。这种数据结构，就是索引。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -781,7 +783,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -791,7 +793,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

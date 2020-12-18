@@ -265,6 +265,104 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/09/php中的时间/" itemprop="url">
+                  php中的时间
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-09T17:51:49+08:00" content="2017-08-09">
+              2017-08-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>哪个更痛苦，努力还是后悔？<br></blockquote></p>
+<h3 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h3><p>时间戳是指格林威治时间1970年01月01日00时00分00秒(北京时间1970年01月01日08时00分00秒)起至现在的总秒数</p>
+<h3 id="php获取"><a href="#php获取" class="headerlink" title="php获取"></a>php获取</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pure php</span></span><br><span class="line">time()</span><br><span class="line"></span><br><span class="line"><span class="comment">// Carbon\Carbon</span></span><br><span class="line">Carbon::now()-&gt;timestamp</span><br></pre></td></tr></table></figure>
+<h3 id="PHP-Date-函数"><a href="#PHP-Date-函数" class="headerlink" title="PHP Date() 函数"></a>PHP Date() 函数</h3><p>date(format,timestamp)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"Y/m/d"</span>) . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"Y.m.d"</span>) . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"Y-m-d"</span>) . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"今天是 "</span> . date(<span class="string">"l"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="php-获取时间今天明天昨天时间戳"><a href="#php-获取时间今天明天昨天时间戳" class="headerlink" title="php 获取时间今天明天昨天时间戳"></a>php 获取时间今天明天昨天时间戳</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="string">"今天:"</span>.date(<span class="string">"Y-m-d"</span>).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"昨天:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"-1 day"</span>)), <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"明天:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+1 day"</span>)). <span class="string">"&lt;br&gt;"</span>;  </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一周后:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+1 week"</span>)). <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一周零两天四小时两秒后:"</span>.date(<span class="string">"Y-m-d G:H:s"</span>,strtotime(<span class="string">"+1 week 2 days 4 hours 2 seconds"</span>)). <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"下个星期四:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"next Thursday"</span>)). <span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"上个周一:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"last Monday"</span>)).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一个月前:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"last month"</span>)).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"一个月后:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+1 month"</span>)).<span class="string">"&lt;br&gt;"</span>;     </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"十年后:"</span>.date(<span class="string">"Y-m-d"</span>,strtotime(<span class="string">"+10 year"</span>)).<span class="string">"&lt;br&gt;"</span>;    </span><br><span class="line"></span><br><span class="line"><span class="comment">//strtotime()函数的作用是将日期时间描述解析为 Unix 时间戳</span></span><br></pre></td></tr></table></figure>
+<h3 id="python获取"><a href="#python获取" class="headerlink" title="python获取"></a>python获取</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line">time.time()</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/08/javascript中的函数预解析和变量提升/" itemprop="url">
                   javascript中的函数预解析和变量提升
                 </a>
@@ -667,107 +765,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/07/移动端ui框架推荐/" itemprop="url">
-                  移动端ui框架推荐
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-07T09:11:56+08:00" content="2017-08-07">
-              2017-08-07
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>不要在父母需要你的时候, 只有眼泪<br></blockquote><br>不想多做介绍, 自己点开看看, 没有最好的, 只有最合适的</p>
-<h3 id="weui"><a href="#weui" class="headerlink" title="weui"></a>weui</h3><p>微信ui<br><a href="https://weui.io/" target="_blank" rel="noopener">https://weui.io/</a></p>
-<h3 id="SUI-Mobile"><a href="#SUI-Mobile" class="headerlink" title="SUI Mobile"></a>SUI Mobile</h3><p>阿里巴巴团队<br><a href="http://m.sui.taobao.org/components/" target="_blank" rel="noopener">http://m.sui.taobao.org/components/</a></p>
-<h3 id="layui"><a href="#layui" class="headerlink" title="layui"></a>layui</h3><p><a href="http://www.layui.com/" target="_blank" rel="noopener">http://www.layui.com/</a></p>
-<h3 id="ydui"><a href="#ydui" class="headerlink" title="ydui"></a>ydui</h3><p><a href="http://www.ydui.org/" target="_blank" rel="noopener">http://www.ydui.org/</a></p>
-<h3 id="frozenui"><a href="#frozenui" class="headerlink" title="frozenui"></a>frozenui</h3><p><a href="http://frozenui.github.io" target="_blank" rel="noopener">http://frozenui.github.io</a></p>
-<h3 id="zanui"><a href="#zanui" class="headerlink" title="zanui"></a>zanui</h3><p>使用于vue<br><a href="https://www.youzanyun.com/zanui" target="_blank" rel="noopener">https://www.youzanyun.com/zanui</a></p>
-<h3 id="zanui-weapp"><a href="#zanui-weapp" class="headerlink" title="zanui-weapp"></a>zanui-weapp</h3><p>微信小程序<br><a href="https://github.com/youzan/zanui-weapp" target="_blank" rel="noopener">https://github.com/youzan/zanui-weapp</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -811,7 +808,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -821,7 +818,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

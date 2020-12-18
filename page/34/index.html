@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/14/chrome新标签页/" itemprop="url">
+                  chrome新标签页
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-14T18:49:17+08:00" content="2017-12-14">
+              2017-12-14
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>去年今日此门中，人面桃花相映红<br></blockquote>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>一款全新的chrome新标签页, 简介大方, 可以自由切换背景图片,切换搜索引擎,并配合使用相应的快捷键, 很大程度上提升您的工作效率以及给您视觉上最好的享受</p>
+<h3 id="预览页面"><a href="#预览页面" class="headerlink" title="预览页面"></a>预览页面</h3><p><img src="/images/Yangtab01.png" alt></p>
+<h3 id="设置侧栏"><a href="#设置侧栏" class="headerlink" title="设置侧栏"></a>设置侧栏</h3><p><img src="/images/Yangtab02.png" alt></p>
+<h3 id="下载链接"><a href="#下载链接" class="headerlink" title="下载链接"></a>下载链接</h3><blockquote>
+<p><a href="https://chrome.google.com/webstore/detail/yangtab/ialpcdjbbnnilkgfoeokndnolckhgddo?utm_source=swoole.app" target="_blank" rel="noopener">https://chrome.google.com/webstore/detail/yangtab/ialpcdjbbnnilkgfoeokndnolckhgddo?utm_source=swoole.app</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/12/14/laravel的服务提供者/" itemprop="url">
                   laravel的服务提供者
                 </a>
@@ -665,116 +766,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/12/05/laravel在发生异常错误时如何发送邮件通知/" itemprop="url">
-                  laravel在发生异常错误时如何发送邮件通知
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-05T18:01:36+08:00" content="2017-12-05">
-              2017-12-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>知识太多了就容易装B，知识太少就容易犯浑，像我这样不多不少刚刚好，想装B就装B，想犯浑就犯浑。<br></blockquote><br>我们建了一个新的laravel项目并部署到了生产服务器,一切都工作正常，直到一个客户因为我们的bug遇到了一个问题,随即用户离开了我们的程序, 在我们发现这个bug之前,同样的问题发生在了越来越多的客户身上.随后你修复了bug, 所有的都恢复到了正常.但是如果你能在bug发生时得到邮件通知并很快修复他,在laravel中, 这个很容易实现;<br>在laravel项目中, 所有的异常都是<code>App\Exceptions\Handler</code> 这个类处理的,这个类包含了两个方法:<code>report</code>和<code>render</code>. 现在我们只关心<code>report</code>这个方法. 这个类使用日志记录异常或者是发送异常到一些其他的服务像Bugsna或者Sentry. 默认情况下, <code>report</code>这个方法只是简单的传递异常到基类中,进而被写到日志里.然而,我们也可以发送邮件给开发者关于这些异常.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Report or log an exception.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * This is a great spot to send exceptions to Emails.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  \Exception  $exception</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">report</span><span class="params">(Exception $exception)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;shouldReport($exception)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;sendEmail($exception); <span class="comment">// sends an email</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">parent</span>::report($exception);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Sends an email to the developer about the exception.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  \Exception  $exception</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sendEmail</span><span class="params">(Exception $exception)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// sending email</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Here we are using shouldReport method to ignore exceptions which are listed in the $dontReport property of the exception handler.</p>
-<p>Each type of email sent by the application is represented as a “mailable” class in Laravel. So, we need to create our mailable class using the make:mail command:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ php artisan make:mail ExceptionOccured</span><br></pre></td></tr></table></figure></p>
-<p>This will create a class ExceptionOccured in the app/Mail directory.</p>
-<p>Merely sending the mail will not solve the problem. We need the full stack trace of the exception. And for that, we can use the Symfony’s Debug component.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sendEmail</span><span class="params">(Exception $exception)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        $e = FlattenException::create($exception);</span><br><span class="line"></span><br><span class="line">        $handler = <span class="keyword">new</span> SymfonyExceptionHandler();</span><br><span class="line"></span><br><span class="line">        $html = $handler-&gt;getHtml($e);</span><br><span class="line"></span><br><span class="line">        Mail::to(<span class="string">'developer@gmail.com'</span>)-&gt;send(<span class="keyword">new</span> ExceptionOccured($html));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $ex) &#123;</span><br><span class="line">        dd($ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Make sure you add the following code at the top of the file:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">se Mail;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">Debug</span>\<span class="title">Exception</span>\<span class="title">FlattenException</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">Debug</span>\<span class="title">ExceptionHandler</span> <span class="title">as</span> <span class="title">SymfonyExceptionHandler</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Mail</span>\<span class="title">ExceptionOccured</span>;</span><br></pre></td></tr></table></figure></p>
-<p>Note—We have used the try block to avoid the infinite loop if the mail command fails.</p>
-<p>Then, in your ExceptionOccured mailer class:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Mail</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Bus</span>\<span class="title">Queueable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Mail</span>\<span class="title">Mailable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Queue</span>\<span class="title">SerializesModels</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Queue</span>\<span class="title">ShouldQueue</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionOccured</span> <span class="keyword">extends</span> <span class="title">Mailable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Queueable</span>, <span class="title">SerializesModels</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The body of the message.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> $content;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new message instance.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($content)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;content = $content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Build the message.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> $this</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">build</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;view(<span class="string">'emails.exception'</span>)</span><br><span class="line">                    -&gt;with(<span class="string">'content'</span>, <span class="keyword">$this</span>-&gt;content);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Add the following code in your emails.exception view file:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;!! $content !!&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Now, whenever an exception is thrown in your application, you will receive an email with full stack trace. Cool!</p>
-<p>I have created a Laravel package named squareboat/sneaker(<a href="https://packagist.org/packages/squareboat/sneaker" target="_blank" rel="noopener">https://packagist.org/packages/squareboat/sneaker</a>) to do all this cumbersome work for you so you can concentrate on solving the bug.</p>
-<p>Some of the features of the sneaker are:<br>– On/off emailing using .env file.<br>– Customizing the email body.<br>– Ignoring the exception generated by bots.</p>
-<p>and more to come.</p>
-<p>If you want the complete source code for this(<a href="https://github.com/akaamitgupta/laravel-error-emailer-demo" target="_blank" rel="noopener">https://github.com/akaamitgupta/laravel-error-emailer-demo</a>), I’m more than happy to share it and you can find the source code on Github</p>
-<blockquote>
-<p><a href="https://laravel-news.com/email-on-error-exceptions" target="_blank" rel="noopener">https://laravel-news.com/email-on-error-exceptions</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -818,7 +809,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">367</span>
+              <span class="site-state-item-count">368</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -828,7 +819,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">142</span>
+                <span class="site-state-item-count">143</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
