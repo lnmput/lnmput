@@ -265,6 +265,103 @@
             
               
                 
+                <a class="post-title-link" href="/2018/02/12/Larave的表单验证/" itemprop="url">
+                  Larave的表单验证
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-12T16:08:16+08:00" content="2018-02-12">
+              2018-02-12
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>今天完了就要回家过年了…<br></blockquote>
+
+<h3 id="同时验证两个字段唯一"><a href="#同时验证两个字段唯一" class="headerlink" title="同时验证两个字段唯一"></a>同时验证两个字段唯一</h3><p>控制器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;validate($request, SiteMail::rules());</span><br></pre></td></tr></table></figure></p>
+<p> 模型<br> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">rules</span><span class="params">($request = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">'site_id'</span> =&gt; <span class="string">'required|integer'</span>,</span><br><span class="line">        <span class="string">'subject'</span> =&gt; <span class="string">'required|max:256'</span>,</span><br><span class="line">        <span class="string">'type'</span>    =&gt;  Rule::unique(<span class="string">'site_mails'</span>)-&gt;where(<span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">            $query-&gt;where(<span class="string">'site_id'</span>, request(<span class="string">'site_id'</span>));</span><br><span class="line">        &#125;),</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/02/08/fetch-api简介/" itemprop="url">
                   fetch-api简介
                 </a>
@@ -722,112 +819,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/24/说说laravel管道pipeline的实现/" itemprop="url">
-                  说说laravel管道pipeline的实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-24T09:19:26+08:00" content="2018-01-24">
-              2018-01-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我来过，我战斗过，我不在乎结局。<br></blockquote><br>Laravel中比较优雅的实现了MiddleWare. 主要用来层层递进的处理Request.</p>
-<h3 id="Pipeline对象"><a href="#Pipeline对象" class="headerlink" title="Pipeline对象"></a>Pipeline对象</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">new</span> Pipeline())</span><br><span class="line">     -&gt;send($passable) <span class="comment">// 待处理对象，要经过流水线的对象（比如request对象）</span></span><br><span class="line">     -&gt;through($middlewares) <span class="comment">// 流水线上的各个环节（中间件）</span></span><br><span class="line">     -&gt;via(<span class="string">'handle'</span>) <span class="comment">// 指定每个环节的处理方法，比如 Authenticate::handle</span></span><br><span class="line">     -&gt;then($handler); <span class="comment">// 尽头，最后的处理（返回时，则是源头）</span></span><br></pre></td></tr></table></figure>
-<h3 id="then-方法"><a href="#then-方法" class="headerlink" title="then()方法"></a>then()方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">then</span><span class="params">(Closure $destination)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $pipeline = array_reduce(</span><br><span class="line">        array_reverse(<span class="keyword">$this</span>-&gt;pipes), <span class="keyword">$this</span>-&gt;carry(), <span class="keyword">$this</span>-&gt;prepareDestination($destination)</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> $pipeline(<span class="keyword">$this</span>-&gt;passable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>$this-&gt;pipes 是我们的中间件数组:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">2018</span><span class="number">-01</span><span class="number">-24</span> <span class="number">08</span>:<span class="number">55</span>:<span class="number">58</span>] local.INFO: <span class="keyword">array</span> (</span><br><span class="line">  <span class="number">0</span> =&gt; <span class="string">'App\\Http\\Middleware\\EncryptCookies'</span>,</span><br><span class="line">  <span class="number">1</span> =&gt; <span class="string">'Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse'</span>,</span><br><span class="line">  <span class="number">2</span> =&gt; <span class="string">'Illuminate\\Session\\Middleware\\StartSession'</span>,</span><br><span class="line">  <span class="number">3</span> =&gt; <span class="string">'Illuminate\\View\\Middleware\\ShareErrorsFromSession'</span>,</span><br><span class="line">  <span class="number">4</span> =&gt; <span class="string">'App\\Http\\Middleware\\VerifyCsrfToken'</span>,</span><br><span class="line">  <span class="number">5</span> =&gt; <span class="string">'Illuminate\\Auth\\Middleware\\Authenticate'</span>,</span><br><span class="line">  <span class="number">6</span> =&gt; <span class="string">'Illuminate\\Routing\\Middleware\\SubstituteBindings'</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
-<h3 id="carry-方法"><a href="#carry-方法" class="headerlink" title="carry()方法"></a>carry()方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">carry</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($passable)</span> <span class="title">use</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ($pipe <span class="keyword">instanceof</span> Closure) &#123;</span><br><span class="line">                <span class="comment">// If the pipe is an instance of a Closure, we will just call it directly but</span></span><br><span class="line">                <span class="comment">// otherwise we'll resolve the pipes out of the container and call it with</span></span><br><span class="line">                <span class="comment">// the appropriate method and arguments, returning the results back out.</span></span><br><span class="line">                <span class="keyword">return</span> $pipe($passable, $stack);</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (! is_object($pipe)) &#123;</span><br><span class="line">                <span class="keyword">list</span>($name, $parameters) = <span class="keyword">$this</span>-&gt;parsePipeString($pipe);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// If the pipe is a string we will parse the string and resolve the class out</span></span><br><span class="line">                <span class="comment">// of the dependency injection container. We can then build a callable and</span></span><br><span class="line">                <span class="comment">// execute the pipe function giving in the parameters that are required.</span></span><br><span class="line">                $pipe = <span class="keyword">$this</span>-&gt;getContainer()-&gt;make($name);</span><br><span class="line"></span><br><span class="line">                $parameters = array_merge([$passable, $stack], $parameters);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// If the pipe is already an object we'll just make a callable and pass it to</span></span><br><span class="line">                <span class="comment">// the pipe as-is. There is no need to do any extra parsing and formatting</span></span><br><span class="line">                <span class="comment">// since the object we're given was already a fully instantiated object.</span></span><br><span class="line">                $parameters = [$passable, $stack];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> $pipe-&gt;&#123;<span class="keyword">$this</span>-&gt;method&#125;(...$parameters);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里使用了<code>array_reduce</code>和闭包, 在闭包中判断, 如果是迭代就执行这个迭代.<br><code>$this-&gt;method</code> 这个方法是<code>handle</code>, 也是每次我们需要自定义中间件时需要实现的方法.</p>
-<h3 id="简化说明"><a href="#简化说明" class="headerlink" title="简化说明"></a>简化说明</h3><p>先看下面这段代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$arr = [<span class="string">'AAAA'</span>];</span><br><span class="line"></span><br><span class="line">$res = array_reduce($arr, <span class="function"><span class="keyword">function</span><span class="params">($carry, $item)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($carry, $item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_null($carry)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'Carry IS NULL'</span> . $item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>此时的数组长度为1，并且没有指定初始值, 故仅仅会迭代一次,返回一个闭包 use（$carry = null, $item = ‘AAAA’），当我们执行（$res()）这个闭包时，得到的结果为Carry IS NULLAAAA</p>
-<p>然后我们再看另外一段代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$arr = [<span class="string">'AAAA'</span>, <span class="string">'BBBB'</span>];</span><br><span class="line"></span><br><span class="line">$res = array_reduce($arr, <span class="function"><span class="keyword">function</span><span class="params">($carry, $item)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($carry, $item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_null($carry)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'Carry IS NULL'</span> . $item;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ($carry <span class="keyword">instanceof</span> \Closure) &#123;</span><br><span class="line">            <span class="keyword">return</span> $carry() . $item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>我们新增了一个条件判断，若当前迭代的值是一个闭包，返回该闭包的执行结果。<br>当我们执行这个闭包时，满足$carry instanceof \Closure，得到结果Carry IS NULLAAAABBBB。</p>
-<blockquote>
-<p><a href="https://laravel-china.org/articles/5206/the-use-of-php-built-in-function-array-reduce-in-laravel" target="_blank" rel="noopener">https://laravel-china.org/articles/5206/the-use-of-php-built-in-function-array-reduce-in-laravel</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -871,7 +862,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -881,7 +872,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -959,7 +950,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

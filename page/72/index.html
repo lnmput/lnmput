@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/04/PHP的迭代器/" itemprop="url">
+                  PHP的迭代器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-04T20:55:16+08:00" content="2016-08-04">
+              2016-08-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>最孤独的，不是不能跟一个人在一起，而是根本不知道想跟谁在一起……<br></blockquote>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>PHP5开始支持了接口， 并且内置了<code>Iterator</code>接口， 所以如果你定义了一个类，并实现了<code>Iterator</code>接口，<br>那么你的这个类对象就是<code>ZEND_ITER_OBJECT</code>,否则就是<code>ZEND_ITER_PLAIN_OBJECT</code>.<br>对于<code>ZEND_ITER_PLAIN_OBJEC</code>T的类，foreach会通过HASH_OF获取该对象的默认属性数组，然后对该数组进行foreach.<br>而对于<code>END_ITER_OBJECT</code>的类对象，则会通过调用对象实现的Iterator接口相关函数来进行foreach。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Iterator模式的简单实现类</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sample</span> <span class="keyword">implements</span> <span class="title">Iterator</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_items ;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(&amp;$data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_items = $data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> current(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        next(<span class="keyword">$this</span>-&gt;_items);   </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> key(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        reset(<span class="keyword">$this</span>-&gt;_items);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span><span class="params">()</span> </span>&#123;                                                                              </span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">$this</span>-&gt;current() !== <span class="keyword">FALSE</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/** DEMO */</span></span><br><span class="line">$data = <span class="keyword">array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br><span class="line">$sa = <span class="keyword">new</span> sample($data);</span><br><span class="line"><span class="keyword">foreach</span> ($sa <span class="keyword">AS</span> $key =&gt; $row) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $key, <span class="string">' '</span>, $row, <span class="string">'&lt;br /&gt;'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h3><ul>
+<li>使用返回迭代器的包或库时（如PHP5中的SPL迭代器）</li>
+<li>无法在一次的调用获取容器的所有元素时</li>
+<li>要处理数量巨大的无素时（数据库中的表以GB计的数据）</li>
+<li>……</li>
+</ul>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>一般是使用foreach来使用迭代器，下面整理了一下代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>   </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sample</span> <span class="keyword">implements</span> <span class="title">Iterator</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $_items = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                  ;<span class="comment">//void</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span><span class="params">()</span> </span>&#123; reset(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> current(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> key(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> next(<span class="keyword">$this</span>-&gt;_items); &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> ( <span class="keyword">$this</span>-&gt;current() !== <span class="keyword">false</span> ); &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">$sa = <span class="keyword">new</span> sample();</span><br><span class="line"><span class="keyword">foreach</span>($sa <span class="keyword">as</span> $key =&gt; $val)&#123;</span><br><span class="line">    <span class="keyword">print</span> $key . <span class="string">"=&gt;"</span> .$val;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/04/关于PHP迭代器的一道笔试题/" itemprop="url">
                   关于PHP迭代器的一道笔试题
                 </a>
@@ -663,118 +767,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/28/关于出现php-m和phpinfo不一致的问题/" itemprop="url">
-                  关于出现php-m和phpinfo不一致的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-28T09:44:23+08:00" content="2016-07-28">
-              2016-07-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我前半生最强烈三次心跳，分别发生在上课被老师点名 ，下楼梯一脚踩空， 和你对我微笑的时候！<br></blockquote></p>
-<h3 id="本文系转载"><a href="#本文系转载" class="headerlink" title="本文系转载"></a>本文系转载</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令查看：</span><br><span class="line">php -m</span><br><span class="line">which php</span><br></pre></td></tr></table></figure>
-<p>昨天有个学员私聊我，说他的<code>php -m</code>和在<code>apache</code> 中运行<code>phpinfo</code>不一致(这力默认<code>apache</code>是把<code>php</code>编译成模块的)，譬如模块加载不一致。</p>
-<p>理论上这是不可能的。除非你的PHP做了特别的设置（此处不表，-c参数即可搞定), 默认情况下,两者都是一致的。</p>
-<p>经过我一番询问，发现并没有特别之处。于是我也纳闷了、抑郁了、纠结了。这也引起了我的“执着心”，我很讨厌在这种问题上还能卡住。于是我告诉那位学员，今天不找出原因咱两一起“切腹”。学员弱弱的答应了。。。。</p>
-<p>然而，经过我一步步询问确认（注意：我不帮学员远程调试，这是游戏规则）。终于发现了问题。接下来放出原因，大家可能也会碰到</p>
-<p>1、学员执行的是<code>php -m</code> .并不是类似 <code>/usr/local/php/bin/php -m</code>  这说明他的PHP存在于某个环境变量路径里。</p>
-<p>2、也就是恰恰上面这个原因给忽略了。我们一直始终认为 他的环境变量是正确的。</p>
-<p>3、最后，我让他执行了 重新编译PHP。问题依旧。（此时学员已经有切腹的愿望）</p>
-<p>4、最后，我让它（就是它）执行了 <code>which php</code> .这时发现它的PHP在 <code>/usr/bin</code> 里面。</p>
-<p>5、也就是说不管他怎么编译PHP，最终执行的php -m 的那个PHP可执行程序 永远是定位在 /usr/bin里面的那个老PHP</p>
-<p>6、学员已经忘了怎么操作使之 <code>/usr/bin</code>里也有个PHP</p>
-<p>7、解决方法如下：删掉 <code>/usr/bin</code>里面的那个老PHP 。把环境变量 设置到<code>/usr/local/php/bin</code>里。</p>
-<p>8、再次执行 php -m 一切正常了。</p>
-<p>本次解决问题的结论是：</p>
-<p>  不要相信一些“你认为不可能出错的步骤”。往往有的步骤你觉得“绝对不可能出错”，而问题恰恰就在你最信任的步骤里。 交朋友也是，往往你最最信任的人也是最有可能在关键部分干你一菊花的人。</p>
-<blockquote>
-<p><a href="http://www.hishenyi.com/archives/1095" target="_blank" rel="noopener">http://www.hishenyi.com/archives/1095</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -818,7 +810,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -828,7 +820,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -906,7 +898,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

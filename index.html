@@ -265,6 +265,115 @@
             
               
                 
+                <a class="post-title-link" href="/2021/03/13/导致mysql索引失效的几种写法/" itemprop="url">
+                  导致mysql索引失效的几种写法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2021-03-13T18:06:43+08:00" content="2021-03-13">
+              2021-03-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>人生若只如初见，何事秋风悲画扇<br></blockquote>
+
+<h3 id="使用-或者-lt-gt-导致索引失效"><a href="#使用-或者-lt-gt-导致索引失效" class="headerlink" title="使用!= 或者 &lt;&gt; 导致索引失效"></a>使用!= 或者 &lt;&gt; 导致索引失效</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> <span class="keyword">name</span><span class="string">` != '冰峰';</span></span><br></pre></td></tr></table></figure>
+<p>我们给name字段建立了索引，但是如果!= 或者 &lt;&gt; 这种都会导致索引失效，进行全表扫描，所以如果数据量大的话，谨慎使用</p>
+<h3 id="类型不一致导致的索引失效"><a href="#类型不一致导致的索引失效" class="headerlink" title="类型不一致导致的索引失效"></a>类型不一致导致的索引失效</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span><span class="string">` WHERE height= 175;</span></span><br></pre></td></tr></table></figure>
+<p>height表字段类型是varchar，但是我查询的时候使用了数字类型，因为这个中间存在一个隐式的类型转换，所以就会导致索引失效，进行全表扫描。</p>
+<h3 id="函数导致的索引失效"><a href="#函数导致的索引失效" class="headerlink" title="函数导致的索引失效"></a>函数导致的索引失效</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span><span class="string">` WHERE DATE(create_time) = '2020-09-03';</span></span><br></pre></td></tr></table></figure>
+<p>如果你的索引字段使用了索引，对不起，他是真的不走索引的</p>
+<h3 id="运算符导致的索引失效"><a href="#运算符导致的索引失效" class="headerlink" title="运算符导致的索引失效"></a>运算符导致的索引失效</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span><span class="string">` WHERE age - 1 = 20;</span></span><br></pre></td></tr></table></figure>
+<h3 id="OR引起的索引失效"><a href="#OR引起的索引失效" class="headerlink" title="OR引起的索引失效"></a>OR引起的索引失效</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> <span class="keyword">name</span><span class="string">` = '张三' OR height = '175';</span></span><br></pre></td></tr></table></figure>
+<p>OR导致索引是在特定情况下的，并不是所有的OR都是使索引失效，如果OR连接的是同一个字段，那么索引不会失效，反之索引失效。</p>
+<h3 id="模糊搜索导致的索引失效"><a href="#模糊搜索导致的索引失效" class="headerlink" title="模糊搜索导致的索引失效"></a>模糊搜索导致的索引失效</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> s.* <span class="keyword">FROM</span> <span class="keyword">user</span> s <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span> u <span class="keyword">WHERE</span> u.name = s.name <span class="keyword">AND</span> u.name<span class="string">` = '冰峰')</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">SELECT * FROM user WHERE name`</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="string">'冰峰'</span>);</span><br></pre></td></tr></table></figure>
+<p>这两种用法，也将使索引失效。但是NOT IN 还是走索引的，千万不要误解为 IN 全部是不走索引的。</p>
+<blockquote>
+<p><a href="https://segmentfault.com/a/1190000023911554" target="_blank" rel="noopener">https://segmentfault.com/a/1190000023911554</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/12/18/chromedriver安装/" itemprop="url">
                   chromedriver安装
                 </a>
@@ -669,133 +778,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/08/17/nginx的location匹配/" itemprop="url">
-                  nginx的location匹配
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-08-17T18:05:36+08:00" content="2020-08-17">
-              2020-08-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>人心本無染，心靜自然清。<br></blockquote>
-
-<h3 id="语法规则"><a href="#语法规则" class="headerlink" title="语法规则"></a>语法规则</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>语法规则很简单，一个location关键字，后面跟着可选的修饰符，后面是要匹配的字符，花括号中是要执行的操作。</p>
-<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a>修饰符</h3><ul>
-<li>= 表示精确匹配。只有请求的url路径与后面的字符串完全相等时，才会命中。</li>
-<li>~ 表示该规则是使用正则定义的，区分大小写。</li>
-<li>~* 表示该规则是使用正则定义的，不区分大小写。</li>
-<li>^~ 表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找。</li>
-</ul>
-<h3 id="匹配过程"><a href="#匹配过程" class="headerlink" title="匹配过程"></a>匹配过程</h3><p>对请求的url序列化。例如，对%xx等字符进行解码，去除url中多个相连的/，解析url中的.，..等。这一步是匹配的前置工作。</p>
-<p>location有两种表示形式，一种是使用前缀字符，一种是使用正则。如果是正则的话，前面有<code>~</code>或<code>~*</code>修饰符。</p>
-<p>具体的匹配过程如下：</p>
-<p>首先先检查使用前缀字符定义的location，选择最长匹配的项并记录下来。</p>
-<p>如果找到了精确匹配的location，也就是使用了=修饰符的location，结束查找，使用它的配置。</p>
-<p>然后按顺序查找使用正则定义的location，如果匹配则停止查找，使用它定义的配置。</p>
-<p>如果没有匹配的正则location，则使用前面记录的最长匹配前缀字符location。</p>
-<p>基于以上的匹配过程，我们可以得到以下两点启示：</p>
-<p>使用正则定义的location在配置文件中出现的顺序很重要。因为找到第一个匹配的正则后，查找就停止了，后面定义的正则就是再匹配也没有机会了。<br>使用精确匹配可以提高查找的速度。例如经常请求/的话，可以使用=来定义location。</p>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">location = / &#123;</span><br><span class="line">    [ configuration A ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location / &#123;</span><br><span class="line">    [ configuration B ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location /user/ &#123;</span><br><span class="line">    [ configuration C ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ^~ /images/ &#123;</span><br><span class="line">    [ configuration D ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line">    [ configuration E ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>请求/精准匹配A，不再往下查找。</p>
-<p>请求/index.html匹配B。首先查找匹配的前缀字符，找到最长匹配是配置B，接着又按照顺序查找匹配的正则。结果没有找到，因此使用先前标记的最长匹配，即配置B。</p>
-<p>请求/user/index.html匹配C。首先找到最长匹配C，由于后面没有匹配的正则，所以使用最长匹配C。<br>请求/user/1.jpg匹配E。首先进行前缀字符的查找，找到最长匹配项C，继续进行正则查找，找到匹配项E。因此使用E。</p>
-<p>请求/images/1.jpg匹配D。首先进行前缀字符的查找，找到最长匹配D。但是，特殊的是它使用了<code>^~</code>修饰符，不再进行接下来的正则的匹配查找，因此使用D。这里，如果没有前面的修饰符，其实最终的匹配是E。大家可以想一想为什么。</p>
-<p>请求/documents/about.html匹配B。因为B表示任何以/开头的URL都匹配。在上面的配置中，只有B能满足，所以匹配B。</p>
-<h3 id="location-name的用法"><a href="#location-name的用法" class="headerlink" title="location @name的用法"></a>location @name的用法</h3><p>@用来定义一个命名location。主要用于内部重定向，不能用来处理正常的请求。其用法如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    try_files $uri $uri/ @custom</span><br><span class="line">&#125;</span><br><span class="line">location @custom &#123;</span><br><span class="line">    <span class="comment"># ...do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上例中，当尝试访问url找不到对应的文件就重定向到我们自定义的命名location（此处为custom）。</p>
-<p>值得注意的是，命名location中不能再嵌套其它的命名location。</p>
-<h3 id="URL尾部的-需不需要"><a href="#URL尾部的-需不需要" class="headerlink" title="URL尾部的/需不需要"></a>URL尾部的/需不需要</h3><ul>
-<li>location中的字符有没有/都没有影响。也就是说/user/和/user是一样的。</li>
-<li>如果URL结构是<a href="https://domain.com/的形式，尾部有没有/都不会造成重定向。因为浏览器在发起请求的时候，默认加上了/。虽然很多浏览器在地址栏里也不会显示/。这一点，可以访问baidu验证一下。" target="_blank" rel="noopener">https://domain.com/的形式，尾部有没有/都不会造成重定向。因为浏览器在发起请求的时候，默认加上了/。虽然很多浏览器在地址栏里也不会显示/。这一点，可以访问baidu验证一下。</a></li>
-<li>如果URL的结构是<a href="https://domain.com/some-dir/。尾部如果缺少/将导致重定向。因为根据约定，URL尾部的/表示目录，没有/表示文件。所以访问/some-dir/时，服务器会自动去该目录下找对应的默认文件。如果访问/some-dir的话，服务器会先去找some-dir文件，找不到的话会将some-dir当成目录，重定向到/some-dir/，去该目录下找默认文件。可以去测试一下你的网站是不是这样的。" target="_blank" rel="noopener">https://domain.com/some-dir/。尾部如果缺少/将导致重定向。因为根据约定，URL尾部的/表示目录，没有/表示文件。所以访问/some-dir/时，服务器会自动去该目录下找对应的默认文件。如果访问/some-dir的话，服务器会先去找some-dir文件，找不到的话会将some-dir当成目录，重定向到/some-dir/，去该目录下找默认文件。可以去测试一下你的网站是不是这样的。</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -839,7 +821,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -849,7 +831,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -927,7 +909,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

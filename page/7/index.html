@@ -265,6 +265,116 @@
             
               
                 
+                <a class="post-title-link" href="/2019/10/16/go语言中的接口/" itemprop="url">
+                  Go语言中的接口
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-10-16T15:53:00+08:00" content="2019-10-16">
+              2019-10-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>世界上最廉价的东西就是男人一事无成时的温柔。<br></blockquote>
+
+<p>Go 语言也提供了接口类型，使得我们可以面向接口编程，将实现和接口分离。在我看来，软件的抽象之美也应该以此来表达，和 Java 语言不同的是 Go 并不是那么 “强制”，它使用了一种 鸭子类型 的方式让动态类型成为可能。</p>
+<h3 id="Duck-Typing"><a href="#Duck-Typing" class="headerlink" title="Duck Typing"></a>Duck Typing</h3><p>在 Go 中没有 implements 和 extends 这种关键字，这对我们而言反倒轻松了一些，它认为 Go 的接口就像鸭子测试里的描述：</p>
+<blockquote>
+<p>当看到一只鸟走起来像鸭子、游泳起来像鸭子、叫起来也像鸭子，那么这只鸟就可以被称为鸭子。</p>
+</blockquote>
+<p>在鸭子类型中，关注点在于对象的行为，能作什么；而不是关注对象所属的类型。例如，在不使用鸭子类型的语言中，我们可以编写一个函数，它接受一个类型为 “鸭子” 的对象，并调用它的 “走” 和 “叫” 方法。</p>
+<p>在使用鸭子类型的语言中，这样的一个函数可以接受一个任意类型的对象，并调用它的 “走” 和 “叫” 方法。如果这些需要被调用的方法不存在，那么将引发一个运行时错误。</p>
+<p>任何拥有这样的正确的 “走” 和 “叫” 方法的对象都可被函数接受的这种行为引出了以上表述，这种决定类型的方式因此得名。</p>
+<h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><p>我们用 Go 语言来实现一个鸭子类型：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Duck <span class="keyword">interface</span> &#123;</span><br><span class="line">    Swim()    <span class="comment">// 游泳</span></span><br><span class="line">    Feathers() <span class="comment">// 羽毛</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里使用 Go 提供的 interface 关键字定义了一个鸭子接口类型，这个接口中提供了鸭子的两种行为：游泳和羽毛是什么样的，但是没有提供实现。</p>
+<h3 id="组合接口"><a href="#组合接口" class="headerlink" title="组合接口"></a>组合接口</h3><p>现在我们给鸭子再添加一种嘎嘎叫的能力，一种方式是在原有的接口上添加 “嘎嘎叫” 方法，这样做的话就表示所有的鸭子都应该拥有此能力，假设我们的玩具鸭并不能开口嘎嘎叫，所以它没有这种能力。这时候我们可以将会嘎嘎叫的鸭子单独定义一种类型，在 Go 可以使用组合的方式来实现：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> QuackDuck <span class="keyword">interface</span> &#123;</span><br><span class="line">    Quack()  <span class="comment">// 嘎嘎叫</span></span><br><span class="line">    Duck     <span class="comment">// 嵌入接口</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>样 QuackDuck 类型就拥有了之前 Duck 提供的两种抽象能力，同时还应该拥有嘎嘎叫的能力。</p>
+<h3 id="接口实现"><a href="#接口实现" class="headerlink" title="接口实现"></a>接口实现</h3><p>前面我们只给出了鸭子的能力定义，还没有任何实现，由于 Go 中没有继承和实现的关键字，想成为上述接口的实现非常简单，只要实现它们定义的方法就可以了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RealDuck - 真正的鸭子</span></span><br><span class="line"><span class="keyword">type</span> RealDuck <span class="keyword">struct</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(RealDuck)</span> <span class="title">Swim</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"用鸭璞向后划水"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(RealDuck)</span> <span class="title">Feathers</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"遇到水也不会湿的羽毛"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(RealDuck)</span> <span class="title">Quack</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"嘎~ 嘎~ 嘎~"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ToyDuck - 玩具鸭</span></span><br><span class="line"><span class="keyword">type</span> ToyDuck <span class="keyword">struct</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ToyDuck)</span> <span class="title">Swim</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"以固定的速度向前移动"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ToyDuck)</span> <span class="title">Feathers</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"白色的固定的塑料羽毛"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="接口使用"><a href="#接口使用" class="headerlink" title="接口使用"></a>接口使用</h3><p>接下来我们可以使用一下这个类型了：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> duck Duck</span><br><span class="line">duck = ToyDuck&#123;&#125;</span><br><span class="line">duck.Swim()</span><br><span class="line">duck.Feathers()</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/10/05/go语言中什么时候使用指针/" itemprop="url">
                   Go语言中什么时候使用指针
                 </a>
@@ -714,104 +824,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/06/05/laravel大量数据库查询导致php进程内存耗尽/" itemprop="url">
-                  Laravel大量数据库查询导致php进程内存耗尽
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-06-05T12:39:26+08:00" content="2019-06-05">
-              2019-06-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>行路难，不在水，不在山，只在人情反覆间<br></blockquote>
-
-<p>Laravel框架默认存储每次请求(每次命令行执行也相当于一次请求)的所有数据库查询语句！！！<br>在普通的http中数据库请求语句并不多，所有不会导致问题，但是需要大量数据库查询的命令行工具就显然不能这么干，</p>
-<h3 id="禁用query日志"><a href="#禁用query日志" class="headerlink" title="禁用query日志"></a>禁用query日志</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DB::connection()-&gt;disableQueryLog();  <span class="comment">//禁用query log</span></span><br></pre></td></tr></table></figure>
-<h3 id="打印sql"><a href="#打印sql" class="headerlink" title="打印sql"></a>打印sql</h3><p>在 <code>AppServiceProvider.php</code> 的 boot 方法中添加如下内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (env(<span class="string">'APP_ENV'</span>) === <span class="string">'local'</span>) &#123;</span><br><span class="line">        DB::connection()-&gt;enableQueryLog();</span><br><span class="line">        Event::listen(<span class="string">'kernel.handled'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($request, $response)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ( $request-&gt;has(<span class="string">'sql-debug'</span>) ) &#123;</span><br><span class="line">                $queries = DB::getQueryLog();</span><br><span class="line">                dd($queries);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -855,7 +867,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -865,7 +877,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -943,7 +955,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -265,6 +265,102 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/07/计算PHP脚本的执行时间/" itemprop="url">
+                  计算PHP脚本的执行时间
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-07T22:31:52+08:00" content="2017-08-07">
+              2017-08-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>你我之间本无缘分，全靠我死撑<br></blockquote></p>
+<h3 id="sleep-与usleep-的区别"><a href="#sleep-与usleep-的区别" class="headerlink" title="sleep()与usleep()的区别"></a>sleep()与usleep()的区别</h3><p>sleep()是暂停多少秒<br>usleep()是暂停多少微秒<br>注意：usleep()单位是微秒，1秒 = 1000毫秒 ，1毫秒 = 1000微秒，即1微秒等于百万分之一秒。</p>
+<h3 id="microtime"><a href="#microtime" class="headerlink" title="microtime"></a>microtime</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$start = microtime(<span class="keyword">true</span>);</span><br><span class="line">sleep(<span class="number">2</span>);</span><br><span class="line">$end = microtime(<span class="keyword">true</span>);</span><br><span class="line">$execution_time = number_format($end-$start, <span class="number">2</span>); <span class="comment">// 单位秒</span></span><br></pre></td></tr></table></figure>
+<h3 id="文件修改时间"><a href="#文件修改时间" class="headerlink" title="文件修改时间"></a>文件修改时间</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$updateTime = filemtime($tokenPath);</span><br><span class="line">$nowTime = microtime(<span class="keyword">true</span>);</span><br><span class="line">$diffTime = round($nowTime - $updateTime);</span><br><span class="line"><span class="keyword">if</span> ($diffTime &lt; <span class="number">7000</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> file_get_contents($tokenPath);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/07/移动端ui框架推荐/" itemprop="url">
                   移动端ui框架推荐
                 </a>
@@ -642,108 +738,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/03/使用DomCrawler批量本地化淘宝天猫详情图/" itemprop="url">
-                  使用DomCrawler批量本地化淘宝天猫详情图
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-03T10:21:43+08:00" content="2017-08-03">
-              2017-08-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>你没有变强是因为你一直很舒服。<br></blockquote></p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> symfony/dom-crawler</span><br></pre></td></tr></table></figure>
-<h3 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// october cms</span></span><br><span class="line">$crawler = <span class="keyword">new</span> Crawler($content);</span><br><span class="line">$crawler-&gt;filter(<span class="string">'img'</span>)-&gt;each(<span class="function"><span class="keyword">function</span> <span class="params">(Crawler $node)</span> <span class="title">use</span><span class="params">($pid)</span> </span>&#123;</span><br><span class="line">    $sourceSrc = explode(<span class="string">'?'</span>,$node-&gt;attr(<span class="string">'src'</span>))[<span class="number">0</span>];</span><br><span class="line">    $sourceSrc = str_replace(<span class="string">'https'</span>, <span class="string">'http'</span>, $sourceSrc);</span><br><span class="line">    <span class="keyword">if</span> (!starts_with($sourceSrc, <span class="string">'http'</span>)) &#123;</span><br><span class="line">        $sourceSrc = <span class="string">"http:"</span>.$sourceSrc;</span><br><span class="line">    &#125;</span><br><span class="line">    $imageManager = <span class="keyword">new</span> ImageManager([<span class="string">'driver'</span> =&gt; <span class="string">'gd'</span>]);</span><br><span class="line">    $temPath = storage_path() . <span class="string">'/temp/'</span> .time().basename($sourceSrc);</span><br><span class="line">    $imageManager-&gt;make($sourceSrc)-&gt;save($temPath);</span><br><span class="line">    $attachment_type = <span class="string">'Jason\Ccmall\Models\Product'</span>;</span><br><span class="line">    $productImage = <span class="keyword">new</span> File();</span><br><span class="line">    $productImage-&gt;data = $temPath;</span><br><span class="line">    $productImage-&gt;field = <span class="string">'content'</span>;</span><br><span class="line">    $productImage-&gt;attachment_id = $pid;</span><br><span class="line">    $productImage-&gt;attachment_type = $attachment_type;</span><br><span class="line">    $productImage-&gt;save();</span><br><span class="line">    $node-&gt;getNode(<span class="number">0</span>)-&gt;setAttribute(<span class="string">'src'</span>, $productImage-&gt;path);</span><br><span class="line">    @unlink($temPath);</span><br><span class="line">&#125;);</span><br><span class="line">$html = $crawler-&gt;html();</span><br><span class="line">Product::query()-&gt;where(<span class="string">'id'</span>, $pid)-&gt;update([</span><br><span class="line">    <span class="string">'content'</span> =&gt; $html</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
-<h3 id="实例一"><a href="#实例一" class="headerlink" title="实例一"></a>实例一</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">DomCrawler</span>\<span class="title">Crawler</span>;</span><br><span class="line"></span><br><span class="line">$html = <span class="string">&lt;&lt;&lt;'HTML'</span></span><br><span class="line"><span class="string">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="string">&lt;html&gt;</span></span><br><span class="line"><span class="string">    &lt;body&gt;</span></span><br><span class="line"><span class="string">        &lt;p class="message"&gt;Hello World!&lt;/p&gt;</span></span><br><span class="line"><span class="string">        &lt;p&gt;Hello Crawler!&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br><span class="line"><span class="string">HTML;</span></span><br><span class="line"></span><br><span class="line">$crawler = <span class="keyword">new</span> Crawler($html);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> ($crawler <span class="keyword">as</span> $domElement) &#123;</span><br><span class="line">    var_dump($domElement-&gt;nodeName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="实例二"><a href="#实例二" class="headerlink" title="实例二"></a>实例二</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$crawler = <span class="keyword">new</span> Crawler(<span class="string">'&lt;html&gt;&lt;body /&gt;&lt;/html&gt;'</span>);</span><br><span class="line"></span><br><span class="line">$crawler-&gt;addHtmlContent(<span class="string">'&lt;html&gt;&lt;body /&gt;&lt;/html&gt;'</span>);</span><br><span class="line">$crawler-&gt;addXmlContent(<span class="string">'&lt;root&gt;&lt;node /&gt;&lt;/root&gt;'</span>);</span><br><span class="line"></span><br><span class="line">$crawler-&gt;addContent(<span class="string">'&lt;html&gt;&lt;body /&gt;&lt;/html&gt;'</span>);</span><br><span class="line">$crawler-&gt;addContent(<span class="string">'&lt;root&gt;&lt;node /&gt;&lt;/root&gt;'</span>, <span class="string">'text/xml'</span>);</span><br><span class="line"></span><br><span class="line">$crawler-&gt;add(<span class="string">'&lt;html&gt;&lt;body /&gt;&lt;/html&gt;'</span>);</span><br><span class="line">$crawler-&gt;add(<span class="string">'&lt;root&gt;&lt;node /&gt;&lt;/root&gt;'</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="实例三"><a href="#实例三" class="headerlink" title="实例三"></a>实例三</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$imagesCrawler = $crawler-&gt;selectImage(<span class="string">'Kitten'</span>);</span><br><span class="line">$image = $imagesCrawler-&gt;image();</span><br><span class="line"></span><br><span class="line"><span class="comment">// or do this all at once</span></span><br><span class="line">$image = $crawler-&gt;selectImage(<span class="string">'Kitten'</span>)-&gt;image();</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://symfony.com/doc/current/components/dom_crawler.html" target="_blank" rel="noopener">https://symfony.com/doc/current/components/dom_crawler.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -787,7 +781,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -797,7 +791,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -875,7 +869,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

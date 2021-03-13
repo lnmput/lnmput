@@ -265,6 +265,102 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/27/上传文件出现httpcode413错误/" itemprop="url">
+                  上传文件出现httpcode413错误
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-27T15:10:55+08:00" content="2017-12-27">
+              2017-12-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>世人谓我恋长安，其实只恋长安某。<br></blockquote><br>在使用curl上传POST一段数据时，被提示413 Request Entity Too Large，应该是nginx限制了上传数据的大小。<br>解决方法就是:<br>打开nginx主配置文件<code>nginx.conf</code>，一般在<code>/usr/local/nginx/conf/nginx.conf</code>这个位置，找到<code>http{}</code>段，修改或者添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client_max_body_size <span class="number">2</span>m;</span><br></pre></td></tr></table></figure></p>
+<p>然后重启nginx，<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/nginxd reload</span><br></pre></td></tr></table></figure></p>
+<p>即可。<br>要是以php运行的话，这个大小<code>client_max_body_size</code>要和<code>php.ini</code>中的如下值的最大值差不多或者稍大，这样就不会因为提交数据大小不一致出现错误。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">post_max_size = <span class="number">2</span>M</span><br><span class="line">upload_max_filesize = <span class="number">2</span>M</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/12/14/chrome新标签页/" itemprop="url">
                   chrome新标签页
                 </a>
@@ -663,109 +759,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/12/12/使用javascript生成条形码/" itemprop="url">
-                  使用javascript生成条形码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-12T19:06:03+08:00" content="2017-12-12">
-              2017-12-12
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>疼痛是不能见人的<br></blockquote>
-
-<h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>注意要引入在页面底部<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"JsBarcode.all.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">id</span>=<span class="string">"barcode"</span>&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JsBarcode(<span class="string">"#barcode"</span>, <span class="string">"Hi world!"</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="简单配置"><a href="#简单配置" class="headerlink" title="简单配置"></a>简单配置</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Option  	         Default value   	        Type</span><br><span class="line">format			 <span class="string">"auto"</span> (CODE128)	        <span class="built_in">String</span></span><br><span class="line">width	   		 <span class="number">2</span>			        <span class="built_in">Number</span></span><br><span class="line">height	  		 <span class="number">100</span>				<span class="built_in">Number</span></span><br><span class="line">displayValue	         <span class="literal">true</span>				<span class="built_in">Boolean</span></span><br><span class="line">fontOptions		 <span class="string">""</span>			        <span class="built_in">String</span></span><br><span class="line">font			 <span class="string">"monospace"</span>	         	<span class="built_in">String</span></span><br><span class="line">textAlign		 <span class="string">"center"</span>			<span class="built_in">String</span></span><br><span class="line">textPosition	         <span class="string">"bottom"</span>			<span class="built_in">String</span></span><br><span class="line">textMargin		 <span class="number">2</span>		                <span class="built_in">Number</span></span><br><span class="line">fontSize		 <span class="number">20</span>		                <span class="built_in">Number</span></span><br><span class="line">background		 <span class="string">"#ffffff"</span>			<span class="built_in">String</span> (CSS color)</span><br><span class="line">lineColor		 <span class="string">"#000000"</span>			<span class="built_in">String</span> (CSS color)</span><br><span class="line">margin		         <span class="number">10</span>				<span class="built_in">Number</span></span><br><span class="line">marginTop		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">marginBottom		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">marginLeft		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">marginRight		 <span class="literal">undefined</span>			<span class="built_in">Number</span></span><br><span class="line">valid			 <span class="function"><span class="keyword">function</span>(<span class="params">valid</span>)</span>&#123;&#125;	        <span class="built_in">Function</span></span><br></pre></td></tr></table></figure>
-<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">@foreach($qrcodes as $qrcode)</span><br><span class="line">    <span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"barcode"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-format</span>=<span class="string">"code128"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-value</span>=<span class="string">"&#123;&#123; $qrcode[1] &#125;&#125;"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-textmargin</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">jsbarcode-fontoptions</span>=<span class="string">"bold"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br><span class="line">@endforeach</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    JsBarcode(<span class="string">".barcode"</span>).init();</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://lindell.me/JsBarcode/" target="_blank" rel="noopener">http://lindell.me/JsBarcode/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -809,7 +802,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -819,7 +812,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -897,7 +890,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

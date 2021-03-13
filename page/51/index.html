@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/27/Mysql常用日期函数/" itemprop="url">
+                  Mysql常用日期函数
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-27T11:02:34+08:00" content="2017-07-27">
+              2017-07-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>身不饥寒，天未曾负我；学无长进，我何以对天<br></blockquote>
+
+<h3 id="获得当前日期-时间"><a href="#获得当前日期-时间" class="headerlink" title="获得当前日期+时间"></a>获得当前日期+时间</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select now();</span><br><span class="line">mysql&gt; select sysdate();</span><br></pre></td></tr></table></figure>
+<p>不同之处在于：now() 在执行开始时值就得到了， sysdate() 在函数执行时动态得到值。</p>
+<h3 id="获得当前日期"><a href="#获得当前日期" class="headerlink" title="获得当前日期"></a>获得当前日期</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select curdate();</span><br></pre></td></tr></table></figure>
+<h3 id="获得当前时间"><a href="#获得当前时间" class="headerlink" title="获得当前时间"></a>获得当前时间</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select curtime();</span><br></pre></td></tr></table></figure>
+<h3 id="获得当前-UTC-日期时间函数"><a href="#获得当前-UTC-日期时间函数" class="headerlink" title="获得当前 UTC 日期时间函数"></a>获得当前 UTC 日期时间函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select utc_timestamp(), utc_date(), utc_time(), now()</span><br></pre></td></tr></table></figure>
+<h3 id="MySQL-为日期增加一个时间间隔"><a href="#MySQL-为日期增加一个时间间隔" class="headerlink" title="MySQL 为日期增加一个时间间隔"></a>MySQL 为日期增加一个时间间隔</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">set @dt = now();</span><br><span class="line">select date_add(@dt, interval 1 day); -- add 1 day</span><br><span class="line">select date_add(@dt, interval 1 hour); -- add 1 hour</span><br><span class="line">select date_add(@dt, interval 1 minute); -- ...</span><br><span class="line">select date_add(@dt, interval 1 second);</span><br><span class="line">select date_add(@dt, interval 1 microsecond);</span><br><span class="line">select date_add(@dt, interval 1 week);</span><br><span class="line">select date_add(@dt, interval 1 month);</span><br><span class="line">select date_add(@dt, interval 1 quarter);</span><br><span class="line">select date_add(@dt, interval 1 year);</span><br><span class="line">select date_add(@dt, interval -1 day); -- sub 1 day</span><br></pre></td></tr></table></figure>
+<h3 id="MySQL-为日期减去一个时间间隔"><a href="#MySQL-为日期减去一个时间间隔" class="headerlink" title="MySQL 为日期减去一个时间间隔"></a>MySQL 为日期减去一个时间间隔</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select date_sub(&apos;1998-01-01 00:00:00&apos;, interval &apos;1 1:1:1&apos; day_second);</span><br></pre></td></tr></table></figure>
+<h3 id="DATE-函数返回日期或日期-时间表达式的日期部分"><a href="#DATE-函数返回日期或日期-时间表达式的日期部分" class="headerlink" title="DATE() 函数返回日期或日期/时间表达式的日期部分"></a>DATE() 函数返回日期或日期/时间表达式的日期部分</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DATE(date)</span><br></pre></td></tr></table></figure>
+<h3 id="前一天"><a href="#前一天" class="headerlink" title="前一天"></a>前一天</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date_sub(curdate(),interval 1 day);</span><br></pre></td></tr></table></figure>
+<h3 id="统计日期"><a href="#统计日期" class="headerlink" title="统计日期"></a>统计日期</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span>  <span class="built_in">DATE</span>(updated_at) <span class="keyword">AS</span> dd, <span class="keyword">COUNT</span>(*) <span class="keyword">FROM</span> m_shells <span class="keyword">GROUP</span> <span class="keyword">BY</span> dd</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/27/Mysql索引理解/" itemprop="url">
                   Mysql索引理解
                 </a>
@@ -659,110 +763,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/24/PHP-cURL多线程模拟并发请求/" itemprop="url">
-                  PHP-cURL多线程模拟并发请求
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-24T19:58:49+08:00" content="2017-07-24">
-              2017-07-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>钱是买不到幸福的, 因为他本身就是幸福<br></blockquote>
-
-<h3 id="PHP-cURL所有函数列表："><a href="#PHP-cURL所有函数列表：" class="headerlink" title="PHP cURL所有函数列表："></a>PHP cURL所有函数列表：</h3><p><a href="http://php.net/manual/zh/ref.curl.php]http://php.net/manual/zh/ref.curl.php" target="_blank" rel="noopener">http://php.net/manual/zh/ref.curl.php]http://php.net/manual/zh/ref.curl.php</a></p>
-<p>以下是PHP中cURL多线程相关函数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">curl_multi_add_handle — 向curl批处理会话中添加单独的curl句柄</span><br><span class="line">curl_multi_close — 关闭一组cURL句柄</span><br><span class="line">curl_multi_exec — 运行当前 cURL 句柄的子连接</span><br><span class="line">curl_multi_getcontent — 如果设置了CURLOPT_RETURNTRANSFER，则返回获取的输出的文本流</span><br><span class="line">curl_multi_info_read — 获取当前解析的cURL的相关传输信息</span><br><span class="line">curl_multi_init — 返回一个新cURL批处理句柄</span><br><span class="line">curl_multi_remove_handle — 移除curl批处理句柄资源中的某个句柄资源</span><br><span class="line">curl_multi_select — 等待所有cURL批处理中的活动连接</span><br><span class="line">curl_multi_setopt — 为 cURL 并行处理设置一个选项</span><br><span class="line">curl_multi_strerror — <span class="keyword">Return</span> string describing error code</span><br></pre></td></tr></table></figure></p>
-<p>一般来说，想到要用这些函数时，目的显然应该是要同时请求多个URL，而不是一个一个依次请求，否则不如自己循环去调curl_exec好了。</p>
-<p>步骤总结如下：</p>
-<p>1、调用curl_multi_init，初始化一个批处理handle<br>2、循环调用 curl_multi_add_handle，往1中的批处理handle 添加curl_init来的子handle<br>3、持续调用 curl_multi_exec，直到所有子handle执行完毕。<br>4、根据需要循环调用 curl_multi_getcontent 获取结果<br>5、调用 curl_multi_remove_handle，并为每个字handle调用curl_close<br>6、调用 curl_multi_close</p>
-<p>以下是一个通过并发请求抓取网页的demo：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$urls = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'https://979137.com/'</span>,</span><br><span class="line">    <span class="string">'http://www.sina.com.cn/'</span>,</span><br><span class="line">    <span class="string">'http://www.sohu.com/'</span>,</span><br><span class="line">    <span class="string">'http://www.163.com/'</span></span><br><span class="line">);   </span><br><span class="line"><span class="comment">//1、初始化一个批处理handle</span></span><br><span class="line">$mh = curl_multi_init();</span><br><span class="line"> </span><br><span class="line"><span class="comment">//2、往批处理handle 添加curl_init来的子handle</span></span><br><span class="line"><span class="keyword">foreach</span> ($urls <span class="keyword">as</span> $i =&gt; $url) &#123;   </span><br><span class="line">    $conn[$i] = curl_init($url);   </span><br><span class="line">    curl_setopt($conn[$i], CURLOPT_HEADER, <span class="number">0</span>);   </span><br><span class="line">    curl_setopt($conn[$i], CURLOPT_CONNECTTIMEOUT, <span class="number">60</span>);   </span><br><span class="line">    curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>);  </span><br><span class="line">    curl_multi_add_handle($mh, $conn[$i]);   </span><br><span class="line">&#125;   </span><br><span class="line"></span><br><span class="line"><span class="comment">//3、并发执行，直到全部结束。</span></span><br><span class="line"><span class="keyword">do</span> &#123;   </span><br><span class="line">    curl_multi_exec($mh, $active);   </span><br><span class="line">&#125; <span class="keyword">while</span> ($active);   </span><br><span class="line"> </span><br><span class="line"><span class="comment">//4、获取结果</span></span><br><span class="line"><span class="keyword">foreach</span> ($urls <span class="keyword">as</span> $i =&gt; $url) &#123;   </span><br><span class="line">    $data = curl_multi_getcontent($conn[$i]);</span><br><span class="line">    <span class="keyword">echo</span> ($data);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;hr /&gt;'</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//5、移除子handle，并close子handle</span></span><br><span class="line"><span class="keyword">foreach</span> ($urls <span class="keyword">as</span> $i =&gt; $url) &#123;   </span><br><span class="line">  curl_multi_remove_handle($mh,$conn[$i]);   </span><br><span class="line">  curl_close($conn[$i]);   </span><br><span class="line">&#125;   </span><br><span class="line"> </span><br><span class="line"><span class="comment">//6、关闭批处理handle</span></span><br><span class="line">curl_multi_close($mh);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://979137.com/archives/133.html" target="_blank" rel="noopener">https://979137.com/archives/133.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -806,7 +806,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -816,7 +816,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -894,7 +894,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

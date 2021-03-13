@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2017/06/08/WebWorker通信/" itemprop="url">
+                  WebWorker通信
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-08T09:37:06+08:00" content="2017-06-08">
+              2017-06-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>生活就是这样，<br>在你最糟的时候，会遇到最好的人。<br></blockquote>
+
+<h3 id="Web-Worker是什么"><a href="#Web-Worker是什么" class="headerlink" title="Web Worker是什么"></a>Web Worker是什么</h3><p>Web Worker 是HTML5标准的一部分，这一规范定义了一套 API，它允许一段JavaScript程序运行在主线程之外的另外一个线程中。Web Worker 规范中定义了两类工作线程，分别是专用线程Dedicated Worker和共享线程 Shared Worker，其中，Dedicated Worker只能为一个页面所使用，而Shared Worker则可以被多个页面所共享，本文示例为专用线程Dedicated Worker。<br>web worker 是运行在后台的 JavaScript，不会影响页面的性能。</p>
+<h3 id="例子一-简单通信"><a href="#例子一-简单通信" class="headerlink" title="例子一: 简单通信"></a>例子一: 简单通信</h3><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/socket.io/1.7.2/socket.io.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">"task.js"</span>);</span></span><br><span class="line">worker.postMessage(</span><br><span class="line">        &#123;</span><br><span class="line">id:1,</span><br><span class="line"><span class="javascript">msg:<span class="string">'Hello World'</span></span></span><br><span class="line">&#125;</span><br><span class="line">    );</span><br><span class="line"><span class="javascript">worker.onmessage=<span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data = message.data;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(data));</span></span><br><span class="line">worker.terminate();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="javascript">worker.onerror=<span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(error.filename,error.lineno,error.message);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>task.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">onmessage= <span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span><br><span class="line"><span class="keyword">var</span> data=message.data;</span><br><span class="line">data.msg = <span class="string">'Hi from task.js'</span>;</span><br><span class="line">postMessage(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="例子二-计数功能"><a href="#例子二-计数功能" class="headerlink" title="例子二: 计数功能"></a>例子二: 计数功能</h3><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">"task.js"</span>);</span></span><br><span class="line"><span class="javascript">worker.onmessage=<span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data = message.data;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(data));</span></span><br><span class="line"><span class="javascript"><span class="comment">//终止woker</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">//worker.terminate();</span></span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="javascript">worker.onerror=<span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(error.filename,error.lineno,error.message);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>task.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedCount</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">i=i+<span class="number">1</span>;</span><br><span class="line">postMessage(i);</span><br><span class="line">setTimeout(<span class="string">"timedCount()"</span>,<span class="number">500</span>);</span><br><span class="line">&#125;</span><br><span class="line">timedCount();</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/05/31/增广贤文/" itemprop="url">
                   增广贤文
                 </a>
@@ -634,108 +734,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/10/php和python中的正则表达式/" itemprop="url">
-                  php和python中的正则表达式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-10T15:10:33+08:00" content="2017-05-10">
-              2017-05-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>现在的孩子越来越早熟才炖了5分钟就烂了<br></blockquote></p>
-<h2 id="php"><a href="#php" class="headerlink" title="php"></a>php</h2><h3 id="preg-match"><a href="#preg-match" class="headerlink" title="preg_match"></a>preg_match</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$str = <span class="string">'&lt;a&gt;&lt;b&gt;&lt;c&gt;'</span>;</span><br><span class="line">preg_match(<span class="string">"/&lt;(\w)+&gt;/"</span>, $str, $abc);</span><br><span class="line">dd($abc);</span><br></pre></td></tr></table></figure>
-<p>结果: <code>[&#39;&lt;a&gt;&#39;, &#39;a&#39;]</code></p>
-<h3 id="preg-match-all"><a href="#preg-match-all" class="headerlink" title="preg_match_all"></a>preg_match_all</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$str = <span class="string">'&lt;a&gt;&lt;b&gt;&lt;c&gt;'</span>;</span><br><span class="line">preg_match_all(<span class="string">"/&lt;(\w)+&gt;/"</span>, $str, $abc);</span><br><span class="line">dd($abc);</span><br></pre></td></tr></table></figure>
-<p>结果: <code>[[&#39;&lt;a&gt;&#39;,&#39;&lt;b&gt;&#39;,&#39;&lt;c&gt;&#39;],[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]]</code></p>
-<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><h3 id="re-match"><a href="#re-match" class="headerlink" title="re.match"></a>re.match</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">line = <span class="string">'&lt;a&gt;&lt;b&gt;&lt;c&gt;'</span></span><br><span class="line">reg = <span class="string">"&lt;(\w)&gt;"</span></span><br><span class="line">res = re.match(reg, line)</span><br><span class="line"><span class="keyword">if</span> res:</span><br><span class="line">print(res.group(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>结果: <code>a</code></p>
-<h3 id="re-findall"><a href="#re-findall" class="headerlink" title="re.findall"></a>re.findall</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">line = <span class="string">'&lt;a&gt;&lt;b&gt;&lt;c&gt;'</span></span><br><span class="line">reg = <span class="string">"&lt;(\w)&gt;"</span></span><br><span class="line">res = re.findall(reg, line)</span><br><span class="line"><span class="keyword">if</span> res:</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-<p>结果: <code>[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</code></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -779,7 +777,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -789,7 +787,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -867,7 +865,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

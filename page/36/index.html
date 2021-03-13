@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/23/blade模板引擎的-prepend指令/" itemprop="url">
+                  blade模板引擎的@prepend指令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-23T09:18:36+08:00" content="2017-11-23">
+              2017-11-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>有一天,我看了四十四次日落<br></blockquote><br>在laravel5.4的版本中,新增了一个新的命令可以简化在构建页面时重复使用元素.</p>
+<p>我们假设你有一个布局文件<code>layout.blade.php</code>,包含了下面这个内容:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">"sidebar"</span>&gt;</span><br><span class="line">    @stack(<span class="string">'sidebar'</span>)</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
+<p>当你想要在部件中插入元素, 你可以这样:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@push(<span class="string">'sidebar'</span>)</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">@endpush</span><br></pre></td></tr></table></figure></p>
+<p>这样浏览器将会渲染出一个无序的列表:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">"sidebar"</span>&gt;</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
+<p>自从laravel 5.4.10 的版本中, laravel提供了一个新的<code>prepend</code>命令, 这个命令运行你增加你的项目内容在浏览器渲染之前</p>
+<p>例如:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@push(<span class="string">'sidebar'</span>)</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">@endpush</span><br><span class="line"></span><br><span class="line">@prepend(<span class="string">'sidebar'</span>)</span><br><span class="line">    &lt;li&gt;First Sidebar Item&lt;/li&gt;</span><br><span class="line">@endprepend</span><br></pre></td></tr></table></figure></p>
+<p>现在, 结果将会变成这样<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">"sidebar"</span>&gt;</span><br><span class="line">    &lt;li&gt;First Sidebar Item&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Sidebar <span class="keyword">list</span> item&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这将会是非常有用的, 当你需要把你的项目内容放到最前面.</p>
+<blockquote>
+<p><a href="https://laravel-news.com/blade-prepend" target="_blank" rel="noopener">https://laravel-news.com/blade-prepend</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/22/laravel5-5中新的路由方法/" itemprop="url">
                   laravel5.5中新的路由方法
                 </a>
@@ -644,107 +748,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/13/phpstudy升级php7-1/" itemprop="url">
-                  phpstudy升级php7.1
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-13T17:39:16+08:00" content="2017-11-13">
-              2017-11-13
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我上学那会暗恋你 哈哈哈  我也是<br></blockquote>
-
-<h3 id="下载win版php"><a href="#下载win版php" class="headerlink" title="下载win版php"></a>下载win版php</h3><p><a href="http://windows.php.net/download/" target="_blank" rel="noopener">http://windows.php.net/download/</a><br>注意不要下载源码包，下载指zip压缩包<br>下载对应的windows位数， 32或是64</p>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>解压后目录重命名，保留版本号及nts<br>复制到phpStudy安装目录的php文件夹即可</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>目录一定要保留版本号及nts 信息。没有nts的php只有apache支持。有nts的版本apache、nginx都支持</p>
-<blockquote>
-<p><a href="http://www.phpstudy.net/a.php/209.html" target="_blank" rel="noopener">http://www.phpstudy.net/a.php/209.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -788,7 +791,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -798,7 +801,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -876,7 +879,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

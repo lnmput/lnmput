@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2017/06/15/php使用fsockopen传送post到别的url并取得回应的内容/" itemprop="url">
+                  php使用fsockopen传送post到别的url并取得回应的内容
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-15T14:49:22+08:00" content="2017-06-15">
+              2017-06-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>几年前踏上火车那一刻都还没有意识到，从此故乡只有冬夏，再无春秋。<br></blockquote><br>如果不需要傳送參數或是使用GET method傳送</p>
+<p>可以直接使用fopen()或是file_get_contents()函式獲得回應內容<br>但是如果需要不經過表單就送出POST給某URL<br>就需要使用curl相關函式或是fsockopen()傳送</p>
+<p>curl的用法比較簡單<br>可以咕狗看看(但是php必須要先安裝curl才可以用)<br>這邊要講的是fsockopen()</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接收POST參數的URL</span></span><br><span class="line">$url = <span class="string">'http://www.google.com'</span>;</span><br><span class="line"><span class="comment">//POST參數,在這個陣列裡,索引是name,值是value,沒有限定組數</span></span><br><span class="line">$postdata = <span class="keyword">array</span>(<span class="string">'post_name'</span>=&gt;<span class="string">'post_value'</span>,<span class="string">'acc'</span>=&gt;<span class="string">'hsin'</span>,<span class="string">'nick'</span>=&gt;<span class="string">'joe'</span>);</span><br><span class="line"><span class="comment">//函式回覆的值就是取得的內容</span></span><br><span class="line">$result = sendpost($url,$postdata);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sendpost</span><span class="params">($url, $data)</span></span>&#123;</span><br><span class="line"><span class="comment">//先解析url 取得的資訊可以看看http://www.php.net/parse_url</span></span><br><span class="line">$url = parse_url($url);</span><br><span class="line">$url_port = $url[<span class="string">'port'</span>]==<span class="string">''</span>?(($url[<span class="string">'scheme'</span>]==<span class="string">'https'</span>)?<span class="number">443</span>:<span class="number">80</span>):$url[<span class="string">'port'</span>];</span><br><span class="line"><span class="keyword">if</span>(!$url) <span class="keyword">return</span> <span class="string">"couldn't parse url"</span>;</span><br><span class="line"><span class="comment">//對要傳送的POST參數作處理</span></span><br><span class="line">$encoded = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">list</span>($k,$v)=each($data))&#123;</span><br><span class="line">  $encoded .= ($encoded?<span class="string">'&amp;'</span>:<span class="string">''</span>);</span><br><span class="line">  $encoded .= rawurlencode($k).<span class="string">"="</span>.rawurlencode($v);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//開啟一個socket</span></span><br><span class="line">$fp = fsockopen($url[<span class="string">'host'</span>],$url_port);</span><br><span class="line"><span class="keyword">if</span>(!$fp) <span class="keyword">return</span> <span class="string">"Failed to open socket to "</span>.$url[<span class="string">'host'</span>];</span><br><span class="line"><span class="comment">//header的資訊</span></span><br><span class="line">fputs($fp,<span class="string">'POST '</span>.$url[<span class="string">'path'</span>].($url[<span class="string">'query'</span>]?<span class="string">'?'</span>.$url[<span class="string">'query'</span>]:<span class="string">''</span>).<span class="string">" HTTP/1.0rn"</span>);</span><br><span class="line">fputs($fp,<span class="string">"Host: "</span>.$url[<span class="string">'host'</span>].<span class="string">"n"</span>);</span><br><span class="line">fputs($fp,<span class="string">"Content-type: application/x-www-form-urlencodedn"</span>);</span><br><span class="line">fputs($fp,<span class="string">"Content-length: "</span>.strlen($encoded).<span class="string">"n"</span>);</span><br><span class="line">fputs($fp,<span class="string">"Connection: closenn"</span>);</span><br><span class="line">fputs($fp,$encoded.<span class="string">"n"</span>);</span><br><span class="line"><span class="comment">//取得回應的內容</span></span><br><span class="line">$line = fgets($fp,<span class="number">1024</span>);</span><br><span class="line"><span class="keyword">if</span>(!eregi(<span class="string">"^HTTP/1.. 200"</span>, $line)) <span class="keyword">return</span>;</span><br><span class="line">$results = <span class="string">""</span>;</span><br><span class="line">$inheader = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span>(!feof($fp))&#123;</span><br><span class="line">  $line = fgets($fp,<span class="number">2048</span>);</span><br><span class="line">  <span class="keyword">if</span>($inheader&amp;&amp;($line == <span class="string">"n"</span> || $line == <span class="string">"rn"</span>))&#123;</span><br><span class="line">    $inheader = <span class="number">0</span>;</span><br><span class="line">  &#125;<span class="keyword">elseif</span>(!$inheader)&#123;</span><br><span class="line">    $results .= $line;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">fclose($fp);</span><br><span class="line"><span class="keyword">return</span> $results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://inspiregate.com/programming/php/26-php-to-use-fsockopen-to-send-post-to-another-url-and-get-to-respond-to-the-content.html" target="_blank" rel="noopener">http://inspiregate.com/programming/php/26-php-to-use-fsockopen-to-send-post-to-another-url-and-get-to-respond-to-the-content.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/06/13/php中-POST和php-input的区别/" itemprop="url">
                   php中$_POST和php://input的区别
                 </a>
@@ -639,106 +739,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/08/WebWorker通信/" itemprop="url">
-                  WebWorker通信
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-08T09:37:06+08:00" content="2017-06-08">
-              2017-06-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>生活就是这样，<br>在你最糟的时候，会遇到最好的人。<br></blockquote>
-
-<h3 id="Web-Worker是什么"><a href="#Web-Worker是什么" class="headerlink" title="Web Worker是什么"></a>Web Worker是什么</h3><p>Web Worker 是HTML5标准的一部分，这一规范定义了一套 API，它允许一段JavaScript程序运行在主线程之外的另外一个线程中。Web Worker 规范中定义了两类工作线程，分别是专用线程Dedicated Worker和共享线程 Shared Worker，其中，Dedicated Worker只能为一个页面所使用，而Shared Worker则可以被多个页面所共享，本文示例为专用线程Dedicated Worker。<br>web worker 是运行在后台的 JavaScript，不会影响页面的性能。</p>
-<h3 id="例子一-简单通信"><a href="#例子一-简单通信" class="headerlink" title="例子一: 简单通信"></a>例子一: 简单通信</h3><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/socket.io/1.7.2/socket.io.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">"task.js"</span>);</span></span><br><span class="line">worker.postMessage(</span><br><span class="line">        &#123;</span><br><span class="line">id:1,</span><br><span class="line"><span class="javascript">msg:<span class="string">'Hello World'</span></span></span><br><span class="line">&#125;</span><br><span class="line">    );</span><br><span class="line"><span class="javascript">worker.onmessage=<span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data = message.data;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(data));</span></span><br><span class="line">worker.terminate();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="javascript">worker.onerror=<span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(error.filename,error.lineno,error.message);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>task.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">onmessage= <span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span><br><span class="line"><span class="keyword">var</span> data=message.data;</span><br><span class="line">data.msg = <span class="string">'Hi from task.js'</span>;</span><br><span class="line">postMessage(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="例子二-计数功能"><a href="#例子二-计数功能" class="headerlink" title="例子二: 计数功能"></a>例子二: 计数功能</h3><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">"task.js"</span>);</span></span><br><span class="line"><span class="javascript">worker.onmessage=<span class="function"><span class="keyword">function</span>(<span class="params">message</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data = message.data;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(data));</span></span><br><span class="line"><span class="javascript"><span class="comment">//终止woker</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">//worker.terminate();</span></span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="javascript">worker.onerror=<span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(error.filename,error.lineno,error.message);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>task.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedCount</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">i=i+<span class="number">1</span>;</span><br><span class="line">postMessage(i);</span><br><span class="line">setTimeout(<span class="string">"timedCount()"</span>,<span class="number">500</span>);</span><br><span class="line">&#125;</span><br><span class="line">timedCount();</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -782,7 +782,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -792,7 +792,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -870,7 +870,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

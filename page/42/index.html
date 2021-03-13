@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/22/php实现跳转的一个坑/" itemprop="url">
+                  php实现跳转的一个坑
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-22T10:14:53+08:00" content="2017-09-22">
+              2017-09-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>被人看得见的努力,都是肤浅的努力<br></blockquote></p>
+<h3 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h3><p>If you don’t put a die() or exit() after your header(‘Location: <a href="http://something" target="_blank" rel="noopener">http://something</a>‘) your script may continue resulting in unexpected behaviour. This may for example result in content being disclosed that you actually wanted to prevent with the redirect (HTTP 301). The aforementioned may not directly be visible for an end user as the browser may not render it (due to the 301). Conclusion, the exit() and die() functions stop the script from continuing.</p>
+<h3 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h3><p>这句话的意思是说如果你不在header(‘Location: <a href="http://something&#39;)你的脚本后面加上" target="_blank" rel="noopener">http://something&#39;)你的脚本后面加上</a> die() 或者 exit(), 你的脚本就会继续向下执行,这样你的脚本就可能跳转不成功;</p>
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/8665985/php-utilizing-exit-or-die-after-headerlocation" target="_blank" rel="noopener">https://stackoverflow.com/questions/8665985/php-utilizing-exit-or-die-after-headerlocation</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/21/swoole结合php实现多任务异步处理/" itemprop="url">
                   swoole结合php实现多任务异步处理
                 </a>
@@ -644,107 +743,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/14/php的短路原则以及位运算/" itemprop="url">
-                  php的短路原则以及位运算
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-14T13:53:19+08:00" content="2017-09-14">
-              2017-09-14
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>我想我还是不习惯，从默默无闻到有人喜欢！<br></blockquote></p>
-<h3 id="短路作用"><a href="#短路作用" class="headerlink" title="短路作用"></a>短路作用</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">false</span> || $b = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">echo</span> $b;</span><br></pre></td></tr></table></figure>
-<p>当 || 前面的值为 false 时， || 后的表达式才会被执行， 此时结果为5；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">true</span> || $b = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">echo</span> $b;</span><br></pre></td></tr></table></figure></p>
-<p>当 || 前面的值为 true 时， || 后的表达式不会被执行， 此时结果就找不到 $b<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="keyword">false</span> &amp;&amp; $a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span> $a;</span><br></pre></td></tr></table></figure></p>
-<p>当 &amp;&amp; 前面的值为false 时， 后面的表达式不会被执行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="keyword">true</span> &amp;&amp; $a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span> $a;</span><br></pre></td></tr></table></figure></p>
-<p>只有当 &amp;&amp; 前面的值为true 时， 后面的表达式才会被执行</p>
-<h3 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h3><h4 id="左移-lt-lt"><a href="#左移-lt-lt" class="headerlink" title="左移 &lt;&lt;"></a>左移 &lt;&lt;</h4><p>左移运算的实质是将对应的数据的二进制值逐位左移若干位，并在空出的位置上填0，最高位溢出并舍弃。<br>左移一位, 就实现了乘2运算<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line"><span class="comment">//结果是 80</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &lt;&lt; <span class="number">2</span>;</span><br><span class="line"><span class="comment">//结果是160</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="右移-gt-gt"><a href="#右移-gt-gt" class="headerlink" title="右移 &gt;&gt;"></a>右移 &gt;&gt;</h4><p>可以实现 除 2 运算<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &gt;&gt; <span class="number">1</span>;</span><br><span class="line"><span class="comment">//结果是 20</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">40</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line"><span class="comment">//结果是 10</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">9</span> &gt;&gt; <span class="number">1</span>;</span><br><span class="line"><span class="comment">//结果是4</span></span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -788,7 +786,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -798,7 +796,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -876,7 +874,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

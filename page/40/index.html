@@ -265,6 +265,107 @@
             
               
                 
+                <a class="post-title-link" href="/2017/10/17/swoole实现消息简单消息推送/" itemprop="url">
+                  swoole实现消息简单消息推送
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-10-17T15:44:33+08:00" content="2017-10-17">
+              2017-10-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>我今生没有别的希望，我只希望，能多**几个女人。<br>     ——季羡林 清华园日记<br></blockquote>
+
+<h3 id="试验环境"><a href="#试验环境" class="headerlink" title="试验环境"></a>试验环境</h3><ul>
+<li>ThinkPHP5</li>
+<li>Centos</li>
+</ul>
+<h3 id="后端php代码"><a href="#后端php代码" class="headerlink" title="后端php代码"></a>后端php代码</h3><p><code>tp5\application\console\TimerConsole.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Console</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Command</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Input</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Output</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Exception</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimerConsole</span> <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $server;</span><br><span class="line">    <span class="keyword">protected</span> $client; <span class="comment">// 用于保存所有的客户端</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">configure</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;setName(<span class="string">'timer:start'</span>)-&gt;setDescription(<span class="string">'Start TCP(Timer) Server!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">(Input $input, Output $output)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server = <span class="keyword">new</span> \swoole_websocket_server(<span class="string">'0.0.0.0'</span>, <span class="number">9501</span>);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'open'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(\swoole_websocket_server $server, $request)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"服务器: 握手成功-&#123;$request-&gt;fd&#125;\n"</span>;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;client[] = $request-&gt;fd;</span><br><span class="line">            <span class="keyword">echo</span> json_encode(<span class="keyword">$this</span>-&gt;client);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(\swoole_websocket_server $server, $frame)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"接受到消息: &#123;$frame-&gt;fd&#125;:&#123;$frame-&gt;data&#125;,opcode:&#123;$frame-&gt;opcode&#125;,fin:&#123;$frame-&gt;finish&#125;\n"</span>;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;client <span class="keyword">as</span> $item) &#123;</span><br><span class="line">                <span class="keyword">if</span> ($item) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        $server-&gt;push($item, time());</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $exception) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($ser, $fd)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"客户端关闭-&#123;$fd&#125;\n"</span>;</span><br><span class="line">            <span class="keyword">unset</span>(<span class="keyword">$this</span>-&gt;client[$fd]);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;server-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="前端html代码"><a href="#前端html代码" class="headerlink" title="前端html代码"></a>前端html代码</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">if</span> (<span class="string">"WebSocket"</span> <span class="keyword">in</span> <span class="built_in">window</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"您的浏览器支持 WebSocket!"</span>);</span></span><br><span class="line"><span class="javascript">          <span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">"ws://vxndy.com:9501"</span>);</span></span><br><span class="line"><span class="javascript">          ws.onopen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">              ws.send(<span class="string">"来自客户端的数据"</span>);</span></span><br><span class="line">          &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">          ws.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">evt</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">              <span class="keyword">var</span> received_msg = evt.data;</span></span><br><span class="line"><span class="javascript">              <span class="built_in">console</span>.log(<span class="string">"数据已接收..."</span>+received_msg);</span></span><br><span class="line"><span class="javascript">              <span class="built_in">document</span>.getElementById(<span class="string">"haha"</span>).innerHTML=received_msg;</span></span><br><span class="line">          &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">          ws.onclose = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">              <span class="built_in">console</span>.log(<span class="string">"连接已关闭..."</span>);</span></span><br><span class="line">          &#125;;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="javascript">      <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"您的浏览器不支持 WebSocket!"</span>);</span></span><br><span class="line">      &#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"haha"</span>&gt;</span><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/10/13/jQuery序列化表单serialize和serializeArray/" itemprop="url">
                   jQuery序列化表单serialize和serializeArray
                 </a>
@@ -677,114 +778,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/29/Laravel5-4新特性-Laravel-mix和laravel-elixir比较/" itemprop="url">
-                  Laravel5.4新特性-Laravel-mix和laravel-elixir比较
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-29T14:54:11+08:00" content="2017-09-29">
-              2017-09-29
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>年纪越大,越没有人会原谅你的穷<br></blockquote>
-
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><code>Laravel Mix</code> 提供了一套流式 API，使用一些通用的 CSS 和 JavaScript 预处理器为 Laravel 应用定义 Webpack 构建步骤。通过简单的方法链，你可以流式定义资源管道。例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mix.js(<span class="string">'resources/assets/js/app.js'</span>, <span class="string">'public/js'</span>)</span><br><span class="line">   .sass(<span class="string">'resources/assets/sass/app.scss'</span>, <span class="string">'public/css'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>如果你对如何开始使用 Webpack 和前端资源编译感到困惑，那么你会爱上 Laravel Mix。不过，并不是强制要求在开发期间使用它。你可以自由选择使用任何前端资源管道工具，或者压根不使用。</p>
-<h2 id="webpack用法"><a href="#webpack用法" class="headerlink" title="webpack用法"></a>webpack用法</h2><p>Mix 是位于 Webpack 顶层的配置层，所以要运行 Mix 任务你只需要在运行包含在默认 package.json 文件中的其中某个 NPM 脚本即可：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.安装package.json 包</span></span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.运行所有 Mix 任务...</span></span><br><span class="line">npm run dev</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行所有 Mix 任务并减少输出...</span></span><br><span class="line"><span class="comment">// npm run production</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.监控前端资源改变</span></span><br><span class="line">npm run watch</span><br><span class="line">监控前端资源改变</span><br></pre></td></tr></table></figure></p>
-<p><code>npm run watch</code>命令将会持续在终端运行并监听所有相关文件的修改，Webpack将会在发现修改后自动重新编译资源文件：</p>
-<p><code>webpack.mix.js</code> 添加版本<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; mix &#125; = <span class="built_in">require</span>(<span class="string">'laravel-mix'</span>);</span><br><span class="line"></span><br><span class="line">mix.js(<span class="string">'resources/assets/js/app.js'</span>, <span class="string">'public/js'</span>)</span><br><span class="line">   .sass(<span class="string">'resources/assets/sass/app.scss'</span>, <span class="string">'public/css'</span>)</span><br><span class="line">   .version();</span><br></pre></td></tr></table></figure></p>
-<p>前端<code>app.blade.php</code>引入资源方法修改：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Styles --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; mix('css/app.css') &#125;&#125;"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">&lt;!-- Scripts --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; mix('js/app.js') &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="Laravel-elixir"><a href="#Laravel-elixir" class="headerlink" title="Laravel-elixir"></a>Laravel-elixir</h2><p>旧版本用的是<code>laravel-elixir</code>处理的，只需执行gulp命令即可整合前端的资源,<code>gulpfile.js</code>为入口文件<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elixir = <span class="built_in">require</span>(<span class="string">'laravel-elixir'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"> | Elixir Asset Management</span></span><br><span class="line"><span class="comment"> |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"> |</span></span><br><span class="line"><span class="comment"> | Elixir provides a clean, fluent API for defining some basic Gulp tasks</span></span><br><span class="line"><span class="comment"> | for your Laravel application. By default, we are compiling the Sass</span></span><br><span class="line"><span class="comment"> | file for our application, as well as publishing vendor resources.</span></span><br><span class="line"><span class="comment"> |</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">elixir(<span class="function"><span class="keyword">function</span>(<span class="params">mix</span>) </span>&#123;</span><br><span class="line">    mix.sass(<span class="string">'app.scss'</span>)</span><br><span class="line">      .browserify(<span class="string">'app.js'</span>);</span><br><span class="line">     mix.version([<span class="string">'js/app.js'</span>, <span class="string">'css/app.css'</span>])</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>如果运行该命令后，全端资源有缓存影响，我们可以在上边的配置文件中，对输出的资源加版本：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix.version([<span class="string">'app.js'</span>, <span class="string">'app.css'</span>])</span><br></pre></td></tr></table></figure></p>
-<p>在前端 HTML 页面引入打包后的 css 或 js 资源时，可以用全局的方法 elixir这样写：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Styles --&gt;</span></span><br><span class="line">// <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; asset('css/app.css') &#125;&#125;"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&#123;&#123; elixir('css/app.css') &#125;&#125;"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Scripts --&gt;</span></span><br><span class="line">// <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; asset('js/app.js') &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; elixir('js/app.js') &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>然后再执行gulp命令：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gulp</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><a href="https://segmentfault.com/a/1190000008666954" target="_blank" rel="noopener">https://segmentfault.com/a/1190000008666954</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -828,7 +821,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">368</span>
+              <span class="site-state-item-count">369</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -838,7 +831,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">143</span>
+                <span class="site-state-item-count">144</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -916,7 +909,7 @@
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
