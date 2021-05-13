@@ -265,6 +265,114 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/01/php命名空间和自动载入理解/" itemprop="url">
+                  php命名空间和自动载入理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-01T16:06:57+09:00" content="2018-03-01">
+              2018-03-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br> 每个人的心里都有一片属于自己的森林，迷失的人迷失了，相遇的人会再相遇<br></blockquote><br>今天写一个demo，遇到一个问题，平时框架用多了，下意识的就以为use就能引入类，导致一直跑不成功，后来才意识到use与引用类并不是一回事。use只是指定了要使用哪个命名空间下的类，但是并不会引入类，类的引用还是需要使用include或require。</p>
+<h3 id="不使用命名空间"><a href="#不使用命名空间" class="headerlink" title="不使用命名空间"></a>不使用命名空间</h3><p>我们的所有的php文件都没有申明使用命名空间, 所有相关文件的引入使用include或require, 并需要指明文件的具体路径<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> Dog());</span><br></pre></td></tr></table></figure></p>
+<p>注意:使用 <code>include_once</code> 可以防止文件重复引入定义</p>
+<p>如果不使用命名空间, 那么我们的同一个文件夹就不能重复定义相同的类名, 如果需要解决这个重名的冲突, 就需要放在不同的文件夹下面, 或者申明不同的命名空间;</p>
+<h3 id="使用命名空间"><a href="#使用命名空间" class="headerlink" title="使用命名空间"></a>使用命名空间</h3><p>申明使用命名空间<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>申明以后所有需要引入这个文件都必须使用<code>use</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span>  <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'dog run'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果引用的文件是在同一个命名空间下, 则无需使用<code>use</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果被引入的文件没有申明命名空间,则默认全局命名空间<code>\</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Index</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Cat.php'</span>;</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'Dog.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Dog());</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">'AnimalInterface.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span>  <span class="title">AnimalInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'dog run'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自动载入"><a href="#自动载入" class="headerlink" title="自动载入"></a>自动载入</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Index</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">AnimalInterface</span>;</span><br><span class="line"></span><br><span class="line">spl_autoload_register(<span class="function"><span class="keyword">function</span> <span class="params">($filename)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($filename) &#123;</span><br><span class="line">        <span class="keyword">if</span> (file_exists($filename.<span class="string">'.php'</span>)) &#123;</span><br><span class="line">            <span class="keyword">include_once</span> $filename.<span class="string">'.php'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//include_once 'AnimalInterface.php';</span></span><br><span class="line"><span class="comment">//include_once 'Cat.php';</span></span><br><span class="line"><span class="comment">//include_once 'Dog.php';</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">(AnimalInterface $animal)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $animal-&gt;run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$demo = <span class="keyword">new</span> Demo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Cat());</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $demo-&gt;action(<span class="keyword">new</span> \Dog());</span><br></pre></td></tr></table></figure>
+<p>所有文件的自动载入需要在<code>spl_autoload_register</code>这个函数中通过<code>include_once</code>实现;</p>
+<h3 id="PSR"><a href="#PSR" class="headerlink" title="PSR"></a>PSR</h3><p>命名空间跟文件加载并无直接关系，只是有些语言，将命名空间结构和文件结构对应起来了。 以php为例，一般的命名空间结构，跟php文件结构是存在映射关系的，通过命名空间名称，就能算出该类的实际存储位置， 然后实例化的时候，会触发用设置的spl自动加载函数将文件引入。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/01/在PHP下理解和应用多态/" itemprop="url">
                   在PHP下理解和应用多态
                 </a>
@@ -279,7 +387,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-01T11:18:28+08:00" content="2018-03-01">
+            <time itemprop="dateCreated" datetime="2018-03-01T11:18:28+09:00" content="2018-03-01">
               2018-03-01
             </time>
           </span>
@@ -394,7 +502,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-01T09:39:26+08:00" content="2018-03-01">
+            <time itemprop="dateCreated" datetime="2018-03-01T09:39:26+09:00" content="2018-03-01">
               2018-03-01
             </time>
           </span>
@@ -496,7 +604,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-23T18:08:20+08:00" content="2018-02-23">
+            <time itemprop="dateCreated" datetime="2018-02-23T18:08:20+09:00" content="2018-02-23">
               2018-02-23
             </time>
           </span>
@@ -601,7 +709,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-23T10:34:50+08:00" content="2018-02-23">
+            <time itemprop="dateCreated" datetime="2018-02-23T10:34:50+09:00" content="2018-02-23">
               2018-02-23
             </time>
           </span>
@@ -637,104 +745,6 @@
 <h3 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h3><p>把 <code>node_modules</code> 目录删除<br>执行命令<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm cache clear --force  </span><br><span class="line">npm install -g npm</span><br></pre></td></tr></table></figure></p>
 <h3 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h3><p>查看 <code>node_modules</code> 目录的权限是否存在问题</p>
 <h3 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h3><p>检查是否有异常端口占用</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/02/23/新年的第一天/" itemprop="url">
-                  新年的第一天
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-23T09:21:46+08:00" content="2018-02-23">
-              2018-02-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>努力, 奋斗<br></blockquote><br>新年第一天, 带病上班, 感冒加口腔溃疡, 难受的很.想起前天晚上看到的那篇文章, 就想发发感慨, 长大了好多事儿就觉得自己无能为力, 除了写代码, 也没有其他赚钱维生的技能, 在家里的这几天,翻看以前的旧照片, 能看到父母一点一点的变老,我们几个孩子都已经长大, 相继结婚生子, 可父母仍旧每天不辞辛劳的在外奔波, 想为他们做点儿啥, 却发现自己真的是… 没钱, 工作忙, 不敢请假, 房租, 房贷, 各种花销都让我望而却步, 一次次打消带父母出去玩的念头, 或者是让父母停下来, 找点儿轻松一点儿活儿来做, 但是, 哎….</p>
-<h3 id="如果亲人健在的时候，有什么都给他们吧。"><a href="#如果亲人健在的时候，有什么都给他们吧。" class="headerlink" title="如果亲人健在的时候，有什么都给他们吧。"></a>如果亲人健在的时候，有什么都给他们吧。</h3><p>分享柳岩的一个故事, 她说：我爸上个月身体状况不太好，然后是在医院度过70岁生日，但是我很高兴自豪的是，我有足够的经济能力，给他最好的医疗条件。她说：总是有人说要送什么祝福，最大的祝福，就是希望父母健健康康的，因为这样才能给我们机会，实现我们小时候的诺言，我要给你们买大房子，我要带你们周游世界。</p>
-<h3 id="时间不会等你，父母衰老的速度不会等你。"><a href="#时间不会等你，父母衰老的速度不会等你。" class="headerlink" title="时间不会等你，父母衰老的速度不会等你。"></a>时间不会等你，父母衰老的速度不会等你。</h3><p>一个人真正的成熟是什么？就是时间推着你往前走，你发现自己忽然在迎来客往里，变成了越来越重要的那一个人。而你，也慢慢接受着这一切，并约定俗成。中年人，是没有资格说“不”的，哪怕你私心觉得这是你的权利。上有老，下有小，是每个中年人不得不面临的。中年危机不是某个时代的焦虑，而是属于每个人的焦虑。中年人的焦虑，与生俱来，而你消失的那一刻，你已经进入了老年，那是人生的另一个阶段。中年，是一种责任，你再瘦弱也要扛起来，什么疲于奔命，如果能通过你疲于奔命，改变家族的命运，请认真努力。</p>
-<h3 id="越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。"><a href="#越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。" class="headerlink" title="越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。"></a>越长大越明白，什么都可以等，但爱亲人这件事，真的等不了。</h3><p>李健写自己的父亲生病的时候，当时我泪如雨下。“我把当时仅有的几万块钱全拿出来了，我意识到，有些时候钱是多么重要。随后他的病情每况愈下，生命的最后阶段，我送他回哈尔滨。火车上，他已经很虚弱了，每次去洗手间都要我搀扶或者背着他，我一宿没怎么睡觉。记得当我背着他时，他说了句，原谅爸爸。那一瞬间，我强忍住了泪水。他太客气了，竟然对自己从小背到大的儿子客气，而我只是背了他几次而已。”你看，亲情有时真的是一瞬间的。你说你长大后，我就可以给你住大房子。你说你长大后，我就可以带你吃所有你喜欢的。你说你放心，你想去哪儿都可以，我有能力。请！现在！就做！一刻不停。</p>
-<h3 id="加油-好好待父母，也好好待父母爱的自己"><a href="#加油-好好待父母，也好好待父母爱的自己" class="headerlink" title="加油,好好待父母，也好好待父母爱的自己"></a>加油,好好待父母，也好好待父母爱的自己</h3><p>子欲养而亲不待。我从前是不太敏感这样的话，觉得父母健在，并未到达需要我们告别前匆匆完成的时刻。而这些年，看到一个个越来越熟悉的人经历着离别，好像一切又离自己慢慢近了。对于我们这些中年人来说，尤其是最大的骄傲，莫过于：爸妈，你们想吃什么尽管买吧，我有钱；爸妈，我有大房子，你有空来住吧；爸妈，你们别担心，万一生病了，我有足够的钱给你们治病。因为是你们的儿女，因为你们是我们的亲人。今生一见，来世不知道是否还能遇见，所以，珍惜以及相爱，毕竟匆匆而过。</p>
 
           
         
@@ -806,7 +816,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -816,7 +826,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

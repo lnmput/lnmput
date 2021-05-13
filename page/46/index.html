@@ -265,6 +265,104 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/21/流程控制的替代语法/" itemprop="url">
+                  流程控制的替代语法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-21T14:58:36+09:00" content="2017-08-21">
+              2017-08-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>当你厌恶你身边的人，你表达厌恶最好的方式不是和他们争吵，而是自己勤快点儿，加把劲离开他们。那样，他们就永远从你的生活中消失，和死了差不多。<br></blockquote></p>
+<h3 id="if语句的替代语法"><a href="#if语句的替代语法" class="headerlink" title="if语句的替代语法"></a>if语句的替代语法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">if</span> ($a == <span class="number">5</span>): <span class="meta">?&gt;</span></span><br><span class="line">  &lt;div&gt;等于<span class="number">5</span>&lt;/div&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">elseif</span> ($a == <span class="number">6</span>): <span class="meta">?&gt;</span></span><br><span class="line">  &lt;div&gt;等于<span class="number">5</span>&lt;/div&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">else</span>: <span class="meta">?&gt;</span></span><br><span class="line">  &lt;div&gt;不是<span class="number">5</span>就是<span class="number">6</span>&lt;/div&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">endif</span>; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="while替代语法"><a href="#while替代语法" class="headerlink" title="while替代语法"></a>while替代语法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">while</span> (expr): <span class="meta">?&gt;</span></span><br><span class="line">  &lt;li&gt;循环点什么&lt;/li&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">endwhile</span>; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="for替代语法："><a href="#for替代语法：" class="headerlink" title="for替代语法："></a>for替代语法：</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">for</span> (expr1; expr2; expr3): <span class="meta">?&gt;</span></span><br><span class="line">  &lt;li&gt;循环点什么&lt;/li&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">endfor</span>; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### foreach替代语法</span></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">foreach</span> (expr1): <span class="meta">?&gt;</span></span><br><span class="line">  &lt;li&gt;循环点什么&lt;/li&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">endforeach</span>; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="switch替代语法"><a href="#switch替代语法" class="headerlink" title="switch替代语法"></a>switch替代语法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">switch</span> ($i):</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"i equals 0"</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"i equals 1"</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"i equals 2"</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"i is not equal to 0, 1 or 2"</span>;</span><br><span class="line"><span class="keyword">endswitch</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/21/记录一次jquery的ajax请求错误/" itemprop="url">
                   记录一次jquery的ajax请求错误
                 </a>
@@ -279,7 +377,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-21T11:26:59+08:00" content="2017-08-21">
+            <time itemprop="dateCreated" datetime="2017-08-21T11:26:59+09:00" content="2017-08-21">
               2017-08-21
             </time>
           </span>
@@ -376,7 +474,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-18T09:24:01+08:00" content="2017-08-18">
+            <time itemprop="dateCreated" datetime="2017-08-18T09:24:01+09:00" content="2017-08-18">
               2017-08-18
             </time>
           </span>
@@ -479,7 +577,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-17T15:00:22+08:00" content="2017-08-17">
+            <time itemprop="dateCreated" datetime="2017-08-17T15:00:22+09:00" content="2017-08-17">
               2017-08-17
             </time>
           </span>
@@ -587,7 +685,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-15T16:56:00+08:00" content="2017-08-15">
+            <time itemprop="dateCreated" datetime="2017-08-15T16:56:00+09:00" content="2017-08-15">
               2017-08-15
             </time>
           </span>
@@ -672,106 +770,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/14/CSS清浮动处理/" itemprop="url">
-                  CSS清浮动处理
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-14T22:14:30+08:00" content="2017-08-14">
-              2017-08-14
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>以前央视新闻有条微博说7成网友赞成数学退出高考，下边一片叫好声。我有个朋友淡淡回了句：“数学就是用来把这7成人筛出去的。”这句话我永远都记得，所有被千夫所指的困难，都是为了淘汰掉懦夫，仅此而已。<br></blockquote><br>做前端开发我们都不得不使用float浮动属性，但是如果使用了浮动，由于浮动本身的特性，难免会遇到父级元素塌陷的情况，不能自适应高度。<br>假设了有三个盒子对象，一个父级里包含了两个子级，父级元素没有设置固定高度，子级一个使用了float:left（左浮动）属性，另外一个子级使用float:right（右浮动）属性，这种情况的话父级元素的高度就必定不能被子内容而撑开。</p>
-<h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><p>三个盒子对象：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-1"</span>&gt;</span>布局1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-2"</span>&gt;</span>布局2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    内容</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>设置了浮动之后，父级元素不能被撑开，如图：<br><img src="/images/014.jpg" alt><br>我们所希望的效果：<br><img src="/images/015.jpg" alt><br>这种情况在我们的工作中特别常见，我们可以通过四种方法清除浮动。</p>
-<h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>使用一个空标签<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-1"</span>&gt;</span>布局1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-2"</span>&gt;</span>布局2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    内容</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>clear的 CSS样式如下：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clear</span> &#123;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>给父元素设置display:inline-block属性：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline-block</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h4><p>给父元素设置overflow:auto或hidden属性：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="attribute">overflow</span>: auto;  <span class="comment">/* 设置 hidden 也可以 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="方法四"><a href="#方法四" class="headerlink" title="方法四"></a>方法四</h4>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -815,7 +813,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -825,7 +823,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

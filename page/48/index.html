@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/11/转载PHP实现异步调用方法研究/" itemprop="url">
+                  转载PHP实现异步调用方法研究
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-11T07:45:57+09:00" content="2017-08-11">
+              2017-08-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>Yesterday you said tomorrow.<br></blockquote>
+
+<h3 id="嵌入Ajax调用"><a href="#嵌入Ajax调用" class="headerlink" title="嵌入Ajax调用"></a>嵌入Ajax调用</h3><p> 最简单的办法，就是在返回给客户端的HTML代码中，嵌入Ajax调用，或者，嵌入一个img标签，src指向要执行的耗时脚本。<br>这种方法最简单，也最快。服务器端不用做任何的调用。<br>但是缺点是，一般来说Ajax都应该在onLoad以后触发，也就是说，用户点开页面后，就关闭，那就不会触发我们的后台脚本了。<br>而使用img标签的话，这种方式不能称为严格意义上的异步执行。用户浏览器会长时间等待php脚本的执行完成，也就是用户浏览器的状态栏一直显示还在load。<br>当然，还可以使用其他的类似原理的方法，比如script标签等等。</p>
+<h3 id="popen"><a href="#popen" class="headerlink" title="popen()"></a>popen()</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">resource popen ( string command, string mode );</span><br><span class="line"><span class="comment">//打开一个指向进程的管道，该进程由派生给定的 command 命令执行而产生。打开一个指向进程的管道，该进程由派生给定的 command 命令执行而产生。</span></span><br></pre></td></tr></table></figure>
+<p>所以可以通过调用它，但忽略它的输出。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pclose(popen(<span class="string">"/home/xinchen/backend.php &amp;"</span>, <span class="string">'r'</span>));</span><br></pre></td></tr></table></figure></p>
+<p>这个方法避免了第一个方法的缺点，并且也很快。但是问题是，这种方法不能通过HTTP协议请求另外的一个WebService，只能执行本地的脚本文件。并且只能单向打开，无法穿大量参数给被调用脚本。<br>并且如果，访问量很高的时候，会产生大量的进程。如果使用到了外部资源，还要自己考虑竞争。</p>
+<h3 id="使用CURL"><a href="#使用CURL" class="headerlink" title="使用CURL"></a>使用CURL</h3><p>这个方法，设置CUROPT_TIMEOUT为1（最小为1，郁闷）。也就是说，客户端至少必须等待1秒钟。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ch = curl_init();</span><br><span class="line"> </span><br><span class="line">$curl_opt = <span class="keyword">array</span>(CURLOPT_URL, <span class="string">'http://www.example.com/backend.php'</span>,</span><br><span class="line">                CURLOPT_RETURNTRANSFER, <span class="number">1</span>,</span><br><span class="line">                CURLOPT_TIMEOUT, <span class="number">1</span>,);</span><br><span class="line">curl_setopt_array($ch, $curl_opt);</span><br><span class="line">curl_exec($ch);</span><br><span class="line">curl_close($ch);</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用fsockopen"><a href="#使用fsockopen" class="headerlink" title="使用fsockopen"></a>使用fsockopen</h3><p>这个方法应该是最完美的，但是缺点是，你需要自己拼出HTTP的header部分。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$fp = fsockopen(<span class="string">"www.example.com"</span>, <span class="number">80</span>, $errno, $errstr, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">if</span> (!$fp) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"$errstr ($errno)&lt;br /&gt;\n"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    $out = <span class="string">"GET /backend.php  / HTTP/1.1\r\n"</span>;</span><br><span class="line">    $out .= <span class="string">"Host: www.example.com\r\n"</span>;</span><br><span class="line">    $out .= <span class="string">"Connection: Close\r\n\r\n"</span>;</span><br><span class="line"> </span><br><span class="line">    fwrite($fp, $out);</span><br><span class="line">    <span class="comment">/*忽略执行结果</span></span><br><span class="line"><span class="comment">    while (!feof($fp)) &#123;</span></span><br><span class="line"><span class="comment">        echo fgets($fp, 128);</span></span><br><span class="line"><span class="comment">    &#125;*/</span></span><br><span class="line">    fclose($fp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="http://www.laruence.com/2008/04/14/318.html" target="_blank" rel="noopener">http://www.laruence.com/2008/04/14/318.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/10/理解算法的时间复杂度/" itemprop="url">
                   理解算法的时间复杂度
                 </a>
@@ -279,7 +383,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-10T08:16:21+08:00" content="2017-08-10">
+            <time itemprop="dateCreated" datetime="2017-08-10T08:16:21+09:00" content="2017-08-10">
               2017-08-10
             </time>
           </span>
@@ -398,7 +502,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-09T17:51:49+08:00" content="2017-08-09">
+            <time itemprop="dateCreated" datetime="2017-08-09T17:51:49+09:00" content="2017-08-09">
               2017-08-09
             </time>
           </span>
@@ -496,7 +600,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-08T22:59:52+08:00" content="2017-08-08">
+            <time itemprop="dateCreated" datetime="2017-08-08T22:59:52+09:00" content="2017-08-08">
               2017-08-08
             </time>
           </span>
@@ -608,7 +712,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-08T20:48:34+08:00" content="2017-08-08">
+            <time itemprop="dateCreated" datetime="2017-08-08T20:48:34+09:00" content="2017-08-08">
               2017-08-08
             </time>
           </span>
@@ -691,103 +795,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/08/querySelector和getElementById方法的区别/" itemprop="url">
-                  querySelector和getElementById方法的区别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-08T20:34:06+08:00" content="2017-08-08">
-              2017-08-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>人总是喜欢自己没有的<br></blockquote></p>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>querySelector()是用于接收一个CSS选择符，返回与该模式匹配的第一个元素；<br>querySelectorAll()用于选择匹配到的所有元素。<br>query选择符选出来的元素及元素数组是静态的，而getElement这种方法选出的元素是动态的。</p>
-<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>querySelector<br>list 是一个静态的 Node List，是一个 li 集合的快照，对文档的任何操作都不会对其产生影响。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>111<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>222<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>333<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> ul=<span class="built_in">document</span>.querySelector(<span class="string">'ul'</span>);</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> list=ul.querySelectorAll(<span class="string">'li'</span>);</span></span><br><span class="line"><span class="javascript"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;list.length;i++)&#123;</span></span><br><span class="line"><span class="javascript">    ul.appendChild(<span class="built_in">document</span>.createElement(<span class="string">'li'</span>));</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="javascript"><span class="comment">//这个时候就创建了3个新的li，添加在ul列表上。</span></span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(list.length);</span></span><br><span class="line"><span class="javascript"><span class="comment">// 输出的结果仍然是3，不是此时li的数量6</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>getElementById<br>list 是一个动态的 Node List， 每一次调用 lis 都会重新对文档进行查询，导致无限循环的问题。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>111<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>222<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>333<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> ul=<span class="built_in">document</span>.getElementsByTagName(<span class="string">'ul'</span>)[<span class="number">0</span>];</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> list=ul.getElementsByTagName(<span class="string">'li'</span>);</span></span><br><span class="line"><span class="javascript"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span></span><br><span class="line"><span class="javascript">    ul.appendChild(<span class="built_in">document</span>.createElement(<span class="string">'li'</span>));</span></span><br><span class="line">&#125;   </span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(list.length)<span class="comment">//此时输出的结果就是3+5=8</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -831,7 +838,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -841,7 +848,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

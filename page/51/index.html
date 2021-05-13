@@ -265,6 +265,103 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/28/数字签名是什么/" itemprop="url">
+                  数字签名是什么
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-28T09:56:20+09:00" content="2017-07-28">
+              2017-07-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我喜欢钱, 很喜欢, 喜欢的不得了<br></blockquote><br><img src="/images/001.png" alt><br>鲍勃有两把钥匙，一把是公钥，另一把是私钥。<br><img src="/images/002.png" alt><br>鲍勃把公钥送给他的朋友们—-帕蒂、道格、苏珊—-每人一把。<br><img src="/images/003.png" alt><br>苏珊要给鲍勃写一封保密的信。她写完后用鲍勃的公钥加密，就可以达到保密的效果。<br><img src="/images/004.png" alt><br>鲍勃收信后，用私钥解密，就看到了信件内容。这里要强调的是，只要鲍勃的私钥不泄露，这封信就是安全的，即使落在别人手里，也无法解密。<br><img src="/images/005.png" alt><br>鲍勃给苏珊回信，决定采用”数字签名”。他写完后先用Hash函数，生成信件的摘要（digest）。<br><img src="/images/006.png" alt><br>然后，鲍勃使用私钥，对这个摘要加密，生成”数字签名”（signature）。<br><img src="/images/007.png" alt><br>鲍勃将这个签名，附在信件下面，一起发给苏珊。<br><img src="/images/008.png" alt><br>苏珊收信后，取下数字签名，用鲍勃的公钥解密，得到信件的摘要。由此证明，这封信确实是鲍勃发出的。<br><img src="/images/009.png" alt><br>苏珊再对信件本身使用Hash函数，将得到的结果，与上一步得到的摘要进行对比。如果两者一致，就证明这封信未被修改过。<br><img src="/images/010.png" alt><br>复杂的情况出现了。道格想欺骗苏珊，他偷偷使用了苏珊的电脑，用自己的公钥换走了鲍勃的公钥。此时，苏珊实际拥有的是道格的公钥，但是还以为这是鲍勃的公钥。因此，道格就可以冒充鲍勃，用自己的私钥做成”数字签名”，写信给苏珊，让苏珊用假的鲍勃公钥进行解密。<br><img src="/images/011.png" alt><br>后来，苏珊感觉不对劲，发现自己无法确定公钥是否真的属于鲍勃。她想到了一个办法，要求鲍勃去找”证书中心”（certificate authority，简称CA），为公钥做认证。证书中心用自己的私钥，对鲍勃的公钥和一些相关信息一起加密，生成”数字证书”（Digital Certificate）。<br><img src="/images/012.png" alt><br>鲍勃拿到数字证书以后，就可以放心了。以后再给苏珊写信，只要在签名的同时，再附上数字证书就行了。<br><img src="/images/013.png" alt><br>苏珊收信后，用CA的公钥解开数字证书，就可以拿到鲍勃真实的公钥了，然后就能证明”数字签名”是否真的是鲍勃签的。</p>
+<blockquote>
+<p><a href="http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/27/Mysql常用日期函数/" itemprop="url">
                   Mysql常用日期函数
                 </a>
@@ -279,7 +376,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-27T11:02:34+08:00" content="2017-07-27">
+            <time itemprop="dateCreated" datetime="2017-07-27T11:02:34+09:00" content="2017-07-27">
               2017-07-27
             </time>
           </span>
@@ -383,7 +480,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-27T09:17:30+08:00" content="2017-07-27">
+            <time itemprop="dateCreated" datetime="2017-07-27T09:17:30+09:00" content="2017-07-27">
               2017-07-27
             </time>
           </span>
@@ -478,7 +575,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-26T15:39:03+08:00" content="2017-07-26">
+            <time itemprop="dateCreated" datetime="2017-07-26T15:39:03+09:00" content="2017-07-26">
               2017-07-26
             </time>
           </span>
@@ -599,7 +696,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-26T10:35:52+08:00" content="2017-07-26">
+            <time itemprop="dateCreated" datetime="2017-07-26T10:35:52+09:00" content="2017-07-26">
               2017-07-26
             </time>
           </span>
@@ -634,107 +731,6 @@
 <p>使用后，成功去掉空格；另外，str_replace也可使用：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$otmp = str_replace(chr(<span class="number">0xc2</span>) . chr(<span class="number">0xa0</span>), <span class="string">''</span>, $otmp);</span><br></pre></td></tr></table></figure></p>
 <p>效果一样，成功解决~~~<br>ps:此空格产生的原因是，我在获取到html代码之后strip_tags去掉所有标签，而产生了一些实体空格</p>
 <h3 id="html实体"><a href="#html实体" class="headerlink" title="html实体"></a>html实体</h3><p>在 HTML 中，某些字符是预留的。<br>在 HTML 中不能使用小于号（&lt;）和大于号（&gt;），这是因为浏览器会误认为它们是标签。<br>如果希望正确地显示预留字符，我们必须在 HTML 源代码中使用字符实体（character entities）。<br>字符实体类似这样：&amp;entity_name;或者&amp;#entity_number;<br>如需显示小于号，我们必须这样写： <code>&amp;lt;</code>  或  <code>&amp;#60;</code><br>提示：使用实体名而不是数字的好处是，名称易于记忆。不过坏处是，浏览器也许并不支持所有实体名称（对实体数字的支持却很好）。<br>不间断空格（non-breaking space）<br>HTML 中的常用字符实体是不间断空格( <code>&amp;nbsp;</code> )。<br>浏览器总是会截短 HTML 页面中的空格。如果您在文本中写 10 个空格，在显示该页面之前，浏览器会删除它们中的 9 个。如需在页面中增加空格的数量，您需要使用 <code>&amp;nbsp;</code> 字符实体。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/25/使用swoole异步发送邮件/" itemprop="url">
-                  使用swoole异步发送邮件
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-25T14:42:39+08:00" content="2017-07-25">
-              2017-07-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>父母在时，人生尚有来处。<br>父母去时，人生只剩归途。<br></blockquote></p>
-<h3 id="安装swoole"><a href="#安装swoole" class="headerlink" title="安装swoole"></a>安装swoole</h3><p>pecl 安装:<br><code>pecl install swoole</code></p>
-<p>看命令行提示，如果它提示说没有写php.ini，则自己手动在PHP.ini后面加上：<br><code>extension = &quot;swoole.so&quot;</code></p>
-<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $serv;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv = <span class="keyword">new</span> swoole_server(<span class="string">"0.0.0.0"</span>, <span class="number">9501</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;set(<span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'worker_num'</span> =&gt; <span class="number">1</span>,   <span class="comment">//一般设置为服务器CPU数的1-4倍</span></span><br><span class="line">            <span class="string">'daemonize'</span> =&gt; <span class="number">1</span>,  <span class="comment">//以守护进程执行</span></span><br><span class="line">            <span class="string">'max_request'</span> =&gt; <span class="number">10000</span>,</span><br><span class="line">            <span class="string">'dispatch_mode'</span> =&gt; <span class="number">2</span>,</span><br><span class="line">            <span class="string">'task_worker_num'</span> =&gt; <span class="number">8</span>,  <span class="comment">//task进程的数量</span></span><br><span class="line">            <span class="string">"task_ipc_mode "</span> =&gt; <span class="number">3</span> ,  <span class="comment">//使用消息队列通信，并设置为争抢模式</span></span><br><span class="line">            <span class="comment">//"log_file" =&gt; "log/taskqueueu.log" ,//日志</span></span><br><span class="line">        ));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Receive'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onReceive'</span>));</span><br><span class="line">        <span class="comment">// bind callback</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Task'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onTask'</span>));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;on(<span class="string">'Finish'</span>, <span class="keyword">array</span>(<span class="keyword">$this</span>, <span class="string">'onFinish'</span>));</span><br><span class="line">        <span class="keyword">$this</span>-&gt;serv-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onReceive</span><span class="params">( swoole_server $serv, $fd, $from_id, $data )</span> </span>&#123;</span><br><span class="line">        <span class="comment">//echo "Get Message From Client &#123;$fd&#125;:&#123;$data&#125;n";</span></span><br><span class="line">        <span class="comment">// send a task to task worker.</span></span><br><span class="line">        $serv-&gt;task( $data );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onTask</span><span class="params">($serv,$task_id,$from_id, $data)</span> </span>&#123;</span><br><span class="line">        $array = json_decode( $data , <span class="keyword">true</span> );</span><br><span class="line">        <span class="keyword">if</span> ($array[<span class="string">'url'</span>]) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;httpGet( $array[<span class="string">'url'</span>] , $array[<span class="string">'param'</span>]  );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onFinish</span><span class="params">($serv,$task_id, $data)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//echo "Task &#123;$task_id&#125; finishn";</span></span><br><span class="line">        <span class="comment">//echo "Result: &#123;$data&#125;n";</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">httpGet</span><span class="params">($url,$data)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($data) &#123;</span><br><span class="line">            $url .=<span class="string">'?'</span>.http_build_query($data) ;</span><br><span class="line">        &#125;</span><br><span class="line">        $curlObj = curl_init();    <span class="comment">//初始化curl，</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_URL, $url);   <span class="comment">//设置网址</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);  <span class="comment">//将curl_exec的结果返回</span></span><br><span class="line">        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, <span class="keyword">FALSE</span>);</span><br><span class="line">        curl_setopt($curlObj, CURLOPT_SSL_VERIFYHOST, <span class="keyword">FALSE</span>);</span><br><span class="line">        curl_setopt($curlObj, CURLOPT_HEADER, <span class="number">0</span>);         <span class="comment">//是否输出返回头信息</span></span><br><span class="line">        $response = curl_exec($curlObj);   <span class="comment">//执行</span></span><br><span class="line">        curl_close($curlObj);          <span class="comment">//关闭会话</span></span><br><span class="line">        <span class="keyword">return</span> $response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">$server = <span class="keyword">new</span> Server();</span><br></pre></td></tr></table></figure>
-<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Client</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $client;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = <span class="keyword">new</span> swoole_client(SWOOLE_SOCK_TCP);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>( !<span class="keyword">$this</span>-&gt;client-&gt;connect(<span class="string">"127.0.0.1"</span>, <span class="number">9501</span> , <span class="number">1</span>) ) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"Connect Error"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $data = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">"url"</span> =&gt;  <span class="string">"http://192.168.10.19/send_mail"</span> ,</span><br><span class="line">            <span class="string">"param"</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">"username"</span>=&gt;<span class="string">'test'</span>,</span><br><span class="line">                <span class="string">"password"</span> =&gt; <span class="string">'test'</span></span><br><span class="line">            )</span><br><span class="line">        );</span><br><span class="line">        $json_data = json_encode($data);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client-&gt;send( $json_data );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> Client();</span><br><span class="line">$client-&gt;connect();</span><br></pre></td></tr></table></figure>
-<h3 id="查看与关闭"><a href="#查看与关闭" class="headerlink" title="查看与关闭"></a>查看与关闭</h3><p>swoole好像没有很便捷的关闭方式。所以只能直接通过关闭进程来关闭。<br>查看命令：<br><code>ps -ef | grep php</code></p>
-<p>结束单个进程：<br><code>kill -9 {进程号}</code></p>
-<p>结束所有进程的命令：<br><code>killall -9 php</code></p>
 
           
         
@@ -806,7 +802,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -816,7 +812,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

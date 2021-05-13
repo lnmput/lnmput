@@ -265,6 +265,128 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/31/laravel之开发测试和生产环境区分/" itemprop="url">
+                  Laravel之开发测试和生产环境区分
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-31T11:48:11+09:00" content="2018-05-31">
+              2018-05-31
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>不做动机揣测，少做价值判断<br></blockquote>
+
+<p>Laravel环境检测的方法是很容易的，因为大家都知道Laravel中使用了Dotenv来做文件配置，这就牵扯到了我们的都很熟悉的.env。</p>
+<p>比如一个典型的.env是:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=local</span><br><span class="line">APP_DEBUG=<span class="keyword">true</span></span><br><span class="line">APP_KEY=base64:<span class="number">3</span>csTuw5O1me1PF4j9xErbUR+seyH1xdf6uRfvjuQ22Q=</span><br><span class="line">APP_URL=http:<span class="comment">//localhost</span></span><br><span class="line"></span><br><span class="line">DB_CONNECTION=mysql</span><br><span class="line">DB_HOST=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">DB_PORT=<span class="number">3306</span></span><br><span class="line">DB_DATABASE=db_name</span><br><span class="line">DB_USERNAME=db_user</span><br><span class="line">DB_PASSWORD=db_pass</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
+<p>今天我的这篇分享主要介绍两种区分不同环境的方法。</p>
+<h3 id="不同环境维护自己的-env文件"><a href="#不同环境维护自己的-env文件" class="headerlink" title="不同环境维护自己的.env文件"></a>不同环境维护自己的.env文件</h3><p>这种办法也是Laravel默认的办法，也就是开发环境、测试环境和生产环境各自维护自己的.env文件，也就是说.env不要加到版本控制系统中，通过不同的配置可以做到环境的区分，比如:</p>
+<p>开发环境<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=dev</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
+<p>测试环境<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=staging</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
+<p>生产环境<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APP_ENV=production</span><br><span class="line"><span class="comment">//...省略</span></span><br></pre></td></tr></table></figure></p>
+<p>这样，在我们的代码中即可以通过判断APP_ENV来判断是哪种环境。但是这种办法我个人是不太喜欢的，原因有以下几点:</p>
+<ul>
+<li>环境的判断过多的写到代码里面，维护起来很麻烦</li>
+<li>如果某次上线需要修改配置文件，则每次上线代码还需要到线上机器修改.env文件，部署起来很麻烦</li>
+</ul>
+<h3 id="不同环境加载自己的-env-文件"><a href="#不同环境加载自己的-env-文件" class="headerlink" title="不同环境加载自己的.env.文件"></a>不同环境加载自己的.env.文件</h3><p>这里面的.env.文件延伸开来就是.env.dev、.env.test和.env.prod，比如开发环境会自动加载.env.dev，依此类推，那么如果是这样的话，不同环境的机器又怎么知道加载哪个文件呢？其实这里面还是耍了点小聪明，别忘了我们有php.ini</p>
+<ul>
+<li><p>1.在php.ini中追加一行配置<br>当然开发、测试和生产环境中env所对应的值也需要不一样</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//开发环境</span></span><br><span class="line">env=dev</span><br><span class="line"><span class="comment">//测试环境</span></span><br><span class="line">env=staging</span><br><span class="line"><span class="comment">//生产环境</span></span><br><span class="line">env=production</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>2.加载不同的配置文件<br>在bootstrap/app.php文件中添加如下判断，在这里将通过获取php.ini中的env的值，然后从而加载不同的配置文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//...省略</span></span><br><span class="line">$env = get_cfg_var(<span class="string">'env'</span>);</span><br><span class="line">$env = !<span class="keyword">empty</span>($env) ? $env : <span class="string">'production'</span>;</span><br><span class="line"><span class="keyword">if</span>(!defined(<span class="string">'APP_MODE'</span>))&#123;</span><br><span class="line">    define(<span class="string">'APP_MODE'</span>, $env);</span><br><span class="line">&#125;</span><br><span class="line">$app-&gt;loadEnvironmentFrom(<span class="string">'.env.'</span>.$env);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> $app;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3.新建.env.dev、.env.staging和.env.production</p>
+</li>
+</ul>
+<p>好，就到此为止了，当然虽然我非常喜欢第二种办法，但第二种毕竟需要对线上机器做一次大的改动，需要运维同学支持下。但是也需要具体情况具体来选择吧。</p>
+<blockquote>
+<p><a href="http://xuwenzhi.com/2016/07/31/laravel%E4%B9%8B%E5%BC%80%E5%8F%91%E3%80%81%E6%B5%8B%E8%AF%95%E5%92%8C%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%8C%BA%E5%88%86/" target="_blank" rel="noopener">http://xuwenzhi.com/2016/07/31/laravel%E4%B9%8B%E5%BC%80%E5%8F%91%E3%80%81%E6%B5%8B%E8%AF%95%E5%92%8C%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%8C%BA%E5%88%86/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/30/现代后端开发者必备技能/" itemprop="url">
                   现代后端开发者必备技能
                 </a>
@@ -279,7 +401,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-30T16:47:52+08:00" content="2018-05-30">
+            <time itemprop="dateCreated" datetime="2018-05-30T16:47:52+09:00" content="2018-05-30">
               2018-05-30
             </time>
           </span>
@@ -414,7 +536,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-30T16:40:55+08:00" content="2018-05-30">
+            <time itemprop="dateCreated" datetime="2018-05-30T16:40:55+09:00" content="2018-05-30">
               2018-05-30
             </time>
           </span>
@@ -522,7 +644,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-29T22:32:41+08:00" content="2018-05-29">
+            <time itemprop="dateCreated" datetime="2018-05-29T22:32:41+09:00" content="2018-05-29">
               2018-05-29
             </time>
           </span>
@@ -630,7 +752,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-15T16:43:55+08:00" content="2018-05-15">
+            <time itemprop="dateCreated" datetime="2018-05-15T16:43:55+09:00" content="2018-05-15">
               2018-05-15
             </time>
           </span>
@@ -727,125 +849,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/08/swoole的核心概念/" itemprop="url">
-                  swoole的核心概念
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-08T09:29:04+08:00" content="2018-05-08">
-              2018-05-08
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>只要从现在开始努力，最坏不过是大器晚成<br></blockquote>
-
-<p>当 Swoole 启动时, 一共会建立 2 + n + m 个进程，其 n 为 Worker 数， m 为 TaskWorker 数，2 为一个 Master 进程和一个 Manager 进程</p>
-<h3 id="Swoole框架模型"><a href="#Swoole框架模型" class="headerlink" title="Swoole框架模型"></a>Swoole框架模型</h3><p>Swoole Server 中有以下几种角色，分别是：Master(Process)、Reactor(Thread)、Manager(Process)、Worker(Process) 和 TaskWoker(Process);<br><img style="margin-left: 0;" src="/images/swoole01.png"></p>
-<h4 id="Master-Process"><a href="#Master-Process" class="headerlink" title="Master(Process)"></a>Master(Process)</h4><p>Master 是 Swoole 的主要 Process，当我们启动 Swoole 时，当下的 Process 就会成为 Master Process 并负责建立 Main Reactor、建立和管理 Reactor、建立 Manager 并开始接受客户端请求等工作。</p>
-<p>首先 Master 会透过 fork 函数建立一个 Manager，接着建立 Reactor，当全部建立完成后会呼叫 onStart 的 callback function，此时可以在这个 callback function 中对 Master 做一些处理或修改。如：将 Master 重新命名，保存 Master 的 PID 档桉等。</p>
-<p>这裡要特别注意，因为 Master 不应该存在任何商业逻辑，因此 Swoole 底层会禁止你在此处做一些行为，如：发送请求、呼叫 Swoole 的异步 API 等等。</p>
-<h4 id="Reactor-Thread"><a href="#Reactor-Thread" class="headerlink" title="Reactor(Thread)"></a>Reactor(Thread)</h4><p>Reactor 以 Multi-Thread 的方式执行，Reactor 底层由 epoll 函数来实现（在Mac系统是透过 Kqueue），用于实际监听和处理来自客户端的 Connect 请求，并完全是透过异步、非阻塞的模式来运作。</p>
-<h4 id="Manager-Process"><a href="#Manager-Process" class="headerlink" title="Manager(Process)"></a>Manager(Process)</h4><p>Swoole 中 Worker/Task worker 都是由 Manager 所 fork 并管理的。当 Manager 被建立时，会呼叫 onManagerStart 的 callback function 通知上层的应用。</p>
-<p>当底下的某个 Worker 意外结束执行时，Manager 会负责回收的工作，并同时建立新的 Worker 补足固定的数量维持 Swoole 的正常运作。</p>
-<p>当 Manager 退出时，会呼叫 onManagerStop 的 callback function，可以利用此时进行一些回收逻辑。</p>
-<h4 id="Worker-Process"><a href="#Worker-Process" class="headerlink" title="Worker(Process)"></a>Worker(Process)</h4><p>Worker 以 Multi-Process 的方式执行，是 Swoole 中执行大部分逻辑的地方，因此在 Worker 中所对应的 callback function 数量也是最多的。</p>
-<p>当 Worker 启动后会呼叫 onWorkerStart 的 callback function，在这裡我们就能够使用全部 Swoole 所提供的 API 了。</p>
-<p>当上层的 Reactor 收到客户端的请求后，就会将数据打包发送给 Worker，并在相对应的 callback function 中（如：onReceive、onRequest、onMessage等）处理这些资料，并可以将处理结果回传给 Reactor，再回传至客户端中。如果 Worker 正常退出，会呼叫 onWorkerStop 的 callback function，若是处理数据过程中出现严重错误或者 Worker 请求达到处理上限时，则会呼叫 onWorkerError 的 callback function 并结束该 Worker。</p>
-<h4 id="Task-Worker-Process"><a href="#Task-Worker-Process" class="headerlink" title="Task Worker(Process)"></a>Task Worker(Process)</h4><p>Task Worker 一样以 Multi-Process 的方式执行，只接受由 Worker 中透过 swoole_server-&gt;task/taskwait 方法指派过来的任务，并将结果回传给 Worker。</p>
-<h3 id="Process-间的通讯"><a href="#Process-间的通讯" class="headerlink" title="Process 间的通讯"></a>Process 间的通讯</h3><p>在 Swoole 中，Process 间的通讯可以分为以下几三种状况：</p>
-<ul>
-<li>Master &lt;=&gt; Worker</li>
-<li>Worker &lt;=&gt; Worker</li>
-<li>Worker &lt;=&gt; Task Worker</li>
-</ul>
-<p>前两种情形，在 Swoole 底层统一使用 Unix Socket 进行通讯，这些 socket 也都归併到各自 Process 的 Reactor 中进行管理。而第三种情况，除了预设的 Unix Socket 外，还可以使用由系统提供的 Message Queue 来实作。</p>
-<h3 id="Reactor-Worker-Task的关系"><a href="#Reactor-Worker-Task的关系" class="headerlink" title="Reactor,Worker,Task的关系"></a>Reactor,Worker,Task的关系</h3><p>一个通俗的比喻，假设Server就是一个工厂，那Reactor就是销售，接受客户订单。而Worker就是工人，当销售接到订单后，Worker去工作生产出客户要的东西。而TaskWorker可以理解为行政人员，可以帮助Worker干些杂事，让Worker专心工作。</p>
-<blockquote>
-<p><a href="https://wiki.swoole.com/wiki/page/163.html" target="_blank" rel="noopener">https://wiki.swoole.com/wiki/page/163.html</a><br><a href="https://blog.albert-chen.com/swoole-basic-concepts/" target="_blank" rel="noopener">https://blog.albert-chen.com/swoole-basic-concepts/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -889,7 +892,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -899,7 +902,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

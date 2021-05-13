@@ -265,6 +265,106 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/13/laravel删除模型时同时删除关联关系/" itemprop="url">
+                  laravel删除模型时同时删除关联关系
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-13T15:52:46+09:00" content="2017-12-13">
+              2017-12-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>夜阑卧听风吹雨, 铁马是你, 冰河也是你。<br></blockquote>
+
+<p>我们在没有在数据库中设计外键关联时想要在删除某一个模型时同时删除与改模型关联的相关数据, 可以试试下面这个方法<br>注意<code>delete</code>方法需要定义在<code>photos</code>方法之后;</p>
+<h3 id="User-Model"><a href="#User-Model" class="headerlink" title="User Model"></a>User Model</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Eloquent</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">photos</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;has_many(<span class="string">'Photo'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// delete all related photos </span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;photos()-&gt;delete();</span><br><span class="line">        <span class="comment">// as suggested by Dirk in comment,</span></span><br><span class="line">        <span class="comment">// it's an uglier alternative, but faster</span></span><br><span class="line">        <span class="comment">// Photo::where("user_id", $this-&gt;id)-&gt;delete()</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// delete the user</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">parent</span>::delete();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/14174070/automatically-deleting-related-rows-in-laravel-eloquent-orm" target="_blank" rel="noopener">https://stackoverflow.com/questions/14174070/automatically-deleting-related-rows-in-laravel-eloquent-orm</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/12/12/使用javascript生成条形码/" itemprop="url">
                   使用javascript生成条形码
                 </a>
@@ -279,7 +379,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-12T19:06:03+08:00" content="2017-12-12">
+            <time itemprop="dateCreated" datetime="2017-12-12T19:06:03+09:00" content="2017-12-12">
               2017-12-12
             </time>
           </span>
@@ -382,7 +482,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-05T18:01:36+08:00" content="2017-12-05">
+            <time itemprop="dateCreated" datetime="2017-12-05T18:01:36+09:00" content="2017-12-05">
               2017-12-05
             </time>
           </span>
@@ -492,7 +592,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-01T10:46:26+08:00" content="2017-12-01">
+            <time itemprop="dateCreated" datetime="2017-12-01T10:46:26+09:00" content="2017-12-01">
               2017-12-01
             </time>
           </span>
@@ -595,7 +695,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-30T15:57:48+08:00" content="2017-11-30">
+            <time itemprop="dateCreated" datetime="2017-11-30T15:57:48+09:00" content="2017-11-30">
               2017-11-30
             </time>
           </span>
@@ -626,103 +726,6 @@
         
           
             <p><blockquote class="blockquote-center"><br>生活就是这样，在你最糟的时候，会遇到最好的人。<br></blockquote><br>Fatal error: Call to undefined function imagettftext() in /var/www/apev.cn/htdocs/include/captcha.class.php on line 66<br>缺少 imagettftext() 函数造成生成验证码失败，解决办法是安装 freetype 并且重新编译 php，并且带上此参数。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">make clean</span><br><span class="line">./configure --with-gd \</span><br><span class="line">--enable-gd-native-ttf \</span><br><span class="line">--with-ttf \</span><br><span class="line">--with-freetype-dir=/usr/lib/ \</span><br><span class="line">--with-jpeg-dir=/usr/lib/libjpeg.so<span class="number">.62</span> \</span><br><span class="line">--enable-exif \</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/29/laravel项目的一个异常解决/" itemprop="url">
-                  laravel项目的一个异常解决
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-29T11:41:27+08:00" content="2017-11-29">
-              2017-11-29
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>人来人往，只是日常<br></blockquote>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>更新了全站的代码以后, 页面就无法显示了, 查看http返回状态码,200, 没有问题;</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>重新修改了layout布局文件(就在开头加了一个空格), 保存以后, 就OK了, 其实会偶尔碰到某个页面不显示的情况, 在清除缓存无效的情况下, 我们也可以针对单个页面去修改, 比如加一个空格就可以了;</p>
 
           
         
@@ -794,7 +797,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -804,7 +807,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

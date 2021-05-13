@@ -265,6 +265,114 @@
             
               
                 
+                <a class="post-title-link" href="/2018/11/16/composer-install的一个错误/" itemprop="url">
+                  composer-install的一个错误
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-11-16T21:25:57+09:00" content="2018-11-16">
+              2018-11-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>若教眼底无离恨，不信人间有白头。<br></blockquote>
+
+<h3 id="composer-insatall-が失敗す"><a href="#composer-insatall-が失敗す" class="headerlink" title="composer insatall が失敗す"></a>composer insatall が失敗す</h3><p>PHP のライブラリの依存関係を管理する composer ですが、composer install でインストールをしようとすると killed で失敗してしまうのでその原因を調べました。<br>ちなみに Laravel の環境を作っている最中でした。</p>
+<h3 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ composer install</span><br><span class="line">Loading composer repositories with package information</span><br><span class="line">Updating dependencies (including <span class="keyword">require</span>-dev)</span><br><span class="line">Killed</span><br></pre></td></tr></table></figure>
+<p>パッケージをインストールしようとすると上記のような感じで killed で中途半端に終わります。composer install -vvv で詳細な進捗が表示されるので実行して見てみると、順調に進んでいる途中でプチっと途切れてしまいます.</p>
+<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>原因はメモリ不足です。</p>
+<p>どうも killed で終わるのは Linux がメモリ不足でシステム停止する恐れがあるときに、メモリを多く消費しているプロセスを強制的に殺しているかららしいです。OOM Killer という機能です。</p>
+<p>composer install を実行すると、依存関係をいろいろと調整したりするためにデータを読み込んだりするのですが、それが大きくなるとメモリの消費量が大きくなりすぎます。そして限界がきて OS からプロセスが殺されます。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>原因がメモリ不足なのでメモリの割り当てを増やすことで解決できます。</p>
+<p>メモリを増やすのが難しければ、スワップ領域を増やしてやればよいです。私はスワップ領域に1GB分割り当てて解決しました。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dd if=/dev/zero of=/var/swap bs=1M count=1024</span></span><br><span class="line"><span class="comment"># mkswap /var/swap</span></span><br><span class="line"><span class="comment"># swapon /var/swap</span></span><br></pre></td></tr></table></figure></p>
+<p>/var/swap ファイルに 1024MB(1GB)分のファイルを作って割り当てています。これで再実行すれば正常に完了するはずです。</p>
+<p>以上。</p>
+<blockquote>
+<p><a href="https://webbibouroku.com/Blog/Article/composer-killed" target="_blank" rel="noopener">https://webbibouroku.com/Blog/Article/composer-killed</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/11/10/git恢复被删除的文件/" itemprop="url">
                   git恢复被删除的文件
                 </a>
@@ -279,7 +387,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-11-10T23:03:32+08:00" content="2018-11-10">
+            <time itemprop="dateCreated" datetime="2018-11-10T23:03:32+09:00" content="2018-11-10">
               2018-11-10
             </time>
           </span>
@@ -380,7 +488,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-11-10T23:02:20+08:00" content="2018-11-10">
+            <time itemprop="dateCreated" datetime="2018-11-10T23:02:20+09:00" content="2018-11-10">
               2018-11-10
             </time>
           </span>
@@ -493,7 +601,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-08T14:44:20+08:00" content="2018-09-08">
+            <time itemprop="dateCreated" datetime="2018-09-08T14:44:20+09:00" content="2018-09-08">
               2018-09-08
             </time>
           </span>
@@ -601,7 +709,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-05T09:12:17+08:00" content="2018-09-05">
+            <time itemprop="dateCreated" datetime="2018-09-05T09:12:17+09:00" content="2018-09-05">
               2018-09-05
             </time>
           </span>
@@ -689,111 +797,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/09/05/laravel集合中的when方法/" itemprop="url">
-                  Laravel集合中的when方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-09-05T08:55:51+08:00" content="2018-09-05">
-              2018-09-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>Hope is a good thing and maybe the best of things. And no good thing ever dies.<br></blockquote>
-
-<p>Starting at v5.4.12, Laravel Collections now includes a when method that allows you to perform conditional actions on the items without breaking the chain.</p>
-<p>Like all the other Laravel Collection methods this one can have a lot of use cases but one example that comes to mind is being able to filter based on a query string parameter.</p>
-<p>To demonstrate that example, let’s pretend we have a list of hosts from the Laravel News Podcast:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$hosts = [</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Eric Barnes'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">0</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Jack Fruh'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">0</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Jacob Bennett'</span>, <span class="string">'location'</span> =&gt; <span class="string">'USA'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">1</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Michael Dyrynda'</span>, <span class="string">'location'</span> =&gt; <span class="string">'AU'</span>, <span class="string">'is_active'</span> =&gt; <span class="number">1</span>],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-<p>Previously to filter based on a query string you might do something like this:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$inUsa = collect($hosts)-&gt;where(<span class="string">'location'</span>, <span class="string">'USA'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (request(<span class="string">'retired'</span>)) &#123;</span><br><span class="line">    $inUsa = $inUsa-&gt;filter(<span class="function"><span class="keyword">function</span><span class="params">($employee)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ! $employee[<span class="string">'is_active'</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>With the new when method you can now do this all in one Collection chain:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$inUsa = collect($hosts)</span><br><span class="line">    -&gt;where(<span class="string">'location'</span>, <span class="string">'USA'</span>)</span><br><span class="line">    -&gt;when(request(<span class="string">'retired'</span>), <span class="function"><span class="keyword">function</span><span class="params">($collection)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $collection-&gt;reject(<span class="function"><span class="keyword">function</span><span class="params">($employee)</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $employee[<span class="string">'is_active'</span>];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://laravel-news.com/laravel-collections-when-method" target="_blank" rel="noopener">https://laravel-news.com/laravel-collections-when-method</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -837,7 +840,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -847,7 +850,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

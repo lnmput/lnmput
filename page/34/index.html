@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2017/12/27/一个因number-format引起的bug/" itemprop="url">
+                  一个因number_format引起的bug
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-27T15:18:14+09:00" content="2017-12-27">
+              2017-12-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>奥巴马55岁就退休，川普70岁才开始当总统。<br></blockquote><br>number_format() 函数格式化以后的数字不再是数字, 而是字符串<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$num = <span class="number">12.5345</span>;</span><br><span class="line">$format = number_format($num, <span class="number">2</span>);</span><br><span class="line">dd(is_string($format));  <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>所以字符串0.00并不是false<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$num = <span class="number">0</span>;</span><br><span class="line">$format = number_format($num, <span class="number">2</span>);</span><br><span class="line">dd(<span class="keyword">empty</span>($format));  <span class="comment">// false</span></span><br></pre></td></tr></table></figure></p>
+<p>数字0.00 才是false<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd(<span class="keyword">empty</span>(<span class="number">0.00</span>));  <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>还有一个字符串0是false<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dump(<span class="keyword">empty</span>(<span class="string">'0'</span>));  <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>而字符串0.0确是true<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dump(<span class="keyword">empty</span>(<span class="string">'0.0'</span>));  <span class="comment">// false</span></span><br></pre></td></tr></table></figure></p>
+<p>字符串强制转化成数字<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$num = <span class="number">12.45</span>;</span><br><span class="line">$format = number_format($num, <span class="number">2</span>);</span><br><span class="line">dd(floatval($format));</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/12/27/上传文件出现httpcode413错误/" itemprop="url">
                   上传文件出现httpcode413错误
                 </a>
@@ -279,7 +378,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-27T15:10:55+08:00" content="2017-12-27">
+            <time itemprop="dateCreated" datetime="2017-12-27T15:10:55+09:00" content="2017-12-27">
               2017-12-27
             </time>
           </span>
@@ -375,7 +474,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-14T18:49:17+08:00" content="2017-12-14">
+            <time itemprop="dateCreated" datetime="2017-12-14T18:49:17+09:00" content="2017-12-14">
               2017-12-14
             </time>
           </span>
@@ -476,7 +575,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-14T10:07:23+08:00" content="2017-12-14">
+            <time itemprop="dateCreated" datetime="2017-12-14T10:07:23+09:00" content="2017-12-14">
               2017-12-14
             </time>
           </span>
@@ -588,7 +687,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-14T09:16:32+08:00" content="2017-12-14">
+            <time itemprop="dateCreated" datetime="2017-12-14T09:16:32+09:00" content="2017-12-14">
               2017-12-14
             </time>
           </span>
@@ -631,106 +730,6 @@
 <h4 id="修改UserRepository-php"><a href="#修改UserRepository-php" class="headerlink" title="修改UserRepository.php"></a>修改UserRepository.php</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Repositories</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserRepository</span> <span class="keyword">implements</span> <span class="title">UserRepositoryInterFace</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">haha</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'text'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hehe</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Implement hehe() method.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="在HomeController中注入接口"><a href="#在HomeController中注入接口" class="headerlink" title="在HomeController中注入接口"></a>在HomeController中注入接口</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepositoryInterFace</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">protected</span> $userRepository;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(UserRepositoryInterFace $userRepositoryInterFace)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;userRepository = $userRepositoryInterFace;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;userRepository-&gt;haha();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h4><p>我们依赖注入的是接口的时候, 需要做在AppServiceProvider(服务提供者)中做绑定,这样 laravel 就会帮你实例化依赖注入的类<br>app\Providers\AppServiceProvider.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepository</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">UserRepositoryInterFace</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">$this</span>-&gt;app-&gt;bind(UserRepositoryInterFace::class, UserRepository::class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/12/13/laravel删除模型时同时删除关联关系/" itemprop="url">
-                  laravel删除模型时同时删除关联关系
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-12-13T15:52:46+08:00" content="2017-12-13">
-              2017-12-13
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>夜阑卧听风吹雨, 铁马是你, 冰河也是你。<br></blockquote>
-
-<p>我们在没有在数据库中设计外键关联时想要在删除某一个模型时同时删除与改模型关联的相关数据, 可以试试下面这个方法<br>注意<code>delete</code>方法需要定义在<code>photos</code>方法之后;</p>
-<h3 id="User-Model"><a href="#User-Model" class="headerlink" title="User Model"></a>User Model</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Eloquent</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">photos</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;has_many(<span class="string">'Photo'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// delete all related photos </span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;photos()-&gt;delete();</span><br><span class="line">        <span class="comment">// as suggested by Dirk in comment,</span></span><br><span class="line">        <span class="comment">// it's an uglier alternative, but faster</span></span><br><span class="line">        <span class="comment">// Photo::where("user_id", $this-&gt;id)-&gt;delete()</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// delete the user</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">parent</span>::delete();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://stackoverflow.com/questions/14174070/automatically-deleting-related-rows-in-laravel-eloquent-orm" target="_blank" rel="noopener">https://stackoverflow.com/questions/14174070/automatically-deleting-related-rows-in-laravel-eloquent-orm</a></p>
-</blockquote>
 
           
         
@@ -802,7 +801,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -812,7 +811,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

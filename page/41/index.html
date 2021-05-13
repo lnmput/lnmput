@@ -265,6 +265,113 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/30/laravel5-5使用vue的基本开发/" itemprop="url">
+                  laravel5.5使用vue的基本开发
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-30T11:05:53+09:00" content="2017-09-30">
+              2017-09-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>知识太多了就容易装B，知识太少就容易犯浑，像我这样不多不少刚刚好，想装B就装B，想犯浑就犯浑。<br></blockquote>
+
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:auth</span><br><span class="line">php artisan migrate</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>注册用户以后登录到 home, 接下来我们会在 home 视图上创建我们的第一个组件;</p>
+<h3 id="使用laravel提供的一个默认组件"><a href="#使用laravel提供的一个默认组件" class="headerlink" title="使用laravel提供的一个默认组件"></a>使用laravel提供的一个默认组件</h3><p>执行命令<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure></p>
+<p>默认组件位置:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">la555\resources\assets\js\components\Example.vue</span><br></pre></td></tr></table></figure></p>
+<p>组件注册位置:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">la555\resources\assets\js\app.js</span><br><span class="line">Vue.component(<span class="string">'example'</span>, <span class="keyword">require</span>(<span class="string">'./components/Example.vue'</span>));</span><br></pre></td></tr></table></figure></p>
+<p>在视图页面中直接使用:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">example</span>&gt;</span><span class="tag">&lt;/<span class="name">example</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>刷新页面即可</p>
+<h3 id="创建我们自己的组件"><a href="#创建我们自己的组件" class="headerlink" title="创建我们自己的组件"></a>创建我们自己的组件</h3><h4 id="创建组件并注册使用"><a href="#创建组件并注册使用" class="headerlink" title="创建组件并注册使用"></a>创建组件并注册使用</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">la555\resources\assets\js\components\Like.vue</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span></span></span><br><span class="line"><span class="tag">    <span class="attr">class</span>=<span class="string">"btn btn-default"</span></span></span><br><span class="line"><span class="tag">  &gt;</span></span><br><span class="line">    like</span><br><span class="line">  <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line">        mounted() &#123;</span><br><span class="line"><span class="javascript">            <span class="built_in">console</span>.log(<span class="string">'初次加载'</span>)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注册<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'example'</span>, <span class="built_in">require</span>(<span class="string">'./components/Example.vue'</span>));</span><br><span class="line">Vue.component(<span class="string">'like'</span>, <span class="built_in">require</span>(<span class="string">'./components/Like.vue'</span>));</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    el: <span class="string">'#app'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>在模版页面中使用<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">like</span>&gt;</span><span class="tag">&lt;/<span class="name">like</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="组件传参数"><a href="#组件传参数" class="headerlink" title="组件传参数"></a>组件传参数</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">like</span> <span class="attr">user</span>=<span class="string">"&#123;&#123; Auth::id() &#125;&#125;"</span> <span class="attr">title</span>=<span class="string">"yangzie"</span>&gt;</span><span class="tag">&lt;/<span class="name">like</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button</span><br><span class="line">    <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span></span><br><span class="line">  &gt;</span><br><span class="line">    like</span><br><span class="line">  &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">        props: [<span class="string">'user'</span>, <span class="string">'title'</span>],</span><br><span class="line">        mounted() &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>.user);</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>.title);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/29/Laravel5-4新特性-Laravel-mix和laravel-elixir比较/" itemprop="url">
                   Laravel5.4新特性-Laravel-mix和laravel-elixir比较
                 </a>
@@ -279,7 +386,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-29T14:54:11+08:00" content="2017-09-29">
+            <time itemprop="dateCreated" datetime="2017-09-29T14:54:11+09:00" content="2017-09-29">
               2017-09-29
             </time>
           </span>
@@ -387,7 +494,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-28T14:43:01+08:00" content="2017-09-28">
+            <time itemprop="dateCreated" datetime="2017-09-28T14:43:01+09:00" content="2017-09-28">
               2017-09-28
             </time>
           </span>
@@ -489,7 +596,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-28T10:46:54+08:00" content="2017-09-28">
+            <time itemprop="dateCreated" datetime="2017-09-28T10:46:54+09:00" content="2017-09-28">
               2017-09-28
             </time>
           </span>
@@ -594,7 +701,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-28T09:25:20+08:00" content="2017-09-28">
+            <time itemprop="dateCreated" datetime="2017-09-28T09:25:20+09:00" content="2017-09-28">
               2017-09-28
             </time>
           </span>
@@ -675,110 +782,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/25/PHPstudy升级mysql5-7方法/" itemprop="url">
-                  PHPstudy升级mysql5.7方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-09-25T11:35:46+08:00" content="2017-09-25">
-              2017-09-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>当我站在瀑布前，觉得非常的难过，我总觉得，应该是两个人站在这里<br></blockquote></p>
-<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>1.在mysql官网下载压缩包，我选取的是最新版的5.7.17连接：<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/mysql/</a><br>2.趁着下载的时间可以把之前的数据库数据备份下，我把 phpStudy 中 MySQL 文件夹可以重命名下，备用<br>3.把下载的 MySQL 压缩文件解压至 phpStudy 下的 MySQL目录，复制my-default.ini ，重命名为 my.ini。<br>4.打开 my.ini，找到 #basedir 处编辑：（我的安装在了C盘，路径根据phpstudy的安装路径选择）<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">basedir = C:\phpStudy7\MySQL</span><br><span class="line">datadir = C:\phpStudy7\MySQL\data</span><br></pre></td></tr></table></figure></p>
-<p>5.在cmd下进入MySQL的bin目录（我的是 C:\phpStudy7\MySQL\bin），(初始化数据库：<code>mysqld --initialize</code>)</p>
-<h3 id="错误解决"><a href="#错误解决" class="headerlink" title="错误解决"></a>错误解决</h3><h4 id="错误一"><a href="#错误一" class="headerlink" title="错误一"></a>错误一</h4><p>如果是timestamp的错误，在<code>my.ini</code>中添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">explicit_defaults_for_timestamp=<span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="错误二"><a href="#错误二" class="headerlink" title="错误二"></a>错误二</h4><p>如果有[ERROR]mysqld:Error while setting value<br>‘’ONLY_FULL_GROUP_BY,NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,’to ‘sql_mode’<br>在my.ini中添加<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">sql_mode=<span class="string">'NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,PIPES_AS_CONCAT,ANSI_QUOTES'</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="错误三"><a href="#错误三" class="headerlink" title="错误三"></a>错误三</h4><p>如果是错误：initialize specified but the data directory has files in it.aborting<br>管理员身份运行cmd,然后cd至mysql下的bin，运行mysql install，然后就成功了<br>或者mysql中的data目录已经有数据了, 清空重新执行<br>执行完后，重启phpstudy</p>
-<h4 id="错误四"><a href="#错误四" class="headerlink" title="错误四"></a>错误四</h4><p>此时登入 MySQL 报错：#1045 无法登录 MySQL 服务器，<br>打开 my.ini，找到 [mysqld]，在下面添加：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">skip-grant-tables <span class="comment">#(此参数用于忘记mysql密码)并保存</span></span><br></pre></td></tr></table></figure></p>
-<p>此时使用 root 账号，密码处按回车即可登录。<br>如果想增加密码，在无密码的情况下进去mysql命令行，找到mysql数据库的user表：修改密码：<br>update user set authentication_string=’新密码’ where user=’root’ ;<br>此时仍然用root密码仍登录不进去的话，在phpstudy修改密码，原来的密码为空</p>
-<blockquote>
-<p><a href="http://www.jianshu.com/p/b238da2f9134" target="_blank" rel="noopener">http://www.jianshu.com/p/b238da2f9134</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -822,7 +825,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -832,7 +835,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

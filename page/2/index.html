@@ -265,6 +265,111 @@
             
               
                 
+                <a class="post-title-link" href="/2020/08/22/javascript-code-plays-google-dinosaur-t-rex-game-automatically/" itemprop="url">
+                  javascript-code-plays-google-dinosaur-t-rex-game-automatically
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-08-22T09:56:17+09:00" content="2020-08-22">
+              2020-08-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>钱是治疗情绪的最佳良药，简单，粗暴，好用。<br></blockquote>
+
+<h3 id="Step-1"><a href="#Step-1" class="headerlink" title="Step 1"></a>Step 1</h3><p> Open Google Chrome in your computer.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome:<span class="comment">//dino/</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h3><p>Now enter chrome://dino/ in the URL address bar and press “Enter”. Or simply disconnect your internet and try to visit any website. After performing this step you will see the Google Dinosaur/T-Rex Game.</p>
+<h3 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h3><p>Press “F12” on your keyboard. It will open a new window/box on your screen. You need to click the “Console” button/tab on this new window.</p>
+<h3 id="Step-4"><a href="#Step-4" class="headerlink" title="Step 4"></a>Step 4</h3><p>It’s time to add some code here.</p>
+<p>Just copy the code given below and paste it inside the “Console” window. After that press “Enter”.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">keyDown</span>(<span class="params">e</span>)</span>&#123;Podium=&#123;&#125;;<span class="keyword">var</span> n=<span class="built_in">document</span>.createEvent(<span class="string">"KeyboardEvent"</span>);<span class="built_in">Object</span>.defineProperty(n,<span class="string">"keyCode"</span>,&#123;<span class="attr">get</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.keyCodeVal&#125;&#125;),n.initKeyboardEvent?n.initKeyboardEvent(<span class="string">"keydown"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,e,e,<span class="string">""</span>,<span class="string">""</span>,!<span class="number">1</span>,<span class="string">""</span>):n.initKeyEvent(<span class="string">"keydown"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,e,<span class="number">0</span>),n.keyCodeVal=e,<span class="built_in">document</span>.body.dispatchEvent(n)&#125;<span class="function"><span class="keyword">function</span> <span class="title">keyUp</span>(<span class="params">e</span>)</span>&#123;Podium=&#123;&#125;;<span class="keyword">var</span> n=<span class="built_in">document</span>.createEvent(<span class="string">"KeyboardEvent"</span>);<span class="built_in">Object</span>.defineProperty(n,<span class="string">"keyCode"</span>,&#123;<span class="attr">get</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.keyCodeVal&#125;&#125;),n.initKeyboardEvent?n.initKeyboardEvent(<span class="string">"keyup"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,e,e,<span class="string">""</span>,<span class="string">""</span>,!<span class="number">1</span>,<span class="string">""</span>):n.initKeyEvent(<span class="string">"keyup"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,e,<span class="number">0</span>),n.keyCodeVal=e,<span class="built_in">document</span>.body.dispatchEvent(n)&#125;setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;Runner.instance_.horizon.obstacles.length&gt;<span class="number">0</span>&amp;&amp;(Runner.instance_.horizon.obstacles[<span class="number">0</span>].xPos&lt;<span class="number">25</span>*Runner.instance_.currentSpeed-Runner.instance_.horizon.obstacles[<span class="number">0</span>].width/<span class="number">2</span>&amp;&amp;Runner.instance_.horizon.obstacles[<span class="number">0</span>].yPos&gt;<span class="number">75</span>&amp;&amp;(keyUp(<span class="number">40</span>),keyDown(<span class="number">38</span>)),Runner.instance_.horizon.obstacles[<span class="number">0</span>].xPos&lt;<span class="number">30</span>*Runner.instance_.currentSpeed-Runner.instance_.horizon.obstacles[<span class="number">0</span>].width/<span class="number">2</span>&amp;&amp;Runner.instance_.horizon.obstacles[<span class="number">0</span>].yPos&lt;=<span class="number">75</span>&amp;&amp;keyDown(<span class="number">40</span>))&#125;,<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="Step-5"><a href="#Step-5" class="headerlink" title="Step 5"></a>Step 5</h3><p>Start the game by pressing “Space” or “Up Arrow” key.</p>
+<blockquote>
+<p><a href="https://www.edopedia.com/blog/javascript-code-plays-google-dinosaur-t-rex-game-automatically/" target="_blank" rel="noopener">https://www.edopedia.com/blog/javascript-code-plays-google-dinosaur-t-rex-game-automatically/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/08/17/nginx的location匹配/" itemprop="url">
                   nginx的location匹配
                 </a>
@@ -279,7 +384,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-08-17T18:05:36+08:00" content="2020-08-17">
+            <time itemprop="dateCreated" datetime="2020-08-17T18:05:36+09:00" content="2020-08-17">
               2020-08-17
             </time>
           </span>
@@ -406,7 +511,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-07-22T13:50:13+08:00" content="2020-07-22">
+            <time itemprop="dateCreated" datetime="2020-07-22T13:50:13+09:00" content="2020-07-22">
               2020-07-22
             </time>
           </span>
@@ -504,7 +609,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-05-16T23:29:09+08:00" content="2020-05-16">
+            <time itemprop="dateCreated" datetime="2020-05-16T23:29:09+09:00" content="2020-05-16">
               2020-05-16
             </time>
           </span>
@@ -619,7 +724,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-05-04T22:04:43+08:00" content="2020-05-04">
+            <time itemprop="dateCreated" datetime="2020-05-04T22:04:43+09:00" content="2020-05-04">
               2020-05-04
             </time>
           </span>
@@ -727,116 +832,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/05/03/async和await让异步编程更简单/" itemprop="url">
-                  async和await让异步编程更简单
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-05-03T20:58:27+08:00" content="2020-05-03">
-              2020-05-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>这是场接力赛，你却当成百米赛跑。<br></blockquote>
-
-<h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p>首先，我们使用async关键字，您可以将它放在函数声明之前，将其转换为async function。异步函数是一个知道怎样预期 await 关键字可用于调用异步代码可能性的函数。</p>
-<p>尝试在浏览器的JS控制台中键入以下行：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="string">"Hello"</span> &#125;;</span><br><span class="line">hello();</span><br></pre></td></tr></table></figure></p>
-<p>该函数返回“Hello” ––没什么特别的，对吧？</p>
-<p>但是，如果我们将其变成异步函数呢？请尝试以下方法：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="string">"Hello"</span> &#125;;</span><br><span class="line">hello();</span><br></pre></td></tr></table></figure></p>
-<p>额。。现在调用该函数会返回一个promise。这是异步函数的特征之一 ––它将任何函数转换为promise。<br>你也可以创建一个异步函数表达式（参见async function expression），如下所示:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> hello = <span class="keyword">async</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="string">"Hello"</span> &#125;;</span><br><span class="line">hello();</span><br></pre></td></tr></table></figure></p>
-<p>你可以使用箭头函数：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> hello = <span class="keyword">async</span> () =&gt; &#123; <span class="keyword">return</span> <span class="string">"Hello"</span> &#125;;</span><br></pre></td></tr></table></figure></p>
-<p>这些都基本上是一样的。</p>
-<p>要实际使用promise实现时返回的值，因为它返回了一个promise，我们可以使用.then()块：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello().then(<span class="function">(<span class="params">value</span>) =&gt;</span> <span class="built_in">console</span>.log(value))</span><br></pre></td></tr></table></figure></p>
-<p>甚至只是简写如<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello().then(<span class="built_in">console</span>.log)</span><br></pre></td></tr></table></figure></p>
-<p>就像我们在上一篇文章中看到的那样<br>因此，将async关键字添加到函数中以告诉它们返回promise而不是直接返回值。此外，这使同步函数可以避免运行支持使用await时带来的任何潜在开销。通过仅在函数声明为异步时添加必要的处理，JavaScript引擎可以为您优化您的程序。爽！</p>
-<h3 id="await"><a href="#await" class="headerlink" title="await"></a>await</h3><p>将它与await关键字结合使用时，异步函数的真正优势就变得明显了。这可以放在任何基于异步声明的函数之前，暂停代码在该行上，直到promise完成，然后返回结果值。与此同时，其他正在等待执行机会的代码就有可能如愿执行了。<br>这是一个简单的示例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> greeting = <span class="keyword">await</span> <span class="built_in">Promise</span>.resolve(<span class="string">"Hello"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">hello().then(alert);</span><br></pre></td></tr></table></figure></p>
-<p>关键字 await 让 JavaScript 引擎等待直到 promise 完成（settle）并返回结果<br>这里的例子就是一个 1 秒后 resolve 的 promise：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> resolve(<span class="string">"done!"</span>), <span class="number">1000</span>)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> result = <span class="keyword">await</span> promise; <span class="comment">// 等待，直到 promise resolve (*)</span></span><br><span class="line"></span><br><span class="line">  alert(result); <span class="comment">// "done!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f();</span><br></pre></td></tr></table></figure></p>
-<p>这个函数在执行的时候，“暂停”在了 <code>(*)</code> 那一行，并在 promise settle 时，拿到 result 作为结果继续往下执行。所以上面这段代码在一秒后显示 <code>“done!”</code>。</p>
-<p>让我们强调一下：await 字面的意思就是让 JavaScript 引擎等待直到 promise settle，然后以 promise 的结果继续执行。这个行为不会耗费任何 CPU 资源，因为引擎可以同时处理其他任务：执行其他脚本，处理事件等。</p>
-<p>相比于 promise.then，它只是获取 promise 的结果的一个更优雅的语法，同时也更易于读写。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -880,7 +875,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -890,7 +885,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

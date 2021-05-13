@@ -265,6 +265,101 @@
             
               
                 
+                <a class="post-title-link" href="/2021/05/13/html过滤指定标签以及属性css样式/" itemprop="url">
+                  html过滤指定标签以及属性css样式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2021-05-13T15:28:36+09:00" content="2021-05-13">
+              2021-05-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>一辈子都要和别人去比较，是人生悲剧的源头<br></blockquote>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rich_text_filter</span><span class="params">($content)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $allowTags = <span class="keyword">array</span>(<span class="string">'&lt;br&gt;'</span>, <span class="string">'&lt;b&gt;'</span>, <span class="string">'&lt;p&gt;'</span>, <span class="string">'&lt;i&gt;'</span>, <span class="string">'&lt;u&gt;'</span>, <span class="string">'&lt;div&gt;'</span>, <span class="string">'&lt;strong&gt;'</span>, <span class="string">'&lt;img&gt;'</span>);   <span class="comment">// 允许通过的标签</span></span><br><span class="line">    $allowAttributes = <span class="keyword">array</span>(<span class="string">'src'</span>, <span class="string">'width'</span>, <span class="string">'style'</span>);                                      <span class="comment">// 允许通过的html属性</span></span><br><span class="line">    $allowCss = <span class="keyword">array</span>(<span class="string">"width"</span>, <span class="string">"text-align"</span>, <span class="string">"font-weight"</span>);                                <span class="comment">// 允许通过的css属性</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除多余标签  保留特定标签</span></span><br><span class="line">    $content = strip_tags($content, implode($allowTags));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除多余数属性 和多余css</span></span><br><span class="line">    $content = preg_replace(<span class="string">"/&lt;\s*/"</span>, <span class="string">'&lt;'</span>, $content);</span><br><span class="line"></span><br><span class="line">    $content = preg_replace_callback(<span class="string">"/([a-zA-Z0-9\-]+)=['\"]([^'\"]*)['\"]\s*/i"</span>, <span class="function"><span class="keyword">function</span> <span class="params">($matches)</span> <span class="title">use</span> <span class="params">($allowAttributes, $allowCss)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">isset</span>($matches[<span class="number">1</span>]) || !in_array(trim($matches[<span class="number">1</span>]), $allowAttributes)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">' '</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (trim($matches[<span class="number">1</span>]) === <span class="string">'style'</span> &amp;&amp; <span class="keyword">isset</span>($matches[<span class="number">2</span>]) &amp;&amp; !<span class="keyword">empty</span>($matches[<span class="number">2</span>])) &#123;</span><br><span class="line">            $styles = $matches[<span class="number">2</span>] . (preg_match(<span class="string">"/;$/"</span>, $matches[<span class="number">2</span>]) ? <span class="string">''</span> : <span class="string">';'</span>);</span><br><span class="line">            $styles = preg_replace_callback(<span class="string">"/([^:;]+):([^:;]+);/"</span>, <span class="function"><span class="keyword">function</span> <span class="params">($items)</span> <span class="title">use</span><span class="params">($allowCss)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">isset</span>($items[<span class="number">1</span>]) &amp;&amp; in_array(trim($items[<span class="number">1</span>]), $allowCss)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> $items[<span class="number">0</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">            &#125;, $styles);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> sprintf(<span class="string">'style="%s" '</span>, $styles);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sprintf(<span class="string">' %s '</span>, $matches[<span class="number">0</span>]);</span><br><span class="line">    &#125;, $content);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $content;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2021/03/13/导致mysql索引失效的几种写法/" itemprop="url">
                   导致mysql索引失效的几种写法
                 </a>
@@ -279,7 +374,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2021-03-13T18:06:43+08:00" content="2021-03-13">
+            <time itemprop="dateCreated" datetime="2021-03-13T18:06:43+09:00" content="2021-03-13">
               2021-03-13
             </time>
           </span>
@@ -388,7 +483,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-12-18T15:06:54+08:00" content="2020-12-18">
+            <time itemprop="dateCreated" datetime="2020-12-18T15:06:54+09:00" content="2020-12-18">
               2020-12-18
             </time>
           </span>
@@ -491,7 +586,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-12-17T13:39:32+08:00" content="2020-12-17">
+            <time itemprop="dateCreated" datetime="2020-12-17T13:39:32+09:00" content="2020-12-17">
               2020-12-17
             </time>
           </span>
@@ -593,7 +688,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-12-17T13:26:24+08:00" content="2020-12-17">
+            <time itemprop="dateCreated" datetime="2020-12-17T13:26:24+09:00" content="2020-12-17">
               2020-12-17
             </time>
           </span>
@@ -673,111 +768,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/08/22/javascript-code-plays-google-dinosaur-t-rex-game-automatically/" itemprop="url">
-                  javascript-code-plays-google-dinosaur-t-rex-game-automatically
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2020-08-22T09:56:17+08:00" content="2020-08-22">
-              2020-08-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>钱是治疗情绪的最佳良药，简单，粗暴，好用。<br></blockquote>
-
-<h3 id="Step-1"><a href="#Step-1" class="headerlink" title="Step 1"></a>Step 1</h3><p> Open Google Chrome in your computer.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome:<span class="comment">//dino/</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h3><p>Now enter chrome://dino/ in the URL address bar and press “Enter”. Or simply disconnect your internet and try to visit any website. After performing this step you will see the Google Dinosaur/T-Rex Game.</p>
-<h3 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h3><p>Press “F12” on your keyboard. It will open a new window/box on your screen. You need to click the “Console” button/tab on this new window.</p>
-<h3 id="Step-4"><a href="#Step-4" class="headerlink" title="Step 4"></a>Step 4</h3><p>It’s time to add some code here.</p>
-<p>Just copy the code given below and paste it inside the “Console” window. After that press “Enter”.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">keyDown</span>(<span class="params">e</span>)</span>&#123;Podium=&#123;&#125;;<span class="keyword">var</span> n=<span class="built_in">document</span>.createEvent(<span class="string">"KeyboardEvent"</span>);<span class="built_in">Object</span>.defineProperty(n,<span class="string">"keyCode"</span>,&#123;<span class="attr">get</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.keyCodeVal&#125;&#125;),n.initKeyboardEvent?n.initKeyboardEvent(<span class="string">"keydown"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,e,e,<span class="string">""</span>,<span class="string">""</span>,!<span class="number">1</span>,<span class="string">""</span>):n.initKeyEvent(<span class="string">"keydown"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,e,<span class="number">0</span>),n.keyCodeVal=e,<span class="built_in">document</span>.body.dispatchEvent(n)&#125;<span class="function"><span class="keyword">function</span> <span class="title">keyUp</span>(<span class="params">e</span>)</span>&#123;Podium=&#123;&#125;;<span class="keyword">var</span> n=<span class="built_in">document</span>.createEvent(<span class="string">"KeyboardEvent"</span>);<span class="built_in">Object</span>.defineProperty(n,<span class="string">"keyCode"</span>,&#123;<span class="attr">get</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.keyCodeVal&#125;&#125;),n.initKeyboardEvent?n.initKeyboardEvent(<span class="string">"keyup"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,e,e,<span class="string">""</span>,<span class="string">""</span>,!<span class="number">1</span>,<span class="string">""</span>):n.initKeyEvent(<span class="string">"keyup"</span>,!<span class="number">0</span>,!<span class="number">0</span>,<span class="built_in">document</span>.defaultView,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,!<span class="number">1</span>,e,<span class="number">0</span>),n.keyCodeVal=e,<span class="built_in">document</span>.body.dispatchEvent(n)&#125;setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;Runner.instance_.horizon.obstacles.length&gt;<span class="number">0</span>&amp;&amp;(Runner.instance_.horizon.obstacles[<span class="number">0</span>].xPos&lt;<span class="number">25</span>*Runner.instance_.currentSpeed-Runner.instance_.horizon.obstacles[<span class="number">0</span>].width/<span class="number">2</span>&amp;&amp;Runner.instance_.horizon.obstacles[<span class="number">0</span>].yPos&gt;<span class="number">75</span>&amp;&amp;(keyUp(<span class="number">40</span>),keyDown(<span class="number">38</span>)),Runner.instance_.horizon.obstacles[<span class="number">0</span>].xPos&lt;<span class="number">30</span>*Runner.instance_.currentSpeed-Runner.instance_.horizon.obstacles[<span class="number">0</span>].width/<span class="number">2</span>&amp;&amp;Runner.instance_.horizon.obstacles[<span class="number">0</span>].yPos&lt;=<span class="number">75</span>&amp;&amp;keyDown(<span class="number">40</span>))&#125;,<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="Step-5"><a href="#Step-5" class="headerlink" title="Step 5"></a>Step 5</h3><p>Start the game by pressing “Space” or “Up Arrow” key.</p>
-<blockquote>
-<p><a href="https://www.edopedia.com/blog/javascript-code-plays-google-dinosaur-t-rex-game-automatically/" target="_blank" rel="noopener">https://www.edopedia.com/blog/javascript-code-plays-google-dinosaur-t-rex-game-automatically/</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -821,7 +811,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -831,7 +821,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,123 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/07/PHP生成器的简单理解/" itemprop="url">
+                  PHP生成器的简单理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-07T20:15:30+09:00" content="2016-08-07">
+              2016-08-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>最初不相识，最终不相认<br></blockquote><br>生成器允许你在 foreach 代码块中写代码来迭代一组数据而不需要在内存中创建一个数组, 那会使你的内存达到上限，或者会占据可观的处理时间。相反，你可以写一个生成器函数，就像一个普通的自定义函数一样, 和普通函数只返回一次不同的是, 生成器可以根据需要 yield 多次，以便生成需要迭代的值。<br>一个简单的例子就是使用生成器来重新实现 range() 函数。 标准的 range() 函数需要在内存中生成一个数组包含每一个在它范围内的值，然后返回该数组, 结果就是会产生多个很大的数组。 比如，调用 range(0, 1000000) 将导致内存占用超过 100 MB。<br>做为一种替代方法, 我们可以实现一个 xrange() 生成器, 只需要足够的内存来创建 Iterator 对象并在内部跟踪生成器的当前状态，这样只需要不到1K字节的内存。</p>
+<h3 id="简单理解"><a href="#简单理解" class="headerlink" title="简单理解"></a>简单理解</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">官方的定义中：生成器就是简单的迭代器。</span><br><span class="line">不同于标准的PHP迭代器，PHP的生成器并不要求你一定要在一个重量级的类中实现Iterator接口。</span><br><span class="line">相反，生成器会按需求计算并交出迭代值。这对应用程序的性能有着深远的意义。想想吧，</span><br><span class="line">一个标准的PHP迭代器通常都是基于内存中全部计算过的数据集进行迭代。这样做效率不高。</span><br><span class="line">尤其是大量可计算的公式化数据集。使用生成器我们可以动态的计算并交出下一个值而不占用</span><br><span class="line">宝贵的系统内存，这就是我们使用生成器的原因。</span><br></pre></td></tr></table></figure>
+<h3 id="创建一个生成器"><a href="#创建一个生成器" class="headerlink" title="创建一个生成器"></a>创建一个生成器</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myGenerator</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value1'</span>;  </span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value2'</span>;  </span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value3'</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用这个生成器"><a href="#使用这个生成器" class="headerlink" title="使用这个生成器"></a>使用这个生成器</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="keyword">foreach</span> (myGenerator() <span class="keyword">as</span> $yieldedValue) &#123;  </span><br><span class="line">    <span class="keyword">echo</span> $yieldedValue, PHP_EOL;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：<br>value1<br>value2<br>value3</p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><ul>
+<li>Range生成器（糟糕的实现）</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRange</span><span class="params">($length)</span> </span>&#123;  </span><br><span class="line">    $dataset = [];  </span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; $length; $i++) &#123;  </span><br><span class="line">        $dataset[] = $i;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> $dataset;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">$customRange = makeRange(<span class="number">1000000</span>);  </span><br><span class="line"><span class="keyword">foreach</span> ($customRange <span class="keyword">as</span> $i) &#123;  </span><br><span class="line">    <span class="keyword">echo</span> $i, PHP_EOL;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Range生成器（好的实现）</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRange</span><span class="params">($length)</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; $length; $i++) &#123;  </span><br><span class="line">        <span class="keyword">yield</span> $i;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">foreach</span> (makeRange(<span class="number">1000000</span>) <span class="keyword">as</span> $i) &#123;  </span><br><span class="line">    <span class="keyword">echo</span> $i, PHP_EOL;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的例子并不实用。但是，联想一下所有你可能用来计算的数据集。序列数（例如斐波纳挈数）就是很典型的例子。同样你还可以遍历文件流资源。想象一下，如果你需要遍历一个4G的逗号分隔值（CSV）文件，而你的虚拟个人服务器（VPS）上PHP只分配了1G的内存。你根本没法把整个文件读取到内存中。</p>
+<ul>
+<li>CSV生成器</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRows</span><span class="params">($file)</span> </span>&#123;  </span><br><span class="line">    $handle = fopen($file, <span class="string">'rb'</span>);  </span><br><span class="line">    <span class="keyword">if</span> ($handle === <span class="keyword">false</span>) &#123;  </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">Exception</span>();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">while</span> (feof($handle) === <span class="keyword">false</span>) &#123;  </span><br><span class="line">        <span class="keyword">yield</span> fgetcsv($handle);  </span><br><span class="line">    &#125;  </span><br><span class="line">    fclose($handle);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">foreach</span> (getRows(<span class="string">'data.csv'</span>) <span class="keyword">as</span> $row) &#123;  </span><br><span class="line">    print_r($row);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="接收参数"><a href="#接收参数" class="headerlink" title="接收参数"></a>接收参数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">printer</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        printf(<span class="string">"receive: %s\n"</span>, <span class="keyword">yield</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$printer = printer();</span><br><span class="line"></span><br><span class="line">$printer-&gt;send(<span class="string">'hello'</span>);</span><br><span class="line">$printer-&gt;send(<span class="string">'world'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>生成器的确使用了很少的内存却大大简化了某些任务。如果你需要更强大的功能诸如重置、快进、或者数据集的检索，你最好还是自定义一个实现Iterator interface接口的类，或者使用PHP现成的Standard PHP Library（SPL）迭代器。</p>
+<p><code>yield</code> 和 <code>return</code> 都会返回值，但区别在于一个 return 是返回既定结果，一次返回完毕就不再返回新的结果，而 yield 是不断产出直到无法产出为止。</p>
+<blockquote>
+<p><a href="http://blog.csdn.net/bandita/article/details/47723815" target="_blank" rel="noopener">http://blog.csdn.net/bandita/article/details/47723815</a><br><a href="https://laravel-china.org/articles/1430/single-php-generator-complete-knowledge-generator-implementation-process" target="_blank" rel="noopener">https://laravel-china.org/articles/1430/single-php-generator-complete-knowledge-generator-implementation-process</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/04/PHP的迭代器/" itemprop="url">
                   PHP的迭代器
                 </a>
@@ -279,7 +396,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-04T20:55:16+08:00" content="2016-08-04">
+            <time itemprop="dateCreated" datetime="2016-08-04T20:55:16+09:00" content="2016-08-04">
               2016-08-04
             </time>
           </span>
@@ -383,7 +500,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-04T20:17:45+08:00" content="2016-08-04">
+            <time itemprop="dateCreated" datetime="2016-08-04T20:17:45+09:00" content="2016-08-04">
               2016-08-04
             </time>
           </span>
@@ -484,7 +601,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-04T11:30:38+08:00" content="2016-08-04">
+            <time itemprop="dateCreated" datetime="2016-08-04T11:30:38+09:00" content="2016-08-04">
               2016-08-04
             </time>
           </span>
@@ -600,7 +717,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-29T09:56:40+08:00" content="2016-07-29">
+            <time itemprop="dateCreated" datetime="2016-07-29T09:56:40+09:00" content="2016-07-29">
               2016-07-29
             </time>
           </span>
@@ -637,109 +754,6 @@
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内存表使用哈希散列索引把数据保存在内存中，因此具有极快的速度。</span><br></pre></td></tr></table></figure>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">内存表不能包含BLOB或者TEXT列。</span><br><span class="line">内存表不支持事务。</span><br><span class="line">内存表是表锁，当修改频繁时，性能可能会下降。</span><br><span class="line">内存表数据清空或删除表后占用内存不会自动释放。</span><br></pre></td></tr></table></figure>
 <h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mem_table(  </span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>(<span class="number">10</span>),  </span><br><span class="line">  <span class="keyword">num</span> <span class="built_in">int</span>(<span class="number">10</span>)  </span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">MEMORY</span>;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/28/稍微理解ORM/" itemprop="url">
-                  稍微理解ORM
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-28T17:25:22+08:00" content="2016-07-28">
-              2016-07-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>她是你姑姑，又是你师父，怎么能做你妻子！<br></blockquote>
-
-<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><blockquote>
-<p>ORM即Object/Relation Mapping的简写，一般称作“对象关系映射”，在Web开发中最常出没于和关系型数据库交互的地方。ORM以最基本的形式建模数据。比如ORM会将MySQL的一张表映射成一个PHP类（模型），表的字段就是这个类的成员变量</p>
-</blockquote>
-<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>在OOP中通常我们需要写一个对应的class User来作为user数据表的数据模型:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明class User</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    $id;</span><br><span class="line">    $name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">()</span></span>&#123;<span class="comment">/*...*/</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">load</span><span class="params">($id)</span></span>&#123;<span class="comment">/*...*/</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用class User</span></span><br><span class="line">$user = <span class="keyword">new</span> User();</span><br><span class="line">$user-&gt;name = <span class="string">'fancy'</span>;</span><br><span class="line">$user-&gt;create();</span><br></pre></td></tr></table></figure></p>
-<p>但是通过ORM，我们可以不用去声明class User，可以直接继承ORM提供的工厂类，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接使用！对于熟悉MVC的亲知道这个意义之所在！</span></span><br><span class="line">$user = <span class="keyword">new</span> ORM(<span class="string">'user'</span>);  <span class="comment">// ORM都有自己的规则，这里直接使用了MySQL的表名</span></span><br><span class="line">$user-&gt;name = <span class="string">'fancy'</span>;    <span class="comment">// MySQL的表的字段就是$user对象的成员变量</span></span><br><span class="line">$user-&gt;save();            <span class="comment">// 掉用ORM提供的接口函数</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><blockquote>
-<p>在某些复杂的sql中有性能问题</p>
-</blockquote>
-
           
         
       
@@ -810,7 +824,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">369</span>
+              <span class="site-state-item-count">370</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -820,7 +834,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">144</span>
+                <span class="site-state-item-count">145</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
