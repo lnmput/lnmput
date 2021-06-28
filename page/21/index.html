@@ -265,6 +265,113 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/02/关于composer的一点儿思考/" itemprop="url">
+                  关于composer的一点儿思考
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-02T10:37:57+09:00" content="2018-05-02">
+              2018-05-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>像我这样的人…<br></blockquote>
+
+<h3 id="composer-lock文件是否需要版本控制器"><a href="#composer-lock文件是否需要版本控制器" class="headerlink" title="composer.lock文件是否需要版本控制器"></a>composer.lock文件是否需要版本控制器</h3><ul>
+<li><p>什么是 composer.lock 文件?<br><code>composer.lock</code> 文件是当你第一次使用 <code>composer install</code> 或者 执行 <code>composer update</code> 后生成的文件, 此文件里定义了当前项目的代码依赖, 还有最重要的, 这些代码依赖的对应的版本.</p>
+</li>
+<li><p>composer.lock 文件作用是什么?<br>默认情况下, 当执行 <code>composer install</code> 的时候, Composer 会检查当前项目是否有 <code>composer.lock</code> 文件, 如果有的话, 就会按照此文件去下载代码依赖和其指定的版本.</p>
+</li>
+<li><p>好处<br>团队开发的时, clone 下代码后, 使用 <code>composer install</code> 可以确保大家使用的依赖包都是同一个版本的, 避免没必要的混乱;<br>在一个现有的项目上开发的时候, 执行 <code>composer update</code> 后, 偶尔会发现刚刚更新了某个代码包把程序整挂了, 这个时候, 如果 <code>composer.lock</code> 是加入版本控制器的话, 直接一个 <code>git diff</code> 命令, 就可以查看到这次更新了那个包, 快速定位到问题的所在;<br>在线上部署的时候, 可以确保线上生成环境下使用所有代码是和开发时候使用的一致, 因为 <code>composer.lock</code> 会确保你在执行 <code>composer install</code> 命令后, 按照文件里面指定的版本去下载代码依赖包;</p>
+</li>
+</ul>
+<h3 id="composer-install与composer-update的区别"><a href="#composer-install与composer-update的区别" class="headerlink" title="composer install与composer update的区别"></a>composer install与composer update的区别</h3><h4 id="composer-install"><a href="#composer-install" class="headerlink" title="composer install"></a>composer install</h4><p>install 命令从当前目录读取 composer.json 文件，处理了依赖关系，并把其安装到 vendor 目录下。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer install</span><br></pre></td></tr></table></figure></p>
+<p>如果当前目录下存在 <code>composer.lock</code> 文件，它会从此文件读取依赖版本，而不是根据 <code>composer.json</code>文件去获取依赖。这确保了该库的每个使用者都能得到相同的依赖版本。<br>如果没有<code>composer.lock</code> 文件，composer 将在处理完依赖关系后创建它。</p>
+<h4 id="composer-update"><a href="#composer-update" class="headerlink" title="composer update"></a>composer update</h4><p>为了获取依赖的最新版本，并且升级 composer.lock 文件，你应该使用 update 命令。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer update</span><br></pre></td></tr></table></figure></p>
+<p>这将解决项目的所有依赖，并将确切的版本号写入 <code>composer.lock</code>。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/26/编译安装nginx/" itemprop="url">
                   编译安装nginx
                 </a>
@@ -702,123 +809,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/24/git忽略已经被提交的文件/" itemprop="url">
-                  git忽略已经被提交的文件
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-24T13:46:41+09:00" content="2018-04-24">
-              2018-04-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>现在努力的你，未来的事情谁说得清楚呢？<br>但你不努力，未来是怎样大概都知道了。<br></blockquote>
-
-<h3 id="问题起因"><a href="#问题起因" class="headerlink" title="问题起因"></a>问题起因</h3><p>有时候我们会遇到这样的场景,失误或是不小心将IDE的一些配置文件(如.idea文件夹)推送到了git仓库.而且你的同事拉取了代码,那么无论他们修改配置文件还是修复路径,他们:</p>
-<ul>
-<li><p>要么提交上去,谁拉代码谁冲突</p>
-</li>
-<li><p>要么不提,每次提交的时候小心翼翼不把这些配置文件提上去</p>
-</li>
-</ul>
-<h3 id="为什么-gitignore文件不管用"><a href="#为什么-gitignore文件不管用" class="headerlink" title="为什么.gitignore文件不管用"></a>为什么.gitignore文件不管用</h3><p>也许这时你马上会想,”shit,最好马上把这些文件添加到.gitignore”.然后你就做了,结果坑爹的发现:那些已经被添加到仓库的文件,只要修改就会出现在被修改的列表里,根本不管用</p>
-<p>这是因为.gitignore的设计就是为了那些没有被追踪的文件(即不在仓库中),如果你将一个已经被追踪的文件添加到.gitignore文件(或者使用add -f强制添加),这个文件还是会像工程里的其他文件一样被追踪的</p>
-<h3 id="正确的姿势"><a href="#正确的姿势" class="headerlink" title="正确的姿势"></a>正确的姿势</h3><ul>
-<li>将要忽略的文件或者文件夹加入 .gitignore 文件</li>
-<li><p>停止追踪文件或者文件夹 </p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached log -r <span class="comment">// log文件夹</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提交</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -857,7 +852,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -867,7 +862,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

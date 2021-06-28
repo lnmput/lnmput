@@ -265,6 +265,112 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/07/phpize安装php扩展/" itemprop="url">
+                  phpize安装php扩展
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-07T14:30:32+09:00" content="2017-02-07">
+              2017-02-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>这十年来做过的事，能令你无悔骄傲吗？<br>那时候你所相信的事，应该没动摇吧？<br></blockquote><br>如果要安装的扩展在php源码ext目录中没有，那么这个扩展需要到<a href="http://pecl.php.net" target="_blank" rel="noopener">http://pecl.php.net</a> 搜索下载</p>
+<p>以安装libevent扩展为例（假设系统安装了libevent-dev库）</p>
+<h3 id="1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"><a href="#1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）" class="headerlink" title="1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）"></a>1、下载libevent扩展文件压缩包（在当前系统哪个目录下载随意）</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># wget http://pecl.php.net/get/libevent-0.1.0.tgz</span></span><br><span class="line">-<span class="number">-2015</span><span class="number">-05</span><span class="number">-26</span> <span class="number">21</span>:<span class="number">43</span>:<span class="number">40</span>--  http:<span class="comment">//pecl.php.net/get/libevent-0.1.0.tgz</span></span><br><span class="line">Resolving pecl.php.net... <span class="number">104.236</span><span class="number">.228</span><span class="number">.160</span></span><br><span class="line">Connecting to pecl.php.net|<span class="number">104.236</span><span class="number">.228</span><span class="number">.160</span>|:<span class="number">80.</span>.. connected.</span><br><span class="line">HTTP request sent, awaiting response... <span class="number">200</span> OK</span><br><span class="line">Length: <span class="number">9806</span> (<span class="number">9.6</span>K) [application/octet-stream]</span><br><span class="line">Saving to: “libevent<span class="number">-0.1</span><span class="number">.0</span>.tgz”</span><br><span class="line"></span><br><span class="line"><span class="number">100</span>%[=======================================================&gt;] <span class="number">9</span>,<span class="number">806</span>       <span class="number">41.4</span>K/s   in <span class="number">0.2</span>s</span><br></pre></td></tr></table></figure>
+<h3 id="2、解压扩展文件压缩包"><a href="#2、解压扩展文件压缩包" class="headerlink" title="2、解压扩展文件压缩包"></a>2、解压扩展文件压缩包</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># tar -zxvf libevent-0.1.0.tgz</span></span><br><span class="line">package.xml</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/config.m4</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/CREDITS</span><br><span class="line">libevent<span class="number">-0.1</span><span class="number">.0</span>/libevent.c</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<h3 id="3、进入到源码目录"><a href="#3、进入到源码目录" class="headerlink" title="3、进入到源码目录"></a>3、进入到源码目录</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># cd libevent-0.1.0/</span></span><br></pre></td></tr></table></figure>
+<h3 id="4、运行phpize命令"><a href="#4、运行phpize命令" class="headerlink" title="4、运行phpize命令"></a>4、运行phpize命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># phpize</span></span><br><span class="line">Configuring <span class="keyword">for</span>:</span><br><span class="line">PHP Api Version:         <span class="number">20090626</span></span><br><span class="line">Zend Module Api No:      <span class="number">20090626</span></span><br><span class="line">Zend Extension Api No:   <span class="number">220090626</span></span><br></pre></td></tr></table></figure>
+<h3 id="5、运行configure命令"><a href="#5、运行configure命令" class="headerlink" title="5、运行configure命令"></a>5、运行configure命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># ./configure</span></span><br><span class="line">checking <span class="keyword">for</span> grep that handles long lines <span class="keyword">and</span> -e... /bin/grep</span><br><span class="line">checking <span class="keyword">for</span> egrep... /bin/grep -E</span><br><span class="line">checking <span class="keyword">for</span> a sed that does not truncate output... /bin/sed</span><br><span class="line">checking <span class="keyword">for</span> cc... cc</span><br><span class="line">checking whether the C compiler works... yes</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="6、运行make命令"><a href="#6、运行make命令" class="headerlink" title="6、运行make命令"></a>6、运行make命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># /bin/bash /data/test/libevent-0.1.0/libtool --mode=compile cc  -I. -I/data/test/libevent-0.1.0 -DPHP_ATOM_INC -I/data/test/libevent-0.1.0/include</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="7、运行make-install命令"><a href="#7、运行make-install命令" class="headerlink" title="7、运行make install命令"></a>7、运行make install命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="comment"># make install</span></span><br><span class="line">Installing shared extensions:     /usr/lib/php5/<span class="number">20090626</span>/</span><br></pre></td></tr></table></figure>
+<h3 id="8、配置ini文件"><a href="#8、配置ini文件" class="headerlink" title="8、配置ini文件"></a>8、配置ini文件</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过运行 php --ini查找php.ini文件位置，然后在文件中添加extension=libevent.so</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://doc3.workerman.net/appendices/install-extension.html" target="_blank" rel="noopener">http://doc3.workerman.net/appendices/install-extension.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/02/07/关于php的PECL和PEAR/" itemprop="url">
                   关于php的PECL和PEAR
                 </a>
@@ -660,108 +766,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/10/Laravel使用redis存储session/" itemprop="url">
-                  Laravel使用redis存储session
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-10T12:09:36+09:00" content="2017-01-10">
-              2017-01-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>水来我在漩涡中等你<br>火来我在灰烬中等你<br></blockquote><br>默认情况下，Redis 服务会提供 16 个数据库，Laravel 使用数据库 0 作为缓存和 Session 的存储。<br>在使用的过程中觉得这个默认的设置挺不合理，因为当你在执行命令<code>php artisan cache:clear</code> 的时候，会把 Session 也连带清除了，导致所有用户需要重新登录。</p>
-<h3 id="配置-Session-Redis-数据库"><a href="#配置-Session-Redis-数据库" class="headerlink" title="配置 Session Redis 数据库"></a>配置 Session Redis 数据库</h3><p>修改 config/database.php，在 redis 选项内增加 session 选项，并把 database 修改为 1：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'redis'</span> =&gt; [</span><br><span class="line"></span><br><span class="line">   <span class="string">'cluster'</span> =&gt; <span class="keyword">false</span>,</span><br><span class="line"></span><br><span class="line">   <span class="string">'default'</span> =&gt; [</span><br><span class="line">       <span class="string">'host'</span>     =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'localhost'</span>),</span><br><span class="line">       <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),</span><br><span class="line">       <span class="string">'port'</span>     =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),</span><br><span class="line">       <span class="string">'database'</span> =&gt; <span class="number">0</span>,</span><br><span class="line">   ],</span><br><span class="line"></span><br><span class="line">   <span class="string">'session'</span> =&gt; [</span><br><span class="line">         <span class="string">'host'</span>     =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'localhost'</span>),</span><br><span class="line">         <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),</span><br><span class="line">         <span class="string">'port'</span>     =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),</span><br><span class="line">         <span class="string">'database'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">   ],</span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
-<h3 id="指定-Session-使用数据库"><a href="#指定-Session-使用数据库" class="headerlink" title="指定 Session 使用数据库"></a>指定 Session 使用数据库</h3><p>修改 config/session.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'connection'</span> =&gt; <span class="string">'session'</span>,</span><br></pre></td></tr></table></figure></p>
-<h3 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h3><p>修改 .env 文件的 SESSION_DRIVER 选项为 redis，开始应用上。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SESSION_DRIVER=redis</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/61/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><span class="page-number current">62</span><a class="page-number" href="/page/63/">63</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/63/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/61/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><span class="page-number current">62</span><a class="page-number" href="/page/63/">63</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/63/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -800,7 +809,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -810,7 +819,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

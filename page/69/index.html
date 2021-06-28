@@ -265,6 +265,105 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/24/laravel中如何打印sql/" itemprop="url">
+                  laravel中如何打印sql
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-24T10:13:28+09:00" content="2016-10-24">
+              2016-10-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>你也是一片<br>在我胸口颤动的小叶子。<br>生命之风将你吹送至此。<br></blockquote>
+
+<h3 id="第一种方法"><a href="#第一种方法" class="headerlink" title="第一种方法"></a>第一种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//in our case,</span></span><br><span class="line"> DB::table(<span class="string">'users'</span>)-&gt;toSql(); </span><br><span class="line"><span class="comment">//return</span></span><br><span class="line">select * from users</span><br></pre></td></tr></table></figure>
+<h3 id="第二种方法"><a href="#第二种方法" class="headerlink" title="第二种方法"></a>第二种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'haha'</span>,<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    Event::listen(<span class="string">'illuminate.query'</span>, <span class="function"><span class="keyword">function</span><span class="params">($query, $params, $time, $conn)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        dd(<span class="keyword">array</span>($query, $params, $time, $conn));</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    \RainLab\User\Models\User::whereBetween(<span class="string">'created_at'</span>, </span><br><span class="line">    	[<span class="string">'2016-05-26 00:00:00'</span>, <span class="string">'2016-06-27 00:00:00'</span>]</span><br><span class="line">    	)-&gt;get([<span class="string">'email'</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="第三种方法"><a href="#第三种方法" class="headerlink" title="第三种方法"></a>第三种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DB::enableQueryLog();</span><br><span class="line">   $users = \RainLab\User\Models\User::whereBetween(<span class="string">'created_at'</span>, [<span class="string">'2016-05-26 00:00:00'</span>, <span class="string">'2016-06-27 00:00:00'</span>])-&gt;get();</span><br><span class="line">   dd(DB::getQueryLog());</span><br></pre></td></tr></table></figure>
+<h3 id="第四种方法"><a href="#第四种方法" class="headerlink" title="第四种方法"></a>第四种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trace_sql</span><span class="params">($dump = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    \DB::listen(<span class="function"><span class="keyword">function</span> <span class="params">($event)</span> <span class="title">use</span><span class="params">($dump)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($dump) &#123;</span><br><span class="line">            dump($event-&gt;sql);</span><br><span class="line">            dump($event-&gt;bindings);</span><br><span class="line">        &#125;</span><br><span class="line">        info($event-&gt;sql);</span><br><span class="line">        info($event-&gt;bindings);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="最后一种方法"><a href="#最后一种方法" class="headerlink" title="最后一种方法"></a>最后一种方法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//安装 debug</span></span><br><span class="line">composer <span class="keyword">require</span> barryvdh/laravel-debugbar</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/17/python小实例/" itemprop="url">
                   python小实例
                 </a>
@@ -666,109 +765,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/24/PHP函数call-user-func-array用法/" itemprop="url">
-                  PHP函数call_user_func_array用法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T12:13:26+09:00" content="2016-08-24">
-              2016-08-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>无她，唯手熟尔<br></blockquote></p>
-<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>调用函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($b, $c)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">echo</span> $b;</span><br><span class="line">  <span class="keyword">echo</span> $c;</span><br><span class="line">&#125;</span><br><span class="line">call_user_func_array(<span class="string">'a'</span>, <span class="keyword">array</span>(<span class="string">"111"</span>, <span class="string">"222"</span>));</span><br><span class="line"><span class="comment">//显示 111 222</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>调用静态方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">Class</span> <span class="title">ClassA</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">bc</span><span class="params">($b, $c)</span> </span>&#123;</span><br><span class="line">	$bc = $b + $c;</span><br><span class="line">	  <span class="keyword">echo</span> $bc;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">call_user_func_array(<span class="keyword">array</span>(<span class="string">'ClassA'</span>,<span class="string">'bc'</span>), <span class="keyword">array</span>(<span class="string">"111"</span>, <span class="string">"222"</span>));</span><br><span class="line"><span class="comment">//显示 333</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>说明：这样就可以用数组的方式给类的方法传入必要的参数</p>
-<p>调用普通方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Hello, World!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> MyClass();</span><br><span class="line">call_user_func(<span class="keyword">array</span>($a, <span class="string">'hello'</span>));</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/68/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><span class="page-number current">69</span><a class="page-number" href="/page/70/">70</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/70/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/68/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><span class="page-number current">69</span><a class="page-number" href="/page/70/">70</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/70/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -807,7 +808,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -817,7 +818,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

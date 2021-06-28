@@ -265,6 +265,111 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/08/关于http的一些知识/" itemprop="url">
+                  关于http的一些知识
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-08T15:35:42+09:00" content="2016-12-08">
+              2016-12-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>兴趣是最好的老师，其次是耻辱<br></blockquote>
+
+<h3 id="简要说明"><a href="#简要说明" class="headerlink" title="简要说明"></a>简要说明</h3><p>简言之，HTTP Referer是header的一部分，当浏览器向web服务器发送请求的时候，一般会带上Referer，告诉服务器我是从哪个页面链接过来的，服务器籍此可以获得一些信息用于处理。比如从我主页上链接到一个朋友那里，他的服务器就能够从HTTP Referer中统计出每天有多少用户点击我主页上的链接访问他的网站。</p>
+<p>从一个https页面上的链接访问到一个非加密的http页面的时候，在http页面上是检查不到HTTP Referer的，比如当我点击自己的https页面下面的w3c xhtml验证图标（网址为<a href="http://validator.w3.org/check?uri=referer），从来都无法完成校验，提示：" target="_blank" rel="noopener">http://validator.w3.org/check?uri=referer），从来都无法完成校验，提示：</a></p>
+<p>No Referer header found!<br>原来，在http协议的rfc文档中有定义：</p>
+<p>15.1.3 Encoding Sensitive Information in URI’s</p>
+<p>…</p>
+<p>   Clients SHOULD NOT include a Referer header field in a (non-secure)<br>   HTTP request if the referring page was transferred with a secure<br>   protocol.<br>这样是出于安全的考虑，访问非加密页时，如果来源是加密页，客户端不发送Referer，IE一直都是这样实现的，Firefox浏览器也不例外。但这并不影响从加密页到加密页的访问。</p>
+<h3 id="详细论述"><a href="#详细论述" class="headerlink" title="详细论述"></a>详细论述</h3><p>从一个https页面上的链接访问到一个非加密的http页面的时候，在http页面上是检查不到HTTP Referer的，但是这是在https中未做设置的情况下，如facebook，</p>
+<ul>
+<li><a href="http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how" target="_blank" rel="noopener">http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/07/常见性能优化策略的总结/" itemprop="url">
                   常见性能优化策略的总结
                 </a>
@@ -697,125 +802,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/02/flex布局方式之父容器/" itemprop="url">
-                  flex布局方式之父容器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-02T14:43:57+09:00" content="2016-12-02">
-              2016-12-02
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>没有学到死，就往死里学。<br></blockquote><br>最近学习了微信小程序，才接触到了这一布局方式，大概试了一下，记录：</p>
-<p>使用方式：</p>
-<h3 id="1-html"><a href="#1-html" class="headerlink" title="1. html"></a>1. html</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>5<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>6<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>7<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>8<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>9<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-定义基本css样式："><a href="#2-定义基本css样式：" class="headerlink" title="2. 定义基本css样式："></a>2. 定义基本css样式：</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span>&#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#c0ffb6</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">150px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">background-color</span>: <span class="number">#4cae4c</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="3-设置父容器为flex布局："><a href="#3-设置父容器为flex布局：" class="headerlink" title="3. 设置父容器为flex布局："></a>3. 设置父容器为flex布局：</h3><ul>
-<li><p>div 块儿级元素</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>或者 行内元素</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: inline-flex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>设为Flex布局以后，子元素的float、clear和vertical-align属性将失效</p>
-<h3 id="4-flex-direction-属性："><a href="#4-flex-direction-属性：" class="headerlink" title="4. flex-direction 属性："></a>4. flex-direction 属性：</h3><p>决定容器里面元素的排列方式<br>横向排列<br>横向反转排列<br>纵向排列<br>纵向反转排列<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: column;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="5-flex-wrap-属性"><a href="#5-flex-wrap-属性" class="headerlink" title="5. flex-wrap 属性"></a>5. flex-wrap 属性</h3><p>横向排列的子元素是否换行<br>在子元素的大小超出了父容器的大小以后是换行显示<br>不换行： nowrap  设置了不换行以后，子元素的大小将。。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">650px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">background-color</span>: <span class="number">#4cae4c</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="6-justify-content-属性"><a href="#6-justify-content-属性" class="headerlink" title="6. justify-content 属性"></a>6. justify-content 属性</h3><p>子元素的对齐方式<br>左对齐<br>右对齐<br>居中显示<br>相等间隔<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">	<span class="attribute">justify-content</span>: space-around;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="7-align-items"><a href="#7-align-items" class="headerlink" title="7. align-items:"></a>7. align-items:</h3><p>决定子元素在垂直位置上的对齐方式<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">	<span class="attribute">justify-content</span>: space-around;</span><br><span class="line">	<span class="attribute">align-items</span>: flex-end;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="8-align-self-属性"><a href="#8-align-self-属性" class="headerlink" title="8. align-self 属性"></a>8. align-self 属性</h3><p>决定当前元素的对齐方式，用于覆盖父容器的align-items 属性<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: flex;</span><br><span class="line">	<span class="attribute">flex-direction</span>: row;</span><br><span class="line">	<span class="attribute">flex-wrap</span>: nowrap;</span><br><span class="line">	<span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">450px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">background-color</span>: <span class="number">#4cae4c</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item1</span>&#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">120px</span>;</span><br><span class="line">	<span class="attribute">align-self</span>: flex-end;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item2</span>&#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item3</span>&#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">150px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/64/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/64/">64</a><span class="page-number current">65</span><a class="page-number" href="/page/66/">66</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/66/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/64/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/64/">64</a><span class="page-number current">65</span><a class="page-number" href="/page/66/">66</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/66/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -854,7 +845,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -864,7 +855,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

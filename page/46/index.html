@@ -265,6 +265,111 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/22/http的长连接和短连接/" itemprop="url">
+                  http的长连接和短连接
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-22T10:24:02+09:00" content="2017-08-22">
+              2017-08-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>it’s my turn to fuck you<br></blockquote></p>
+<h3 id="TTP协议与TCP-IP协议的关系"><a href="#TTP协议与TCP-IP协议的关系" class="headerlink" title="TTP协议与TCP/IP协议的关系"></a>TTP协议与TCP/IP协议的关系</h3><p>HTTP的长连接和短连接本质上是TCP长连接和短连接。HTTP属于应用层协议，在传输层使用TCP协议，在网络层使用IP协议。IP协议主要解决网络路由和寻址问题，TCP协议主要解决如何在IP层之上可靠的传递数据包，使在网络上的另一端收到发端发出的所有包，并且顺序与发出顺序一致。TCP有可靠，面向连接的特点。</p>
+<h3 id="如何理解HTTP协议是无状态的"><a href="#如何理解HTTP协议是无状态的" class="headerlink" title="如何理解HTTP协议是无状态的"></a>如何理解HTTP协议是无状态的</h3><p>HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。</p>
+<h3 id="什么是长连接、短连接"><a href="#什么是长连接、短连接" class="headerlink" title="什么是长连接、短连接"></a>什么是长连接、短连接</h3><p>在HTTP/1.0中，默认使用的是短连接。也就是说，浏览器和服务器每进行一次HTTP操作，就建立一次连接，但任务结束就中断连接。如果客户端浏览器访问的某个HTML或其他类型的 Web页中包含有其他的Web资源，如JavaScript文件、图像文件、CSS文件等；当浏览器每遇到这样一个Web资源，就会建立一个HTTP会话。</p>
+<p>但从 HTTP/1.1起，默认使用长连接，用以保持连接特性。使用长连接的HTTP协议，会在响应头有加入这行代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Connection:keep-alive</span><br></pre></td></tr></table></figure></p>
+<p>在使用长连接的情况下，当一个网页打开完成后，客户端和服务器之间用于传输HTTP数据的 TCP连接不会关闭，如果客户端再次访问这个服务器上的网页，会继续使用这一条已经建立的连接。Keep-Alive不会永久保持连接，它有一个保持时间，可以在不同的服务器软件（如Apache）中设定这个时间。实现长连接要客户端和服务端都支持长连接。<br>HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// nginx设置</span></span><br><span class="line">http &#123;</span><br><span class="line">    keepalive_timeout  <span class="number">120</span>s <span class="number">120</span>s;</span><br><span class="line">    keepalive_requests <span class="number">10000</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="长连接和短连接的优点和缺点"><a href="#长连接和短连接的优点和缺点" class="headerlink" title="长连接和短连接的优点和缺点"></a>长连接和短连接的优点和缺点</h3><p>长连接可以省去较多的TCP建立和关闭的操作，减少浪费，节约时间。对于频繁请求资源的客户来说，较适用长连接。不过这里存在一个问题，存活功能的探测周期太长，还有就是它只是探测TCP连接的存活，属于比较斯文的做法，遇到恶意的连接时，保活功能就不够使了。在长连接的应用场景下，client端一般不会主动关闭它们之间的连接，Client与server之间的连接如果一直不关闭的话，会存在一个问题，随着客户端连接越来越多，server早晚有扛不住的时候，这时候server端需要采取一些策略，如关闭一些长时间没有读写事件发生的连接，这样可 以避免一些恶意连接导致server端服务受损；如果条件再允许就可以以客户端机器为颗粒度，限制每个客户端的最大长连接数，这样可以完全避免某个蛋疼的客户端连累后端服务。</p>
+<p>短连接对于服务器来说管理较为简单，存在的连接都是有用的连接，不需要额外的控制手段。但如果客户请求频繁，将在TCP的建立和关闭操作上浪费时间和带宽。</p>
+<p>长连接和短连接的产生在于client和server采取的关闭策略，具体的应用场景采用具体的策略，没有十全十美的选择，只有合适的选择。</p>
+<blockquote>
+<p><a href="http://www.cnblogs.com/0201zcr/p/4694945.html" target="_blank" rel="noopener">http://www.cnblogs.com/0201zcr/p/4694945.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/21/流程控制的替代语法/" itemprop="url">
                   流程控制的替代语法
                 </a>
@@ -650,131 +755,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/15/php自动加载的深入理解/" itemprop="url">
-                  php自动加载的深入理解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-15T16:56:00+09:00" content="2017-08-15">
-              2017-08-15
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>那时候我总是能起的那么早,看到鸟儿在舞蹈…<br></blockquote>
-
-<h3 id="使用require-once"><a href="#使用require-once" class="headerlink" title="使用require_once"></a>使用require_once</h3><p>文件位于同级目录下<br>class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require_once</span> <span class="string">'class.php'</span>;</span><br><span class="line"></span><br><span class="line">$test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $test-&gt;getName();</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用-autoload"><a href="#使用-autoload" class="headerlink" title="使用__autoload"></a>使用__autoload</h3><p>Test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">require_once</span> $class_name . <span class="string">'.php'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里要求类名和文件名保持一致,注意大小写;</span></span><br><span class="line">$test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $test-&gt;getName();</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用spl-autoload-register"><a href="#使用spl-autoload-register" class="headerlink" title="使用spl_autoload_register"></a>使用spl_autoload_register</h3><h4 id="第一种方式"><a href="#第一种方式" class="headerlink" title="第一种方式"></a>第一种方式</h4><p>Test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">require_once</span> $class_name . <span class="string">'.php'</span>;</span><br><span class="line">&#125;</span><br><span class="line">spl_autoload_register(<span class="string">"my_autoload"</span>);</span><br><span class="line">$test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $test-&gt;getName();</span><br></pre></td></tr></table></figure></p>
-<h4 id="第二种方式"><a href="#第二种方式" class="headerlink" title="第二种方式"></a>第二种方式</h4><p>Test.class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">spl_autoload_extensions(<span class="string">'.class.php'</span>);<span class="comment">// 寻找扩展名</span></span><br><span class="line"><span class="comment">// 如果我们类的后缀名既有.class.php 还有.php, 可以这样 spl_autoload_extensions('.class.php，.php');</span></span><br><span class="line">set_include_path(get_include_path().PATH_SEPARATOR.<span class="string">""</span>);<span class="comment">// 这里的"" 指的是类文件的目录，这里是平级目录</span></span><br><span class="line">spl_autoload_register();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Test())-&gt;getName();</span><br></pre></td></tr></table></figure></p>
-<h4 id="第三种方式"><a href="#第三种方式" class="headerlink" title="第三种方式"></a>第三种方式</h4><p>Test.class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">    spl_autoload_extensions(<span class="string">'.class.php'</span>);</span><br><span class="line">    set_include_path(get_include_path().PATH_SEPARATOR.<span class="string">""</span>);</span><br><span class="line">    spl_autoload($class_name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spl_autoload_register(<span class="string">'my_autoload'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Test())-&gt;getName();</span><br></pre></td></tr></table></figure></p>
-<h4 id="第四种方式"><a href="#第四种方式" class="headerlink" title="第四种方式"></a>第四种方式</h4><p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">require_once</span> $class_name . <span class="string">'.php'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getLoader</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        spl_autoload_register([<span class="string">'Index'</span>,<span class="string">'my_autoload'</span>], <span class="keyword">true</span>, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Index::getLoader();</span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Test())-&gt;getName();</span><br></pre></td></tr></table></figure></p>
-<p>Test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="PSR"><a href="#PSR" class="headerlink" title="PSR"></a>PSR</h3><p>PSR是由PHP Framework Interoperability Group（PHP通用性框架小组）发布的一系列标准/规范，目前包括了PSR-0~PSR-4共4个，而PSR-0就是其中的自动加载标准（其后的PSR-4称为改进的自动加载的标准，是PSR-0的补充。PSR-0使用更广泛)<br>PSR-4风格:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-|vendor</span><br><span class="line">--|package</span><br><span class="line">---|src</span><br><span class="line">----|demo.php</span><br></pre></td></tr></table></figure></p>
-<p>如在我们的laravel项目下建立一个与app文件夹同级的目录；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新建目录accmd， 与app目录同级</span></span><br><span class="line">acmd\test\yangze\Yang.php</span><br><span class="line"></span><br><span class="line"><span class="comment">// Yang.php文件内容</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Acmd</span>\<span class="title">Test</span>\<span class="title">Yangzie</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yang</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">demo</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'demo'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>尝试在调用这个类<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$yang = <span class="keyword">new</span> \Acmd\Test\Yangzie\Yang();</span><br><span class="line">$yang-&gt;demo();</span><br><span class="line"><span class="comment">// error not found</span></span><br></pre></td></tr></table></figure></p>
-<p>使用composer自动加载<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"autoload"</span>: &#123;</span><br><span class="line">        <span class="string">"classmap"</span>: [</span><br><span class="line">            <span class="string">"database"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"psr-4"</span>: &#123;</span><br><span class="line">            <span class="string">"App\\"</span>: <span class="string">"app/"</span>,</span><br><span class="line">            <span class="string">"Acmd\\"</span>:<span class="string">"acmd/"</span></span><br><span class="line">        &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
-<p>执行命令： composer dump-autoload 即可</p>
-<h3 id="laravel下的自动加载"><a href="#laravel下的自动加载" class="headerlink" title="laravel下的自动加载"></a>laravel下的自动加载</h3><p>入口文件public/index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/autoload.php'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>bootstrap/autoload.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/../vendor/autoload.php'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>vendor/autoload.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// autoload.php @generated by Composer</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require_once</span> <span class="keyword">__DIR__</span> . <span class="string">'/composer'</span> . <span class="string">'/autoload_real.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> ComposerAutoloaderInit5205c428ce42c79967c9b7a7be4a7d82::getLoader();</span><br></pre></td></tr></table></figure></p>
-<p>这个文件包含了laravel对classmap,psr-0,psr-4,files的具体实现,主要只有这么一个方法 <code>getLoader</code>;</p>
-<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>composer 自动加载文件<br>文件位置： acmd和app同目录<br>acmd\test\commom.php<br>composer.json<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">"autoload": &#123;</span><br><span class="line">        "classmap": [</span><br><span class="line">            <span class="string">"database"</span></span><br><span class="line">        ],</span><br><span class="line">        "psr-4": &#123;</span><br><span class="line">            "App\\": "app/",</span><br><span class="line">            "Acmd\\":"acmd/"</span><br><span class="line">        &#125;,</span><br><span class="line">      "files":["acmd/test/commom.php"]</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure></p>
-<p>执行命令： <code>composer dump-autoload</code></p>
-<h3 id="我们自己的项目如何使用"><a href="#我们自己的项目如何使用" class="headerlink" title="我们自己的项目如何使用"></a>我们自己的项目如何使用</h3><p>在使用composer安装好相关的依赖包以后, 只要在我们的项目入口文件index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require_once</span> <span class="string">'vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Flc</span>\<span class="title">Alidayu</span>\<span class="title">Client</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Flc</span>\<span class="title">Alidayu</span>\<span class="title">App</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Flc</span>\<span class="title">Alidayu</span>\<span class="title">Requests</span>\<span class="title">AlibabaAliqinFcSmsNumSend</span>;</span><br><span class="line"></span><br><span class="line">$config = [</span><br><span class="line">    <span class="string">'app_key'</span>    =&gt; <span class="string">'*****'</span>,</span><br><span class="line">    <span class="string">'app_secret'</span> =&gt; <span class="string">'*****'</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> Client(<span class="keyword">new</span> App($config));</span><br><span class="line">$req    = <span class="keyword">new</span> AlibabaAliqinFcSmsNumSend;</span><br><span class="line"></span><br><span class="line">$req-&gt;setRecNum(<span class="string">'15829465509'</span>)</span><br><span class="line">    -&gt;setSmsParam([</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'杨国奇'</span>,</span><br><span class="line">        <span class="string">'days'</span> =&gt; rand(<span class="number">100000</span>, <span class="number">999999</span>)</span><br><span class="line">    ])</span><br><span class="line">    -&gt;setSmsFreeSignName(<span class="string">'叶子坑'</span>)</span><br><span class="line">    -&gt;setSmsTemplateCode(<span class="string">'SMS_87315128'</span>);</span><br><span class="line"></span><br><span class="line">$resp = $client-&gt;execute($req);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回结果</span></span><br><span class="line">print_r($resp);</span><br></pre></td></tr></table></figure></p>
-<p>之后, 我们只要使用合适的命名空间就可以实现自动载入</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/45/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><span class="page-number current">46</span><a class="page-number" href="/page/47/">47</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/47/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/45/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><span class="page-number current">46</span><a class="page-number" href="/page/47/">47</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/47/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -813,7 +798,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -823,7 +808,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

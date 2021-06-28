@@ -265,6 +265,110 @@
             
               
                 
+                <a class="post-title-link" href="/2019/11/26/laravel-chunk-missing-half-the-results/" itemprop="url">
+                  laravel-chunk-missing-half-the-results
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-11-26T17:43:01+09:00" content="2019-11-26">
+              2019-11-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>只要从现在开始努力，最坏不过是大器晚成<br></blockquote>
+
+<h3 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h3><p>I have a problem with Laravel’s ORM Eloquent chunk() method. It misses some results. Here is a test query :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$destinataires = Destinataire::where(<span class="string">'statut'</span>, <span class="string">'&lt;'</span>, <span class="number">3</span>)</span><br><span class="line">    -&gt;where(<span class="string">'tokenized_at'</span>, <span class="string">'&lt;'</span>, $date_active)</span><br><span class="line">    -&gt;chunk(<span class="keyword">$this</span>-&gt;chunk, <span class="function"><span class="keyword">function</span> <span class="params">($destinataires)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span>($destinataires <span class="keyword">as</span> $destinataire) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;i;</span><br></pre></td></tr></table></figure></p>
+<p>It gives 124838 results.<br>But :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$num_dest = Destinataire::where(<span class="string">'statut'</span>, <span class="string">'&lt;'</span>, <span class="number">3</span>)</span><br><span class="line">    -&gt;where(<span class="string">'tokenized_at'</span>, <span class="string">'&lt;'</span>, $date_active)</span><br><span class="line">    -&gt;count();</span><br><span class="line"><span class="keyword">echo</span> $num_dest;</span><br></pre></td></tr></table></figure></p>
+<p>gives 249676, so just TWICE as the first code example.</p>
+<h3 id="A"><a href="#A" class="headerlink" title="A"></a>A</h3><p>Use chunkById() instead of chunk().</p>
+<p>When updating or deleting records inside the chunk callback, any changes to the primary key or foreign keys could affect the chunk query. This could potentially result in records not being included in the chunked results.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'active'</span>, <span class="keyword">false</span>)</span><br><span class="line">    -&gt;chunkById(<span class="number">100</span>, <span class="function"><span class="keyword">function</span> <span class="params">($users)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span> ($users <span class="keyword">as</span> $user) &#123;</span><br><span class="line">            DB::table(<span class="string">'users'</span>)</span><br><span class="line">                -&gt;where(<span class="string">'id'</span>, $user-&gt;id)</span><br><span class="line">                -&gt;update([<span class="string">'active'</span> =&gt; <span class="keyword">true</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/32700537/eloquent-chunk-missing-half-the-results" target="_blank" rel="noopener">https://stackoverflow.com/questions/32700537/eloquent-chunk-missing-half-the-results</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/10/27/golang中该使用指针类型还是值类型/" itemprop="url">
                   Golang中该使用指针类型还是值类型
                 </a>
@@ -711,112 +815,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/07/23/elasticsearch按照给定的id顺序排序/" itemprop="url">
-                  elasticsearch按照给定的id顺序排序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-07-23T11:07:05+09:00" content="2019-07-23">
-              2019-07-23
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>春风再美也比不上你的笑<br>没见过你的人不会明了<br></blockquote>
-
-<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><ul>
-<li>Laravel 5.5</li>
-<li>ElasticSearch 6.5</li>
-</ul>
-<h3 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">$params = [];</span><br><span class="line">$length = count($conditions[<span class="string">'id'</span>]);</span><br><span class="line"><span class="keyword">foreach</span> ($conditions[<span class="string">'id'</span>] <span class="keyword">as</span> $key =&gt; $id) &#123;</span><br><span class="line">    $params[] = [<span class="string">'id'</span> =&gt; $id, <span class="string">'score'</span> =&gt; $length - $key];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$source = [<span class="string">'id'</span>, <span class="string">'title'</span>, <span class="string">'url'</span>, <span class="string">'price'</span>, <span class="string">'list_price'</span>, <span class="string">'images'</span>, <span class="string">'thumbs'</span>, <span class="string">'status'</span>, <span class="string">'rating'</span>, <span class="string">'sort'</span>, <span class="string">'reviews_amount'</span>, <span class="string">'cids'</span>];</span><br><span class="line">$params = [</span><br><span class="line">    <span class="string">'index'</span> =&gt; $index,</span><br><span class="line">    <span class="string">'type'</span> =&gt; <span class="string">'products'</span>,</span><br><span class="line">    <span class="string">'body'</span> =&gt; [</span><br><span class="line">        <span class="string">'query'</span> =&gt; [</span><br><span class="line">            <span class="string">'function_score'</span> =&gt; [</span><br><span class="line">                <span class="string">'query'</span> =&gt; [</span><br><span class="line">                    <span class="string">'bool'</span> =&gt; [</span><br><span class="line">                        <span class="string">'must'</span> =&gt; [</span><br><span class="line">                            [</span><br><span class="line">                                <span class="string">'terms'</span> =&gt; [</span><br><span class="line">                                    <span class="string">'id'</span> =&gt; $conditions[<span class="string">'id'</span>]</span><br><span class="line">                                ]</span><br><span class="line">                            ]</span><br><span class="line">                        ]</span><br><span class="line">                    ]</span><br><span class="line">                ],</span><br><span class="line">                <span class="string">'script_score'</span> =&gt; [</span><br><span class="line">                    <span class="string">'script'</span> =&gt; [</span><br><span class="line">                        <span class="string">'lang'</span> =&gt; <span class="string">'painless'</span>,</span><br><span class="line">                        <span class="string">'params'</span> =&gt; [</span><br><span class="line">                            <span class="string">'scoring'</span> =&gt; $params</span><br><span class="line">                        ],</span><br><span class="line">                        <span class="string">'source'</span> =&gt; <span class="string">"for(i in params.scoring) &#123; if(doc['id'].value == i.id ) return i.score; &#125; return 0;"</span></span><br><span class="line">                    ]</span><br><span class="line">                ]</span><br><span class="line">            ]</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">'_source'</span> =&gt; $source,</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">'from'</span> =&gt; ($page - <span class="number">1</span>) * $perPage,</span><br><span class="line">    <span class="string">'size'</span> =&gt; $perPage,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">$results = Searches::getEsInstance()-&gt;search($params);</span><br><span class="line">$total = $results[<span class="string">'hits'</span>][<span class="string">'total'</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">empty</span>($items = $results[<span class="string">'hits'</span>][<span class="string">'hits'</span>])) &#123;</span><br><span class="line">    <span class="keyword">return</span> [];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>不同版本的ES语法可能不同， 具体请参阅官方文档</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -855,7 +858,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -865,7 +868,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

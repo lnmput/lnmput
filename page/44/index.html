@@ -265,6 +265,135 @@
             
               
                 
+                <a class="post-title-link" href="/2017/09/10/Mysql数据库主从同步/" itemprop="url">
+                  Mysql数据库主从同步
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-09-10T09:16:55+09:00" content="2017-09-10">
+              2017-09-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><blockquote class="blockquote-center"><br>我临睡前想做件大事改变世界激动得睡不着第二天早上连早起都做不到<br></blockquote></p>
+<h3 id="主从复制的原理"><a href="#主从复制的原理" class="headerlink" title="主从复制的原理"></a>主从复制的原理</h3><p>分为同步复制和异步复制，实际复制架构中大部分为异步复制。 复制的基本过程如下：<br>1).Slave上面的IO进程连接上Master，并请求从指定日志文件的指定位置（或者从最开始的日志）之后的日志内容；<br>2).Master接收到来自Slave的IO进程的请求后，通过负责复制的IO进程根据请求信息读取制定日志指定位置之后的日志信息，返回给Slave<br>的IO进程。返回信息中除了日志所包含的信息之外，还包括本次返回的信息已经到Master端的bin-log文件的名称以及bin-log的位置；<br>3).Slave的IO进程接收到信息后，将接收到的日志内容依次添加到Slave端的relay-log文件的最末端，并将读取到的Master端的<br>bin-log的文件名和位置记录到master-info文件中，以便在下一次读取的时候能够清楚的告诉Master“我需要从某个bin-log的哪个位置开始往后的日志内容，请发给我”；<br>4).Slave的Sql进程检测到relay-log中新增加了内容后，会马上解析relay-log的内容成为在Master端真实执行时候的那些可执行的内容，并在自身执行。</p>
+<h3 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h3><ul>
+<li>OS：CentOS</li>
+<li>主服务器master：192.168.11.120</li>
+<li>从服务器slave：192.168.11.139</li>
+</ul>
+<h3 id="mysql主服务器配置-master"><a href="#mysql主服务器配置-master" class="headerlink" title="mysql主服务器配置(master)"></a>mysql主服务器配置(master)</h3><p>master服务器配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">server-id=120</span><br><span class="line">log-bin=/var/lib/mysql/mysql-bin # 启用二进制日志</span><br><span class="line">binlog-do-db=jasontest #指定数据库，如果不指定就是全部数据库</span><br><span class="line">#binlog-ignore-db = mysql,information_schema #忽略写入binlog的库</span><br></pre></td></tr></table></figure>
+<p>重启服务器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld  restart #systemctl restart mysqld.service --- centos7.x重启mysql</span><br></pre></td></tr></table></figure></p>
+<p>在主服务器上建立帐户并授权slave：<br>创建slave帐号，密码123456</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT REPLICATION SLAVE ON *.* to &apos;slave&apos;@&apos;192.168.11.%&apos; identified by &apos;123456&apos; WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
+<p>更新数据库权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;flush privileges;</span><br></pre></td></tr></table></figure>
+<p>查询master的状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show master status;</span><br></pre></td></tr></table></figure>
+<p>显示结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slave status</span><br></pre></td></tr></table></figure></p>
+<p>注：执行完这个步骤后不要再操作主数据库了，防止主数据库状态值变化</p>
+<h3 id="mysql从服务器配置-slave"><a href="#mysql从服务器配置-slave" class="headerlink" title="mysql从服务器配置(slave)"></a>mysql从服务器配置(slave)</h3><p>slave服务器配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">server-id=139</span><br><span class="line">log-bin=/var/lib/mysql/mysql-bin # 启用二进制日志</span><br><span class="line">binlog-do-db=jasontest #指定数据库，如果不指定就是全部数据库</span><br></pre></td></tr></table></figure>
+<p>重启服务器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld  restart #systemctl restart mysqld.service --- centos7.x重启mysql</span><br></pre></td></tr></table></figure></p>
+<p>设置同步源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CHANGE MASTER TO MASTER_HOST=&apos;192.168.11.120&apos;, #主服务器master的ip</span><br><span class="line">    MASTER_USER=&apos;slave&apos;,</span><br><span class="line">    MASTER_PASSWORD=&apos;123456&apos;,</span><br><span class="line">    MASTER_LOG_FILE=&apos;mysql-bin.000022&apos;,  #对应show master status中File</span><br><span class="line">    MASTER_LOG_POS=245;                     #对应show master status中Position</span><br></pre></td></tr></table></figure>
+<p>启用同步：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;start slave</span><br></pre></td></tr></table></figure>
+<p>停止同步：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;stop slave</span><br></pre></td></tr></table></figure>
+<p>检查从服务器状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW SLAVE STATUS\G;</span><br></pre></td></tr></table></figure>
+<p>注意：<code>Slave_IO_Running</code>及<code>Slave_SQL_Running</code>进程必须正常运行，即YES状态，否则说明同步失败</p>
+<p>下面介绍几个比较关键的参数，全面的说明可阅读参考手册。</p>
+<p>Slave_IO_Running: IO线程是否正常运行<br>Slave_SQL_Running: SQL线程是否正常运行<br>Master_Log_File: IO线程正在读取的主服务器日志文件<br>Read_Master_Log_Pos: IO线程正在读取的主服务器日志文件的位置<br>Relay_Log_File: SQL线程正在读取和执行的本地日志文件<br>Relay_Log_Pos: SQL线程正在读取和执行的本地日志文件的位置<br>Relay_Master_Log_File: SQL线程正在重演的事件所在的主服务器日志文件<br>Exec_Master_Log_Pos: SQL线程正在重演的事件在主服务器日志文件中的位置<br>Seconds_Behind_Master:如果网络没有明显的延迟，该参数标志着SQL线程的事件重演速度。如果该值较大且不断递增，调整innodb_flush_log_at_trx_commit会有比较明显的效果，但是可能会在MySQL进程崩溃时丢失数据。<br>mysql数据库同步验证</p>
+<p>主从数据库设置工作已经完成，可以在master新建数据库和表，插入和修改数据，查看slave是否获得同步，测试一下是否成功。</p>
+<blockquote>
+<p><a href="https://jasonhzy.github.io/2016/02/05/master-slave/" target="_blank" rel="noopener">https://jasonhzy.github.io/2016/02/05/master-slave/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/09/07/依赖注入设计模式/" itemprop="url">
                   依赖注入设计模式
                 </a>
@@ -661,111 +790,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/28/PHP输出缓冲及其应用/" itemprop="url">
-                  PHP输出缓冲及其应用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-28T11:21:45+09:00" content="2017-08-28">
-              2017-08-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><blockquote class="blockquote-center"><br>某天，你无端想起一个人，她曾让你对明天有所期许，但是却完全没有出现在你的明天里。<br></blockquote><br>缓冲(buffer)是为了协调吞吐速度相差很大的设备之间数据传送而采用的技术，用来存放缓冲数据的区域叫缓冲区，在计算机科学领域，当数据从一个地方传送到另一个地方时，缓冲区被用来临时存储数据。与缓冲相似的一个技术是缓存(cache)，它们都是为了解决数据存储和传输速度不同而带来的问题，不同的是，缓冲主要在写时使用，而缓存主要用来在读时使用。</p>
-<p>PHP在执行的过程中，嵌入的HTML代码，’echo’,’print_r’等指令都是一次数据输出，正是因为有缓冲区的存在，系统可以在php执行完之后再一次把数据发送给浏览器，运行如下代码:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"这里是第一行数据"</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"这里是第二行数据，下面睡眠5秒"</span>;</span><br><span class="line">sleep(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"这里是第三行数据，下面是HTML代码"</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;h1&gt;标题&lt;/h1&gt;</span><br></pre></td></tr></table></figure></p>
-<p>发现浏览器是同时显示所有内容，而不是先显示第一行和第二行数据，等待5秒后再显示后面的数据。不仅这样，PHP的缓冲区还提供给我们更加强大的功能，我们可以在数据发送之前对其作出捕获，更改等。PHP提供给我们”ob_”系列函数，例如如下代码，可以对某些字符进行替换:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">ob_start();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"Hello world, this is http://www.hitoy.org/"</span>;</span><br><span class="line">$content = ob_get_contents();</span><br><span class="line">ob_end_clean();</span><br><span class="line"><span class="keyword">echo</span> str_replace(<span class="string">"http://"</span>,<span class="string">"https://"</span>,$content);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>上面中的ob_start,ob_get_contents,ob_end_clean分别用来开启用户缓冲区，获取缓存内容和关闭缓存区.</p>
-<blockquote>
-<p><a href="https://www.hitoy.org/php-output-buffer.html" target="_blank" rel="noopener">https://www.hitoy.org/php-output-buffer.html</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/43/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><span class="page-number current">44</span><a class="page-number" href="/page/45/">45</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/45/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/43/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><span class="page-number current">44</span><a class="page-number" href="/page/45/">45</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/45/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -804,7 +833,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -814,7 +843,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

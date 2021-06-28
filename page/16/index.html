@@ -265,6 +265,122 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/22/alpine简介/" itemprop="url">
+                  Alpine简介
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-22T14:00:27+09:00" content="2018-06-22">
+              2018-06-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>让未来到来，让过去过去。<br></blockquote>
+
+<p>Alpine 操作系统是一个面向安全的轻型 Linux 发行版。它不同于通常 Linux 发行版，Alpine 采用了 musl libc 和 busybox 以减小系统的体积和运行时资源消耗，但功能上比 busybox 又完善的多，因此得到开源社区越来越多的青睐。在保持瘦身的同时，Alpine 还提供了自己的包管理工具 apk，可以通过 <a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">https://pkgs.alpinelinux.org/packages</a> 网站上查询包信息，也可以直接通过 apk 命令直接查询和安装各种软件。</p>
+<p>Alpine 由非商业组织维护的，支持广泛场景的 Linux发行版，它特别为资深/重度Linux用户而优化，关注安全，性能和资源效能。Alpine 镜像可以适用于更多常用场景，并且是一个优秀的可以适用于生产的基础系统/环境。</p>
+<p>Alpine Docker 镜像也继承了 Alpine Linux 发行版的这些优势。相比于其他 Docker 镜像，它的容量非常小，仅仅只有 5 MB 左右（对比 Ubuntu 系列镜像接近 200 MB），且拥有非常友好的包管理机制。官方镜像来自 docker-alpine 项目。</p>
+<p>目前 Docker 官方已开始推荐使用 Alpine 替代之前的 Ubuntu 做为基础镜像环境。这样会带来多个好处。包括镜像下载速度加快，镜像安全性提高，主机之间的切换更方便，占用更少磁盘空间等。</p>
+<h3 id="Docker下的运行"><a href="#Docker下的运行" class="headerlink" title="Docker下的运行"></a>Docker下的运行</h3><p>官方 Alpine 镜像的文档：<a href="http://gliderlabs.viewdocs.io/docker-alpine/" target="_blank" rel="noopener">http://gliderlabs.viewdocs.io/docker-alpine/</a></p>
+<p>可以使用Docker Toolbox，创建一台Docker虚拟主机，在该主机的Docker环境下运行alpine的 Docker容器。该容器就是一个Alpine Linux系统，<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull alpine</span><br><span class="line"></span><br><span class="line">docker run -it --name myalpine alpine</span><br></pre></td></tr></table></figure></p>
+<h3 id="作为Docker容器的基础镜像"><a href="#作为Docker容器的基础镜像" class="headerlink" title="作为Docker容器的基础镜像"></a>作为Docker容器的基础镜像</h3><p>以Alpine为基础镜像，创建一个MySQL容器，镜像大小只有36.5MB，<br>同样的方式使用Ubuntu系统作为基础镜像，镜像大小有184MB，<br>Dockerfile文件的内容：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:<span class="number">3.6</span></span><br><span class="line">RUN apk add --no-cache mysql-client</span><br><span class="line">ENTRYPOINT [<span class="string">"mysql"</span>]</span><br></pre></td></tr></table></figure></p>
+<p>创建一个test/mysqlclient:1.0镜像<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t test/mysqlclient:<span class="number">1.0</span> .</span><br></pre></td></tr></table></figure></p>
+<h3 id="Alpine的配置和使用"><a href="#Alpine的配置和使用" class="headerlink" title="Alpine的配置和使用"></a>Alpine的配置和使用</h3><h4 id="网络相关文件"><a href="#网络相关文件" class="headerlink" title="网络相关文件"></a>网络相关文件</h4><p>主机名文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hostname</span><br></pre></td></tr></table></figure></p>
+<p>主机IP和域名映射文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hosts</span><br></pre></td></tr></table></figure></p>
+<p>安装nginx<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add --update nginx</span><br></pre></td></tr></table></figure></p>
+<p>安装openssh-server服务器<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add openssh-server</span><br></pre></td></tr></table></figure></p>
+<h3 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h3><ul>
+<li>Alpine 官网：<a href="http://alpinelinux.org/" target="_blank" rel="noopener">http://alpinelinux.org/</a></li>
+<li>Alpine 官方仓库：<a href="https://github.com/alpinelinux" target="_blank" rel="noopener">https://github.com/alpinelinux</a></li>
+<li>Alpine 官方镜像：<a href="https://hub.docker.com/_/alpine/" target="_blank" rel="noopener">https://hub.docker.com/_/alpine/</a></li>
+<li>Alpine 官方镜像仓库：<a href="https://github.com/gliderlabs/docker-alpine" target="_blank" rel="noopener">https://github.com/gliderlabs/docker-alpine</a></li>
+</ul>
+<blockquote>
+<p><a href="https://blog.csdn.net/CSDN_duomaomao/article/details/76152416" target="_blank" rel="noopener">https://blog.csdn.net/CSDN_duomaomao/article/details/76152416</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/21/nginx与php-fpm的负载均衡/" itemprop="url">
                   nginx与php-fpm的负载均衡
                 </a>
@@ -744,136 +860,11 @@ if (!-f $request_filename) {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/14/nginx的配置虚拟主机负载均衡和反向代理二/" itemprop="url">
-                  nginx的配置虚拟主机负载均衡和反向代理二
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-14T15:38:35+09:00" content="2018-06-14">
-              2018-06-14
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>山不厌高，海不厌深；周公吐哺，天下归心<br></blockquote>
-
-<h3 id="基于域名的虚拟主机"><a href="#基于域名的虚拟主机" class="headerlink" title="基于域名的虚拟主机"></a>基于域名的虚拟主机</h3><p>假设我们在本地开发有3个项目，分别在hosts里映射到本地的127.0.0.1上：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> www.iyangyi.com iyangyi.com</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> api.iyangyi.com</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> admin.iyangyi.com</span><br></pre></td></tr></table></figure></p>
-<p>有这样3个项目，分别对应于web根目录下的3个文件夹，我们用域名对应文件夹名字，这样子好记：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/Users/yangyi/www/www.iyangyi.com/</span><br><span class="line">/Users/yangyi/www/api.iyangyi.com/</span><br><span class="line">/Users/yangyi/www/admin.iyangyi.com/</span><br></pre></td></tr></table></figure></p>
-<p>每个目录下都有一个index.php文件，都素简单的输入自己的域名。</p>
-<p>下面我们就来搭建这3个域名的虚拟主机，很显然，我们要新建3个server来完成。为了看起来简洁好看，我们使用require来包含外面的3个server在nginx.conf中，这样就清晰了很多。不会使得这个nginx.conf内容太多：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line">events   &#123;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br><span class="line">http        &#123;</span><br><span class="line">  ....</span><br><span class="line">  <span class="keyword">include</span> vhost/www.iyangyi.conf;</span><br><span class="line">  <span class="keyword">include</span> vhost/api.iyangyi.conf;</span><br><span class="line">  <span class="keyword">include</span> vhost/admin.iyangyi.conf;</span><br><span class="line">  <span class="comment">#或者用 *.conf  包含</span></span><br><span class="line">  <span class="comment"># include vhost/*.conf</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>既然每一个conf都是一个server，前面已经学习了一个完整的server写的了。下面就开始：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># www.iyangyi.conf</span></span><br><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name www.iyangyi.com iyangyi.com;</span><br><span class="line">    root /Users/yangyi/www/www.iyangyi.com/;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line">    access_log /usr/local/<span class="keyword">var</span>/log/nginx/www.iyangyi.access.log main;</span><br><span class="line">    error_log /usr/local/<span class="keyword">var</span>/log/nginx/www.iyangyi.error.log error;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9000</span>; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        <span class="keyword">include</span>        fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># api.iyangyi.conf</span></span><br><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name api.iyangyi.com;</span><br><span class="line">    root /Users/yangyi/www/api.iyangyi.com/;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line">    access_log /usr/local/<span class="keyword">var</span>/log/nginx/api.iyangyi.access.log main;</span><br><span class="line">    error_log /usr/local/<span class="keyword">var</span>/log/nginx/api.iyangyi.error.log error;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9000</span>; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        <span class="keyword">include</span>        fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># admin.iyangyi.conf</span></span><br><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name admin.iyangyi.com;</span><br><span class="line">    root /Users/yangyi/www/admin.iyangyi.com/;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line">    access_log /usr/local/<span class="keyword">var</span>/log/nginx/admin.iyangyi.access.log main;</span><br><span class="line">    error_log /usr/local/<span class="keyword">var</span>/log/nginx/admin.iyangyi.error.log error;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9000</span>; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        <span class="keyword">include</span>        fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样3个很精简的虚拟域名就搭建好了。重启下nginx，然后打开浏览器访问一下这3个域名，就能看到对应的域名内容了。</p>
-<h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><h4 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h4><p>在说啥啥反向代理之前，先说下什么是代理或者正向代理。</p>
-<p>正向代理也就是代理，他的工作原理就像一个跳板，简单的说，我访问不了google.com，但是我能访问一个代理服务器A，A能访问google.com，于是我先连上代理服务器A，告诉他我需要google.com的内容，A就去取回来，然后返回给我。从网站的角度，只在代理服务器来取内容的时候有一次记录，有时候并不知道是用户的请求，也隐藏了用户的资料，这取决于代理告不告诉网站。</p>
-<p>结论就是，正向代理是一个位于客户端和原始服务器(origin server)之间的服务器。为了从原始服务器取得内容，客户端向代理发送一个请求并指定目标(原始服务器)，然后代理向原始服务器转交请求并将获得的内容返回给客户端。</p>
-<p>目前代理软件很多，浏览器上的代理就更多了。什么自由门啊，红杏等。</p>
-<h4 id="反向代理-1"><a href="#反向代理-1" class="headerlink" title="反向代理"></a>反向代理</h4><p>ok，说完正向代理，再来说啥是反向代理！</p>
-<p>举个例子，比如我想访问 <a href="http://www.test.com/readme，但www.test.com上并不存在readme页面，于是他是偷偷从另外一台服务器上取回来，然后作为自己的内容返回用户，但用户并不知情。这里所提到的" target="_blank" rel="noopener">http://www.test.com/readme，但www.test.com上并不存在readme页面，于是他是偷偷从另外一台服务器上取回来，然后作为自己的内容返回用户，但用户并不知情。这里所提到的</a> www.test.com 这个域名对应的服务器就设置了反向代理功能。</p>
-<p>结论就是，反向代理正好相反，对于客户端而言它就像是原始服务器，并且客户端不需要进行任何特别的设置。客户端向反向代理的命名空间(name-space)中的内容发送普通请求，接着反向代理将判断向何处(原始服务器)转交请求，并将获得的内容返回给客户端，就像这些内容原本就是它自己的一样。</p>
-<p>嗯。正向代理和反向代理就基本清楚了，那我们就来用nginx来配置一个反向代理。</p>
-<p>nginx 使用反向代理，主要是使用location模块下的proxy_pass选项。</p>
-<p>我们直接实战吧！</p>
-<p>来个最简单的。当我访问 mac 上的nginx 的 centos.iyangyi.com 的内容时候, 就反向代理到虚拟机centos上的 apache 192.168.33.10 的index.html页面。</p>
-<p>192.168.33.10 中的html 是很简单的一句输出：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">centos apache2 index.html</span><br></pre></td></tr></table></figure></p>
-<p>在hosts里新加上这个域名。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#vi /etc/hosts </span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> centos.iyangyi.com</span><br></pre></td></tr></table></figure></p>
-<p>在vhost目录中新建一个conf server<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#centos.iyangyi.conf</span></span><br><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name centos.iyangyi.com;</span><br><span class="line">    access_log /usr/local/<span class="keyword">var</span>/log/nginx/centos.iyangyi.access.log main;</span><br><span class="line">    error_log /usr/local/<span class="keyword">var</span>/log/nginx/centos.iyangyi.error.log error;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http:<span class="comment">//192.168.33.10;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>重启下nginx:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nginx -s reload</span><br></pre></td></tr></table></figure></p>
-<p>打开浏览器，就可以看到页面输出了：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">centos apache2 index.html</span><br></pre></td></tr></table></figure></p>
-<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>先简单说下负载均衡是干嘛的？举个例子：我们的小网站，刚开始就一台nginx服务器，后来，随着业务量增大，用户增多，一台服务器已经不够用了，我们就又多加了几台服务器。那么这几台服务器如何调度？如何均匀的提供访问？这就是负载均衡。</p>
-<p>负载均衡的好处是可以集群多台机器一起工作，并且对外的IP 和 域名是一样的，外界看起来就好像一台机器一样。</p>
-<p>nginx 也刚好提供了强大而又简单的负载均衡功能。</p>
-<p>在第一节中，我详细讲了nginx的负载均衡模块upstream，负载均衡呢，主要是用这个模块。</p>
-<h4 id="基于-weight-权重的负载"><a href="#基于-weight-权重的负载" class="headerlink" title="基于 weight 权重的负载"></a>基于 weight 权重的负载</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">upstream webservers&#123;</span><br><span class="line">    server <span class="number">192.168</span><span class="number">.33</span><span class="number">.11</span> weight=<span class="number">10</span>;</span><br><span class="line">    server <span class="number">192.168</span><span class="number">.33</span><span class="number">.12</span> weight=<span class="number">10</span>;</span><br><span class="line">    server <span class="number">192.168</span><span class="number">.33</span><span class="number">.13</span> weight=<span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name upstream.iyangyi.com;</span><br><span class="line">    access_log /usr/local/<span class="keyword">var</span>/log/nginx/upstream.iyangyi.access.log main;</span><br><span class="line">    error_log /usr/local/<span class="keyword">var</span>/log/nginx/upstream.iyangyi.error.log error;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http:<span class="comment">//webservers;</span></span><br><span class="line">        proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重启nginx nginx -s reload，打开浏览器输入upstream.iyangyi.com，不断刷新下，就能看到变化显示web1,web2,web3。说明我们的负载均衡起作用了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -912,7 +903,7 @@ if (!-f $request_filename) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -922,7 +913,7 @@ if (!-f $request_filename) {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

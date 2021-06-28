@@ -265,6 +265,114 @@
             
               
                 
+                <a class="post-title-link" href="/2018/07/10/shell输出颜色和闪烁控制/" itemprop="url">
+                  shell输出颜色和闪烁控制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-10T09:20:17+09:00" content="2018-07-10">
+              2018-07-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>平平淡淡是懒惰，是害怕，是贪图安逸，是一条不敢见世面的土狗<br></blockquote>
+
+<p>在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，在使用的时候直接调用函数会方便很多</p>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> -e <span class="string">"\033[字背景颜色;字体颜色m字符串\033[控制码"</span></span><br></pre></td></tr></table></figure>
+<h3 id="定制颜色函数"><a href="#定制颜色函数" class="headerlink" title="定制颜色函数"></a>定制颜色函数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span># blue to echo </span><br><span class="line">function blue()&#123;</span><br><span class="line">    echo -e "\033[34m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># green to echo </span><br><span class="line">function green()&#123;</span><br><span class="line">    echo -e "\033[32m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># warning</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以把这些函数写入到一个公共的SHELL脚本中，每次在编写其他脚本的时候用如下方式调用，即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /root/bin/common</span><br></pre></td></tr></table></figure>
+<p>或者可以把上述代码直接粘贴到当前编写的脚本中去。<br>当然可以推荐第一种方式。不用每次都复制粘贴。 直接 source 调用 即可</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># blue to echo </span><br><span class="line">function blue()&#123;</span><br><span class="line">    echo -e "\033[35m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># green to echo </span><br><span class="line">function green()&#123;</span><br><span class="line">    echo -e "\033[32m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function bred()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error to warning with blink</span><br><span class="line">function byellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># Error</span><br><span class="line">function red()&#123;</span><br><span class="line">    echo -e "\033[31m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># warning</span><br><span class="line">function yellow()&#123;</span><br><span class="line">    echo -e "\033[33m\033[01m[ $1 ]\033[0m"</span><br><span class="line">&#125;</span><br><span class="line">Dev-web-solr [/opt/hexo2] 2016-11-28 17:52:03</span><br><span class="line">root@pts/4 $ cat /root/bin/test.sh </span><br><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">source /root/bin/common</span><br><span class="line"></span><br><span class="line">green "hello world with green color"</span><br><span class="line">blue "hello world with blue color"</span><br><span class="line"></span><br><span class="line">bred "error info with blink"</span><br><span class="line">byellow "warning info with blink"</span><br></pre></td></tr></table></figure>
+<h3 id="字体背景颜色"><a href="#字体背景颜色" class="headerlink" title="字体背景颜色"></a>字体背景颜色</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">40:黑 </span><br><span class="line">41:深红 </span><br><span class="line">42:绿 </span><br><span class="line">43:黄色 </span><br><span class="line">44:蓝色 </span><br><span class="line">45:紫色 </span><br><span class="line">46:深绿 </span><br><span class="line">47:白色</span><br></pre></td></tr></table></figure>
+<h3 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">30:黑 </span><br><span class="line">31:红 </span><br><span class="line">32:绿 </span><br><span class="line">33:黄 </span><br><span class="line">34:蓝色 </span><br><span class="line">35:紫色 </span><br><span class="line">36:深绿 </span><br><span class="line">37:白色</span><br></pre></td></tr></table></figure>
+<h3 id="控制码"><a href="#控制码" class="headerlink" title="控制码"></a>控制码</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">\33[0m 关闭所有属性 </span><br><span class="line">\33[01m 设置高亮度 </span><br><span class="line">\33[04m 下划线 </span><br><span class="line">\33[05m 闪烁 </span><br><span class="line">\33[07m 反显 </span><br><span class="line">\33[08m 消隐 </span><br><span class="line">\33[30m -- \33[37m 设置前景色 </span><br><span class="line">\33[40m -- \33[47m 设置背景色 </span><br><span class="line">\33[nA 光标上移n行 </span><br><span class="line">\33[nB 光标下移n行 </span><br><span class="line">\33[nC 光标右移n行 </span><br><span class="line">\33[nD 光标左移n行 </span><br><span class="line">\33[y;xH设置光标位置 </span><br><span class="line">\33[2J 清屏 </span><br><span class="line">\33[K 清除从光标到行尾的内容 </span><br><span class="line">\33[s 保存光标位置 </span><br><span class="line">\33[u 恢复光标位置 </span><br><span class="line">\33[?25l 隐藏光标 </span><br><span class="line">\33[?25h 显示光标</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/ba1b8aded634" target="_blank" rel="noopener">https://www.jianshu.com/p/ba1b8aded634</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/09/持续集成是什么/" itemprop="url">
                   持续集成是什么
                 </a>
@@ -690,115 +798,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/07/05/golang中下划线使用方法/" itemprop="url">
-                  golang中下划线使用方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-07-05T11:46:29+09:00" content="2018-07-05">
-              2018-07-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>我想有一间书房，不负光阴，静享慢乐<br></blockquote>
-
-<h3 id="用在import"><a href="#用在import" class="headerlink" title="用在import"></a>用在import</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	<span class="string">"database/sql"</span></span><br><span class="line">    _<span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>引入包，会先调用包中的初始化函数，这种使用方式仅让导入的包做初始化，而不使用包中其他功能</p>
-<h3 id="用在返回值"><a href="#用在返回值" class="headerlink" title="用在返回值"></a>用在返回值</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _,v := range Slice&#123;&#125;</span><br><span class="line"></span><br><span class="line">_,err := func()</span><br></pre></td></tr></table></figure>
-<p>表示忽略某个值。单函数有多个返回值，用来获取某个特定的值</p>
-<h3 id="用在变量"><a href="#用在变量" class="headerlink" title="用在变量"></a>用在变量</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type T struct&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> _ I = T&#123;&#125;</span><br><span class="line"></span><br><span class="line">其中 I为<span class="class"><span class="keyword">interface</span></span></span><br></pre></td></tr></table></figure>
-<p>上面用来判断 type T是否实现了I,用作类型断言，如果T没有实现借口I，则编译错误.</p>
-<blockquote>
-<p><a href="https://www.jianshu.com/p/309f55a152db" target="_blank" rel="noopener">https://www.jianshu.com/p/309f55a152db</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -837,7 +841,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -847,7 +851,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -265,6 +265,126 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/15/php自动加载的深入理解/" itemprop="url">
+                  php自动加载的深入理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-15T16:56:00+09:00" content="2017-08-15">
+              2017-08-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote class="blockquote-center"><br>那时候我总是能起的那么早,看到鸟儿在舞蹈…<br></blockquote>
+
+<h3 id="使用require-once"><a href="#使用require-once" class="headerlink" title="使用require_once"></a>使用require_once</h3><p>文件位于同级目录下<br>class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require_once</span> <span class="string">'class.php'</span>;</span><br><span class="line"></span><br><span class="line">$test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $test-&gt;getName();</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用-autoload"><a href="#使用-autoload" class="headerlink" title="使用__autoload"></a>使用__autoload</h3><p>Test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">require_once</span> $class_name . <span class="string">'.php'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里要求类名和文件名保持一致,注意大小写;</span></span><br><span class="line">$test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $test-&gt;getName();</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用spl-autoload-register"><a href="#使用spl-autoload-register" class="headerlink" title="使用spl_autoload_register"></a>使用spl_autoload_register</h3><h4 id="第一种方式"><a href="#第一种方式" class="headerlink" title="第一种方式"></a>第一种方式</h4><p>Test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">require_once</span> $class_name . <span class="string">'.php'</span>;</span><br><span class="line">&#125;</span><br><span class="line">spl_autoload_register(<span class="string">"my_autoload"</span>);</span><br><span class="line">$test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $test-&gt;getName();</span><br></pre></td></tr></table></figure></p>
+<h4 id="第二种方式"><a href="#第二种方式" class="headerlink" title="第二种方式"></a>第二种方式</h4><p>Test.class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">spl_autoload_extensions(<span class="string">'.class.php'</span>);<span class="comment">// 寻找扩展名</span></span><br><span class="line"><span class="comment">// 如果我们类的后缀名既有.class.php 还有.php, 可以这样 spl_autoload_extensions('.class.php，.php');</span></span><br><span class="line">set_include_path(get_include_path().PATH_SEPARATOR.<span class="string">""</span>);<span class="comment">// 这里的"" 指的是类文件的目录，这里是平级目录</span></span><br><span class="line">spl_autoload_register();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Test())-&gt;getName();</span><br></pre></td></tr></table></figure></p>
+<h4 id="第三种方式"><a href="#第三种方式" class="headerlink" title="第三种方式"></a>第三种方式</h4><p>Test.class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">    spl_autoload_extensions(<span class="string">'.class.php'</span>);</span><br><span class="line">    set_include_path(get_include_path().PATH_SEPARATOR.<span class="string">""</span>);</span><br><span class="line">    spl_autoload($class_name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spl_autoload_register(<span class="string">'my_autoload'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Test())-&gt;getName();</span><br></pre></td></tr></table></figure></p>
+<h4 id="第四种方式"><a href="#第四种方式" class="headerlink" title="第四种方式"></a>第四种方式</h4><p>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">require_once</span> $class_name . <span class="string">'.php'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getLoader</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        spl_autoload_register([<span class="string">'Index'</span>,<span class="string">'my_autoload'</span>], <span class="keyword">true</span>, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Index::getLoader();</span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">new</span> Test())-&gt;getName();</span><br></pre></td></tr></table></figure></p>
+<p>Test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'yangzie'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="PSR"><a href="#PSR" class="headerlink" title="PSR"></a>PSR</h3><p>PSR是由PHP Framework Interoperability Group（PHP通用性框架小组）发布的一系列标准/规范，目前包括了PSR-0~PSR-4共4个，而PSR-0就是其中的自动加载标准（其后的PSR-4称为改进的自动加载的标准，是PSR-0的补充。PSR-0使用更广泛)<br>PSR-4风格:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-|vendor</span><br><span class="line">--|package</span><br><span class="line">---|src</span><br><span class="line">----|demo.php</span><br></pre></td></tr></table></figure></p>
+<p>如在我们的laravel项目下建立一个与app文件夹同级的目录；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新建目录accmd， 与app目录同级</span></span><br><span class="line">acmd\test\yangze\Yang.php</span><br><span class="line"></span><br><span class="line"><span class="comment">// Yang.php文件内容</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Acmd</span>\<span class="title">Test</span>\<span class="title">Yangzie</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yang</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">demo</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'demo'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>尝试在调用这个类<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$yang = <span class="keyword">new</span> \Acmd\Test\Yangzie\Yang();</span><br><span class="line">$yang-&gt;demo();</span><br><span class="line"><span class="comment">// error not found</span></span><br></pre></td></tr></table></figure></p>
+<p>使用composer自动加载<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"autoload"</span>: &#123;</span><br><span class="line">        <span class="string">"classmap"</span>: [</span><br><span class="line">            <span class="string">"database"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"psr-4"</span>: &#123;</span><br><span class="line">            <span class="string">"App\\"</span>: <span class="string">"app/"</span>,</span><br><span class="line">            <span class="string">"Acmd\\"</span>:<span class="string">"acmd/"</span></span><br><span class="line">        &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
+<p>执行命令： composer dump-autoload 即可</p>
+<h3 id="laravel下的自动加载"><a href="#laravel下的自动加载" class="headerlink" title="laravel下的自动加载"></a>laravel下的自动加载</h3><p>入口文件public/index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/autoload.php'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>bootstrap/autoload.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/../vendor/autoload.php'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>vendor/autoload.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// autoload.php @generated by Composer</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require_once</span> <span class="keyword">__DIR__</span> . <span class="string">'/composer'</span> . <span class="string">'/autoload_real.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> ComposerAutoloaderInit5205c428ce42c79967c9b7a7be4a7d82::getLoader();</span><br></pre></td></tr></table></figure></p>
+<p>这个文件包含了laravel对classmap,psr-0,psr-4,files的具体实现,主要只有这么一个方法 <code>getLoader</code>;</p>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>composer 自动加载文件<br>文件位置： acmd和app同目录<br>acmd\test\commom.php<br>composer.json<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">"autoload": &#123;</span><br><span class="line">        "classmap": [</span><br><span class="line">            <span class="string">"database"</span></span><br><span class="line">        ],</span><br><span class="line">        "psr-4": &#123;</span><br><span class="line">            "App\\": "app/",</span><br><span class="line">            "Acmd\\":"acmd/"</span><br><span class="line">        &#125;,</span><br><span class="line">      "files":["acmd/test/commom.php"]</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure></p>
+<p>执行命令： <code>composer dump-autoload</code></p>
+<h3 id="我们自己的项目如何使用"><a href="#我们自己的项目如何使用" class="headerlink" title="我们自己的项目如何使用"></a>我们自己的项目如何使用</h3><p>在使用composer安装好相关的依赖包以后, 只要在我们的项目入口文件index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require_once</span> <span class="string">'vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Flc</span>\<span class="title">Alidayu</span>\<span class="title">Client</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Flc</span>\<span class="title">Alidayu</span>\<span class="title">App</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Flc</span>\<span class="title">Alidayu</span>\<span class="title">Requests</span>\<span class="title">AlibabaAliqinFcSmsNumSend</span>;</span><br><span class="line"></span><br><span class="line">$config = [</span><br><span class="line">    <span class="string">'app_key'</span>    =&gt; <span class="string">'*****'</span>,</span><br><span class="line">    <span class="string">'app_secret'</span> =&gt; <span class="string">'*****'</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">$client = <span class="keyword">new</span> Client(<span class="keyword">new</span> App($config));</span><br><span class="line">$req    = <span class="keyword">new</span> AlibabaAliqinFcSmsNumSend;</span><br><span class="line"></span><br><span class="line">$req-&gt;setRecNum(<span class="string">'15829465509'</span>)</span><br><span class="line">    -&gt;setSmsParam([</span><br><span class="line">        <span class="string">'name'</span> =&gt; <span class="string">'杨国奇'</span>,</span><br><span class="line">        <span class="string">'days'</span> =&gt; rand(<span class="number">100000</span>, <span class="number">999999</span>)</span><br><span class="line">    ])</span><br><span class="line">    -&gt;setSmsFreeSignName(<span class="string">'叶子坑'</span>)</span><br><span class="line">    -&gt;setSmsTemplateCode(<span class="string">'SMS_87315128'</span>);</span><br><span class="line"></span><br><span class="line">$resp = $client-&gt;execute($req);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回结果</span></span><br><span class="line">print_r($resp);</span><br></pre></td></tr></table></figure></p>
+<p>之后, 我们只要使用合适的命名空间就可以实现自动载入</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/14/CSS清浮动处理/" itemprop="url">
                   CSS清浮动处理
                 </a>
@@ -709,137 +829,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/08/11/laravel队列使用注意问题/" itemprop="url">
-                  laravel队列使用注意问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-11T07:53:58+09:00" content="2017-08-11">
-              2017-08-11
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote class="blockquote-center"><br>你看了一千个正确答案，还是要一秒一秒的等时间<br></blockquote>
-
-<h3 id="任务超时"><a href="#任务超时" class="headerlink" title="任务超时"></a>任务超时</h3><p>任务可以运行的最大秒数可以使用 <code>Artisan</code> 命令行上的 <code>--timeout</code> 开关指定：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan queue:work --timeout=<span class="number">30</span></span><br></pre></td></tr></table></figure></p>
-<p>这个选项指定了 Laravel 队列处理器最多执行多长时间后就应该被关闭掉。有时候一个队列的子进程会因为很多原因僵死，比如一个外部的 HTTP 请求没有响应。这个 –timeout 选项会移除超出指定事件限制的僵死进程。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Jobs</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProcessPodcast</span> <span class="keyword">implements</span> <span class="title">ShouldQueue</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 任务运行的超时时间。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> int</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> $timeout = <span class="number">120</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="任务过期"><a href="#任务过期" class="headerlink" title="任务过期"></a>任务过期</h3><p><code>config/queue.php</code> 配置文件里，每一个队列连接都定义了一个 <code>retry_after</code>选项。这个选项指定了任务最多处理多少秒后就被当做失败重试了。比如说，如果这个选项设置为 90，那么当这个任务持续执行了 90 秒而没有被删除，那么它将被释放回队列。通常情况下，你应该把 retry_after 设置为最长耗时的任务所对应的时间。</p>
-<h3 id="二者区别"><a href="#二者区别" class="headerlink" title="二者区别"></a>二者区别</h3><p><code>retry_after</code> 配置选项和 <code>--timeout</code> 命令行选项是不一样的，但是可以同时工作来保证任务不会丢失并且不会重复执行。<br><code>--timeout</code>应该永远都要比<code>retry_after</code>短至少几秒钟的时间。这样就能保证任务进程总能在失败重试前就被杀死了。如果你的<code>--timeout</code>选项大于<code>retry_after</code> 配置选项，你的任务可能被执行两次。</p>
-<h3 id="queue-listen-和-queue-work"><a href="#queue-listen-和-queue-work" class="headerlink" title="queue:listen 和 queue:work"></a>queue:listen 和 queue:work</h3><p>queue:work在启动后，代码修改，queue:work不会再 Load 上下文，但是 queue:listen仍然会重新 Load 新代码。</p>
-<h3 id="队列监听"><a href="#队列监听" class="headerlink" title="队列监听"></a>队列监听</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan queue:work --daemon --quiet --queue=<span class="keyword">default</span> --delay=<span class="number">3</span> --sleep=<span class="number">3</span> --tries=<span class="number">3</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>–quiet</li>
-</ul>
-<p>不输出任何内容</p>
-<ul>
-<li>–delay=3</li>
-</ul>
-<p>一个任务失败后，延迟多长时间后再重试，单位是秒。这个值的设定我个人建议不要太短，因为一个任务失败（比如网络原因），重试时间太短可能会出现连续失败的情况。</p>
-<ul>
-<li>–sleep=3</li>
-</ul>
-<p>去 Redis 中拿任务的时候，发现没有任务，休息多长时间，单位是秒。这个值的设定要看你的任务是否紧急，如果是那种非常紧急的任务，不能等待太长时间。</p>
-<ul>
-<li>–tries=3</li>
-</ul>
-<p>定义失败任务最多重试次数。这个值的设定根据任务的重要程度来确定，一般 3 次比较适合。</p>
-<ul>
-<li>–daemon</li>
-</ul>
-<p>以守护进程的方式运行，在 supervisor 中一般要加这个 option，可以节省 CPU 使用。</p>
-<h3 id="Supervisor"><a href="#Supervisor" class="headerlink" title="Supervisor"></a>Supervisor</h3><p>使用 Supervisor 监听 Laravel 队列任务，其中 Supervisor 的配置如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[program:laravel-worker]</span><br><span class="line">process_name=%(program_name)s_%(process_num)<span class="number">02</span>d</span><br><span class="line">command=php /<span class="keyword">var</span>/www/xxx.cn/artisan queue:work --queue=sendfile --tries=<span class="number">3</span> --daemon</span><br><span class="line">autostart=<span class="keyword">true</span></span><br><span class="line">autorestart=<span class="keyword">true</span></span><br><span class="line">numprocs=<span class="number">8</span></span><br><span class="line">redirect_stderr=<span class="keyword">true</span></span><br><span class="line">stdout_logfile=/<span class="keyword">var</span>/www/xxx.cn/worker.log</span><br></pre></td></tr></table></figure></p>
-<p>注意 numprocs = 8，代表开启 8 个进程来执行 command 中的命令, 这样就可以大大加快队列的执行速度,如果仅仅是一个进程, 队列就相当于顺序执行。</p>
-<blockquote>
-<p><a href="https://laravel-china.org/docs/laravel/5.5/queues#744c5b" target="_blank" rel="noopener">https://laravel-china.org/docs/laravel/5.5/queues#744c5b</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/46/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><span class="page-number current">47</span><a class="page-number" href="/page/48/">48</a><span class="space">&hellip;</span><a class="page-number" href="/page/74/">74</a><a class="extend next" rel="next" href="/page/48/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/46/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><span class="page-number current">47</span><a class="page-number" href="/page/48/">48</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" href="/page/48/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -878,7 +872,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">370</span>
+              <span class="site-state-item-count">371</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -888,7 +882,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
